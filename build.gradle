@@ -55,7 +55,7 @@ subprojects { p ->
     ]
     tasks.named('processResources') {
         inputs.properties props
-        filesMatching('META-INF/neoforge.mods.toml') { expand props }
+        filesMatching(['META-INF/neoforge.mods.toml', 'strata_core_build.properties']) { expand props }
     }
 
     tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }

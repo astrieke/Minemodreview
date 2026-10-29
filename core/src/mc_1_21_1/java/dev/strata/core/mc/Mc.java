@@ -24,8 +24,6 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 /** Versionsanbindung für Minecraft 1.21.1 (NeoForge 21.1). */
 public final class Mc {
 
-    public static final String MINECRAFT_LINE = "1.21.1";
-
     /** IDs werden im gemeinsamen Code als Text geführt, z. B. {@code "strata:crystal_age"}. */
     public static final Codec<String> ID_CODEC = ResourceLocation.CODEC.xmap(ResourceLocation::toString, ResourceLocation::parse);
 

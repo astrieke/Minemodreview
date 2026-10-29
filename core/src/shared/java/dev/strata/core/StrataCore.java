@@ -11,7 +11,7 @@ import org.slf4j.Logger;
  * Einstieg von Strata Core.
  *
  * <p>Der Code in {@code core/src/shared} ist für alle Minecraft-Versionen gleich.
- * Alles, was sich zwischen Versionen unterscheidet, steckt hinter {@link Mc}.
+ * Alles, was sich zwischen Versionen unterscheidet, steckt in {@code dev.strata.core.mc}.
  */
 @Mod(StrataCore.MOD_ID)
 public final class StrataCore {
@@ -24,6 +24,17 @@ public final class StrataCore {
         StrataRegistries.register(modBus);
         NeoForge.EVENT_BUS.addListener(StrataCommands::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(StrataValidation::onServerStarted);
-        LOG.info("Strata Core geladen (Minecraft {})", Mc.MINECRAFT_LINE);
+        LOG.info("Strata Core geladen (Minecraft {})", minecraftVersion());
+    }
+
+    /** Die Minecraft-Version, für die dieses Jar gebaut wurde. */
+    static String minecraftVersion() {
+        try (var in = StrataCore.class.getResourceAsStream("/strata_core_build.properties")) {
+            var props = new java.util.Properties();
+            if (in != null) props.load(in);
+            return props.getProperty("minecraft_version", "unbekannt");
+        } catch (java.io.IOException e) {
+            return "unbekannt";
+        }
     }
 }
