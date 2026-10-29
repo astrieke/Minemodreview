@@ -24,7 +24,12 @@
           "count": 22,
           "max_y": 160
         }
-      ]
+      ],
+      "surface": {
+        "top": "minecraft:calcite",
+        "under": "minecraft:smooth_basalt"
+      },
+      "ambient_light": 0.1
     },
     {
       "id": "spore_age",
@@ -47,7 +52,12 @@
           "count": 18,
           "max_y": 120
         }
-      ]
+      ],
+      "surface": {
+        "top": "minecraft:mycelium",
+        "under": "minecraft:dirt"
+      },
+      "ambient_light": 0.1
     }
   ],
   "loot_tables": [

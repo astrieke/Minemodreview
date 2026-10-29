@@ -24,6 +24,12 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 
 ## So spielt sich Strata Epochs
 
+| Kristallzeit | Sporenzeit |
+|---|---|
+| ![Kristallzeit](docs/screenshots/crystal_age.png) | ![Sporenzeit](docs/screenshots/spore_age.png) |
+
+*Ankunft in den Epochen (Minecraft 1.21.1). Vorne das Epochentor für den Rückweg, unten alle neuen Items.*
+
 1. **Kernbohrer** bauen (Eisen, Kupfer, Stock) und auf den Boden rechtsklicken. Du bekommst einen **Bohrkern**. Er zeigt, welche Epoche unter diesem Ort liegt. Jede Region von 8 × 8 Chunks hat ihre eigene Epoche.
 2. **Epochentor** bauen (Obsidian, Amethyst, Kompass) und mit dem Bohrkern rechtsklicken. Der Kern wird verbraucht, und du landest in der Epoche. Neben dir steht ein Tor für den Rückweg.
 3. In der **Kristallzeit** findest du Kristallquarz, in der **Sporenzeit** Bernstein. Beide Dimensionen sind Höhlenwelten aus **Zeitgestein**.
@@ -46,6 +52,7 @@ epochs/worldgen/                 Epochen-Spezifikation und Rezepte (Quelle für 
 epochs/worldgen.gradle           Erzeugt Worldgen, Loot-Tabellen und Rezepte pro Version
 example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kodex-Knoten)
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
+scripts/client-screenshot.sh     Startet den Client auf einem virtuellen Bildschirm und macht einen Screenshot
 tools/make_textures.py           Erzeugt die Platzhaltertexturen
 ```
 
@@ -104,6 +111,8 @@ data/<namespace>/strata_core/codex_node/<name>.json
 
 ## Noch offen
 
-- Automatisch getestet ist der Server. Mit einem echten Client wurde noch nicht gespielt; die Texturen sind Platzhalter.
+- Automatisch getestet ist der Server in allen Versionen. Der Client wurde in 1.21.1 gestartet (Modelle, Texturen und beide Dimensionen laden, siehe Screenshots). Für 26.x fehlt der Client-Test, weil der virtuelle Bildschirm der Testumgebung kein passendes OpenGL-Fenster bietet. Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
+- Die Texturen sind Platzhalter.
+- Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Kernanalyse-Tisch, Fossilien, Transplantator und weitere Biome pro Epoche (siehe Konzept, Phase 3).
 - Strata Bridge.

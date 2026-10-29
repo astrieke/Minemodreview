@@ -55,6 +55,7 @@ def generate = tasks.register('generateEpochData') {
             // Dimensionstyp: Höhlen-Overworld ohne Himmelslicht und ohne Raids.
             def dimType = vanilla(e.dimension_type, 'dimension_type')
             dimType.has_skylight = false
+            if (dimType.containsKey('ambient_light')) dimType.ambient_light = e.ambient_light
             if (dimType.containsKey('has_raids')) dimType.has_raids = false
             if (dimType.containsKey('bed_works')) dimType.bed_works = false
             if (dimType.attributes instanceof Map) {
@@ -65,7 +66,31 @@ def generate = tasks.register('generateEpochData') {
 
             // Noise: Vanilla-Höhlen, aber mit Zeitgestein als Grundblock.
             def noise = vanilla(e.noise_settings, 'worldgen/noise_settings')
-            noise.default_block = noise.default_block instanceof String ? e.default_block : [Name: e.default_block]
+            def blocksAsText = noise.default_block instanceof String
+            noise.default_block = blocksAsText ? e.default_block : [Name: e.default_block]
+
+            // Oberfläche: eigene schlanke Regel statt der Vanilla-Höhlenregel (die legt Gras und Erde).
+            // Bedrock-Decke und -Boden kommen aus Vanilla. Ab 26.3 heißt das Feld "material_rule",
+            // und Regeln/Bedingungen sind eigene Registry-Einträge, auf die man per ID verweist.
+            def newRules = noise.containsKey('material_rule')
+            def blockRule = { String id -> [type: 'minecraft:block', result_state: blocksAsText ? id : [Name: id]] }
+            def floorCondition = { boolean under ->
+                newRules ? (under ? 'minecraft:under_floor' : 'minecraft:on_floor')
+                         : [type: 'minecraft:stone_depth', add_surface_depth: under, offset: 0, secondary_depth_range: 0, surface_type: 'floor']
+            }
+            def bedrock
+            if (newRules) {
+                bedrock = ['minecraft:bedrock_roof', 'minecraft:bedrock_floor']
+            } else {
+                bedrock = noise.surface_rule.sequence.findAll { r ->
+                    r instanceof Map && r.then_run instanceof Map && r.then_run.result_state?.toString()?.contains('minecraft:bedrock')
+                }
+            }
+            def surface = [type: 'minecraft:sequence', sequence: bedrock + [
+                    [type: 'minecraft:condition', if_true: floorCondition(false), then_run: blockRule(e.surface.top)],
+                    [type: 'minecraft:condition', if_true: floorCondition(true), then_run: blockRule(e.surface.under)]
+            ]]
+            if (newRules) noise.material_rule = surface else noise.surface_rule = surface
             write("data/${ns}/worldgen/noise_settings/${e.id}.json", noise)
 
             // Erze: konfiguriertes und platziertes Feature pro Erz.

@@ -62,6 +62,10 @@ subprojects { p ->
             client {
                 client()
                 gameDirectory = p.file('run/client')
+                // Direkt in eine Welt springen: ./gradlew :epochs-1.21.1:runClient -PquickPlay=<Weltordner>
+                if (rootProject.hasProperty('quickPlay')) {
+                    programArguments.addAll('--quickPlaySingleplayer', rootProject.property('quickPlay') as String)
+                }
             }
         }
         mods {
