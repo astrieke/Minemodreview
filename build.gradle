@@ -1,0 +1,62 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.148' apply false
+}
+
+// Gemeinsame Einstellungen für alle core-<version>-Projekte.
+// Welche Quellordner eine Version nutzt, steht in ihrer gradle.properties (src_groups).
+subprojects { p ->
+    if (!p.name.startsWith('core-')) return
+
+    apply plugin: 'java-library'
+    apply plugin: 'net.neoforged.moddev'
+
+    def mcVersion = p.property('minecraft_version')
+    def javaVersion = (p.property('java_version') as String) as int
+    def groups = (p.property('src_groups') as String).split(',')*.trim()
+
+    version = "${p.property('mod_version')}+${p.projectDir.name}"
+    group = p.property('mod_group')
+    base.archivesName = "strata-core-neoforge"
+
+    java.toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
+
+    sourceSets.main {
+        // Die reine Spiellogik wird direkt mitkompiliert, so ist kein Shading nötig.
+        java.srcDir rootProject.file('common/src/main/java')
+        groups.each { g ->
+            java.srcDir rootProject.file("core/src/${g}/java")
+            resources.srcDir rootProject.file("core/src/${g}/resources")
+        }
+    }
+
+    neoForge {
+        version = p.property('neo_version')
+        runs {
+            server {
+                server()
+                gameDirectory = p.file('run/server')
+                programArgument '--nogui'
+            }
+        }
+        mods {
+            "${p.property('mod_id')}" { sourceSet sourceSets.main }
+        }
+    }
+
+    def props = [
+            mod_id               : p.property('mod_id'),
+            mod_name             : p.property('mod_name'),
+            mod_version          : p.version,
+            mod_license          : p.property('mod_license'),
+            mod_authors          : p.property('mod_authors'),
+            minecraft_version    : mcVersion,
+            minecraft_version_range: p.property('minecraft_version_range'),
+            neo_version          : p.property('neo_version'),
+    ]
+    tasks.named('processResources') {
+        inputs.properties props
+        filesMatching('META-INF/neoforge.mods.toml') { expand props }
+    }
+
+    tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+}

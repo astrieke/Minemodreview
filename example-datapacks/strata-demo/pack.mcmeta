@@ -1,0 +1,9 @@
+{
+  "pack": {
+    "description": "Strata Demo: zwei Epochen und ein kleiner Kodex",
+    "pack_format": 48,
+    "supported_formats": [48, 999],
+    "min_format": 48,
+    "max_format": 999
+  }
+}
