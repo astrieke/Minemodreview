@@ -1,0 +1,92 @@
+{
+  "_hinweis": "Grundlage für das Worldgen der Epochen. Der Task generateEpochData baut daraus pro Minecraft-Version passendes JSON, abgeleitet von den Vanilla-Dateien genau dieser Version.",
+  "namespace": "strata_epochs",
+  "ore_replaceables_tag": "strata_epochs:epoch_ore_replaceables",
+  "epochs": [
+    {
+      "id": "crystal_age",
+      "dimension_type": "minecraft:overworld_caves",
+      "noise_settings": "minecraft:caves",
+      "default_block": "strata_epochs:chronostone",
+      "biome": "crystal_hollows",
+      "biome_base": "minecraft:dripstone_caves",
+      "colors": {
+        "fog": "#6e56b8",
+        "sky": "#2a1f4d",
+        "water": "#9b7bff",
+        "water_fog": "#2a1f4d"
+      },
+      "ores": [
+        {
+          "id": "crystal_quartz",
+          "block": "strata_epochs:crystal_quartz_ore",
+          "size": 7,
+          "count": 22,
+          "max_y": 160
+        }
+      ]
+    },
+    {
+      "id": "spore_age",
+      "dimension_type": "minecraft:overworld_caves",
+      "noise_settings": "minecraft:caves",
+      "default_block": "strata_epochs:chronostone",
+      "biome": "spore_grotto",
+      "biome_base": "minecraft:lush_caves",
+      "colors": {
+        "fog": "#4f7a3a",
+        "sky": "#1f3318",
+        "water": "#6fbf73",
+        "water_fog": "#1f3318"
+      },
+      "ores": [
+        {
+          "id": "amber",
+          "block": "strata_epochs:amber_ore",
+          "size": 5,
+          "count": 18,
+          "max_y": 120
+        }
+      ]
+    }
+  ],
+  "loot_tables": [
+    {
+      "block": "chronostone",
+      "base": "minecraft:blocks/cobbled_deepslate",
+      "replace": {
+        "minecraft:cobbled_deepslate": "strata_epochs:chronostone"
+      }
+    },
+    {
+      "block": "petrified_stone",
+      "base": "minecraft:blocks/cobbled_deepslate",
+      "replace": {
+        "minecraft:cobbled_deepslate": "strata_epochs:petrified_stone"
+      }
+    },
+    {
+      "block": "epoch_gate",
+      "base": "minecraft:blocks/obsidian",
+      "replace": {
+        "minecraft:obsidian": "strata_epochs:epoch_gate"
+      }
+    },
+    {
+      "block": "crystal_quartz_ore",
+      "base": "minecraft:blocks/emerald_ore",
+      "replace": {
+        "minecraft:emerald_ore": "strata_epochs:crystal_quartz_ore",
+        "minecraft:emerald": "strata_epochs:crystal_quartz"
+      }
+    },
+    {
+      "block": "amber_ore",
+      "base": "minecraft:blocks/emerald_ore",
+      "replace": {
+        "minecraft:emerald_ore": "strata_epochs:amber_ore",
+        "minecraft:emerald": "strata_epochs:amber_shard"
+      }
+    }
+  ]
+}

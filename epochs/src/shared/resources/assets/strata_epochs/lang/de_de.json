@@ -1,0 +1,22 @@
+{
+  "block.strata_epochs.chronostone": "Zeitgestein",
+  "block.strata_epochs.crystal_quartz_ore": "Kristallquarzerz",
+  "block.strata_epochs.amber_ore": "Bernsteinerz",
+  "block.strata_epochs.petrified_stone": "Versteinerter Stein",
+  "block.strata_epochs.epoch_gate": "Epochentor",
+  "item.strata_epochs.core_drill": "Kernbohrer",
+  "item.strata_epochs.core_sample": "Bohrkern",
+  "item.strata_epochs.crystal_quartz": "Kristallquarz",
+  "item.strata_epochs.amber_shard": "Bernsteinsplitter",
+  "item.strata_epochs.time_anchor": "Zeitanker",
+  "epoch.strata_epochs.crystal_age": "Kristallzeit",
+  "epoch.strata_epochs.spore_age": "Sporenzeit",
+  "message.strata_epochs.drill.sample": "Bohrkern: %s",
+  "message.strata_epochs.drill.nothing": "Unter diesem Ort liegt keine Epoche.",
+  "message.strata_epochs.drill.inside_epoch": "Du bist schon tief in der Zeit. Der Bohrer findet nichts Älteres.",
+  "message.strata_epochs.gate.need_sample": "Das Tor braucht einen Bohrkern.",
+  "message.strata_epochs.gate.unreachable": "%s ist noch nicht erreichbar.",
+  "message.strata_epochs.gate.entered": "Die Zeit wird hier schwer. Bleib nicht zu lange.",
+  "message.strata_epochs.solidify.warning": "Die Zeit verfestigt sich um dich … noch %s s",
+  "message.strata_epochs.solidify.active": "Du versteinerst! Kehr durch das Tor zurück!"
+}

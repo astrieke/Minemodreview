@@ -15,10 +15,15 @@ rootProject.name = 'strata'
 // Reine Spiellogik ohne Minecraft-Abhängigkeit.
 include 'common'
 
-// Ein Gradle-Projekt pro unterstützter Minecraft-Version.
-// Die Einstellungen stehen jeweils in core/versions/<version>/gradle.properties.
-file('core/versions').eachDir { dir ->
-    def name = "core-${dir.name}"
-    include name
-    project(":${name}").projectDir = dir
+// Für jede Minecraft-Version unter versions/<v>/ und jede Mod ein eigenes Gradle-Projekt,
+// z. B. :core-1.21.1 oder :epochs-26.3. Die Versionsdaten stehen in versions/<v>/gradle.properties.
+def mods = ['core', 'epochs']
+file('versions').eachDir { dir ->
+    mods.each { mod ->
+        def name = "${mod}-${dir.name}"
+        def projectDir = file("${mod}/versions/${dir.name}")
+        projectDir.mkdirs()
+        include name
+        project(":${name}").projectDir = projectDir
+    }
 }

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [" Q ", "AGA", " Q "],
+  "key": { "Q": "strata_epochs:crystal_quartz", "A": "strata_epochs:amber_shard", "G": "minecraft:gold_ingot" },
+  "result": { "id": "strata_epochs:time_anchor", "count": 1 }
+}

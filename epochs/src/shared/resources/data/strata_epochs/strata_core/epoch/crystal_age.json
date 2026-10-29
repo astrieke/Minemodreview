@@ -1,0 +1,5 @@
+{
+  "weight": 3,
+  "solidify_seconds": 600,
+  "dimension": "strata_epochs:crystal_age"
+}

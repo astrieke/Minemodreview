@@ -1,0 +1,11 @@
+{
+  "values": [
+    "strata_epochs:chronostone",
+    "minecraft:stone",
+    "minecraft:deepslate",
+    "minecraft:tuff",
+    "minecraft:granite",
+    "minecraft:diorite",
+    "minecraft:andesite"
+  ]
+}

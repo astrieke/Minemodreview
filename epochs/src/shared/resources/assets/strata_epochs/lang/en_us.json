@@ -1,0 +1,22 @@
+{
+  "block.strata_epochs.chronostone": "Chronostone",
+  "block.strata_epochs.crystal_quartz_ore": "Crystal Quartz Ore",
+  "block.strata_epochs.amber_ore": "Amber Ore",
+  "block.strata_epochs.petrified_stone": "Petrified Stone",
+  "block.strata_epochs.epoch_gate": "Epoch Gate",
+  "item.strata_epochs.core_drill": "Core Drill",
+  "item.strata_epochs.core_sample": "Core Sample",
+  "item.strata_epochs.crystal_quartz": "Crystal Quartz",
+  "item.strata_epochs.amber_shard": "Amber Shard",
+  "item.strata_epochs.time_anchor": "Time Anchor",
+  "epoch.strata_epochs.crystal_age": "Crystal Age",
+  "epoch.strata_epochs.spore_age": "Spore Age",
+  "message.strata_epochs.drill.sample": "Core sample: %s",
+  "message.strata_epochs.drill.nothing": "No epoch found beneath this place.",
+  "message.strata_epochs.drill.inside_epoch": "You are already deep in time. The drill finds nothing older.",
+  "message.strata_epochs.gate.need_sample": "The gate needs a core sample.",
+  "message.strata_epochs.gate.unreachable": "%s cannot be reached yet.",
+  "message.strata_epochs.gate.entered": "Time grows heavy here. Do not stay too long.",
+  "message.strata_epochs.solidify.warning": "Time is solidifying around you… %s s left",
+  "message.strata_epochs.solidify.active": "You are solidifying! Return through the gate!"
+}

@@ -2,61 +2,93 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.148' apply false
 }
 
-// Gemeinsame Einstellungen für alle core-<version>-Projekte.
-// Welche Quellordner eine Version nutzt, steht in ihrer gradle.properties (src_groups).
+// Die Mods des Sets. Jede Mod hat Quellordner unter <mod>/src/<gruppe>/,
+// und versions/<v>/gradle.properties legt fest, welche Gruppen eine Version nutzt.
+def modInfo = [
+        core  : [id: 'strata_core', name: 'Strata Core', jar: 'strata-core-neoforge'],
+        epochs: [id: 'strata_epochs', name: 'Strata Epochs', jar: 'strata-epochs-neoforge'],
+]
+
 subprojects { p ->
-    if (!p.name.startsWith('core-')) return
+    def dash = p.name.indexOf('-')
+    if (dash < 0) return
+    def mod = p.name.substring(0, dash)
+    def mcLine = p.name.substring(dash + 1)
+    def info = modInfo[mod]
+    if (info == null) return
+
+    // Versionsdaten laden (MC-, NeoForge- und Java-Version, Quellgruppen).
+    def versionProps = new Properties()
+    rootProject.file("versions/${mcLine}/gradle.properties").withInputStream { versionProps.load(it) }
+    versionProps.each { k, v -> p.ext.set(k as String, v) }
 
     apply plugin: 'java-library'
     apply plugin: 'net.neoforged.moddev'
 
-    def mcVersion = p.property('minecraft_version')
-    def javaVersion = (p.property('java_version') as String) as int
-    def groups = (p.property('src_groups') as String).split(',')*.trim()
+    def groups = (versionProps.getProperty("${mod}_src_groups") ?: '').split(',')*.trim().findAll { it }
+    if (groups.isEmpty()) throw new GradleException("versions/${mcLine}/gradle.properties: ${mod}_src_groups fehlt")
 
-    version = "${p.property('mod_version')}+${p.projectDir.name}"
-    group = p.property('mod_group')
-    base.archivesName = "strata-core-neoforge"
+    version = "${rootProject.property('mod_version')}+${mcLine}"
+    group = rootProject.property('mod_group')
+    base.archivesName = info.jar
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(versionProps.getProperty('java_version') as int)
 
     sourceSets.main {
         // Die reine Spiellogik wird direkt mitkompiliert, so ist kein Shading nötig.
-        java.srcDir rootProject.file('common/src/main/java')
+        if (mod == 'core') java.srcDir rootProject.file('common/src/main/java')
         groups.each { g ->
-            java.srcDir rootProject.file("core/src/${g}/java")
-            resources.srcDir rootProject.file("core/src/${g}/resources")
+            java.srcDir rootProject.file("${mod}/src/${g}/java")
+            resources.srcDir rootProject.file("${mod}/src/${g}/resources")
         }
     }
 
+    def coreProject = mod == 'core' ? null : project(":core-${mcLine}")
+    if (coreProject != null) {
+        evaluationDependsOn(coreProject.path)
+        dependencies { implementation coreProject }
+    }
+
     neoForge {
-        version = p.property('neo_version')
+        version = versionProps.getProperty('neo_version')
         runs {
             server {
                 server()
                 gameDirectory = p.file('run/server')
                 programArgument '--nogui'
+                // Schaltet beim Serverstart zusätzliche Selbsttests ein (nur in Entwicklungsläufen).
+                systemProperty 'strata.selftest', 'true'
+            }
+            client {
+                client()
+                gameDirectory = p.file('run/client')
             }
         }
         mods {
-            "${p.property('mod_id')}" { sourceSet sourceSets.main }
+            "${info.id}" { sourceSet sourceSets.main }
+            if (coreProject != null) {
+                strata_core { sourceSet coreProject.sourceSets.main }
+            }
         }
     }
 
     def props = [
-            mod_id               : p.property('mod_id'),
-            mod_name             : p.property('mod_name'),
-            mod_version          : p.version,
-            mod_license          : p.property('mod_license'),
-            mod_authors          : p.property('mod_authors'),
-            minecraft_version    : mcVersion,
-            minecraft_version_range: p.property('minecraft_version_range'),
-            neo_version          : p.property('neo_version'),
+            mod_id                 : info.id,
+            mod_name               : info.name,
+            mod_version            : p.version,
+            mod_license            : rootProject.property('mod_license'),
+            mod_authors            : rootProject.property('mod_authors'),
+            minecraft_version      : versionProps.getProperty('minecraft_version'),
+            minecraft_version_range: versionProps.getProperty('minecraft_version_range'),
+            neo_version            : versionProps.getProperty('neo_version'),
+            core_version_range     : "[${rootProject.property('mod_version')},)",
     ]
     tasks.named('processResources') {
         inputs.properties props
-        filesMatching(['META-INF/neoforge.mods.toml', 'strata_core_build.properties']) { expand props }
+        filesMatching(['META-INF/neoforge.mods.toml', '*_build.properties']) { expand props }
     }
 
     tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+
+    if (mod == 'epochs') apply from: rootProject.file('epochs/worldgen.gradle')
 }

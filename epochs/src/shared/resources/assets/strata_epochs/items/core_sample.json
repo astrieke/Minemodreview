@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "strata_epochs:item/core_sample"
+  }
+}

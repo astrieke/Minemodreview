@@ -9,6 +9,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.IdentifierArgument;
@@ -76,5 +85,65 @@ public final class Mc {
 
     public static String getId(CommandContext<CommandSourceStack> ctx, String name) {
         return IdentifierArgument.getId(ctx, name).toString();
+    }
+
+    // ---- Helfer für alle Strata-Mods ----
+
+    public static String levelId(Level level) {
+        return level.dimension().identifier().toString();
+    }
+
+    public static ServerLevel level(MinecraftServer server, String id) {
+        return server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(id)));
+    }
+
+    public static void teleport(ServerPlayer player, ServerLevel level, double x, double y, double z) {
+        player.teleportTo(level, x, y, z, java.util.Set.of(), player.getYRot(), player.getXRot(), true);
+    }
+
+    public static int minY(Level level) {
+        return level.getMinY();
+    }
+
+    public static int maxY(Level level) {
+        return level.getMaxY();
+    }
+
+    public static void addCooldown(ServerPlayer player, ItemStack stack, int ticks) {
+        player.getCooldowns().addCooldown(stack, ticks);
+    }
+
+    public static boolean isOnCooldown(net.minecraft.world.entity.player.Player player, ItemStack stack) {
+        return player.getCooldowns().isOnCooldown(stack);
+    }
+
+    public static void actionbar(ServerPlayer player, Component message) {
+        player.sendSystemMessage(message, true);
+    }
+
+    public static Holder<MobEffect> slowness() {
+        return MobEffects.SLOWNESS;
+    }
+
+    public static Holder<MobEffect> miningFatigue() {
+        return MobEffects.MINING_FATIGUE;
+    }
+
+    /** Legt ein Attachment an, das mit dem Codec gespeichert wird. */
+    public static <T> Supplier<AttachmentType<T>> attachment(DeferredRegister<AttachmentType<?>> register, String name,
+                                                            Supplier<T> defaultValue, Codec<T> codec, boolean copyOnDeath) {
+        return register.register(name, () -> {
+            var builder = AttachmentType.builder(defaultValue).serialize(codec.fieldOf("value"));
+            if (copyOnDeath) builder.copyOnDeath();
+            return builder.build();
+        });
+    }
+
+    public static DeferredRegister<AttachmentType<?>> attachmentRegister(String modId) {
+        return DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, modId);
+    }
+
+    public static long seed(ServerLevel level) {
+        return level.getSeed();
     }
 }

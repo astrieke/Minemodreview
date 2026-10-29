@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Startet für jede Minecraft-Version einen Server mit dem Demo-Datapack
-# und prüft, ob Strata Core lädt und die Datapack-Inhalte erkennt.
+# Startet für jede Minecraft-Version einen Server (Strata Core + Strata Epochs + Demo-Datapack)
+# und prüft das Log:
+#  - Strata Core erkennt alle Epochen und Kodex-Knoten ohne Fehler,
+#  - der Selbsttest von Strata Epochs generiert jede Epochen-Dimension erfolgreich.
 #
 # Aufruf: scripts/smoke-test.sh [version ...]   (ohne Argument: alle Versionen)
 set -uo pipefail
@@ -8,14 +10,16 @@ cd "$(dirname "$0")/.."
 
 versions=("$@")
 if [ ${#versions[@]} -eq 0 ]; then
-    for dir in core/versions/*/; do versions+=("$(basename "$dir")"); done
+    for dir in versions/*/; do versions+=("$(basename "$dir")"); done
 fi
 
-expected='\[Strata\] 2 Epochen und 3 Kodex-Knoten geladen, 0 Fehler'
+# Demo-Datapack (2 Epochen, 3 Knoten) + Strata Epochs (2 Epochen, 3 Knoten)
+expected_core='\[Strata\] 4 Epochen und 6 Kodex-Knoten geladen, 0 Fehler'
+expected_test='\[Strata-Test\] Fertig, 0 Fehler'
 failed=()
 
 for v in "${versions[@]}"; do
-    run="core/versions/$v/run/server"
+    run="epochs/versions/$v/run/server"
     rm -rf "$run"
     mkdir -p "$run/world/datapacks"
     cp -r example-datapacks/strata-demo "$run/world/datapacks/"
@@ -24,12 +28,12 @@ for v in "${versions[@]}"; do
 
     log="$run/smoke.log"
     echo "== $v: Server startet …"
-    ./gradlew --console=plain ":core-$v:runServer" > "$log" 2>&1 &
+    ./gradlew --console=plain ":epochs-$v:runServer" > "$log" 2>&1 &
     pid=$!
     result="TIMEOUT"
     for _ in $(seq 1 300); do
-        if grep -qE "$expected" "$log"; then result="OK"; break; fi
-        if grep -qE '\[Strata\] .* Fehler|Failed to start|Crash report|BUILD FAILED' "$log"; then result="FEHLER"; break; fi
+        if grep -qE "$expected_core" "$log" && grep -qE "$expected_test" "$log"; then result="OK"; break; fi
+        if grep -qE '\[Strata-Test\] Fertig, [1-9]|\[Strata\] .*, [1-9][0-9]* Fehler|Failed to start|Crash report|Exception in server tick|BUILD FAILED' "$log"; then result="FEHLER"; break; fi
         if ! kill -0 "$pid" 2>/dev/null; then result="BEENDET"; break; fi
         sleep 2
     done
@@ -42,7 +46,7 @@ for v in "${versions[@]}"; do
         sleep 1
     done
     echo "== $v: $result"
-    grep -E '\[Strata\]|Strata Core geladen' "$log" | sed 's/^/   /'
+    grep -E '\[Strata|Strata Core geladen|ERROR' "$log" | head -40 | sed 's/^/   /'
     [ "$result" = "OK" ] || failed+=("$v")
 done
 

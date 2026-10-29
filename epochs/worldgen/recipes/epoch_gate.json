@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["OAO", "ACA", "OAO"],
+  "key": { "O": "minecraft:obsidian", "A": "minecraft:amethyst_shard", "C": "minecraft:compass" },
+  "result": { "id": "strata_epochs:epoch_gate", "count": 1 }
+}

@@ -37,10 +37,12 @@ jobs:
             25
       - uses: gradle/actions/setup-gradle@v4
       - name: Bauen
-        run: ./gradlew :core-${{ matrix.version }}:build
+        run: ./gradlew :core-${{ matrix.version }}:build :epochs-${{ matrix.version }}:build
       - name: Server-Smoke-Test
         run: scripts/smoke-test.sh ${{ matrix.version }}
       - uses: actions/upload-artifact@v4
         with:
-          name: strata-core-${{ matrix.version }}
-          path: core/versions/${{ matrix.version }}/build/libs/*.jar
+          name: strata-${{ matrix.version }}
+          path: |
+            core/versions/${{ matrix.version }}/build/libs/*.jar
+            epochs/versions/${{ matrix.version }}/build/libs/*.jar

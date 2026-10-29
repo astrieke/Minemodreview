@@ -1,0 +1,158 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.util.zip.ZipFile
+
+// Erzeugt das Worldgen und die Rezepte von Strata Epochs passend zur Minecraft-Version.
+//
+// Statt JSON für jede Version von Hand zu pflegen, liest der Task die Vanilla-Dateien
+// genau dieser Version (Höhlen-Dimension, Höhlen-Noise, Biome) und passt nur wenige Felder an.
+// So stimmt das Format automatisch, auch wenn Mojang es ändert (z. B. "attributes" ab 1.21.11).
+
+def outDir = layout.buildDirectory.dir('generated/epochData')
+sourceSets.main.resources.srcDir(outDir)
+
+def generate = tasks.register('generateEpochData') {
+    def specFile = rootProject.file('epochs/worldgen/epochs.json')
+    def recipeDir = rootProject.file('epochs/worldgen/recipes')
+    // 1.21.x: Vanilla-Daten liegen in einem Laufzeit-Jar; 26.x: im kompilierten Minecraft-Jar.
+    def classpath = configurations.compileClasspath + configurations.runtimeClasspath
+    inputs.file(specFile)
+    inputs.dir(recipeDir)
+    inputs.files(classpath)
+    outputs.dir(outDir)
+
+    doLast {
+        def marker = 'data/minecraft/worldgen/noise_settings/caves.json'
+        def jar = classpath.files.find { f ->
+            f.name.endsWith('.jar') && new ZipFile(f).withCloseable { it.getEntry(marker) != null }
+        }
+        if (jar == null) throw new GradleException("Keine Vanilla-Daten auf dem Klassenpfad gefunden (${marker})")
+
+        def slurper = new JsonSlurper()
+        def zip = new ZipFile(jar)
+        def vanilla = { String id, String folder ->
+            def (ns, path) = id.split(':')
+            def entry = zip.getEntry("data/${ns}/${folder}/${path}.json")
+            if (entry == null) throw new GradleException("Vanilla-Datei fehlt: ${id} in ${folder}")
+            zip.getInputStream(entry).withCloseable { slurper.parse(it) }
+        }
+
+        def root = outDir.get().asFile
+        root.deleteDir()
+        def write = { String path, Object json ->
+            def f = new File(root, path)
+            f.parentFile.mkdirs()
+            f.text = JsonOutput.prettyPrint(JsonOutput.toJson(json)) + '\n'
+        }
+        def hexToInt = { String hex -> Integer.parseInt(hex.substring(1), 16) }
+        // Setzt eine Farbe im selben Format, das die Vanilla-Datei an dieser Stelle nutzt (Zahl oder "#rrggbb").
+        def color = { Object existing, String hex -> existing instanceof Number ? hexToInt(hex) : hex }
+
+        def spec = slurper.parse(specFile)
+        def ns = spec.namespace
+
+        spec.epochs.each { e ->
+            // Dimensionstyp: Höhlen-Overworld ohne Himmelslicht und ohne Raids.
+            def dimType = vanilla(e.dimension_type, 'dimension_type')
+            dimType.has_skylight = false
+            if (dimType.containsKey('has_raids')) dimType.has_raids = false
+            if (dimType.containsKey('bed_works')) dimType.bed_works = false
+            if (dimType.attributes instanceof Map) {
+                dimType.attributes['minecraft:visual/fog_color'] = e.colors.fog
+                dimType.attributes['minecraft:visual/sky_color'] = e.colors.sky
+            }
+            write("data/${ns}/dimension_type/${e.id}.json", dimType)
+
+            // Noise: Vanilla-Höhlen, aber mit Zeitgestein als Grundblock.
+            def noise = vanilla(e.noise_settings, 'worldgen/noise_settings')
+            noise.default_block = noise.default_block instanceof String ? e.default_block : [Name: e.default_block]
+            write("data/${ns}/worldgen/noise_settings/${e.id}.json", noise)
+
+            // Erze: konfiguriertes und platziertes Feature pro Erz.
+            // Format wie das Vanilla-Diamanterz dieser Version (26.3: Ordner "feature", ohne "config", Zustand als Text).
+            def featureFolder = zip.getEntry('data/minecraft/worldgen/feature/ore_diamond_small.json') != null ? 'feature' : 'configured_feature'
+            def diamond = vanilla('minecraft:ore_diamond_small', "worldgen/${featureFolder}")
+            def wrapped = diamond.containsKey('config')
+            def stateAsText = (wrapped ? diamond.config : diamond).targets[0].state instanceof String
+            def placedOres = []
+            e.ores.each { o ->
+                def config = [
+                        discard_chance_on_air_exposure: 0.0,
+                        size                          : o.size,
+                        targets                       : [[
+                                state : stateAsText ? o.block : [Name: o.block],
+                                target: [predicate_type: 'minecraft:tag_match', tag: spec.ore_replaceables_tag]
+                        ]]
+                ]
+                write("data/${ns}/worldgen/${featureFolder}/ore_${o.id}.json",
+                        wrapped ? [type: 'minecraft:ore', config: config] : [type: 'minecraft:ore'] + config)
+                write("data/${ns}/worldgen/placed_feature/ore_${o.id}.json", [
+                        feature  : "${ns}:ore_${o.id}".toString(),
+                        placement: [
+                                [type: 'minecraft:count', count: o.count],
+                                [type: 'minecraft:in_square'],
+                                [type  : 'minecraft:height_range',
+                                 height: [type: 'minecraft:uniform', min_inclusive: [above_bottom: 0], max_inclusive: [absolute: o.max_y]]],
+                                [type: 'minecraft:biome']
+                        ]
+                ])
+                placedOres << "${ns}:ore_${o.id}".toString()
+            }
+
+            // Biom: Vanilla-Höhlenbiom mit eigenen Farben und den Epochen-Erzen.
+            def biome = vanilla(e.biome_base, 'worldgen/biome')
+            def effects = biome.effects instanceof Map ? biome.effects : [:]
+            ['fog_color': e.colors.fog, 'sky_color': e.colors.sky, 'water_color': e.colors.water, 'water_fog_color': e.colors.water_fog].each { k, hex ->
+                if (effects.containsKey(k)) effects[k] = color(effects[k], hex)
+            }
+            if (biome.attributes instanceof Map) {
+                biome.attributes['minecraft:visual/fog_color'] = e.colors.fog
+                biome.attributes['minecraft:visual/sky_color'] = e.colors.sky
+            }
+            def UNDERGROUND_ORES = 6
+            while (biome.features.size() <= UNDERGROUND_ORES) biome.features << []
+            biome.features[UNDERGROUND_ORES].addAll(placedOres)
+            write("data/${ns}/worldgen/biome/${e.biome}.json", biome)
+
+            // Dimension: Noise-Generator mit einem festen Biom.
+            write("data/${ns}/dimension/${e.id}.json", [
+                    type     : "${ns}:${e.id}".toString(),
+                    generator: [
+                            type        : 'minecraft:noise',
+                            settings    : "${ns}:${e.id}".toString(),
+                            biome_source: [type: 'minecraft:fixed', biome: "${ns}:${e.biome}".toString()]
+                    ]
+            ])
+        }
+
+        // Loot-Tabellen: Vanilla-Tabelle kopieren und die IDs austauschen (Silk Touch, Fortune usw. bleiben erhalten).
+        spec.loot_tables.each { l ->
+            def (lns, lpath) = l.base.split(':')
+            def entry = zip.getEntry("data/${lns}/loot_table/${lpath}.json")
+            if (entry == null) throw new GradleException("Vanilla-Loot-Tabelle fehlt: ${l.base}")
+            def text = zip.getInputStream(entry).withCloseable { it.getText('UTF-8') }
+            l.replace.each { from, to -> text = text.replace("\"${from}\"", "\"${to}\"") }
+            def table = slurper.parseText(text)
+            table.remove('random_sequence')
+            write("data/${ns}/loot_table/blocks/${l.block}.json", table)
+        }
+
+        // Rezepte: Quelle im neuen Format (Zutaten als Text). Ältere Versionen erwarten {"item": ...}.
+        def compass = vanilla('minecraft:compass', 'recipe')
+        def oldIngredients = compass.key.values().first() instanceof Map
+        def toOld = { String s -> s.startsWith('#') ? [tag: s.substring(1)] : [item: s] }
+        recipeDir.eachFileMatch(~/.*\.json/) { f ->
+            def recipe = slurper.parse(f)
+            if (oldIngredients) {
+                if (recipe.key) recipe.key = recipe.key.collectEntries { k, v -> [k, toOld(v)] }
+                if (recipe.ingredients) recipe.ingredients = recipe.ingredients.collect { toOld(it) }
+            }
+            write("data/${ns}/recipe/${f.name}", recipe)
+        }
+        zip.close()
+        logger.lifecycle("Epochen-Daten aus ${jar.name} erzeugt (${oldIngredients ? 'altes' : 'neues'} Rezeptformat)")
+    }
+}
+
+tasks.named('processResources') { dependsOn generate }
+tasks.matching { it.name == 'sourcesJar' }.configureEach { dependsOn generate }

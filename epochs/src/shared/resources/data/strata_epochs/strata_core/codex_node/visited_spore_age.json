@@ -1,0 +1,5 @@
+{
+  "requires": [
+    "strata_epochs:first_core"
+  ]
+}
