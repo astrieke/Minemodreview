@@ -1,0 +1,23 @@
+{
+  "advancements.strata_epochs.root.title": "Strata: Deep Time",
+  "advancements.strata_epochs.root.description": "Get a core drill",
+  "advancements.strata_epochs.first_core.title": "First Core",
+  "advancements.strata_epochs.first_core.description": "Drill your first core sample",
+  "advancements.strata_epochs.visited_crystal_age.title": "Crystal Age",
+  "advancements.strata_epochs.visited_crystal_age.description": "Travel to the Crystal Age",
+  "advancements.strata_epochs.visited_spore_age.title": "Spore Age",
+  "advancements.strata_epochs.visited_spore_age.description": "Travel to the Spore Age",
+  "jei.strata_bridge.info.core_drill": "Right-click the ground to drill a core sample. It shows which epoch lies beneath this region (8×8 chunks).",
+  "jei.strata_bridge.info.core_sample": "Shows an epoch. Right-click an Epoch Gate with it to travel there. The sample is used up.",
+  "jei.strata_bridge.info.epoch_gate": "Right-click with a core sample to enter its epoch. Inside an epoch, right-click the gate to return. Gates inside epochs cannot be broken.",
+  "jei.strata_bridge.info.time_anchor": "Keep it in your inventory to double the time you can stay in an epoch before you solidify.",
+  "jei.strata_bridge.info.crystal_quartz_ore": "Found in the Crystal Age.",
+  "jei.strata_bridge.info.amber_ore": "Found in the Spore Age.",
+  "jei.strata_bridge.info.petrified_stone": "Forms around players who stay too long in an epoch.",
+  "jade.strata_bridge.gate.enter": "Right-click with a core sample to travel",
+  "jade.strata_bridge.gate.leave": "Right-click to return home",
+  "jade.strata_bridge.found_in.crystal_age": "Found in the Crystal Age",
+  "jade.strata_bridge.found_in.spore_age": "Found in the Spore Age",
+  "jade.strata_bridge.petrified": "Solidified time",
+  "config.jade.plugin_strata_bridge.blocks": "Strata hints"
+}

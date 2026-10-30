@@ -145,4 +145,27 @@ public final class Mc {
     public static long seed(ServerLevel level) {
         return level.getSeed();
     }
+
+    /** Registry-Einträge auch auf dem Client lesen (Datapack-Registries werden synchronisiert). */
+    public static <T> Map<String, T> entries(net.minecraft.core.RegistryAccess access, ResourceKey<Registry<T>> key) {
+        Map<String, T> result = new LinkedHashMap<>();
+        access.registry(key).ifPresent(reg ->
+                reg.entrySet().forEach(e -> result.put(e.getKey().location().toString(), e.getValue())));
+        return result;
+    }
+
+    public static boolean hasAdvancement(MinecraftServer server, String id) {
+        return server.getAdvancements().get(ResourceLocation.parse(id)) != null;
+    }
+
+    /** Vergibt alle offenen Kriterien eines Advancements. Gibt false zurück, wenn es das Advancement nicht gibt. */
+    public static boolean awardAdvancement(ServerPlayer player, String id) {
+        var holder = player.level().getServer().getAdvancements().get(ResourceLocation.parse(id));
+        if (holder == null) return false;
+        var progress = player.getAdvancements().getOrStartProgress(holder);
+        for (String criterion : progress.getRemainingCriteria()) {
+            player.getAdvancements().award(holder, criterion);
+        }
+        return true;
+    }
 }

@@ -8,6 +8,8 @@ import dev.strata.core.mc.Mc;
 import java.util.List;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import dev.strata.core.api.StrataAPI;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -17,7 +19,8 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
  * <ul>
  *   <li>{@code /strata epoch} – welche Epoche liegt unter mir?</li>
  *   <li>{@code /strata codex list} – meine Knoten und was als Nächstes geht</li>
- *   <li>{@code /strata codex unlock <knoten>} – Knoten freischalten (OP)</li>
+ *   <li>{@code /strata codex unlock <knoten>} – Knoten für sich selbst freischalten (OP)</li>
+ *   <li>{@code /strata codex grant <spieler> <knoten>} – Knoten für Spieler freischalten (OP, z. B. als Quest-Belohnung)</li>
  *   <li>{@code /strata codex validate} – Kodex-Datapack prüfen</li>
  * </ul>
  */
@@ -33,7 +36,10 @@ final class StrataCommands {
                         .then(Commands.literal("list").executes(StrataCommands::list))
                         .then(Commands.literal("validate").requires(Mc.opOnly()).executes(StrataCommands::validate))
                         .then(Commands.literal("unlock").requires(Mc.opOnly())
-                                .then(Commands.argument("node", Mc.idArgument()).executes(StrataCommands::unlock)))));
+                                .then(Commands.argument("node", Mc.idArgument()).executes(StrataCommands::unlock)))
+                        .then(Commands.literal("grant").requires(Mc.opOnly())
+                                .then(Commands.argument("targets", EntityArgument.players())
+                                        .then(Commands.argument("node", Mc.idArgument()).executes(StrataCommands::grant))))));
     }
 
     private static int epoch(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
@@ -77,8 +83,20 @@ final class StrataCommands {
                     "Nicht freischaltbar: " + node + " (unbekannt, schon frei oder Voraussetzungen fehlen)"));
             return 0;
         }
-        Mc.setProgress(player, progress.with(node));
+        StrataAPI.unlock(player, node);
         ctx.getSource().sendSuccess(() -> Component.literal("Freigeschaltet: " + node), true);
         return 1;
+    }
+
+    /** Für Quest-Belohnungen und Command-Blöcke: still, wenn ein Spieler den Knoten schon hat. */
+    private static int grant(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        String node = Mc.getId(ctx, "node");
+        int count = 0;
+        for (ServerPlayer player : EntityArgument.getPlayers(ctx, "targets")) {
+            if (StrataAPI.unlock(player, node)) count++;
+        }
+        int granted = count;
+        ctx.getSource().sendSuccess(() -> Component.literal(node + " für " + granted + " Spieler freigeschaltet"), true);
+        return count;
     }
 }

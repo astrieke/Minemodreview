@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Startet für jede Minecraft-Version einen Server (Strata Core + Strata Epochs + Demo-Datapack)
-# und prüft das Log:
+# Startet für jede Minecraft-Version einen Server mit dem ganzen Set
+# (Strata Core + Epochs + Bridge, dazu JEI und Jade) und dem Demo-Datapack, und prüft das Log:
 #  - Strata Core erkennt alle Epochen und Kodex-Knoten ohne Fehler,
-#  - der Selbsttest von Strata Epochs generiert jede Epochen-Dimension erfolgreich.
+#  - der Selbsttest von Strata Epochs generiert jede Epochen-Dimension erfolgreich,
+#  - Strata Bridge findet alle mitgelieferten Advancements.
 #
 # Aufruf: scripts/smoke-test.sh [version ...]   (ohne Argument: alle Versionen)
 set -uo pipefail
@@ -16,10 +17,12 @@ fi
 # Demo-Datapack (2 Epochen, 3 Knoten) + Strata Epochs (2 Epochen, 3 Knoten)
 expected_core='\[Strata\] 4 Epochen und 6 Kodex-Knoten geladen, 0 Fehler'
 expected_test='\[Strata-Test\] Fertig, 0 Fehler'
+expected_bridge='\[Strata-Bridge-Test\] 4 von 4 Advancements geladen'
+expected_chain='\[Strata-Bridge-Test\] Freischaltung: .* -> OK'
 failed=()
 
 for v in "${versions[@]}"; do
-    run="epochs/versions/$v/run/server"
+    run="bridge/versions/$v/run/server"
     rm -rf "$run"
     mkdir -p "$run/world/datapacks"
     cp -r example-datapacks/strata-demo "$run/world/datapacks/"
@@ -28,12 +31,12 @@ for v in "${versions[@]}"; do
 
     log="$run/smoke.log"
     echo "== $v: Server startet …"
-    ./gradlew --console=plain ":epochs-$v:runServer" > "$log" 2>&1 &
+    ./gradlew --console=plain ":bridge-$v:runServer" > "$log" 2>&1 &
     pid=$!
     result="TIMEOUT"
     for _ in $(seq 1 300); do
-        if grep -qE "$expected_core" "$log" && grep -qE "$expected_test" "$log"; then result="OK"; break; fi
-        if grep -qE '\[Strata-Test\] Fertig, [1-9]|\[Strata\] .*, [1-9][0-9]* Fehler|Failed to start|Crash report|Exception in server tick|BUILD FAILED' "$log"; then result="FEHLER"; break; fi
+        if grep -qE "$expected_core" "$log" && grep -qE "$expected_test" "$log" && grep -qE "$expected_bridge" "$log" && grep -qE "$expected_chain" "$log"; then result="OK"; break; fi
+        if grep -qE '\[Strata-Test\] Fertig, [1-9]|Advancement fehlt|Freischaltung: .* -> FEHLER|\[Strata\] .*, [1-9][0-9]* Fehler|Failed to start|Crash report|Exception in server tick|BUILD FAILED' "$log"; then result="FEHLER"; break; fi
         if ! kill -0 "$pid" 2>/dev/null; then result="BEENDET"; break; fi
         sleep 2
     done

@@ -6,7 +6,7 @@ Ein Modset für Minecraft-Modpacks. Das Konzept steht in [KONZEPT.md](KONZEPT.md
 |---|---|---|
 | **Strata Core** | Epochen und Kodex-Knoten per Datapack, Kodex-Fortschritt, `/strata`-Befehle, öffentliche API | fertig für den MVP |
 | **Strata Epochs** | Kernbohrer, Bohrkerne, Epochentor, Verfestigung, Dimensionen Kristallzeit und Sporenzeit | erster spielbarer Stand |
-| Strata Bridge | Integrationen (EMI/JEI, Jade, KubeJS, FTB Quests …) | geplant |
+| **Strata Bridge** | JEI-Infoseiten, Jade-Hinweise, Advancements für Quest-Mods, Event für KubeJS | erster Stand |
 
 ## Unterstützte Versionen
 
@@ -18,7 +18,14 @@ Ein Modset für Minecraft-Modpacks. Das Konzept steht in [KONZEPT.md](KONZEPT.md
 | 26.2 | 26.2.0.93 | 25 |
 | 26.3 | 26.3.0.99 | 25 |
 
-Für jede Version gilt: Beide Mods bauen, der Server startet, und ein Selbsttest generiert beide Epochen-Dimensionen.
+Für jede Version gilt: Alle drei Mods bauen, und der Server startet mit dem ganzen Set plus JEI und Jade. Ein Selbsttest generiert beide Epochen-Dimensionen, findet alle Advancements und prüft die Kette „Kodex-Knoten freischalten → Event → Advancement“.
+
+| Fremd-Mod | 1.21.1 | 1.21.11 | 26.1 | 26.2 | 26.3 |
+|---|---|---|---|---|---|
+| JEI | 19.70 | 27.54 | 29.53 | 30.48 | 31.17 |
+| Jade | 15.10 | 21.1 | 26.1 | 26.2 | 26.3 |
+
+Beide sind optional. Strata läuft auch ohne sie.
 
 Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks sammeln sich auf wenigen Versionen: 1.21.1 ist die große Modpack-Basis, 1.21.11 die letzte 1.21-Version. Eine Zwischenversion lässt sich bei konkreter Nachfrage ergänzen (siehe unten).
 
@@ -39,6 +46,19 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 
 Kodex-Knoten werden automatisch freigeschaltet: `strata_epochs:first_core` mit dem ersten Bohrkern, `visited_crystal_age` bzw. `visited_spore_age` beim ersten Besuch einer Epoche.
 
+## Strata Bridge: Anbindung an andere Mods
+
+![Jade-Hinweis am Epochentor](docs/screenshots/jade_gate.png)
+
+| Mod | Was Strata Bridge macht |
+|---|---|
+| **JEI** | Infoseiten für Kernbohrer, Bohrkern, Epochentor, Zeitanker, beide Erze und versteinerten Stein. **EMI** kann JEI-Plugins mitnutzen, wenn JEI daneben installiert ist (nicht getestet). |
+| **Jade** | Hinweis beim Anschauen: am Tor „Reise in die Epoche“ bzw. in der Epoche „Rückweg nach Hause“, an Erzen der Fundort. |
+| **FTB Quests, Heracles & Co.** | Für jeden Kodex-Knoten `ns:pfad` vergibt Strata das Advancement `ns:strata_codex/pfad`, falls es existiert. Quests prüfen das als Advancement-Aufgabe. Für die Knoten von Strata Epochs sind die Advancements dabei. Als Quest-Belohnung schaltet `/strata codex grant @p <knoten>` Knoten frei. |
+| **KubeJS** | Kein Plugin nötig: Strata feuert bei jeder Freischaltung das NeoForge-Event `dev.strata.core.api.CodexNodeUnlockedEvent` (mit `getPlayer()` und `getNode()`). KubeJS kann es über `NativeEvents.onEvent(...)` abfangen (mit KubeJS selbst noch nicht getestet). |
+
+Eigene Kodex-Knoten bekommen ein Advancement, indem der Pack-Autor einfach `data/<ns>/advancement/strata_codex/<pfad>.json` mit dem Kriterium `"trigger": "minecraft:impossible"` anlegt.
+
 ## Aufbau
 
 ```
@@ -50,6 +70,9 @@ epochs/src/shared/               Strata Epochs, in allen Versionen gleich; Asset
 epochs/src/reg_*/, break_*/      Versionsanbindung von Epochs (Reg, BreakHook)
 epochs/worldgen/                 Epochen-Spezifikation und Rezepte (Quelle für das Worldgen)
 epochs/worldgen.gradle           Erzeugt Worldgen, Loot-Tabellen und Rezepte pro Version
+bridge/src/shared/               Strata Bridge: Advancement-Anbindung, Texte für JEI/Jade
+bridge/src/mc_*/                 JEI- und Jade-Plugins (nur geladen, wenn die Mod installiert ist)
+bridge/generated.gradle          Erzeugt das Wurzel-Advancement passend zur Version
 example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kodex-Knoten)
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
 scripts/client-screenshot.sh     Startet den Client auf einem virtuellen Bildschirm und macht einen Screenshot
@@ -66,12 +89,12 @@ Gradle braucht zum Starten Java 17 oder neuer. Fehlende JDKs (21 für 1.21.x, 25
 ./gradlew :common:test                 # Spiellogik testen
 ./gradlew build                        # alle Mods für alle Versionen bauen
 ./gradlew :epochs-26.3:build           # eine Mod für eine Version
-./gradlew :epochs-1.21.1:runClient     # Spiel mit Core + Epochs starten
+./gradlew :bridge-1.21.1:runClient     # Spiel mit dem ganzen Set + JEI + Jade starten
 scripts/smoke-test.sh                  # Server + Selbsttest in allen Versionen
 scripts/smoke-test.sh 1.21.1 26.3      # nur bestimmte Versionen
 ```
 
-Die fertigen Jars liegen unter `core/versions/<v>/build/libs/` und `epochs/versions/<v>/build/libs/`.
+Die fertigen Jars liegen unter `<mod>/versions/<v>/build/libs/` (core, epochs, bridge).
 
 ## Eigene Epoche hinzufügen (Pack-Autoren)
 
@@ -106,13 +129,14 @@ data/<namespace>/strata_core/codex_node/<name>.json
 |---|---|---|
 | `/strata epoch` | alle | Welche Epoche liegt unter mir? |
 | `/strata codex list` | alle | Eigener Kodex-Fortschritt und nächste Schritte |
-| `/strata codex unlock <knoten>` | OP | Knoten freischalten |
+| `/strata codex unlock <knoten>` | OP | Knoten für sich selbst freischalten |
+| `/strata codex grant <spieler> <knoten>` | OP | Knoten für Spieler freischalten (z. B. Quest-Belohnung) |
 | `/strata codex validate` | OP | Kodex-Datapack auf Tippfehler und Zyklen prüfen |
 
 ## Noch offen
 
-- Automatisch getestet ist der Server in allen Versionen. Der Client wurde in 1.21.1 gestartet (Modelle, Texturen und beide Dimensionen laden, siehe Screenshots). Für 26.x fehlt der Client-Test, weil der virtuelle Bildschirm der Testumgebung kein passendes OpenGL-Fenster bietet. Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
+- Automatisch getestet ist der Server in allen Versionen. Der Client wurde in 1.21.1 gestartet (Modelle, Texturen, beide Dimensionen, JEI- und Jade-Plugin laden, siehe Screenshots). Für 26.x fehlt der Client-Test, weil der virtuelle Bildschirm der Testumgebung kein passendes OpenGL-Fenster bietet. Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
 - Die Texturen sind Platzhalter.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Kernanalyse-Tisch, Fossilien, Transplantator und weitere Biome pro Epoche (siehe Konzept, Phase 3).
-- Strata Bridge.
+- Bridge: eigenes EMI-Plugin (EMI gibt es nur für 1.21.1), KubeJS-Plugin mit eigenen Bindings, Curios-Slot für den Zeitanker.

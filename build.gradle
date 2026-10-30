@@ -5,11 +5,13 @@ plugins {
 // Die Mods des Sets. Jede Mod hat Quellordner unter <mod>/src/<gruppe>/,
 // und versions/<v>/gradle.properties legt fest, welche Gruppen eine Version nutzt.
 def modInfo = [
-        core  : [id: 'strata_core', name: 'Strata Core', jar: 'strata-core-neoforge'],
-        epochs: [id: 'strata_epochs', name: 'Strata Epochs', jar: 'strata-epochs-neoforge'],
+        core  : [id: 'strata_core', name: 'Strata Core', jar: 'strata-core-neoforge', deps: []],
+        epochs: [id: 'strata_epochs', name: 'Strata Epochs', jar: 'strata-epochs-neoforge', deps: ['core']],
+        bridge: [id: 'strata_bridge', name: 'Strata Bridge', jar: 'strata-bridge-neoforge', deps: ['core', 'epochs']],
 ]
+def modIds = modInfo.collectEntries { k, v -> [k, v.id] }
 
-subprojects { p ->
+def configureStrataProject = { Project p ->
     def dash = p.name.indexOf('-')
     if (dash < 0) return
     def mod = p.name.substring(0, dash)
@@ -43,10 +45,28 @@ subprojects { p ->
         }
     }
 
-    def coreProject = mod == 'core' ? null : project(":core-${mcLine}")
-    if (coreProject != null) {
-        evaluationDependsOn(coreProject.path)
-        dependencies { implementation coreProject }
+    // Abhängigkeiten auf andere Strata-Mods derselben MC-Version.
+    def depProjects = info.deps.collect { d -> project(":${d}-${mcLine}") }
+    depProjects.each { dp ->
+        evaluationDependsOn(dp.path)
+        dependencies { implementation dp }
+    }
+
+    // Optionale Fremd-Mods (nur Strata Bridge): API zum Kompilieren, volle Mod für Testläufe.
+    if (mod == 'bridge') {
+        repositories {
+            maven { url = 'https://maven.blamejared.com' }
+            maven { url = 'https://api.modrinth.com/maven' }
+        }
+        def jei = versionProps.getProperty('jei_version')
+        def jeiLine = versionProps.getProperty('jei_mc')
+        def jade = versionProps.getProperty('jade_version')
+        dependencies {
+            compileOnly "mezz.jei:jei-${jeiLine}-neoforge-api:${jei}"
+            runtimeOnly "mezz.jei:jei-${jeiLine}-neoforge:${jei}"
+            compileOnly "maven.modrinth:jade:${jade}"
+            runtimeOnly "maven.modrinth:jade:${jade}"
+        }
     }
 
     neoForge {
@@ -70,8 +90,8 @@ subprojects { p ->
         }
         mods {
             "${info.id}" { sourceSet sourceSets.main }
-            if (coreProject != null) {
-                strata_core { sourceSet coreProject.sourceSets.main }
+            depProjects.eachWithIndex { dp, i ->
+                "${modIds[info.deps[i]]}" { sourceSet dp.sourceSets.main }
             }
         }
     }
@@ -86,6 +106,9 @@ subprojects { p ->
             minecraft_version_range: versionProps.getProperty('minecraft_version_range'),
             neo_version            : versionProps.getProperty('neo_version'),
             core_version_range     : "[${rootProject.property('mod_version')},)",
+            strata_version_range   : "[${rootProject.property('mod_version')},)",
+            jei_version            : versionProps.getProperty('jei_version') ?: '',
+            jade_version           : versionProps.getProperty('jade_version') ?: '',
     ]
     tasks.named('processResources') {
         inputs.properties props
@@ -95,4 +118,10 @@ subprojects { p ->
     tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 
     if (mod == 'epochs') apply from: rootProject.file('epochs/worldgen.gradle')
+    if (mod == 'bridge') apply from: rootProject.file('bridge/generated.gradle')
+}
+
+// In Abhängigkeitsreihenfolge konfigurieren (core vor epochs vor bridge), nicht alphabetisch.
+modInfo.keySet().each { m ->
+    subprojects.findAll { it.name.startsWith("${m}-") }.each { sp -> configure(sp, configureStrataProject) }
 }

@@ -1,0 +1,38 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.util.zip.ZipFile
+
+// Erzeugt das Wurzel-Advancement von Strata Bridge passend zur Minecraft-Version.
+// Ab 26.3 braucht jede sichtbare Wurzel einen Hintergrund, und dessen Pfad-Format
+// unterscheidet sich je nach Version. Er wird deshalb aus dem Vanilla-Advancement
+// "story/root" derselben Version übernommen.
+
+def outDir = layout.buildDirectory.dir('generated/bridgeData')
+sourceSets.main.resources.srcDir(outDir)
+
+def generate = tasks.register('generateBridgeData') {
+    def template = rootProject.file('bridge/templates/root.json')
+    def classpath = configurations.compileClasspath + configurations.runtimeClasspath
+    inputs.file(template)
+    inputs.files(classpath)
+    outputs.dir(outDir)
+
+    doLast {
+        def marker = 'data/minecraft/advancement/story/root.json'
+        def jar = classpath.files.find { f ->
+            f.name.endsWith('.jar') && new ZipFile(f).withCloseable { it.getEntry(marker) != null }
+        }
+        if (jar == null) throw new GradleException("Keine Vanilla-Advancements auf dem Klassenpfad gefunden (${marker})")
+        def slurper = new JsonSlurper()
+        def vanillaRoot = new ZipFile(jar).withCloseable { z -> z.getInputStream(z.getEntry(marker)).withCloseable { slurper.parse(it) } }
+
+        def root = slurper.parse(template)
+        root.display.background = vanillaRoot.display.background
+        def f = new File(outDir.get().asFile, 'data/strata_epochs/advancement/strata_codex/root.json')
+        f.parentFile.mkdirs()
+        f.text = JsonOutput.prettyPrint(JsonOutput.toJson(root)) + '\n'
+    }
+}
+
+tasks.named('processResources') { dependsOn generate }
+tasks.matching { it.name == 'sourcesJar' }.configureEach { dependsOn generate }

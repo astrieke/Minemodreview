@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/first_core",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:crystal_quartz"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.visited_crystal_age.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.visited_crystal_age.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

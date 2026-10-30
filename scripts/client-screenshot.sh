@@ -11,13 +11,13 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 v="$1"; epoch="$2"; out="$(realpath -m "$3")"
 
-server_world="epochs/versions/$v/run/server/world"
-client_dir="epochs/versions/$v/run/client"
+server_world="bridge/versions/$v/run/server/world"
+client_dir="bridge/versions/$v/run/client"
 log="$client_dir/screenshot.log"
 [ -d "$server_world" ] || { echo "Erst scripts/smoke-test.sh $v ausführen"; exit 1; }
 
 # Ankunftsplatz aus dem Selbsttest-Log lesen, z. B. "Ankunft=12, 55, 8".
-pos=$(grep -oE "strata_epochs:$epoch: .*Ankunft=-?[0-9]+, -?[0-9]+, -?[0-9]+" "epochs/versions/$v/run/server/smoke.log" \
+pos=$(grep -oE "strata_epochs:$epoch: .*Ankunft=-?[0-9]+, -?[0-9]+, -?[0-9]+" "bridge/versions/$v/run/server/smoke.log" \
       | grep -oE 'Ankunft=.*' | sed 's/Ankunft=//; s/,//g' | tail -1)
 read -r x y z <<< "$pos"
 
@@ -31,7 +31,7 @@ dp="$client_dir/saves/strata_shot/datapacks/strata-shot"
 mkdir -p "$dp/data/strata_shot/function" "$dp/data/minecraft/tags/function"
 cp example-datapacks/strata-demo/pack.mcmeta "$dp/pack.mcmeta"
 cat > "$dp/data/strata_shot/function/tick.mcfunction" <<MC
-execute as @a[tag=!strata_shot] in strata_epochs:$epoch run tp @s $x.5 $y $z.5 -90 10
+execute as @a[tag=!strata_shot] in strata_epochs:$epoch run tp @s $x.5 $y $z.5 -90 35
 gamemode creative @a[tag=!strata_shot]
 item replace entity @a[tag=!strata_shot] hotbar.0 with strata_epochs:core_drill
 item replace entity @a[tag=!strata_shot] hotbar.1 with strata_epochs:core_sample
@@ -60,7 +60,7 @@ display=":97"
 Xvfb "$display" -screen 0 "${XVFB_SCREEN:-1280x720x24}" +extension GLX +render >/dev/null 2>&1 &
 xpid=$!
 sleep 2
-DISPLAY="$display" ./gradlew --console=plain ":epochs-$v:runClient" -PquickPlay=strata_shot > "$log" 2>&1 &
+DISPLAY="$display" ./gradlew --console=plain ":bridge-$v:runClient" -PquickPlay=strata_shot > "$log" 2>&1 &
 gpid=$!
 
 # Warten, bis die Welt geöffnet wird, dann die Experimentell-Warnung bestätigen.
@@ -83,6 +83,13 @@ if [ $ok -eq 1 ]; then
     sleep 25
     DISPLAY="$display" import -window root "$out"
     echo "Screenshot: $out"
+    if [ -n "${PYTHON:-}" ]; then
+        # Zweites Bild mit geöffnetem Inventar (zeigt z. B. die JEI-Itemliste).
+        DISPLAY="$display" "$PYTHON" tools/xclick.py key e
+        sleep 4
+        DISPLAY="$display" import -window root "${out%.png}_inventar.png"
+        echo "Screenshot: ${out%.png}_inventar.png"
+    fi
 else
     echo "Client hat die Welt nicht geladen, siehe $log"
 fi

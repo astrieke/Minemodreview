@@ -1,0 +1,23 @@
+{
+  "advancements.strata_epochs.root.title": "Strata: Tiefenzeit",
+  "advancements.strata_epochs.root.description": "Besorge dir einen Kernbohrer",
+  "advancements.strata_epochs.first_core.title": "Erster Bohrkern",
+  "advancements.strata_epochs.first_core.description": "Bohre deinen ersten Bohrkern",
+  "advancements.strata_epochs.visited_crystal_age.title": "Kristallzeit",
+  "advancements.strata_epochs.visited_crystal_age.description": "Reise in die Kristallzeit",
+  "advancements.strata_epochs.visited_spore_age.title": "Sporenzeit",
+  "advancements.strata_epochs.visited_spore_age.description": "Reise in die Sporenzeit",
+  "jei.strata_bridge.info.core_drill": "Rechtsklick auf den Boden bohrt einen Bohrkern. Er zeigt, welche Epoche unter dieser Region (8 × 8 Chunks) liegt.",
+  "jei.strata_bridge.info.core_sample": "Zeigt eine Epoche. Mit Rechtsklick auf ein Epochentor reist du dorthin. Der Kern wird dabei verbraucht.",
+  "jei.strata_bridge.info.epoch_gate": "Rechtsklick mit einem Bohrkern bringt dich in dessen Epoche. In einer Epoche bringt dich ein Rechtsklick auf das Tor zurück. Tore in Epochen lassen sich nicht abbauen.",
+  "jei.strata_bridge.info.time_anchor": "Im Inventar verdoppelt er die Zeit, die du in einer Epoche bleiben kannst, bevor du versteinerst.",
+  "jei.strata_bridge.info.crystal_quartz_ore": "Kommt in der Kristallzeit vor.",
+  "jei.strata_bridge.info.amber_ore": "Kommt in der Sporenzeit vor.",
+  "jei.strata_bridge.info.petrified_stone": "Entsteht um Spieler, die zu lange in einer Epoche bleiben.",
+  "jade.strata_bridge.gate.enter": "Rechtsklick mit Bohrkern: Reise in die Epoche",
+  "jade.strata_bridge.gate.leave": "Rechtsklick: Rückweg nach Hause",
+  "jade.strata_bridge.found_in.crystal_age": "Kommt in der Kristallzeit vor",
+  "jade.strata_bridge.found_in.spore_age": "Kommt in der Sporenzeit vor",
+  "jade.strata_bridge.petrified": "Erstarrte Zeit",
+  "config.jade.plugin_strata_bridge.blocks": "Strata-Hinweise"
+}

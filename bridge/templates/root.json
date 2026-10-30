@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "strata_epochs:core_drill"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.root.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "has_drill": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "strata_epochs:core_drill"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@ include 'common'
 
 // Für jede Minecraft-Version unter versions/<v>/ und jede Mod ein eigenes Gradle-Projekt,
 // z. B. :core-1.21.1 oder :epochs-26.3. Die Versionsdaten stehen in versions/<v>/gradle.properties.
-def mods = ['core', 'epochs']
+def mods = ['core', 'epochs', 'bridge']
 file('versions').eachDir { dir ->
     mods.each { mod ->
         def name = "${mod}-${dir.name}"
