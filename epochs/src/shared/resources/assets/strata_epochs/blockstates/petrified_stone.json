@@ -1,7 +1,14 @@
 {
   "variants": {
-    "": {
-      "model": "strata_epochs:block/petrified_stone"
-    }
+    "": [
+      { "model": "strata_epochs:block/petrified_stone" },
+      { "model": "strata_epochs:block/petrified_stone", "y": 90 },
+      { "model": "strata_epochs:block/petrified_stone", "y": 180 },
+      { "model": "strata_epochs:block/petrified_stone", "y": 270 },
+      { "model": "strata_epochs:block/petrified_stone", "x": 90 },
+      { "model": "strata_epochs:block/petrified_stone", "x": 90, "y": 90 },
+      { "model": "strata_epochs:block/petrified_stone", "x": 180, "y": 180 },
+      { "model": "strata_epochs:block/petrified_stone", "x": 270, "y": 270 }
+    ]
   }
 }

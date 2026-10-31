@@ -88,10 +88,10 @@ def pick(palette, value):
 CHRONO_COOL = ['#2c2638', '#383047', '#433a55', '#4f4563', '#5b5071', '#695e80']
 CHRONO_WARM = ['#2f2636', '#3c3144', '#483c52', '#544760', '#61536d', '#6f617b']
 SEAM = '#332b40'
-SEAM_LIGHT = '#6a5f82'
+SEAM_LIGHT = '#5a4f6e'
 # (erste Zeile, Helligkeitsversatz, Palette)
-BANDS = [(0, 0.03, CHRONO_COOL), (3, -0.05, CHRONO_WARM), (6, 0.06, CHRONO_COOL),
-         (10, -0.02, CHRONO_WARM), (13, 0.02, CHRONO_COOL)]
+BANDS = [(0, 0.04, CHRONO_COOL), (3, -0.09, CHRONO_WARM), (6, 0.08, CHRONO_COOL),
+         (10, -0.07, CHRONO_WARM), (13, 0.03, CHRONO_COOL)]
 
 
 def band_for(y):
@@ -113,10 +113,12 @@ def chronostone(seed=11, seams=True):
             img.putpixel((x, y), pick(pal, v))
     if seams:
         # Kurze Fugen an den Bandgrenzen, nie über den Kachelrand.
-        for y, x0, length in [(2, 2, 4), (5, 9, 5), (9, 1, 3), (9, 11, 3), (12, 5, 4)]:
+        for y, x0, length, lit in [(2, 2, 4, True), (5, 9, 5, False), (9, 1, 3, True),
+                                   (9, 11, 3, False), (12, 5, 4, True)]:
             for x in range(x0, x0 + length):
                 img.putpixel((x, y), rgb(SEAM))
-                img.putpixel((x, y + 1), rgb(SEAM_LIGHT))
+                if lit and x != x0 + length - 1:
+                    img.putpixel((x, y + 1), rgb(SEAM_LIGHT))
     return img
 
 
@@ -127,16 +129,17 @@ def stamp(img, x0, y0, rows, pal):
                 img.putpixel((x0 + dx, y0 + dy), rgb(pal[ch]))
 
 
-QUARTZ = {'k': '#2c2470', 'd': '#4a43b8', 'm': '#6f6cf0', 'l': '#a9a8ff', 'w': '#e6e6ff'}
+QUARTZ = {'k': '#2c2470', 'd': '#4a43b8', 'm': '#6f6cf0', 'l': '#a9a8ff', 'w': '#e6e6ff', 'p': '#262031'}
 
 
 def crystal_quartz_ore():
     img = chronostone(seed=23)
     # Kristalle ohne schwarzen Umriss: Licht oben links, dunkle Kante unten rechts.
-    stamp(img, 2, 1, ['.w..', 'wlm.', 'wlmd', 'lmdk', 'lmdk', '.dk.'], QUARTZ)          # groß, senkrecht
-    stamp(img, 9, 3, ['....w', '...wl', '..wlm', '.wlmd', 'wlmdk', 'lmdk.', '.kk..'], QUARTZ)  # schräg
-    stamp(img, 5, 10, ['.w.', 'wlm', 'lmd', 'mdk', '.k.'], QUARTZ)                       # mittel
-    stamp(img, 12, 12, ['..w', '.wm', 'wmd', 'dk.'], QUARTZ)                            # klein, schräg
+    # Gesteinsmulden ('p') unter den Kristallen, damit sie im Stein sitzen statt darauf.
+    stamp(img, 2, 1, ['.w..', 'wlm.', 'wlmd', 'lmdk', 'lmdk', 'pdkp'], QUARTZ)          # groß, senkrecht
+    stamp(img, 10, 4, ['...l', '..lm', '.lmd', 'lmdk', 'mdk.', 'pkp.'], QUARTZ)         # schräg, gedämpft
+    stamp(img, 5, 10, ['.w.', 'wlm', 'lmd', 'mdk', 'pkp'], QUARTZ)                     # mittel
+    stamp(img, 12, 12, ['..m', '.md', 'mdk', 'pp.'], QUARTZ)                            # klein, dunkel
     return img
 
 
@@ -148,12 +151,12 @@ def amber_ore():
     stamp(img, 2, 2, ['.lmm.', 'lwymd', 'mymdk', 'lmddk', '.dkk.'], AMBER)   # großer Einschluss
     stamp(img, 9, 8, ['..lm.', '.wymd', 'lymmd', 'mmdk.', '.kk..'], AMBER)   # zweiter Einschluss
     stamp(img, 11, 2, ['ld', 'dk'], AMBER)                                  # Splitter
-    stamp(img, 3, 12, ['yd'], AMBER)                                        # Splitter
+    stamp(img, 1, 7, ['y', 'd'], AMBER)                                     # Splitter
     return img
 
 
 # Versteinerter Stein: Sandgrau mit Violettstich (entsteht aus Zeitgestein) und gerippter Ammonit.
-PETRI = ['#4d4650', '#605866', '#756c78', '#8a8188', '#9f9597', '#b5aba8']
+PETRI = ['#4a4152', '#5e5468', '#74697c', '#8a7f8c', '#a0959c', '#b8adae']
 
 
 def petrified_stone():
@@ -166,11 +169,12 @@ def petrified_stone():
             v = 0.55 + (coarse[y][x] - 0.5) * 0.3 + rnd.uniform(-0.15, 0.15)
             img.putpixel((x, y), pick(PETRI[1:], v))
     # Ammonit: runde Schale mit Spiralrille, aus der Mitte gerückt, Licht oben links.
-    cx, cy, radius = 9.0, 7.5, 4.8
+    cx, cy, radius = 12.5, 11.0, 4.8                      # sitzt über der Ecke -> kein Stempelraster
     turn = 2.6                                            # Pixel Abstand pro Windung
     for y in range(16):
         for x in range(16):
-            dx, dy = x + 0.5 - cx, y + 0.5 - cy
+            dx = (x + 0.5 - cx + 8) % 16 - 8                # Abstand mit Umbruch über den Kachelrand
+            dy = (y + 0.5 - cy + 8) % 16 - 8
             r = math.hypot(dx, dy)
             if r > radius:
                 continue
@@ -178,14 +182,14 @@ def petrified_stone():
             angle = (math.atan2(dy, dx) / (2 * math.pi)) % 1.0
             phase = (r / turn - angle) % 1.0
             if r > radius - 0.8:
-                color = PETRI[0] if light < 0.25 else PETRI[1]       # Außenkante
+                color = PETRI[5] if light > 0.3 else PETRI[0] if light < -0.2 else PETRI[2]  # Außenkante im Licht
             elif phase < 0.28:
                 color = PETRI[0] if light < 0.4 else PETRI[1]        # Spiralrille
             else:
                 color = PETRI[5] if light > 0.3 else PETRI[4] if light > -0.25 else PETRI[3]
             img.putpixel((x, y), rgb(color))
     # kurze Haarrisse, nicht an den Ecken
-    for x, y in [(2, 4), (3, 5), (3, 11), (4, 12), (13, 13)]:
+    for x, y in [(2, 4), (3, 5), (6, 7), (7, 8)]:
         img.putpixel((x, y), rgb(PETRI[0]))
     return img
 
@@ -204,19 +208,32 @@ def epoch_gate():
         'ABKSSSSSSSSSSKCC',
         'ABSGGGGGGGGGGhCC',
         'ABSsgqqqqqqqhsCC',
-        'ABSsgqvvvvVqhsCC',
-        'ABSssgqvvVqhssCC',
+        'ABSsgvqqqqqVhsCC',
+        'ABSssgvvvVVhssCC',
         'ABSsssgvVhsssSCC',
         'ABSsssgqvhsssSCC',
         'ABSssgqqvqqhssCC',
-        'ABSsgqqqvVqqhsCC',
-        'ABSsgqvvvVVVhsCC',
+        'ABSsgqqvVVqqhsCC',
+        'ABSsgvvvVVVVhsCC',
         'ABSGGGGGGGGGGhCC',
         'ABKSSSSSSSSSSKCC',
         'AgCCCCCCCCCCCCgC',
         'BCCCCCCCCCCCCCCK',
     ]
-    return from_grid(rows, pal)
+    img = from_grid(rows, pal)
+    # Leuchten: dunkle Innenpixel neben der Sanduhr bekommen einen violetten Schimmer.
+    glow = rgb('#33275a')
+    frame = {rgb(pal[c]) for c in 'Ggh'}
+    inner = {rgb(pal['S']), rgb(pal['s'])}
+    halo = []
+    for y in range(2, 14):
+        for x in range(2, 14):
+            if img.getpixel((x, y)) in inner and any(
+                    img.getpixel((x + dx, y + dy)) in frame for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+                halo.append((x, y))
+    for xy in halo:
+        img.putpixel(xy, glow)
+    return img
 
 
 # ---------------------------------------------------------------- Items
@@ -239,59 +256,60 @@ def diag_shape(spec, t_range, u_center=15):
 
 
 def core_drill():
-    wood = {-1: '#a8774a', 0: '#7f5634', 1: '#5c3c22'}
-    copper = {-1: '#f2a56a', 0: '#c66d33', 1: '#8a4520'}
-    steel = {-1: '#eef3f7', 0: '#a9b4bf', 1: '#5d6670'}
-
-    def spec(t, du):
-        if t < -2:                       # Griff, 2 Pixel breit, Maserung
-            if du not in (0, 1):
-                return None
-            c = wood[-1 if du == 0 else 1]
-            return wood[0] if (t % 3 == 0 and du == 0) else c
-        if t <= -1:                      # Muffe
-            return '#3b3b44' if du in (-1, 0, 1) else None
-        if t <= 4:                       # Kupferrohr, 3 breit mit Glanzstreifen
-            return copper.get(du)
-        if t <= 8:                       # Stahlkrone, 5 breit
-            if -2 <= du <= 2:
-                return steel[-1] if du <= -2 else steel[1] if du >= 2 else steel[0] if du >= 0 else steel[-1]
-            return None
-        if t == 9:                       # Zähne
-            return steel[1] if du in (-2, 0, 2) else None
-        return None
-
-    return outline(diag_shape(spec, (-14, 9)), '#1e140c')
+    # T-Griff aus Holz unten links, dickes Kupferrohr, Stahlkrone als Ring mit Bohrloch oben rechts.
+    pal = {
+        'V': '#b0804e', 'W': '#83593a', 'w': '#5a3b22',      # Holz
+        'y': '#3b3b44', 'Y': '#5f5f6c',                      # Muffe
+        'X': '#f2a56a', 'C': '#c66d33', 'c': '#8a4520',      # Kupfer
+        'Z': '#eef3f7', 'S': '#a9b4bf', 's': '#5d6670', 'k': '#1f2228',  # Stahl, Bohrloch
+    }
+    rows = [
+        '................',
+        '...........Z.s..',
+        '..........ZSZSs.',
+        '.........ZSkkSs.',
+        '........XZSkSs..',
+        '.......XCSSss.s.',
+        '......XCCCc.....',
+        '.....XCCCc......',
+        '....XCCCc.......',
+        '....YyCc........',
+        '...VWy..........',
+        '.V.VW...........',
+        '..VVWw..........',
+        '...WWww.........',
+        '....ww..........',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1e140c')
 
 
 def core_sample():
-    import math
-    layers = [  # entlang der Achse: Bruchende unten links ... Querschnitt oben rechts
-        ('#6d6680', '#565068', '#413c50'),
-        ('#7cc274', '#5a9e54', '#3f7a3c'),
-        ('#6d6680', '#565068', '#413c50'),
-        ('#f0a64a', '#d0802a', '#a05f1c'),
-        ('#f0a64a', '#d0802a', '#a05f1c'),
-        ('#6d6680', '#565068', '#413c50'),
-        ('#a98ce0', '#7a5cc0', '#5a3f98'),
-        ('#a98ce0', '#7a5cc0', '#5a3f98'),
+    grey = ('#8a8496', '#6b6578', '#4c4758')
+    bands = [  # (t von, t bis, Farbe hell/mittel/dunkel) entlang der Achse
+        (-7, -5, ('#95bb88', '#729a69', '#527a4b')),   # Sporenzeit (gedämpftes Grün)
+        (-2, 0, ('#e0ab68', '#c08a48', '#8f6332')),    # Bernsteinschicht
+        (3, 5, ('#ac98e0', '#8a73c4', '#65509a')),     # Kristallzeit
     ]
 
     def spec(t, du):
-        if not -3 <= du <= 2:
+        if not -2 <= du <= 1:
             return None
-        if t == -7 and du in (-3, 0, 2):  # gebrochenes Ende unten links
+        if t <= -11 and (t + du) % 3 == 0:     # gebrochenes Ende unten links
             return None
-        if t >= 6:                        # Querschnitt oben rechts (Ellipse mit Körnung)
-            if t == 7 and du in (-3, 2):
+        if t >= 9:                             # Querschnitt oben rechts (Bohrkern-Stirnfläche)
+            if t == 10 and du in (-2, 1):
                 return None
-            return '#e2d6f5' if du <= -2 else '#c3b2e6' if du <= 0 else '#a592cf'
-        wave = int(round(math.sin((du + 4) * 1.4) * 0.7))
-        idx = max(0, min(len(layers) - 1, (t + 7 + wave) * len(layers) // 13))
-        light, mid, dark = layers[idx]
-        return light if du <= -2 else dark if du == 2 else mid
+            return '#b9b2c6' if du <= -1 else '#9a93a8'
+        light, mid, dark = grey
+        for lo, hi, colors in bands:
+            if lo <= t <= hi:
+                light, mid, dark = colors
+        if (t * 7 + du * 3) % 11 == 0:         # Körnung im Gestein
+            mid = dark
+        return light if du == -2 else dark if du == 1 else mid
 
-    return outline(diag_shape(spec, (-7, 7)), '#16121c')
+    return outline(diag_shape(spec, (-12, 10)), '#16121c')
 
 
 def crystal_quartz():
@@ -310,8 +328,8 @@ def crystal_quartz():
         '...lllmmdd.lmd..',
         '...llmmmdd.lmd..',
         '....lmmmd..mdk..',
-        '....kmmdk..kk...',
-        '.....k.k........',
+        '....kkkkk..kk...',
+        '................',
         '................',
         '................',
     ]
@@ -321,20 +339,20 @@ def crystal_quartz():
 def amber_shard():
     # Kantiger Bernsteinsplitter (gerade Bruchkante oben rechts) mit eingeschlossenem Insekt.
     pal = {'k': '#6e380a', 'd': '#a2560f', 'm': '#d9821c', 'l': '#f6ad3e', 'y': '#ffd27a', 'w': '#fff3c8',
-           'b': '#3e1e06', 'B': '#7a4210'}
+           'b': '#3e1e06', 'n': '#5c2e0a', 'B': '#9a5a1a'}
     rows = [
         '................',
         '..........w.....',
-        '.........wyl....',
-        '........wyyml...',
-        '.......wyymmmd..',
-        '......lyymmmmd..',
+        '.........wyy....',
+        '........wyyyy...',
+        '.......wyymyl...',
+        '......lyymmmld..',
         '.....lyymBmBmd..',
-        '....lyymmmbmmd..',
-        '....lymBbbbbBd..',
-        '...lyymmmbbmmd..',
-        '...lymBbbbbBdk..',
-        '...lmmmmmbmmdk..',
+        '....lyymmmnmmd..',
+        '....lymBnbbnBd..',
+        '...lyymmmbnmmd..',
+        '...lymBnbbnBdk..',
+        '...lmmmmmnmmdk..',
         '....dmmmmmmdk...',
         '.....ddmmddk....',
         '.......kkk......',
@@ -354,15 +372,15 @@ def time_anchor():
         '..GGGGGGGGGGGG..',
         '..gggggggggggh..',
         '...gqqqqqqqQh...',
-        '...gqvvvvvVQh...',
+        '...gqvqqqVVQh...',
         '....gqvvvVQh....',
         '.....gqvVQh.....',
         '......gvVh......',
         '......gqvh......',
-        '.....gqqvQh.....',
-        '....gqqqvQQh....',
-        '...gqqvvvVVQh...',
-        '...gqvvvvvVVh...',
+        '.....gqvVQh.....',
+        '....gqvvVVQh....',
+        '...gqvvvVVVQh...',
+        '...gvvvvvVVVh...',
         '..GGGGGGGGGGGG..',
         '..gggggggggggh..',
         '................',
