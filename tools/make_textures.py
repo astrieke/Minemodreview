@@ -256,60 +256,69 @@ def diag_shape(spec, t_range, u_center=15):
 
 
 def core_drill():
-    # T-Griff aus Holz unten links, dickes Kupferrohr, Stahlkrone als Ring mit Bohrloch oben rechts.
-    pal = {
-        'V': '#b0804e', 'W': '#83593a', 'w': '#5a3b22',      # Holz
-        'y': '#3b3b44', 'Y': '#5f5f6c',                      # Muffe
-        'X': '#f2a56a', 'C': '#c66d33', 'c': '#8a4520',      # Kupfer
-        'Z': '#eef3f7', 'S': '#a9b4bf', 's': '#5d6670', 'k': '#1f2228',  # Stahl, Bohrloch
-    }
-    rows = [
-        '................',
-        '...........Z.s..',
-        '..........ZSZSs.',
-        '.........ZSkkSs.',
-        '........XZSkSs..',
-        '.......XCSSss.s.',
-        '......XCCCc.....',
-        '.....XCCCc......',
-        '....XCCCc.......',
-        '....YyCc........',
-        '...VWy..........',
-        '.V.VW...........',
-        '..VVWw..........',
-        '...WWww.........',
-        '....ww..........',
-        '................',
-    ]
-    return outline(from_grid(rows, pal), '#1e140c')
+    # Seitenansicht: Querbalken-Griff aus Holz, Holzschaft, Muffe, Kupferrohr, Stahlkrone mit Sägezähnen.
+    wood_l, wood_m, wood_d = '#b0804e', '#83593a', '#5a3b22'
+    copper = {-1: '#f2a56a', 0: '#c66d33', 1: '#8a4520'}
+    steel = {-1: '#eef3f7', 0: '#a9b4bf', 1: '#5d6670'}
+
+    def spec(t, du):
+        if t in (-12, -11):                     # Querbalken quer zum Schaft, 2 px dick
+            if -4 <= du <= 4:
+                return wood_l if t == -11 else wood_d if abs(du) >= 3 else wood_m
+            return None
+        if t <= -5:                             # Holzschaft, 2 breit
+            return {0: wood_l, 1: wood_d}.get(du)
+        if t <= -3:                             # Muffe
+            return '#3b3b44' if -1 <= du <= 1 else None
+        if t <= 2:                              # Kupferrohr, 3 breit
+            return copper.get(du)
+        if t <= 8:                              # Stahlkrone, so breit wie das Rohr
+            return steel.get(du)
+        if t <= 10:                             # Sägezähne: abwechselnd hell und dunkel
+            if du in (-1, 1):
+                return steel[-1] if (t + du) % 4 == 0 else steel[1]
+            return None
+        return None
+
+    return outline(diag_shape(spec, (-12, 10)), '#1e140c')
 
 
 def core_sample():
-    grey = ('#8a8496', '#6b6578', '#4c4758')
-    bands = [  # (t von, t bis, Farbe hell/mittel/dunkel) entlang der Achse
-        (-7, -5, ('#95bb88', '#729a69', '#527a4b')),   # Sporenzeit (gedämpftes Grün)
-        (-2, 0, ('#e0ab68', '#c08a48', '#8f6332')),    # Bernsteinschicht
-        (3, 5, ('#ac98e0', '#8a73c4', '#65509a')),     # Kristallzeit
+    # Breiter Bohrkern (5 px), Schichten als volle Querbänder in grauem Gestein.
+    grey = ('#948ea0', '#76708a', '#57516a', '#433e52')
+    bands = [  # (t von, t bis, hell, mittel, dunkel, sehr dunkel)
+        (-7, -4, ('#9cc08e', '#77a06d', '#567d4f', '#42613d')),   # Sporenzeit
+        (-1, 2, ('#e3ae6c', '#c38c4a', '#916434', '#704c26')),     # Bernstein
+        (5, 7, ('#b19de3', '#8d76c6', '#68529c', '#4e3d78')),      # Kristallzeit
     ]
 
     def spec(t, du):
-        if not -2 <= du <= 1:
+        if not -3 <= du <= 3:
             return None
-        if t <= -11 and (t + du) % 3 == 0:     # gebrochenes Ende unten links
+        if t == -10 and du in (-3, 0, 1):        # zackiges Bruchende unten links
             return None
-        if t >= 9:                             # Querschnitt oben rechts (Bohrkern-Stirnfläche)
-            if t == 10 and du in (-2, 1):
+        if t == -9 and du == 3:
+            return None
+        if t >= 9:                               # Stirnfläche als Ellipse, heller
+            if t == 10 and abs(du) >= 2:
                 return None
-            return '#b9b2c6' if du <= -1 else '#9a93a8'
-        light, mid, dark = grey
-        for lo, hi, colors in bands:
+            return '#d0c9dc' if du <= 0 else '#b2aac2'
+        colors = grey
+        for lo, hi, c in bands:
             if lo <= t <= hi:
-                light, mid, dark = colors
-        if (t * 7 + du * 3) % 11 == 0:         # Körnung im Gestein
-            mid = dark
-        return light if du == -2 else dark if du == 1 else mid
+                colors = c
+        light, mid, dark, darker = colors
+        if du <= -2:
+            return light
+        if du == 2:
+            return dark
+        if du == 3:
+            return darker
+        if colors is grey and (t * 5 + du * 3) % 7 == 0:   # Körnung im Gestein
+            return dark
+        return mid
 
-    return outline(diag_shape(spec, (-12, 10)), '#16121c')
+    return outline(diag_shape(spec, (-10, 10)), '#16121c')
 
 
 def crystal_quartz():
