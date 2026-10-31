@@ -263,15 +263,15 @@ def core_drill():
 
     def spec(t, du):
         if t in (-12, -11):                     # Querbalken quer zum Schaft, 2 px dick
-            if -4 <= du <= 4:
-                return wood_l if t == -11 else wood_d if abs(du) >= 3 else wood_m
+            if -3 <= du <= 5:                   # mittig zum Schaft (der liegt bei du 0..1)
+                return wood_l if t == -11 else wood_d if du in (-3, 5) else wood_m
             return None
         if t <= -5:                             # Holzschaft, 2 breit
             return {0: wood_l, 1: wood_d}.get(du)
         if t <= -3:                             # Muffe
             return '#3b3b44' if -1 <= du <= 1 else None
-        if t <= 2:                              # Kupferrohr, 3 breit
-            return copper.get(du)
+        if t <= 2:                              # Kupferrohr, mit zusätzlicher Schattenkante
+            return copper.get(du) or ('#6a3418' if du == 2 and t % 2 == 0 else None)
         if t <= 8:                              # Stahlkrone, so breit wie das Rohr
             return steel.get(du)
         if t <= 10:                             # Sägezähne: abwechselnd hell und dunkel
@@ -302,6 +302,8 @@ def core_sample():
         if t >= 9:                               # Stirnfläche als Ellipse, heller
             if t == 10 and abs(du) >= 2:
                 return None
+            if t == 9 and abs(du) <= 1:
+                return '#a798c4'                 # angedeuteter Schichtring
             return '#d0c9dc' if du <= 0 else '#b2aac2'
         colors = grey
         for lo, hi, c in bands:

@@ -76,7 +76,7 @@ bridge/generated.gradle          Erzeugt das Wurzel-Advancement passend zur Vers
 example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kodex-Knoten)
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
 scripts/client-screenshot.sh     Startet den Client auf einem virtuellen Bildschirm und macht einen Screenshot
-tools/make_textures.py           Erzeugt die Platzhaltertexturen
+tools/make_textures.py           Erzeugt die Texturen (mit --preview <datei> ein Vorschaublatt)
 ```
 
 **Warum das Worldgen erzeugt wird:** Mojang ändert das Format von Dimensionen, Biomen, Erz-Features, Loot-Tabellen und Rezepten fast in jeder Version. In 1.21.11 kamen z. B. „attributes“ dazu, in 26.3 wurde `configured_feature` zu `feature`. Der Task `generateEpochData` nimmt deshalb die Vanilla-Dateien genau der gebauten Version als Vorlage (Höhlen-Dimension, Höhlen-Noise, Tropfstein- und Üppige-Höhlen-Biom, Vanilla-Loot) und ändert nur wenige Felder.
@@ -136,7 +136,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 ## Noch offen
 
 - Automatisch getestet ist der Server in allen Versionen. Der Client wurde in 1.21.1 gestartet (Modelle, Texturen, beide Dimensionen, JEI- und Jade-Plugin laden, siehe Screenshots). Für 26.x fehlt der Client-Test, weil der virtuelle Bildschirm der Testumgebung kein passendes OpenGL-Fenster bietet. Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
-- Die Texturen sind Platzhalter.
+- Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Kernanalyse-Tisch, Fossilien, Transplantator und weitere Biome pro Epoche (siehe Konzept, Phase 3).
 - Bridge: eigenes EMI-Plugin (EMI gibt es nur für 1.21.1), KubeJS-Plugin mit eigenen Bindings, Curios-Slot für den Zeitanker.
