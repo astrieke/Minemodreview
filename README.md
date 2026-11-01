@@ -1,6 +1,6 @@
 # Strata – Tiefenzeit
 
-Ein Modset für Minecraft-Modpacks. Das Konzept steht in [KONZEPT.md](KONZEPT.md).
+Ein Modset für Minecraft-Modpacks. Das Konzept steht in [KONZEPT.md](KONZEPT.md), der Plan für eigene Mobs in [docs/MOBS.md](docs/MOBS.md).
 
 | Mod | Inhalt | Stand |
 |---|---|---|
