@@ -77,6 +77,7 @@ example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kode
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
 scripts/client-screenshot.sh     Startet den Client auf einem virtuellen Bildschirm und macht einen Screenshot
 tools/make_textures.py           Erzeugt die Texturen (mit --preview <datei> ein Vorschaublatt)
+tools/blockbench-mcp/            MCP-Server + Blockbench-Plugin, damit Claude Modelle in Blockbench bauen kann
 ```
 
 **Warum das Worldgen erzeugt wird:** Mojang ändert das Format von Dimensionen, Biomen, Erz-Features, Loot-Tabellen und Rezepten fast in jeder Version. In 1.21.11 kamen z. B. „attributes“ dazu, in 26.3 wurde `configured_feature` zu `feature`. Der Task `generateEpochData` nimmt deshalb die Vanilla-Dateien genau der gebauten Version als Vorlage (Höhlen-Dimension, Höhlen-Noise, Tropfstein- und Üppige-Höhlen-Biom, Vanilla-Loot) und ändert nur wenige Felder.

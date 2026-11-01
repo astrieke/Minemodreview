@@ -1,0 +1,17 @@
+{
+  "name": "strata-blockbench-mcp",
+  "version": "0.1.0",
+  "description": "MCP-Server + Blockbench-Plugin, damit Claude Modelle in Blockbench bauen kann",
+  "type": "module",
+  "bin": { "strata-blockbench-mcp": "server.js" },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/e2e.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "ws": "8.18.3",
+    "zod": "3.25.76"
+  },
+  "license": "MIT"
+}
