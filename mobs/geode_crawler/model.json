@@ -1,54 +1,1044 @@
 {
   "id": "geode_crawler",
   "name": "Geodenkriecher",
-  "texture_size": [64, 64],
+  "texture_size": [
+    64,
+    64
+  ],
   "bones": [
-    { "name": "body", "origin": [0, 5.5, 0] },
-    { "name": "back_plate", "parent": "body", "origin": [0, 8, 0] },
-    { "name": "crystals", "parent": "body", "origin": [0, 8, 0] },
-    { "name": "head", "parent": "body", "origin": [0, 6, -7] },
-    { "name": "leg_front_left", "origin": [4, 4, -4.5] },
-    { "name": "leg_front_right", "origin": [-4, 4, -4.5] },
-    { "name": "leg_back_left", "origin": [4, 4, 4.5] },
-    { "name": "leg_back_right", "origin": [-4, 4, 4.5] },
-    { "name": "tail", "parent": "body", "origin": [0, 5.5, 7] },
-    { "name": "tail_tip", "parent": "tail", "origin": [0, 5.5, 13] }
+    {
+      "name": "body",
+      "origin": [
+        0,
+        5.5,
+        0
+      ]
+    },
+    {
+      "name": "back_plate",
+      "parent": "body",
+      "origin": [
+        0,
+        9,
+        0
+      ]
+    },
+    {
+      "name": "crystals",
+      "parent": "body",
+      "origin": [
+        0,
+        10.5,
+        0
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "origin": [
+        0,
+        6,
+        -7
+      ]
+    },
+    {
+      "name": "leg_front_left",
+      "parent": "body",
+      "origin": [
+        5.5,
+        4,
+        -4.5
+      ]
+    },
+    {
+      "name": "leg_front_right",
+      "parent": "body",
+      "origin": [
+        -5.5,
+        4,
+        -4.5
+      ]
+    },
+    {
+      "name": "leg_back_left",
+      "parent": "body",
+      "origin": [
+        5.5,
+        4,
+        4.5
+      ]
+    },
+    {
+      "name": "leg_back_right",
+      "parent": "body",
+      "origin": [
+        -5.5,
+        4,
+        4.5
+      ]
+    },
+    {
+      "name": "tail",
+      "parent": "body",
+      "origin": [
+        0,
+        5.5,
+        7
+      ],
+      "rotation": [
+        -8,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "tail_tip",
+      "parent": "tail",
+      "origin": [
+        0,
+        4.5,
+        13
+      ]
+    }
   ],
   "cubes": [
-    { "name": "torso", "bone": "body", "from": [-4, 3, -7], "to": [4, 8, 7], "uv_offset": [0, 0], "material": "hide" },
-    { "name": "plate", "bone": "back_plate", "from": [-3, 8, -5], "to": [3, 9, 5], "uv_offset": [0, 19], "material": "calcite" },
-    { "name": "skull", "bone": "head", "from": [-3, 4, -13], "to": [3, 9, -7], "uv_offset": [32, 19], "material": "hide", "face": "lizard" },
-    { "name": "snout", "bone": "head", "from": [-2, 4, -16], "to": [2, 7, -13], "uv_offset": [44, 0], "material": "hide_dark" },
-    { "name": "leg_fl", "bone": "leg_front_left", "from": [4, 0, -6], "to": [7, 4, -3], "uv_offset": [0, 30], "material": "hide" },
-    { "name": "leg_fr", "bone": "leg_front_right", "from": [-7, 0, -6], "to": [-4, 4, -3], "uv_offset": [0, 30], "material": "hide", "mirror_uv": true },
-    { "name": "leg_bl", "bone": "leg_back_left", "from": [4, 0, 3], "to": [7, 4, 6], "uv_offset": [0, 30], "material": "hide" },
-    { "name": "leg_br", "bone": "leg_back_right", "from": [-7, 0, 3], "to": [-4, 4, 6], "uv_offset": [0, 30], "material": "hide", "mirror_uv": true },
-    { "name": "tail_base", "bone": "tail", "from": [-2, 4, 7], "to": [2, 7, 13], "uv_offset": [12, 30], "material": "hide" },
-    { "name": "tail_end", "bone": "tail_tip", "from": [-1, 4.5, 13], "to": [1, 6.5, 19], "uv_offset": [32, 30], "material": "hide" },
-    { "name": "crystal_1", "bone": "crystals", "from": [-1, 8.5, -4], "to": [1, 12.5, -2], "rotation": [0, 0, 12], "origin": [0, 8.5, -3], "uv_offset": [48, 30], "material": "quartz" },
-    { "name": "crystal_2", "bone": "crystals", "from": [1, 8.5, -1], "to": [3, 12.5, 1], "rotation": [10, 0, -15], "origin": [2, 8.5, 0], "uv_offset": [48, 30], "material": "quartz" },
-    { "name": "crystal_3", "bone": "crystals", "from": [-3, 8.5, 2], "to": [-1, 12.5, 4], "rotation": [-8, 0, 18], "origin": [-2, 8.5, 3], "uv_offset": [48, 30], "material": "quartz" }
+    {
+      "name": "torso",
+      "bone": "body",
+      "from": [
+        -4,
+        3,
+        -7
+      ],
+      "to": [
+        4,
+        8,
+        7
+      ],
+      "uv_offset": [
+        0,
+        0
+      ],
+      "material": "hide"
+    },
+    {
+      "name": "plate",
+      "bone": "back_plate",
+      "from": [
+        -4,
+        8,
+        -6
+      ],
+      "to": [
+        4,
+        10,
+        6
+      ],
+      "uv_offset": [
+        0,
+        19
+      ],
+      "material": "calcite"
+    },
+    {
+      "name": "plate_top",
+      "bone": "back_plate",
+      "from": [
+        -3,
+        10,
+        -4
+      ],
+      "to": [
+        3,
+        11,
+        4
+      ],
+      "uv_offset": [
+        0,
+        33
+      ],
+      "material": "calcite_light"
+    },
+    {
+      "name": "skull",
+      "bone": "head",
+      "from": [
+        -3,
+        3,
+        -13
+      ],
+      "to": [
+        3,
+        8,
+        -7
+      ],
+      "uv_offset": [
+        40,
+        19
+      ],
+      "material": "hide",
+      "face": "lizard"
+    },
+    {
+      "name": "brow",
+      "bone": "head",
+      "from": [
+        -3.5,
+        8,
+        -12
+      ],
+      "to": [
+        3.5,
+        9,
+        -10
+      ],
+      "uv_offset": [
+        28,
+        33
+      ],
+      "material": "hide_dark"
+    },
+    {
+      "name": "snout",
+      "bone": "head",
+      "from": [
+        -2,
+        4,
+        -17
+      ],
+      "to": [
+        2,
+        6,
+        -13
+      ],
+      "uv_offset": [
+        44,
+        0
+      ],
+      "material": "hide",
+      "face": "snout"
+    },
+    {
+      "name": "jaw",
+      "bone": "head",
+      "from": [
+        -2,
+        3,
+        -16
+      ],
+      "to": [
+        2,
+        4,
+        -13
+      ],
+      "uv_offset": [
+        44,
+        6
+      ],
+      "material": "belly"
+    },
+    {
+      "name": "leg_fl",
+      "bone": "leg_front_left",
+      "from": [
+        4,
+        1,
+        -6
+      ],
+      "to": [
+        7,
+        4,
+        -3
+      ],
+      "uv_offset": [
+        0,
+        42
+      ],
+      "material": "hide"
+    },
+    {
+      "name": "leg_fr",
+      "bone": "leg_front_right",
+      "from": [
+        -7,
+        1,
+        -6
+      ],
+      "to": [
+        -4,
+        4,
+        -3
+      ],
+      "uv_offset": [
+        0,
+        42
+      ],
+      "material": "hide",
+      "mirror_uv": true
+    },
+    {
+      "name": "leg_bl",
+      "bone": "leg_back_left",
+      "from": [
+        4,
+        1,
+        3
+      ],
+      "to": [
+        7,
+        4,
+        6
+      ],
+      "uv_offset": [
+        0,
+        42
+      ],
+      "material": "hide"
+    },
+    {
+      "name": "leg_br",
+      "bone": "leg_back_right",
+      "from": [
+        -7,
+        1,
+        3
+      ],
+      "to": [
+        -4,
+        4,
+        6
+      ],
+      "uv_offset": [
+        0,
+        42
+      ],
+      "material": "hide",
+      "mirror_uv": true
+    },
+    {
+      "name": "foot_fl",
+      "bone": "leg_front_left",
+      "from": [
+        4,
+        0,
+        -7
+      ],
+      "to": [
+        8,
+        1,
+        -2
+      ],
+      "uv_offset": [
+        12,
+        42
+      ],
+      "material": "hide_dark",
+      "face": "claws"
+    },
+    {
+      "name": "foot_fr",
+      "bone": "leg_front_right",
+      "from": [
+        -8,
+        0,
+        -7
+      ],
+      "to": [
+        -4,
+        1,
+        -2
+      ],
+      "uv_offset": [
+        12,
+        42
+      ],
+      "material": "hide_dark",
+      "mirror_uv": true
+    },
+    {
+      "name": "foot_bl",
+      "bone": "leg_back_left",
+      "from": [
+        4,
+        0,
+        2
+      ],
+      "to": [
+        8,
+        1,
+        7
+      ],
+      "uv_offset": [
+        12,
+        42
+      ],
+      "material": "hide_dark"
+    },
+    {
+      "name": "foot_br",
+      "bone": "leg_back_right",
+      "from": [
+        -8,
+        0,
+        2
+      ],
+      "to": [
+        -4,
+        1,
+        7
+      ],
+      "uv_offset": [
+        12,
+        42
+      ],
+      "material": "hide_dark",
+      "mirror_uv": true
+    },
+    {
+      "name": "tail_base",
+      "bone": "tail",
+      "from": [
+        -2,
+        4,
+        7
+      ],
+      "to": [
+        2,
+        7,
+        13
+      ],
+      "uv_offset": [
+        30,
+        42
+      ],
+      "material": "hide"
+    },
+    {
+      "name": "tail_end",
+      "bone": "tail_tip",
+      "from": [
+        -1,
+        3.5,
+        13
+      ],
+      "to": [
+        1,
+        5.5,
+        19
+      ],
+      "uv_offset": [
+        46,
+        33
+      ],
+      "material": "hide"
+    },
+    {
+      "name": "crystal_main",
+      "bone": "crystals",
+      "from": [
+        -1,
+        10.5,
+        -3
+      ],
+      "to": [
+        1,
+        16.5,
+        -1
+      ],
+      "rotation": [
+        -6,
+        0,
+        8
+      ],
+      "origin": [
+        0,
+        10.5,
+        -2
+      ],
+      "uv_offset": [
+        50,
+        42
+      ],
+      "material": "quartz"
+    },
+    {
+      "name": "crystal_mid_r",
+      "bone": "crystals",
+      "from": [
+        1.5,
+        10.5,
+        -1
+      ],
+      "to": [
+        3.5,
+        14.5,
+        1
+      ],
+      "rotation": [
+        8,
+        0,
+        -16
+      ],
+      "origin": [
+        2.5,
+        10.5,
+        0
+      ],
+      "uv_offset": [
+        0,
+        49
+      ],
+      "material": "quartz"
+    },
+    {
+      "name": "crystal_mid_l",
+      "bone": "crystals",
+      "from": [
+        -3.5,
+        10.5,
+        0
+      ],
+      "to": [
+        -1.5,
+        14.5,
+        2
+      ],
+      "rotation": [
+        6,
+        0,
+        15
+      ],
+      "origin": [
+        -2.5,
+        10.5,
+        1
+      ],
+      "uv_offset": [
+        0,
+        49
+      ],
+      "material": "quartz"
+    },
+    {
+      "name": "crystal_small_b",
+      "bone": "crystals",
+      "from": [
+        0,
+        10.5,
+        2
+      ],
+      "to": [
+        1,
+        13.5,
+        3
+      ],
+      "rotation": [
+        14,
+        0,
+        -6
+      ],
+      "origin": [
+        0.5,
+        10.5,
+        2.5
+      ],
+      "uv_offset": [
+        8,
+        49
+      ],
+      "material": "quartz"
+    },
+    {
+      "name": "crystal_small_f",
+      "bone": "crystals",
+      "from": [
+        -2,
+        10.5,
+        -5
+      ],
+      "to": [
+        -1,
+        13.5,
+        -4
+      ],
+      "rotation": [
+        -10,
+        0,
+        12
+      ],
+      "origin": [
+        -1.5,
+        10.5,
+        -4.5
+      ],
+      "uv_offset": [
+        8,
+        49
+      ],
+      "material": "quartz"
+    }
   ],
   "animations": [
-    { "name": "animation.geode_crawler.idle", "length": 2, "loop": "loop", "keyframes": [
-      { "bone": "tail", "time": 0, "value": [0, -8, 0], "interpolation": "catmullrom" },
-      { "bone": "tail", "time": 1, "value": [0, 8, 0], "interpolation": "catmullrom" },
-      { "bone": "tail", "time": 2, "value": [0, -8, 0], "interpolation": "catmullrom" },
-      { "bone": "head", "time": 0, "value": [0, 0, 0], "interpolation": "catmullrom" },
-      { "bone": "head", "time": 1, "value": [4, 0, 0], "interpolation": "catmullrom" },
-      { "bone": "head", "time": 2, "value": [0, 0, 0], "interpolation": "catmullrom" }
-    ]},
-    { "name": "animation.geode_crawler.walk", "length": 1, "loop": "loop", "keyframes": [
-      { "bone": "leg_front_left", "time": 0, "value": [30, 0, 0] }, { "bone": "leg_front_left", "time": 0.5, "value": [-30, 0, 0] }, { "bone": "leg_front_left", "time": 1, "value": [30, 0, 0] },
-      { "bone": "leg_back_right", "time": 0, "value": [30, 0, 0] }, { "bone": "leg_back_right", "time": 0.5, "value": [-30, 0, 0] }, { "bone": "leg_back_right", "time": 1, "value": [30, 0, 0] },
-      { "bone": "leg_front_right", "time": 0, "value": [-30, 0, 0] }, { "bone": "leg_front_right", "time": 0.5, "value": [30, 0, 0] }, { "bone": "leg_front_right", "time": 1, "value": [-30, 0, 0] },
-      { "bone": "leg_back_left", "time": 0, "value": [-30, 0, 0] }, { "bone": "leg_back_left", "time": 0.5, "value": [30, 0, 0] }, { "bone": "leg_back_left", "time": 1, "value": [-30, 0, 0] },
-      { "bone": "body", "time": 0, "value": [0, -4, 0] }, { "bone": "body", "time": 0.5, "value": [0, 4, 0] }, { "bone": "body", "time": 1, "value": [0, -4, 0] },
-      { "bone": "tail", "time": 0, "value": [0, 12, 0] }, { "bone": "tail", "time": 0.5, "value": [0, -12, 0] }, { "bone": "tail", "time": 1, "value": [0, 12, 0] }
-    ]},
-    { "name": "animation.geode_crawler.scratch", "length": 1, "loop": "once", "keyframes": [
-      { "bone": "head", "time": 0, "value": [0, 0, 0] }, { "bone": "head", "time": 0.3, "value": [25, 0, 0] }, { "bone": "head", "time": 0.8, "value": [25, 0, 0] }, { "bone": "head", "time": 1, "value": [0, 0, 0] },
-      { "bone": "leg_front_left", "time": 0, "value": [0, 0, 0] }, { "bone": "leg_front_left", "time": 0.4, "value": [-45, 0, 0] }, { "bone": "leg_front_left", "time": 0.6, "value": [10, 0, 0] }, { "bone": "leg_front_left", "time": 0.8, "value": [-45, 0, 0] }, { "bone": "leg_front_left", "time": 1, "value": [0, 0, 0] }
-    ]}
+    {
+      "name": "animation.geode_crawler.idle",
+      "length": 2.4,
+      "loop": "loop",
+      "keyframes": [
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -8,
+            -6,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            -8,
+            6,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 2.4,
+          "value": [
+            -8,
+            -6,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            3,
+            4,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        }
+      ]
+    },
+    {
+      "name": "animation.geode_crawler.walk",
+      "length": 1.6,
+      "loop": "loop",
+      "keyframes": [
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_front_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_front_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_front_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            -3
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            0,
+            0,
+            3
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            -3
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -8,
+            10,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -8,
+            -10,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -8,
+            10,
+            0
+          ],
+          "interpolation": "catmullrom"
+        }
+      ]
+    },
+    {
+      "name": "animation.geode_crawler.scratch",
+      "length": 1.4,
+      "loop": "once",
+      "keyframes": [
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            -8,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.15,
+          "value": [
+            -8,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            -18,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.15,
+          "value": [
+            -18,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            45,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            45,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0.75,
+          "value": [
+            5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            45,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 1.05,
+          "value": [
+            5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    }
   ]
 }

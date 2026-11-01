@@ -3,14 +3,23 @@
   "name": "Sporenbalg",
   "texture_size": [
     64,
-    32
+    64
   ],
   "bones": [
     {
       "name": "body",
       "origin": [
         0,
-        2,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "sack",
+      "parent": "body",
+      "origin": [
+        0,
+        6.5,
         0
       ]
     },
@@ -19,52 +28,80 @@
       "parent": "body",
       "origin": [
         0,
-        9,
+        10,
         0
       ]
     },
     {
       "name": "leg_left",
+      "parent": "body",
       "origin": [
         2,
-        2,
+        3,
         0
-      ],
-      "parent": "body"
+      ]
     },
     {
       "name": "leg_right",
+      "parent": "body",
       "origin": [
         -2,
-        2,
+        3,
         0
-      ],
-      "parent": "body"
+      ]
+    },
+    {
+      "name": "leg_back",
+      "parent": "body",
+      "origin": [
+        0,
+        3,
+        3
+      ]
     }
   ],
   "cubes": [
     {
-      "name": "sack",
-      "bone": "body",
+      "name": "sack_core",
+      "bone": "sack",
       "from": [
         -4,
-        2,
+        3,
         -4
       ],
       "to": [
         4,
-        9,
+        10,
         4
       ],
       "uv_offset": [
         0,
         0
       ],
-      "material": "sack",
+      "material": "membrane"
+    },
+    {
+      "name": "belly",
+      "bone": "sack",
+      "from": [
+        -5,
+        4,
+        -5
+      ],
+      "to": [
+        5,
+        8,
+        5
+      ],
+      "uv_offset": [
+        0,
+        15
+      ],
+      "material": "membrane",
       "face": "spore"
     },
     {
-      "name": "cap_main",
+      "name": "gills",
       "bone": "cap",
       "from": [
         -5,
@@ -73,33 +110,54 @@
       ],
       "to": [
         5,
-        12,
+        10,
         5
       ],
       "uv_offset": [
         0,
-        15
+        29
       ],
-      "material": "cap"
+      "material": "gill"
+    },
+    {
+      "name": "cap_main",
+      "bone": "cap",
+      "from": [
+        -6,
+        10,
+        -6
+      ],
+      "to": [
+        6,
+        12,
+        6
+      ],
+      "uv_offset": [
+        0,
+        40
+      ],
+      "material": "cap",
+      "face": "amber_dots"
     },
     {
       "name": "cap_top",
       "bone": "cap",
       "from": [
-        -3,
+        -4,
         12,
-        -3
+        -4
       ],
       "to": [
-        3,
-        13,
-        3
+        4,
+        14,
+        4
       ],
       "uv_offset": [
         32,
         0
       ],
-      "material": "cap"
+      "material": "cap",
+      "face": "amber_dots"
     },
     {
       "name": "root_left",
@@ -111,8 +169,18 @@
       ],
       "to": [
         3,
-        2,
+        3,
         1
+      ],
+      "rotation": [
+        0,
+        0,
+        -15
+      ],
+      "origin": [
+        2,
+        3,
+        0
       ],
       "uv_offset": [
         40,
@@ -130,8 +198,18 @@
       ],
       "to": [
         -1,
-        2,
+        3,
         1
+      ],
+      "rotation": [
+        0,
+        0,
+        15
+      ],
+      "origin": [
+        -2,
+        3,
+        0
       ],
       "uv_offset": [
         40,
@@ -139,6 +217,35 @@
       ],
       "material": "root",
       "mirror_uv": true
+    },
+    {
+      "name": "root_back",
+      "bone": "leg_back",
+      "from": [
+        -1,
+        0,
+        2
+      ],
+      "to": [
+        1,
+        3,
+        4
+      ],
+      "rotation": [
+        -15,
+        0,
+        0
+      ],
+      "origin": [
+        0,
+        3,
+        3
+      ],
+      "uv_offset": [
+        40,
+        15
+      ],
+      "material": "root"
     }
   ],
   "animations": [
@@ -148,7 +255,7 @@
       "loop": "loop",
       "keyframes": [
         {
-          "bone": "body",
+          "bone": "sack",
           "channel": "scale",
           "time": 0,
           "value": [
@@ -159,7 +266,7 @@
           "interpolation": "catmullrom"
         },
         {
-          "bone": "body",
+          "bone": "sack",
           "channel": "scale",
           "time": 1,
           "value": [
@@ -170,13 +277,46 @@
           "interpolation": "catmullrom"
         },
         {
-          "bone": "body",
+          "bone": "sack",
           "channel": "scale",
           "time": 2,
           "value": [
             1,
             1,
             1
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "cap",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "cap",
+          "channel": "position",
+          "time": 1,
+          "value": [
+            0,
+            -0.3,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "cap",
+          "channel": "position",
+          "time": 2,
+          "value": [
+            0,
+            0,
+            0
           ],
           "interpolation": "catmullrom"
         }
@@ -195,7 +335,8 @@
             0,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "body",
@@ -205,7 +346,8 @@
             0,
             4,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "body",
@@ -215,7 +357,8 @@
             0,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "body",
@@ -225,7 +368,8 @@
             1.15,
             0.85,
             1.15
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "body",
@@ -235,7 +379,8 @@
             0.92,
             1.12,
             0.92
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "body",
@@ -245,7 +390,8 @@
             1,
             1,
             1
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "body",
@@ -255,61 +401,74 @@
             1.15,
             0.85,
             1.15
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "leg_left",
+          "channel": "rotation",
           "time": 0,
           "value": [
             0,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "leg_left",
+          "channel": "rotation",
           "time": 0.3,
           "value": [
             -20,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "leg_left",
+          "channel": "rotation",
           "time": 0.6,
           "value": [
             0,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "leg_right",
+          "channel": "rotation",
           "time": 0,
           "value": [
             0,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "leg_right",
+          "channel": "rotation",
           "time": 0.3,
           "value": [
             -20,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "leg_right",
+          "channel": "rotation",
           "time": 0.6,
           "value": [
             0,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         }
       ]
     },
@@ -319,44 +478,92 @@
       "loop": "once",
       "keyframes": [
         {
-          "bone": "body",
+          "bone": "sack",
           "channel": "scale",
           "time": 0,
           "value": [
             1,
             1,
             1
-          ]
+          ],
+          "interpolation": "linear"
         },
         {
-          "bone": "body",
+          "bone": "sack",
           "channel": "scale",
-          "time": 0.7,
+          "time": 0.15,
           "value": [
-            1.35,
-            1.2,
-            1.35
-          ]
+            0.92,
+            0.92,
+            0.92
+          ],
+          "interpolation": "linear"
         },
         {
-          "bone": "body",
+          "bone": "sack",
           "channel": "scale",
-          "time": 0.8,
+          "time": 0.5,
+          "value": [
+            1.28,
+            1.18,
+            1.28
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "sack",
+          "channel": "scale",
+          "time": 0.55,
+          "value": [
+            1.32,
+            1.2,
+            1.32
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "sack",
+          "channel": "scale",
+          "time": 0.6,
+          "value": [
+            1.28,
+            1.18,
+            1.28
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "sack",
+          "channel": "scale",
+          "time": 0.65,
+          "value": [
+            1.33,
+            1.21,
+            1.33
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "sack",
+          "channel": "scale",
+          "time": 0.75,
           "value": [
             0.85,
             0.9,
             0.85
-          ]
+          ],
+          "interpolation": "linear"
         },
         {
-          "bone": "body",
+          "bone": "sack",
           "channel": "scale",
           "time": 1.2,
           "value": [
             1,
             1,
             1
-          ]
+          ],
+          "interpolation": "linear"
         },
         {
           "bone": "cap",
@@ -366,37 +573,96 @@
             0,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "cap",
           "channel": "position",
-          "time": 0.7,
+          "time": 0.6,
           "value": [
             0,
-            2,
+            1,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "cap",
           "channel": "position",
-          "time": 0.8,
+          "time": 0.75,
           "value": [
             0,
-            -1,
+            -0.5,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         },
         {
           "bone": "cap",
           "channel": "position",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "cap",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "cap",
+          "channel": "rotation",
+          "time": 0.75,
+          "value": [
+            0,
+            0,
+            6
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "cap",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            0,
+            0,
+            -4
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "cap",
+          "channel": "rotation",
+          "time": 1.05,
+          "value": [
+            0,
+            0,
+            2
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "cap",
+          "channel": "rotation",
           "time": 1.2,
           "value": [
             0,
             0,
             0
-          ]
+          ],
+          "interpolation": "catmullrom"
         }
       ]
     }

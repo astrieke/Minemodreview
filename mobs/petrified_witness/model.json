@@ -1,48 +1,1165 @@
 {
   "id": "petrified_witness",
   "name": "Steinzeuge",
-  "texture_size": [64, 64],
+  "texture_size": [
+    128,
+    64
+  ],
   "bones": [
-    { "name": "body", "origin": [0, 12, 0] },
-    { "name": "head", "parent": "body", "origin": [0, 24, 0] },
-    { "name": "core", "parent": "body", "origin": [0, 18, -3] },
-    { "name": "arm_left", "parent": "body", "origin": [7, 23, 0] },
-    { "name": "arm_right", "parent": "body", "origin": [-7, 23, 0] },
-    { "name": "leg_left", "origin": [3, 12, 0] },
-    { "name": "leg_right", "origin": [-3, 12, 0] }
+    {
+      "name": "body",
+      "origin": [
+        0,
+        12,
+        0
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "origin": [
+        0,
+        24,
+        -1
+      ]
+    },
+    {
+      "name": "core",
+      "parent": "body",
+      "origin": [
+        0,
+        18,
+        -4
+      ]
+    },
+    {
+      "name": "arm_left",
+      "parent": "body",
+      "origin": [
+        9,
+        23,
+        0
+      ]
+    },
+    {
+      "name": "arm_right",
+      "parent": "body",
+      "origin": [
+        -9,
+        23,
+        0
+      ]
+    },
+    {
+      "name": "leg_left",
+      "origin": [
+        3,
+        12,
+        0
+      ]
+    },
+    {
+      "name": "leg_right",
+      "origin": [
+        -3,
+        12,
+        0
+      ]
+    }
   ],
   "cubes": [
-    { "name": "torso", "bone": "body", "from": [-6, 12, -3], "to": [6, 24, 3], "uv_offset": [0, 0], "material": "stone", "back": "ammonite" },
-    { "name": "skull", "bone": "head", "from": [-3, 24, -3], "to": [3, 30, 3], "uv_offset": [36, 0], "material": "stone", "face": "witness" },
-    { "name": "hourglass", "bone": "core", "from": [-2, 15, -4], "to": [2, 21, -3], "uv_offset": [36, 12], "material": "gold", "face": "hourglass" },
-    { "name": "shoulder_left", "bone": "arm_left", "from": [6, 22, -3], "to": [11, 25, 3], "uv_offset": [32, 19], "material": "stone_dark" },
-    { "name": "shoulder_right", "bone": "arm_right", "from": [-11, 22, -3], "to": [-6, 25, 3], "uv_offset": [32, 19], "material": "stone_dark", "mirror_uv": true },
-    { "name": "arm_l", "bone": "arm_left", "from": [6, 9, -2], "to": [10, 22, 2], "uv_offset": [0, 18], "material": "stone" },
-    { "name": "arm_r", "bone": "arm_right", "from": [-10, 9, -2], "to": [-6, 22, 2], "uv_offset": [0, 18], "material": "stone", "mirror_uv": true },
-    { "name": "leg_l", "bone": "leg_left", "from": [1, 0, -2], "to": [5, 12, 2], "uv_offset": [16, 18], "material": "stone" },
-    { "name": "leg_r", "bone": "leg_right", "from": [-5, 0, -2], "to": [-1, 12, 2], "uv_offset": [16, 18], "material": "stone", "mirror_uv": true }
+    {
+      "name": "torso",
+      "bone": "body",
+      "from": [
+        -7,
+        12,
+        -4
+      ],
+      "to": [
+        7,
+        25,
+        4
+      ],
+      "uv_offset": [
+        0,
+        0
+      ],
+      "material": "strata",
+      "face": "niche"
+    },
+    {
+      "name": "ammonite",
+      "bone": "body",
+      "from": [
+        -4,
+        14,
+        4
+      ],
+      "to": [
+        4,
+        22,
+        5
+      ],
+      "uv_offset": [
+        92,
+        5
+      ],
+      "material": "strata_dark",
+      "back": "ammonite"
+    },
+    {
+      "name": "skull",
+      "bone": "head",
+      "from": [
+        -4,
+        23,
+        -5
+      ],
+      "to": [
+        4,
+        30,
+        2
+      ],
+      "uv_offset": [
+        44,
+        0
+      ],
+      "material": "strata",
+      "face": "witness"
+    },
+    {
+      "name": "brow",
+      "bone": "head",
+      "from": [
+        -4,
+        27,
+        -5.5
+      ],
+      "to": [
+        4,
+        28,
+        -4.5
+      ],
+      "uv_offset": [
+        74,
+        0
+      ],
+      "material": "strata_dark"
+    },
+    {
+      "name": "cap_top",
+      "bone": "core",
+      "from": [
+        -2.5,
+        20,
+        -4.5
+      ],
+      "to": [
+        2.5,
+        21,
+        -2.5
+      ],
+      "uv_offset": [
+        92,
+        0
+      ],
+      "material": "gold"
+    },
+    {
+      "name": "cap_bottom",
+      "bone": "core",
+      "from": [
+        -2.5,
+        15,
+        -4.5
+      ],
+      "to": [
+        2.5,
+        16,
+        -2.5
+      ],
+      "uv_offset": [
+        92,
+        0
+      ],
+      "material": "gold"
+    },
+    {
+      "name": "glass",
+      "bone": "core",
+      "from": [
+        -2,
+        16,
+        -4.25
+      ],
+      "to": [
+        2,
+        20,
+        -3.25
+      ],
+      "uv_offset": [
+        106,
+        0
+      ],
+      "material": "glass",
+      "face": "hourglass"
+    },
+    {
+      "name": "shoulder_left",
+      "bone": "arm_left",
+      "from": [
+        7,
+        22,
+        -4
+      ],
+      "to": [
+        13,
+        26,
+        4
+      ],
+      "uv_offset": [
+        44,
+        21
+      ],
+      "material": "strata_dark"
+    },
+    {
+      "name": "shoulder_right",
+      "bone": "arm_right",
+      "from": [
+        -13,
+        22,
+        -4
+      ],
+      "to": [
+        -7,
+        26,
+        4
+      ],
+      "uv_offset": [
+        44,
+        21
+      ],
+      "material": "strata_dark",
+      "mirror_uv": true
+    },
+    {
+      "name": "arm_l",
+      "bone": "arm_left",
+      "from": [
+        7,
+        10,
+        -2.5
+      ],
+      "to": [
+        12,
+        24,
+        2.5
+      ],
+      "uv_offset": [
+        0,
+        21
+      ],
+      "material": "strata"
+    },
+    {
+      "name": "arm_r",
+      "bone": "arm_right",
+      "from": [
+        -12,
+        10,
+        -2.5
+      ],
+      "to": [
+        -7,
+        24,
+        2.5
+      ],
+      "uv_offset": [
+        0,
+        21
+      ],
+      "material": "strata",
+      "mirror_uv": true
+    },
+    {
+      "name": "fist_l",
+      "bone": "arm_left",
+      "from": [
+        6.5,
+        6,
+        -3
+      ],
+      "to": [
+        11.5,
+        10,
+        3
+      ],
+      "uv_offset": [
+        20,
+        21
+      ],
+      "material": "strata_dark"
+    },
+    {
+      "name": "fist_r",
+      "bone": "arm_right",
+      "from": [
+        -11.5,
+        6,
+        -3
+      ],
+      "to": [
+        -6.5,
+        10,
+        3
+      ],
+      "uv_offset": [
+        20,
+        21
+      ],
+      "material": "strata_dark",
+      "mirror_uv": true
+    },
+    {
+      "name": "leg_l",
+      "bone": "leg_left",
+      "from": [
+        0.5,
+        0,
+        -2.5
+      ],
+      "to": [
+        5.5,
+        12,
+        2.5
+      ],
+      "uv_offset": [
+        0,
+        40
+      ],
+      "material": "strata"
+    },
+    {
+      "name": "leg_r",
+      "bone": "leg_right",
+      "from": [
+        -5.5,
+        0,
+        -2.5
+      ],
+      "to": [
+        -0.5,
+        12,
+        2.5
+      ],
+      "uv_offset": [
+        0,
+        40
+      ],
+      "material": "strata",
+      "mirror_uv": true
+    }
   ],
   "animations": [
-    { "name": "animation.petrified_witness.idle", "length": 3, "loop": "loop", "keyframes": [
-      { "bone": "body", "time": 0, "value": [0, 0, 0], "interpolation": "catmullrom" }, { "bone": "body", "time": 1.5, "value": [2, 0, 0], "interpolation": "catmullrom" }, { "bone": "body", "time": 3, "value": [0, 0, 0], "interpolation": "catmullrom" },
-      { "bone": "head", "time": 0, "value": [0, -6, 0], "interpolation": "catmullrom" }, { "bone": "head", "time": 1.5, "value": [0, 6, 0], "interpolation": "catmullrom" }, { "bone": "head", "time": 3, "value": [0, -6, 0], "interpolation": "catmullrom" }
-    ]},
-    { "name": "animation.petrified_witness.walk", "length": 1.6, "loop": "loop", "keyframes": [
-      { "bone": "leg_left", "time": 0, "value": [-22, 0, 0] }, { "bone": "leg_left", "time": 0.8, "value": [22, 0, 0] }, { "bone": "leg_left", "time": 1.6, "value": [-22, 0, 0] },
-      { "bone": "leg_right", "time": 0, "value": [22, 0, 0] }, { "bone": "leg_right", "time": 0.8, "value": [-22, 0, 0] }, { "bone": "leg_right", "time": 1.6, "value": [22, 0, 0] },
-      { "bone": "arm_left", "time": 0, "value": [15, 0, 0] }, { "bone": "arm_left", "time": 0.8, "value": [-15, 0, 0] }, { "bone": "arm_left", "time": 1.6, "value": [15, 0, 0] },
-      { "bone": "arm_right", "time": 0, "value": [-15, 0, 0] }, { "bone": "arm_right", "time": 0.8, "value": [15, 0, 0] }, { "bone": "arm_right", "time": 1.6, "value": [-15, 0, 0] }
-    ]},
-    { "name": "animation.petrified_witness.attack", "length": 1, "loop": "once", "keyframes": [
-      { "bone": "arm_left", "time": 0, "value": [0, 0, 0] }, { "bone": "arm_left", "time": 0.4, "value": [-150, 0, 0] }, { "bone": "arm_left", "time": 0.6, "value": [-20, 0, 0] }, { "bone": "arm_left", "time": 1, "value": [0, 0, 0] },
-      { "bone": "arm_right", "time": 0, "value": [0, 0, 0] }, { "bone": "arm_right", "time": 0.4, "value": [-150, 0, 0] }, { "bone": "arm_right", "time": 0.6, "value": [-20, 0, 0] }, { "bone": "arm_right", "time": 1, "value": [0, 0, 0] },
-      { "bone": "body", "time": 0, "value": [0, 0, 0] }, { "bone": "body", "time": 0.4, "value": [-10, 0, 0] }, { "bone": "body", "time": 0.6, "value": [15, 0, 0] }, { "bone": "body", "time": 1, "value": [0, 0, 0] }
-    ]},
-    { "name": "animation.petrified_witness.awaken", "length": 2, "loop": "once", "keyframes": [
-      { "bone": "body", "time": 0, "value": [35, 0, 0] }, { "bone": "body", "time": 1.5, "value": [0, 0, 0] }, { "bone": "body", "time": 2, "value": [0, 0, 0] },
-      { "bone": "head", "time": 0, "value": [30, 0, 0] }, { "bone": "head", "time": 1.6, "value": [0, 0, 0] },
-      { "bone": "arm_left", "time": 0, "value": [-20, 0, -10] }, { "bone": "arm_left", "time": 1.5, "value": [0, 0, 0] },
-      { "bone": "arm_right", "time": 0, "value": [-20, 0, 10] }, { "bone": "arm_right", "time": 1.5, "value": [0, 0, 0] }
-    ]}
+    {
+      "name": "animation.petrified_witness.idle",
+      "length": 3,
+      "loop": "loop",
+      "keyframes": [
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            2,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 3,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            -6,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            0,
+            6,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 3,
+          "value": [
+            0,
+            -6,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "core",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "core",
+          "channel": "scale",
+          "time": 1.5,
+          "value": [
+            1.08,
+            1.08,
+            1.08
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "core",
+          "channel": "scale",
+          "time": 3,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "catmullrom"
+        }
+      ]
+    },
+    {
+      "name": "animation.petrified_witness.walk",
+      "length": 1.6,
+      "loop": "loop",
+      "keyframes": [
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -22,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            22,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -22,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            22,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -22,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            22,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            15,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -15,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            15,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -15,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            15,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -15,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            -3,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            0,
+            3,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            -3,
+            0
+          ],
+          "interpolation": "catmullrom"
+        }
+      ]
+    },
+    {
+      "name": "animation.petrified_witness.attack",
+      "length": 1,
+      "loop": "once",
+      "keyframes": [
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            160,
+            0,
+            -8
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 0.55,
+          "value": [
+            70,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 0.65,
+          "value": [
+            70,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            160,
+            0,
+            8
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 0.55,
+          "value": [
+            70,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 0.65,
+          "value": [
+            70,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            8,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.55,
+          "value": [
+            -20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.65,
+          "value": [
+            -20,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 0.55,
+          "value": [
+            -12,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 0.65,
+          "value": [
+            -12,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 0.55,
+          "value": [
+            14,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 0.65,
+          "value": [
+            14,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        }
+      ]
+    },
+    {
+      "name": "animation.petrified_witness.awaken",
+      "length": 2.2,
+      "loop": "once",
+      "keyframes": [
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            -4,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -35,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            -35,
+            0,
+            2
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -35,
+            0,
+            -2
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            -34,
+            0,
+            1
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 2.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            35,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            35,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -30,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            -30,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            10,
+            0,
+            -10
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            10,
+            0,
+            10
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "core",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            0.01,
+            0.01,
+            0.01
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "core",
+          "channel": "scale",
+          "time": 1.4,
+          "value": [
+            0.01,
+            0.01,
+            0.01
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "core",
+          "channel": "scale",
+          "time": 1.7,
+          "value": [
+            1.15,
+            1.15,
+            1.15
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "core",
+          "channel": "scale",
+          "time": 2.0,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "catmullrom"
+        }
+      ]
+    }
   ]
 }
