@@ -2,6 +2,10 @@
 
 Ergebnis einer Runde mit Game Designer, 3D-Modellierer/Animator, Programmierer und Projektmanager.
 
+## Stand
+
+Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Ein Designer-Agent hat sie in drei Runden anhand von Screenshots geprüft und freigegeben: Geodenkriecher 8/10, Sporenbalg 7/10, Steinzeuge 7,5/10. Die genauen Maße stehen in [`docs/BRIEFING.md`](BRIEFING.md), Abschnitt 8. Als Nächstes folgt die Grundlage im Code (M0).
+
 ## Entscheidung in Kürze
 
 - **Erst 2 Mobs, dann 1 weiterer, danach Phase 3** (Fossilien). Mehr auf einmal würde die Client-Arbeit für 5 Versionen und die Textur-Prüfrunden verstopfen.
