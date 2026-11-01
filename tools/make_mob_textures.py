@@ -31,7 +31,7 @@ def shade(c, f):
 PAL = {
     'hide':          ['#241f2e', '#322b40', '#423a55', '#544a6a', '#665b7e'],
     'hide_dark':     ['#1b1724', '#262131', '#332c42', '#423a55', '#524866'],
-    'belly':         ['#4a4258', '#5d5470', '#706684', '#867b97', '#9c91aa'],
+    'belly':         ['#5d5470', '#746a88', '#8a7f9c', '#a094b0', '#b6abc2'],
     'calcite':       ['#8f887c', '#ada697', '#c8c1b2', '#ddd7c9', '#efebe0'],
     'calcite_light': ['#b3ad9f', '#cbc5b6', '#dcd6c8', '#ebe6da', '#f8f5ec'],
     'quartz':        ['#2c2670', '#4a43b8', '#6f6cf0', '#a9a8ff', '#e6e6ff'],
@@ -92,7 +92,9 @@ def paint_cube(img, cube, rnd):
                         base = strata_color(top_y - 1 - y, mat == 'strata_dark')
                     c = shade(base, light * (1 + noise * 0.12))
                     if face not in ('up', 'down') and (x * 7 + y * 3 + int(top_y)) % 23 == 0:
-                        c = shade(c, 0.6)                    # Risse
+                        c = shade(c, 0.6)                    # Risse, aber nie fast schwarz
+                        if sum(c[:3]) < sum(rgb('#2a2530')[:3]):
+                            c = rgb('#2a2530')
                     img.putpixel((x0 + x, y0 + y), c)
                     continue
                 pal = PAL[mat]
@@ -102,12 +104,13 @@ def paint_cube(img, cube, rnd):
                 if mat == 'hide':
                     if face == 'up':
                         v -= 0.7                             # dunkler Rücken
-                    if face == 'down' or (face not in ('up',) and h >= 3 and y >= h - 1):
+                    if face == 'down' or (face not in ('up',) and h >= 3 and y >= h - (2 if h >= 5 else 1)):
                         pal = PAL['belly']                   # heller Bauch / Flankenunterkante
                     elif (y % 3 == 2) and ((x + y // 3) % 3 != 0):
                         v -= 1.0                             # Schuppenreihen
                 if mat == 'membrane' and ((x * 3 + y * 5) % 11 == 0 or (x + 2 * y) % 13 == 0):
-                    v = 0.6                                  # Adern
+                    img.putpixel((x0 + x, y0 + y), shade(rgb('#9c8f6a'), light))   # Adern
+                    continue
                 if mat == 'gill':
                     v = 1.0 if x % 2 == 0 else 2.2
                 if mat == 'quartz':
@@ -131,7 +134,10 @@ def d_lizard(img, f, rnd):
         ex = r[2] - 3 if side == 'east' else 1              # zur Schnauze hin
         put(img, r, ex, 1, '#f2c14e'); put(img, r, ex + 1, 1, '#f2c14e')
         put(img, r, ex + (1 if side == 'east' else 0), 1, '#1a1206')
-    # Goldflecken als Erz-Hinweis und Calcit-Sprenkel an den Flanken
+    # Augen auch von vorn erkennbar: Goldpixel an den vorderen Schädelecken
+    r = f['north']
+    put(img, r, 0, 1, '#f2c14e'); put(img, r, r[2] - 1, 1, '#f2c14e')
+    # Goldfleck als Erz-Hinweis an den Flanken
     for side in ('east', 'west'):
         r = f[side]
         put(img, r, 2, 2, '#d9a43a')
@@ -139,7 +145,7 @@ def d_lizard(img, f, rnd):
 
 def d_snout(img, f, rnd):
     r = f['north']
-    put(img, r, 0, 0, '#120e18'); put(img, r, r[2] - 1, 0, '#120e18')
+    put(img, r, 0, 0, '#2a2333'); put(img, r, r[2] - 1, 0, '#2a2333')
 
 
 def d_claws(img, f, rnd):
@@ -161,22 +167,35 @@ def d_spore(img, f, rnd):
     put(img, r, 3, 3, '#c07a1a'); put(img, r, 6, 3, '#c07a1a')
 
 
-def d_amber_dots(img, f, rnd):
+def d_amber_dots(img, f, rnd, rim=True):
     r = f['up']
     w, h = r[2], r[3]
-    spots = [(2, 2), (w - 3, 3), (4, h - 3), (w - 4, h - 4), (w // 2, h // 2 - 1)]
+    spots = [(2, 2), (w - 3, 3), (3, h - 3), (w - 4, h - 4), (w // 2, h // 2 - 1)]
     for x, y in spots:
         put(img, r, x, y, '#e0a030'); put(img, r, x + 1, y, '#8a5a10'); put(img, r, x, y + 1, '#8a5a10')
-        put(img, r, x, y - 1 if y > 0 else y, '#ffd27a')
-    # gelbgrüner Rand an den Seiten
+        put(img, r, x, max(0, y - 1), '#ffd27a')
+    if not rim:
+        return
     for face in ('north', 'south', 'east', 'west'):
         rr = f[face]
         for x in range(rr[2]):
-            put(img, rr, x, rr[3] - 1, '#8a9a3a')
+            put(img, rr, x, rr[3] - 1, '#8a9a3a')          # gelbgrüner Rand nur ganz unten
+        for x in (2, rr[2] - 4):                            # Bernsteinpunkte auch an den Seiten
+            put(img, rr, x, 0, '#e0a030'); put(img, rr, x + 1, 0, '#ffd27a')
+
+
+def d_amber_top(img, f, rnd):
+    d_amber_dots(img, f, rnd, rim=False)
 
 
 def d_witness(img, f, rnd):
+    for side in ('east', 'west', 'south'):                  # Ockerband auf Augenhöhe rundum
+        rr = f[side]
+        for x in range(rr[2]):
+            put(img, rr, x, 3, '#b08a5a')
     r = f['north']                                          # 8 x 7
+    for x in range(r[2]):
+        put(img, r, x, 3, '#b08a5a')
     for x in range(r[2]):
         put(img, r, x, 2, '#2e2a35')                        # Schattenkante unter der Stirn
     for x in (1, 2, 5, 6):
@@ -206,26 +225,26 @@ def d_hourglass(img, f, rnd):
 
 
 def d_ammonite(img, f, rnd):
-    r = f['south']                                          # 8 x 8, Spirale aus Calcit auf dunklem Grund
+    # Von Hand gezeichnet: Auf 8 x 8 Pixeln liest sich eine berechnete Spirale nicht.
     rows = [
-        '..cccc..',
-        '.cddddc.',
-        'cdcccddc',
-        'cdcddcdc',
-        'cdcdccdc',
-        'cdcddddc',
-        '.cdcccc.',
-        '..cddd..',
+        '..lLLl..',
+        '.L....L.',
+        'L..LL..L',
+        'l.L..L.l',
+        'L.L.L..L',
+        'l..L.LLl',
+        '.L.....L',
+        '..LlLlL.',
     ]
-    pal = {'c': '#dcd6cf', 'd': '#2e2a35', '.': None}
+    pal = {'L': '#efe9e0', 'l': '#c9c1b6', '.': '#2e2a35'}
+    r = f['south']
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
-            if pal[ch]:
-                put(img, r, x, y, pal[ch])
-    put(img, r, 2, 2, '#f4f0ea'); put(img, r, 3, 2, '#f4f0ea')   # Glanz oben links
+            put(img, r, x, y, pal[ch])
 
 
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
+           'amber_top': d_amber_top,
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass}
 
 
