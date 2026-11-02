@@ -782,7 +782,7 @@
           "channel": "rotation",
           "time": 0.25,
           "value": [
-            -8,
+            -10,
             0,
             0
           ],
@@ -793,7 +793,7 @@
           "channel": "rotation",
           "time": 1.15,
           "value": [
-            -8,
+            -10,
             0,
             0
           ],
@@ -826,7 +826,7 @@
           "channel": "rotation",
           "time": 0.3,
           "value": [
-            45,
+            55,
             0,
             0
           ],
@@ -848,7 +848,7 @@
           "channel": "rotation",
           "time": 0.6,
           "value": [
-            45,
+            55,
             0,
             0
           ],
@@ -870,7 +870,7 @@
           "channel": "rotation",
           "time": 0.9,
           "value": [
-            45,
+            55,
             0,
             0
           ],
@@ -983,6 +983,581 @@
             0,
             0,
             0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.geode_crawler.sniff",
+      "length": 1.2,
+      "loop": "once",
+      "keyframes": [
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            15,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            15,
+            -8,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            15,
+            8,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.75,
+          "value": [
+            15,
+            -5,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            15,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            4,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            4,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -6,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            -6,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.geode_crawler.curl",
+      "length": 3.0,
+      "loop": "once",
+      "keyframes": [
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            -20,
+            20,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            -20,
+            20,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            -40,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            0,
+            -40,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail_tip",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail_tip",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            -30,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail_tip",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            0,
+            -30,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tail_tip",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            -30,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            -30,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_right",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            -30,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_right",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            -30,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_front_right",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            30,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            30,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            30,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            30,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.4,
+          "value": [
+            0,
+            -1.5,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 2.6,
+          "value": [
+            0,
+            -1.5,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crystals",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crystals",
+          "channel": "scale",
+          "time": 0.4,
+          "value": [
+            1,
+            1.15,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crystals",
+          "channel": "scale",
+          "time": 2.6,
+          "value": [
+            1,
+            1.15,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crystals",
+          "channel": "scale",
+          "time": 3.0,
+          "value": [
+            1,
+            1,
+            1
           ],
           "interpolation": "linear"
         }

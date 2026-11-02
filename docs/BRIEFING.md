@@ -141,7 +141,7 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 | Drop | Calcitschuppe (Material für den Bohrkopf, Stufe 2) |
 | Spawn | Kristallzeit, Gruppen von 1–2, Licht egal |
 | Textur | 64×64, Box-UV |
-| Umfang | 10 Knochen, 15 Würfel, 3 Animationen |
+| Umfang | 10 Knochen, 15 Würfel, 5 Animationen |
 | Prüfung | Design 7 · Game Design 7 · Technik 7 → freigegeben |
 
 **Verhalten:** Eine träge, niedrige Urzeitechse. Sie wandert langsam zu Kristallquarz-Erz in der Nähe und kratzt daran. Wer ihr folgt, findet Erz. Mit Kristallquarz lässt sie sich anlocken. Sie greift nur an, wenn sie angegriffen wird.
