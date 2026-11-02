@@ -307,10 +307,10 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 | `torso` | `body` | [-7, 12, -4] | [7, 25, 4] | [0, 0] | strata | – |
 | `ammonite` | `body` | [-4, 14, 4] | [4, 22, 5] | [42, 35] | strata_dark | – |
 | `skull` | `head` | [-4, 23, -5] | [4, 30, 2] | [0, 21] | strata | – |
-| `brow` | `head` | [-4, 27, -5.5] | [4, 28, -4.5] | [30, 45] | strata_dark | – |
+| `brow` | `head` | [-4, 27, -6] | [4, 28, -5] | [30, 45] | strata_dark | – |
 | `cap_top` | `core` | [-2.5, 20, -4.5] | [2.5, 21, -2.5] | [44, 17] | gold | – |
 | `cap_bottom` | `core` | [-2.5, 15, -4.5] | [2.5, 16, -2.5] | [44, 17] | gold | – |
-| `glass` | `core` | [-2, 16, -4] | [2, 20, -3] | [20, 45] | glass | – |
+| `glass` | `core` | [-2, 16, -4.5] | [2, 20, -3.5] | [20, 45] | glass | – |
 | `shoulder_left` | `shoulder_left` | [7, 22, -4] | [13, 26, 4] | [30, 21] | strata_dark | – |
 | `shoulder_right` | `shoulder_right` | [-13, 22, -4] | [-7, 26, 4] | [30, 21] (gespiegelt) | strata_dark | – |
 | `arm_l` | `arm_left` | [7, 10, -2.5] | [12, 24, 2.5] | [0, 35] | strata | – |

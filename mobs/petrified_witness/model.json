@@ -163,12 +163,12 @@
       "from": [
         -4,
         27,
-        -5.5
+        -6
       ],
       "to": [
         4,
         28,
-        -4.5
+        -5
       ],
       "uv_offset": [
         30,
@@ -220,12 +220,12 @@
       "from": [
         -2,
         16,
-        -4
+        -4.5
       ],
       "to": [
         2,
         20,
-        -3
+        -3.5
       ],
       "uv_offset": [
         20,
@@ -772,7 +772,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "arm_left",
@@ -783,7 +783,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "arm_left",
@@ -827,7 +827,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "arm_right",
@@ -838,7 +838,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "arm_right",
@@ -882,7 +882,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
@@ -893,7 +893,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
@@ -926,7 +926,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_left",
@@ -937,7 +937,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_left",
@@ -970,7 +970,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_right",
@@ -981,7 +981,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_right",
@@ -1025,7 +1025,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "shoulder_left",
@@ -1036,7 +1036,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "shoulder_left",
@@ -1080,7 +1080,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "shoulder_right",
@@ -1091,7 +1091,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "shoulder_right",
@@ -1164,7 +1164,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
@@ -1175,14 +1175,14 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_left",
           "channel": "rotation",
           "time": 0,
           "value": [
-            25,
+            15,
             0,
             0
           ],
@@ -1204,7 +1204,7 @@
           "channel": "rotation",
           "time": 0,
           "value": [
-            25,
+            15,
             0,
             0
           ],
@@ -1230,7 +1230,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "head",
@@ -1241,7 +1241,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "head",
@@ -1307,7 +1307,7 @@
             0.01,
             0.01
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "core",
@@ -1318,7 +1318,7 @@
             0.01,
             0.01
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "core",
@@ -1355,28 +1355,6 @@
         },
         {
           "bone": "root",
-          "channel": "position",
-          "time": 1.6,
-          "value": [
-            0,
-            0,
-            0
-          ],
-          "interpolation": "catmullrom"
-        },
-        {
-          "bone": "body",
-          "channel": "position",
-          "time": 0,
-          "value": [
-            0,
-            -2,
-            0
-          ],
-          "interpolation": "catmullrom"
-        },
-        {
-          "bone": "body",
           "channel": "position",
           "time": 1.6,
           "value": [

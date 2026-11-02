@@ -557,9 +557,9 @@
           "channel": "scale",
           "time": 0.5,
           "value": [
-            1.28,
-            1.18,
-            1.28
+            1.16,
+            1.1,
+            1.16
           ],
           "interpolation": "linear"
         },
@@ -568,9 +568,9 @@
           "channel": "scale",
           "time": 0.55,
           "value": [
-            1.32,
             1.2,
-            1.32
+            1.13,
+            1.2
           ],
           "interpolation": "linear"
         },
@@ -579,9 +579,9 @@
           "channel": "scale",
           "time": 0.6,
           "value": [
-            1.28,
-            1.18,
-            1.28
+            1.16,
+            1.1,
+            1.16
           ],
           "interpolation": "linear"
         },
@@ -590,9 +590,9 @@
           "channel": "scale",
           "time": 0.65,
           "value": [
-            1.33,
-            1.21,
-            1.33
+            1.2,
+            1.14,
+            1.2
           ],
           "interpolation": "linear"
         },

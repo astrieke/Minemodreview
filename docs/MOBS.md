@@ -17,10 +17,13 @@ Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Ein Desig
 Offen sind vor allem:
 - **Lesbarkeit:** Alle drei Mobs verschwinden in den Farben ihrer Epoche.
 - **Steinzeuge:** Er sieht dem Eisengolem zu ähnlich und ist von der Seite nur eine flache Säule.
-- **Technische Fehler:**
-  - Der Schwanz des Geodenkriechers dreht doppelt.
-  - Glas und Brauenleiste des Steinzeugen flackern (Z-Fighting).
-  - Der Kern des Steinzeugen wird beim Erwachen negativ skaliert.
+- **Technische Fehler:** sind behoben.
+  - Der Schwanz des Geodenkriechers dreht nicht mehr doppelt.
+  - Beim Kratzen schweben die Hinterbeine nicht mehr.
+  - Glas und Brauenleiste des Steinzeugen flackern nicht mehr (kein Z-Fighting).
+  - Der Kern des Steinzeugen wird beim Erwachen nicht mehr negativ skaliert, und der Steinzeuge lehnt sich danach nicht mehr zurück.
+  - Das Aufpumpen des Sporenbalgs ist auf 1,2 begrenzt.
+  - Haltephasen sind linear.
 
 ## Entscheidung in Kürze
 

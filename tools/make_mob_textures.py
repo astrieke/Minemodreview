@@ -137,7 +137,7 @@ def d_lizard(img, f, rnd):
     # Augen auch von vorn erkennbar: Goldpixel an den vorderen Schädelecken
     r = f['north']
     for x in range(r[2]):
-        put(img, r, x, 0, PAL['hide_dark'][1])              # Brauenwulst als Kante statt eigenem Würfel
+        put(img, r, x, 0, PAL['hide'][0])                   # Brauenwulst als Kante statt eigenem Würfel
     put(img, r, 0, 1, '#f2c14e'); put(img, r, r[2] - 1, 1, '#f2c14e')
     # Goldfleck als Erz-Hinweis an den Flanken
     for side in ('east', 'west'):
