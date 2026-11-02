@@ -35,9 +35,12 @@ Das ausführliche Konzept steht in [`KONZEPT.md`](../KONZEPT.md), der Mob-Plan i
 
 **Stilregeln für Pixel-Art und Modelle:**
 - Vanilla-Stil: kleine Paletten (4–6 Töne pro Material), Licht von oben links, keine weichen Verläufe.
+- **Lichtstufen:** Die Oberseite ist eine Stufe heller als die Vorderseite, die Unterseite zwei Stufen dunkler. Die unterste Seitenzeile ist ab 3 px Würfelhöhe eine Stufe dunkler. Der Texturmaler prüft automatisch, dass keine Oberseite dunkler ist als ihre Vorderseite.
+- **Gesteinsschichten:** Jede Schicht-Grundfarbe zählt als eigenes Material. Erlaubt sind höchstens 5 Grundfarben mit je höchstens 5 Tönen, ohne Verläufe.
+- **Maßstab:** Der Spieler ist 1,8 Blöcke = 28,8 px hoch.
 - Blöcke kacheln nahtlos. Items haben einen dunklen, farbigen Umriss.
 - Mobs werden nur aus Würfeln gebaut (Box-UV), mit 5–15 Würfeln und 4–12 Knochen. Normale Mobs haben eine 64×64-Textur, kleine 64×32 oder 32×32.
-- Jede Textur wird von einem Prüf-Agenten mit **mindestens 7/10** freigegeben, bevor sie ins Spiel kommt.
+- **Freigabe:** Ein Mob ist freigegeben, wenn **jeder** der drei Prüfer (Design, Game Design, Technik) mindestens 7/10 gibt. Es zählt die niedrigste Note.
 
 ## 4. Aufbau des Repos
 
@@ -93,7 +96,12 @@ scripts/smoke-test.sh                   # Server-Start + Selbsttests in allen Ve
    - mit der Claude-App per MCP-Werkzeugen, oder
    - automatisch mit `node tools/blockbench-mcp/build_mobs.js <id>` (startet Blockbench headless, speichert `.bbmodel` und Screenshots).
 4. `python3 tools/mob_sheet.py <id>` erzeugt das Prüfblatt `mobs/<id>/review_sheet.png`.
-5. Ein **Designer-Agent prüft** das Prüfblatt mit Noten für Silhouette, Proportionen, Textur, Animation und Thema. Nachbessern, bis jeder Mob **mindestens 7/10** hat.
+5. **Drei Prüf-Agenten** bewerten den Mob:
+   - **Designer:** Silhouette, Proportionen, Textur, Animation, Thema
+   - **Game Designer:** Lesbarkeit im Spiel, Verhalten, Hitbox, Einbettung, Eigenständigkeit
+   - **Technical Artist:** Rig, UV, Animationen, Laufzeit
+
+   Nachbessern, bis jeder Prüfer mindestens 7/10 gibt.
 
 **Konventionen:**
 - Format `modded_entity`, Box-UV.
@@ -104,7 +112,7 @@ scripts/smoke-test.sh                   # Server-Start + Selbsttests in allen Ve
 
 ## 8. Die Mobs
 
-Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Agenten anhand von Screenshots geprüft**. Es waren drei Prüfrunden nötig, am Ende waren alle freigegeben (mindestens 7/10). Die Tabellen unten werden direkt aus den Bauplänen `mobs/<id>/model.json` erzeugt. Die Baupläne sind die verbindliche Quelle.
+Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten anhand von Screenshots und Bauplänen geprüft. **Stand 02.11.2026:** Nur der Geodenkriecher ist bei allen drei Prüfern mindestens 7/10 und damit freigegeben. Sporenbalg und Steinzeuge werden nach dem Arbeitsplan in 8.4 nachgebessert. Die Tabellen unten werden direkt aus den Bauplänen `mobs/<id>/model.json` erzeugt. Die Baupläne sind die verbindliche Quelle.
 
 **Konventionen:**
 - Koordinaten in Blockbench-Pixeln (16 = 1 Block), y nach oben, Mob schaut nach −z.
@@ -129,11 +137,12 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 | Epoche | Kristallzeit |
 | Rolle | neutral, greift nur an, wenn er angegriffen wird |
 | Größe | ca. 1 Block breit, 0,75 Block hoch, 2,3 Blöcke lang (mit Schwanz) |
+| Hitbox | 0,9 × 0,7 (unter 1,0, damit er durch einspurige Gänge passt) |
 | Drop | Calcitschuppe (Material für den Bohrkopf, Stufe 2) |
 | Spawn | Kristallzeit, Gruppen von 1–2, Licht egal |
 | Textur | 64×64, Box-UV |
 | Umfang | 10 Knochen, 15 Würfel, 3 Animationen |
-| Design-Prüfung | 8/10 (Silhouette 8 · Proportionen 7 · Textur 7 · Animation 7 · Thema 8) |
+| Prüfung | Design 7 · Game Design 7 · Technik 7 → freigegeben |
 
 **Verhalten:** Eine träge, niedrige Urzeitechse. Sie wandert langsam zu Kristallquarz-Erz in der Nähe und kratzt daran. Wer ihr folgt, findet Erz. Mit Kristallquarz lässt sie sich anlocken. Sie greift nur an, wenn sie angegriffen wird.
 
@@ -201,11 +210,12 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 | Epoche | Sporenzeit |
 | Rolle | Gegner |
 | Größe | ca. 0,75 Block breit, 0,9 Block hoch |
+| Hitbox | 0,75 × 1,0 (nach Verlängerung der Wurzeln) |
 | Drop | Sporenbeutel (Zutat für „Keimfrische“, die die Verfestigung zurücksetzt) |
 | Spawn | Sporenzeit, auf Myzel, Gruppen von 1–3 |
 | Textur | 64×64, Box-UV |
 | Umfang | 6 Knochen, 9 Würfel, 3 Animationen |
-| Design-Prüfung | 7/10 (Silhouette 7 · Proportionen 7 · Textur 7 · Animation 7 · Thema 7) |
+| Prüfung | Design 7 · Game Design 6 · Technik 7 → noch nicht freigegeben |
 
 **Verhalten:** Ein pilziger Sack auf drei Wurzelbeinen. Er hüpft auf Spieler zu, pumpt sich auf und stößt eine grüne Sporenwolke aus. Die Wolke macht keinen Schaden, sondern **beschleunigt die Verfestigung** (×2,5 für 5 Sekunden). So setzt er den Spieler unter Zeitdruck.
 
@@ -262,12 +272,13 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 |---|---|
 | Epoche | beide |
 | Rolle | Gegner, Vorlage für einen späteren Mini-Boss |
-| Größe | ca. 1,6 Blöcke breit, 1,9 Blöcke hoch |
+| Größe | ca. 1,6 Blöcke breit, 1,9 Blöcke hoch (wird umgebaut auf 38 px) |
+| Hitbox | 1,3 × 2,4 (passt absichtlich nicht durch 1×2-Gänge). Er erwacht nur, wenn über dem Block 2×3 frei sind. |
 | Drop | Kodex-Fragment (schaltet Erdkodex-Knoten frei), selten versteinerter Stein mit Ammonit |
 | Spawn | entsteht aus versteinerten Blöcken bei Spielern, die zu lange in einer Epoche bleiben (per Config abschaltbar) |
 | Textur | 64×64, Box-UV |
 | Umfang | 10 Knochen, 15 Würfel, 4 Animationen |
-| Design-Prüfung | 7,5/10 (Silhouette 7 · Proportionen 7 · Textur 7 · Animation 7 · Thema 8) |
+| Prüfung | Design 6 · Game Design 6 · Technik 6 → wird umgebaut |
 
 **Verhalten:** Das Echo eines Reisenden, der zu lange blieb. Er erwacht langsam aus versteinertem Stein und schlägt mit beiden Fäusten zu wie ein Golem. Er macht die Strafe der Verfestigung sichtbar.
 
@@ -331,9 +342,28 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 
 ### 8.4 Nächste Schritte für die Mobs
 
-1. **Grundlage im Code (M0):** gemeinsame Basisklasse `StrataMob`, ein generischer Renderer pro Versionsgruppe (1.21.1 / ab 1.21.2 mit Render States / 26.x), Modelle aus den Bauplänen als `LayerDefinition`, eigener kleiner Keyframe-Abspieler, Spawns per Biome-Modifier. Siehe `docs/MOBS.md`.
-2. **Geodenkriecher ins Spiel (M1)**, dann Sporenbalg (M2) und Steinzeuge (M3), jeweils nach der Definition of Done in `docs/MOBS.md`.
-3. **Leuchten** (Augen, Kristalle, Bernstein, Kern) als eigene Leucht-Ebene im Renderer und im Spiel per Screenshot prüfen lassen.
-4. **Optionale Hinweise des Designers:**
-   - Sporenbalg: Wurzeln beim Sprung seitlich abspreizen (z ±10°), Pump-Scale auf 1.2 deckeln, damit der Hut dominant bleibt.
-   - Steinzeuge: Ammonit mit sichtbarer Mündung, Torso etwas tiefer.
+Arbeitsplan des Projektmanagers vom 03.11.2026. Details stehen in [`MOBS.md`](MOBS.md#entscheidungen-des-projektmanagers-03112026).
+
+**Grafik-Block, ca. 3 Tage:**
+1. Prüfblatt erweitern: Epochen-Hintergründe, Spieler-Maßstab, größte Ausschläge der Animationen, Kontrastwert.
+2. Lichtstufen im Texturmaler, mit automatischer Prüfung.
+3. Geodenkriecher:
+   - heller, warmer Rücken mit Bauchsaum
+   - `scratch` auf 55°
+   - neu: `sniff` und `curl`
+4. Sporenbalg:
+   - Hutrand orange-rot, Bernsteinpunkte nur oben
+   - Wurzeln +2 px
+   - stärkeres Pumpen und Hüpfen
+5. Steinzeuge:
+   - umbauen zum „wandelnden Felsvorsprung“ (38 px, Schichtplatten, Kopf vorn, Goldadern)
+   - Animationen anpassen, neu: `pulse` und `harden`
+   - höchstens 2 Prüfrunden, sonst wird er geparkt
+6. Leucht-Texturen und Nachtansicht.
+7. **Gate A:** alle drei Prüfer mindestens 7, oder der Steinzeuge ist geparkt.
+
+**Danach im Code:**
+- M0: Mob-Basis, Modell-Builder, Abspieler, Renderer mit Leucht-Ebenen, Fähigkeiten-Gerüst, Verfestigungs-API, Tuning
+- **Gate B:** Client-Screenshot unter 1.21.1
+- M1: Geodenkriecher
+- **Gate C**

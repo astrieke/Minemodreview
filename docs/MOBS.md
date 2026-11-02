@@ -4,7 +4,7 @@ Ergebnis einer Runde mit Game Designer, 3D-Modellierer/Animator, Programmierer u
 
 ## Stand
 
-Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Ein Designer-Agent hat sie in drei Runden anhand von Screenshots geprüft und freigegeben: Geodenkriecher 8/10, Sporenbalg 7/10, Steinzeuge 7,5/10. Die genauen Maße stehen in [`docs/BRIEFING.md`](BRIEFING.md), Abschnitt 8. Als Nächstes folgt die Grundlage im Code (M0).
+Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früheren Noten aus einer einzelnen Designer-Prüfung (8 / 7 / 7,5) sind überholt. Es gilt die Nachprüfung durch drei Prüfer unten. Danach ist nur der Geodenkriecher freigegeben. Die genauen Maße stehen in [`docs/BRIEFING.md`](BRIEFING.md), Abschnitt 8. Als Nächstes folgt die Grundlage im Code (M0).
 
 **Nachprüfung am 02.11.2026** (nach der Anpassung an die Stilregeln: höchstens 15 Würfel, 64×64, feste Paletten), drei Prüfer:
 
@@ -31,6 +31,44 @@ Offen sind vor allem:
 - **Nur Bodenmobs am Anfang.** Fliegen, Schweben in der Luft, Schwärme und Bosse sind technisch die teuersten Fälle. Sie kommen erst, wenn die Pipeline steht.
 - **Jeder Mob bedient genau einen Schritt im Spielablauf:** Erz finden → abbauen → unter Zeitdruck geraten → Kodex-Fortschritt.
 - **Keine Fremd-Bibliothek** wie GeckoLib, weil unklar ist, ob es sie für 26.x gibt. Modelle und Animationen kommen aus Blockbench, über das eigene Blockbench-MCP.
+
+## Entscheidungen des Projektmanagers (03.11.2026)
+
+Der Projektmanager trifft die offenen Entscheidungen. Kurzfassung:
+
+- **Freigabe:** Jeder der drei Prüfer (Design, Game Design, Technik) gibt mindestens 7. Es zählt die niedrigste Note, nicht der Durchschnitt.
+- **Steinzeuge wird jetzt umgebaut, vor M0.** Ziel ist ein „wandelnder Felsvorsprung“ statt eines Golems:
+  - Höhe: Kopf bis y 31, Schichtplatten bis 38 px.
+  - Torso [−8, 10, −5] bis [8, 26, 5], Beine y 0–10.
+  - Kopf vorgezogen: [−4, 24, −10] bis [4, 31, −3].
+  - lange Arme
+  - Sanduhr als ein Würfel 5×7×1 mit gemalter Taille
+  - 2 gedrehte Schichtplatten am neuen Knochen `back_plates`
+  - Ammonit auf dem unteren Rücken
+  - insgesamt 15 Würfel und 11 Knochen, ohne Mantelsaum
+  - Höchstens 2 Prüfrunden, sonst wird er geparkt. Dann blockiert er nur M3.
+- **Farben für Lesbarkeit:**
+  - **Geodenkriecher:** Der Rücken wird die hellste Fläche, die Haut heller und wärmer (`#3b3142 … #918190`). Dazu ein heller Bauchsaum. Abnahme: Kontrast mindestens 3:1 zu `#2a1f4d`.
+  - **Sporenbalg:** Der Hutrand wird orange-rot (`#6e2a14 … #e8915a`). Bernsteinpunkte gibt es nur noch auf den Oberseiten, damit nur ein Gesicht bleibt. Grün ist nur für Wolke und Partikel reserviert.
+  - **Steinzeuge:** Goldadern als 1-px-Risse auf Rücken, Seiten, Armen und Platten. Sie leuchten nur während der Steinhaut.
+- **Lichtstufen:** Oberseite +1, Unterseite −2, unterste Seitenzeile −1 ab 3 px Höhe. Der Texturmaler prüft automatisch, dass jede Oberseite mindestens so hell ist wie ihre Vorderseite.
+- **Aktionen deutlicher:**
+  - **Geodenkriecher:** Er kratzt mit 55° Ausschlag, der Kopf senkt sich um 10°, dazu Erzpartikel.
+  - **Sporenbalg, Pumpen:** Er pumpt auf 1,2 mit Höhepunkt bei 0,6 s, der Hut hebt sich um 2 px, das Ventil leuchtet.
+  - **Sporenbalg, Hüpfen:** Die Wurzeln werden 2 px länger, der Sprung geht 5 px hoch. Dabei wird er auf y 1,15 gestreckt und auf 0,8 gestaucht, die Wurzeln spreizen sich um z ±10°.
+  - Das Prüfblatt zeigt die Animationen am größten Ausschlag.
+- **Leucht-Ebenen:**
+  - Sie sind in M0 Pflicht. `StrataMobDef` bekommt eine Liste von Leucht-Ebenen mit einer Stärke von 0 bis 1 je Zustand.
+  - Die `*_glow*.png` erzeugt der Texturmaler schon jetzt.
+- **Animationen für Fähigkeiten** entstehen jetzt im Grafik-Block, nicht erst im jeweiligen Meilenstein: `sniff` und `curl` für den Geodenkriecher, `pulse` und `harden` für den Steinzeugen.
+- **Hitboxen (Breite × Höhe):**
+  - Geodenkriecher 0,9 × 0,7. Bei 1,0 bräuchte die Wegfindung 2 Blöcke breite Gänge.
+  - Sporenbalg 0,75 × 1,0.
+  - Steinzeuge 1,3 × 2,4. Er erwacht nur, wenn 2×3 Blöcke frei sind.
+- **Regelauslegung:**
+  - Jede Schicht-Grundfarbe zählt als eigenes Material: höchstens 5 Grundfarben mit je höchstens 5 Tönen.
+  - Hilfsteile für gedrehte Würfel (`<würfel>_pivot`, nie animiert) zählen nicht zur Grenze von 12 Knochen.
+- **Reihenfolge:** zuerst der Grafik-Block (ca. 3 Tage), dann M0, dann M1. Die Gates stehen unter „Meilensteine“.
 
 ## Das Start-Set
 
@@ -100,12 +138,18 @@ Effekte nutzen nur Vanilla-Partikel und -Sounds. Das spart Assets und funktionie
 
 ### Was das für Modelle und Code bedeutet
 
-- **Neue Animationen:**
+- **Neue Animationen** (entstehen im Grafik-Block):
   - Geodenkriecher: `sniff`, `curl`
   - Steinzeuge: `pulse`, `harden`
   - Sporenbalg: keine. Er nutzt `hop` und `pump`, das Aufblähen beim Tod ist eine kurze Skalierung.
   - Alle neuen Animationen werden über das Blockbench-MCP gebaut und gehen durch die Designer-Prüfung.
-- **Leucht-Ebene:** Gebraucht beim Sporenbalg (Bernsteinpunkte) und beim Steinzeugen (Kern, Risse). Das gehört in den generischen Renderer aus M0.
+- **Leucht-Ebene:** Gebraucht bei allen drei Mobs. Die Stärke hängt vom Zustand ab:
+  - Kristalle: dauerhaft 0,6, vor dem Einrollen 1,0
+  - Ventil und Punkte: nur beim Pumpen
+  - Adern: nur bei der Steinhaut
+  - Kern: pulsiert
+
+  Die Leucht-Ebene gehört in den generischen Renderer aus M0.
 - **Code:** Jede Fähigkeit ist ein eigenes Goal mit Vorwarnzeit, Wirkung und Abklingzeit. Ein gemeinsames `StrataAbility`-Gerüst in M0 hält den Aufwand pro Fähigkeit klein. Effekte laufen über Server-Partikel und Sounds, ohne eigene Pakete.
 - **Verfestigung:** Sporenstoß und Sanduhr-Puls greifen in die Uhr ein (`SolidificationClock`). Sie brauchen dafür eine kleine API: einen Zeitfaktor pro Spieler und „Zeit abziehen“.
 
@@ -149,7 +193,7 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
 ## Wann ist ein Mob fertig? (Definition of Done, Projektmanager)
 
 1. **Modell:** über das Blockbench-MCP gebaut, als `.bbmodel` im Repo, Hitbox passend.
-2. **Textur:** Prüf-Agent ≥ 7/10, auch im Dunkeln lesbar.
+2. **Prüfung:** Designer, Game Designer und Technical Artist geben je mindestens 7/10. Der Mob ist auch im Dunkeln lesbar.
 3. **Animationen:** Idle, Laufen, Angriff bzw. Interaktion, dazu eine Animation pro Fähigkeit mit eigener Pose. Treffer und Tod liefert Vanilla.
 3a. **Fähigkeiten:** Alle Fähigkeiten aus „Spezialfähigkeiten“ wirken, haben Vorwarnung und Gegenzug und lassen sich im Datapack einstellen.
 4. **Sounds:** ambient, hurt, death, mit Untertiteln.
@@ -183,6 +227,9 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
 | **M2 Sporenbalg** | mit Sporenstoß, Wurzelgriff, Letztem Atemzug | 1–1,5 PW |
 | **M3 Steinzeuge** | mit Erwachen aus Stein, Hammerschlag, Sanduhr-Puls, Steinhaut | 1,5–2 PW |
 
-**Go/No-Go nach M1:** Braucht der Geodenkriecher mehr als 2 Personenwochen, wird zuerst die Pipeline verbessert, bevor ein weiterer Mob dazukommt.
+**Gates:**
+- **Gate A, vor M0:** Geodenkriecher und Sporenbalg bekommen von allen drei Prüfern mindestens 7. Für den Steinzeugen gilt dasselbe, oder er wird nach 2 Runden geparkt.
+- **Gate B, in M0 nach dem Renderer:** Der Geodenkriecher sieht im Client-Screenshot unter 1.21.1 genauso aus wie in Blockbench, und das Leuchten ist sichtbar. Dafür sind höchstens 5 Personentage eingeplant. Sonst wird die Pipeline überprüft, als Rückfall dient der Blockbench-Java-Export als Codegenerator.
+- **Gate C, nach M1:** Braucht der Geodenkriecher mehr als 2 Personenwochen, wird zuerst die Pipeline verbessert, bevor ein weiterer Mob dazukommt.
 
 **Bekannte Lücke:** Der Client lässt sich in der Cloud-Testumgebung nur für 1.21.1 starten. Für 26.x braucht der Screenshot-Test entweder eine bessere OpenGL-Umgebung oder einen Test auf einem echten PC, etwa bei dir mit der Claude-App und `scripts/client-screenshot.sh`.
