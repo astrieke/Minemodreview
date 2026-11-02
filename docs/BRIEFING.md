@@ -246,15 +246,15 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 
 | Würfel | Knochen | von | bis | UV | Material | Rotation |
 |---|---|---|---|---|---|---|
-| `sack_core` | `sack` | [-4, 3, -4] | [4, 9, 4] | [0, 14] | membrane | – |
-| `belly` | `sack` | [-5, 4, -5] | [5, 8, 5] | [0, 28] | membrane | – |
-| `gills` | `cap` | [-5, 9, -5] | [5, 10, 5] | [0, 42] | gill | – |
-| `cap_main` | `cap` | [-6, 10, -6] | [6, 12, 6] | [0, 0] | cap | – |
-| `cap_mid` | `cap` | [-5, 12, -5] | [5, 13, 5] | [0, 53] | cap | – |
-| `cap_top` | `cap` | [-3, 13, -3] | [3, 14, 3] | [32, 14] | cap | – |
-| `root_left` | `leg_left` | [2, 0, -1] | [4, 3, 1] | [48, 0] | root | [0, 0, 15] |
-| `root_right` | `leg_right` | [-4, 0, -1] | [-2, 3, 1] | [48, 0] (gespiegelt) | root | [0, 0, -15] |
-| `root_back` | `leg_back` | [-1, 0, 2] | [1, 3, 4] | [48, 0] | root | [-15, 0, 0] |
+| `sack_core` | `sack` | [-4, 5, -4] | [4, 11, 4] | [0, 14] | membrane | – |
+| `belly` | `sack` | [-5, 6, -5] | [5, 10, 5] | [0, 28] | membrane | – |
+| `gills` | `cap` | [-5, 11, -5] | [5, 12, 5] | [0, 42] | gill | – |
+| `cap_main` | `cap` | [-6, 12, -6] | [6, 14, 6] | [0, 0] | cap | – |
+| `cap_mid` | `cap` | [-5, 14, -5] | [5, 15, 5] | [0, 53] | cap | – |
+| `cap_top` | `cap` | [-3, 15, -3] | [3, 16, 3] | [32, 14] | cap | – |
+| `root_left` | `leg_left` | [2, 0, -1] | [4, 5, 1] | [48, 0] | root | [0, 0, 15] |
+| `root_right` | `leg_right` | [-4, 0, -1] | [-2, 5, 1] | [48, 0] (gespiegelt) | root | [0, 0, -15] |
+| `root_back` | `leg_back` | [-1, 0, 2] | [1, 5, 4] | [48, 0] | root | [-15, 0, 0] |
 
 **Animationen:**
 

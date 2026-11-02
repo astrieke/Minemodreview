@@ -19,7 +19,7 @@
       "parent": "body",
       "origin": [
         0,
-        6.5,
+        8.5,
         0
       ]
     },
@@ -28,7 +28,7 @@
       "parent": "body",
       "origin": [
         0,
-        10,
+        12,
         0
       ]
     },
@@ -37,7 +37,7 @@
       "parent": "body",
       "origin": [
         3,
-        3,
+        5,
         0
       ]
     },
@@ -46,7 +46,7 @@
       "parent": "body",
       "origin": [
         -3,
-        3,
+        5,
         0
       ]
     },
@@ -55,7 +55,7 @@
       "parent": "body",
       "origin": [
         0,
-        3,
+        5,
         3
       ]
     }
@@ -66,12 +66,12 @@
       "bone": "sack",
       "from": [
         -4,
-        3,
+        5,
         -4
       ],
       "to": [
         4,
-        9,
+        11,
         4
       ],
       "uv_offset": [
@@ -85,12 +85,12 @@
       "bone": "sack",
       "from": [
         -5,
-        4,
+        6,
         -5
       ],
       "to": [
         5,
-        8,
+        10,
         5
       ],
       "uv_offset": [
@@ -105,12 +105,12 @@
       "bone": "cap",
       "from": [
         -5,
-        9,
+        11,
         -5
       ],
       "to": [
         5,
-        10,
+        12,
         5
       ],
       "uv_offset": [
@@ -124,12 +124,12 @@
       "bone": "cap",
       "from": [
         -6,
-        10,
+        12,
         -6
       ],
       "to": [
         6,
-        12,
+        14,
         6
       ],
       "uv_offset": [
@@ -144,12 +144,12 @@
       "bone": "cap",
       "from": [
         -5,
-        12,
+        14,
         -5
       ],
       "to": [
         5,
-        13,
+        15,
         5
       ],
       "uv_offset": [
@@ -164,12 +164,12 @@
       "bone": "cap",
       "from": [
         -3,
-        13,
+        15,
         -3
       ],
       "to": [
         3,
-        14,
+        16,
         3
       ],
       "uv_offset": [
@@ -189,7 +189,7 @@
       ],
       "to": [
         4,
-        3,
+        5,
         1
       ],
       "rotation": [
@@ -199,7 +199,7 @@
       ],
       "origin": [
         3,
-        3,
+        5,
         0
       ],
       "uv_offset": [
@@ -218,7 +218,7 @@
       ],
       "to": [
         -2,
-        3,
+        5,
         1
       ],
       "rotation": [
@@ -228,7 +228,7 @@
       ],
       "origin": [
         -3,
-        3,
+        5,
         0
       ],
       "uv_offset": [
@@ -248,7 +248,7 @@
       ],
       "to": [
         1,
-        3,
+        5,
         4
       ],
       "rotation": [
@@ -258,7 +258,7 @@
       ],
       "origin": [
         0,
-        3,
+        5,
         3
       ],
       "uv_offset": [
@@ -364,7 +364,7 @@
           "time": 0.3,
           "value": [
             0,
-            4,
+            5,
             0
           ],
           "interpolation": "catmullrom"
@@ -385,9 +385,9 @@
           "channel": "scale",
           "time": 0,
           "value": [
-            1.15,
-            0.85,
-            1.15
+            1.1,
+            0.8,
+            1.1
           ],
           "interpolation": "catmullrom"
         },
@@ -396,9 +396,9 @@
           "channel": "scale",
           "time": 0.15,
           "value": [
-            0.92,
-            1.12,
-            0.92
+            0.93,
+            1.15,
+            0.93
           ],
           "interpolation": "catmullrom"
         },
@@ -418,9 +418,9 @@
           "channel": "scale",
           "time": 0.6,
           "value": [
-            1.15,
-            0.85,
-            1.15
+            1.1,
+            0.8,
+            1.1
           ],
           "interpolation": "catmullrom"
         },
@@ -442,7 +442,7 @@
           "value": [
             -20,
             0,
-            0
+            10
           ],
           "interpolation": "catmullrom"
         },
@@ -475,7 +475,7 @@
           "value": [
             -20,
             0,
-            0
+            -10
           ],
           "interpolation": "catmullrom"
         },
@@ -557,20 +557,9 @@
           "channel": "scale",
           "time": 0.5,
           "value": [
-            1.16,
+            1.15,
             1.1,
-            1.16
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "sack",
-          "channel": "scale",
-          "time": 0.55,
-          "value": [
-            1.2,
-            1.13,
-            1.2
+            1.15
           ],
           "interpolation": "linear"
         },
@@ -579,9 +568,9 @@
           "channel": "scale",
           "time": 0.6,
           "value": [
-            1.16,
-            1.1,
-            1.16
+            1.2,
+            1.14,
+            1.2
           ],
           "interpolation": "linear"
         },
@@ -590,9 +579,9 @@
           "channel": "scale",
           "time": 0.65,
           "value": [
-            1.2,
-            1.14,
-            1.2
+            1.17,
+            1.12,
+            1.17
           ],
           "interpolation": "linear"
         },
@@ -627,7 +616,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "cap",
@@ -635,10 +624,10 @@
           "time": 0.6,
           "value": [
             0,
-            1,
+            2,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "cap",
@@ -649,7 +638,7 @@
             -0.5,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "cap",
@@ -660,7 +649,18 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
+        },
+        {
+          "bone": "cap",
+          "channel": "position",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
         },
         {
           "bone": "cap",
