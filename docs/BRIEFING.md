@@ -132,10 +132,15 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 | Drop | Calcitschuppe (Material für den Bohrkopf, Stufe 2) |
 | Spawn | Kristallzeit, Gruppen von 1–2, Licht egal |
 | Textur | 64×64, Box-UV |
-| Umfang | 10 Knochen, 22 Würfel, 3 Animationen |
+| Umfang | 10 Knochen, 15 Würfel, 3 Animationen |
 | Design-Prüfung | 8/10 (Silhouette 8 · Proportionen 7 · Textur 7 · Animation 7 · Thema 8) |
 
 **Verhalten:** Eine träge, niedrige Urzeitechse. Sie wandert langsam zu Kristallquarz-Erz in der Nähe und kratzt daran. Wer ihr folgt, findet Erz. Mit Kristallquarz lässt sie sich anlocken. Sie greift nur an, wenn sie angegriffen wird.
+
+**Fähigkeiten** (Details, Effekte und Startwerte in [`MOBS.md`](MOBS.md#spezialfähigkeiten)):
+- **Erzwitterung:** Findet Kristallquarz im Umkreis von 12 Blöcken und zeigt mit einer violetten Partikelspur die Richtung.
+- **Kratzfund:** Kratzt Kristallquarz-Splitter vom Erz, ohne den Block abzubauen.
+- **Kristallpanzer:** Rollt sich bei einem Angriff 3 s ein (−60 % Schaden, Splitter-Rücktreffer im Nahkampf).
 
 **Gestaltung:**
 - **Körper:** violettgraue Schuppenhaut. Der Rücken ist dunkler, der Bauch hell (`#5D5470`-Familie), Schuppenreihen als versetzte dunkle Bögen.
@@ -167,24 +172,17 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 | `plate` | `back_plate` | [-4, 8, -6] | [4, 10, 6] | [0, 19] | calcite | – |
 | `plate_top` | `back_plate` | [-3, 10, -4] | [3, 11, 4] | [0, 33] | calcite_light | – |
 | `skull` | `head` | [-3, 3, -13] | [3, 8, -7] | [40, 19] | hide | – |
-| `brow` | `head` | [-3.5, 8, -12] | [3.5, 9, -10] | [28, 33] | hide_dark | – |
-| `snout` | `head` | [-2, 4, -17] | [2, 6, -13] | [44, 0] | hide | – |
-| `jaw` | `head` | [-2, 3, -16] | [2, 4, -13] | [44, 6] | belly | – |
-| `leg_fl` | `leg_front_left` | [4, 1, -6] | [7, 4, -3] | [0, 42] | hide | – |
-| `leg_fr` | `leg_front_right` | [-7, 1, -6] | [-4, 4, -3] | [0, 42] (gespiegelt) | hide | – |
-| `leg_bl` | `leg_back_left` | [4, 1, 3] | [7, 4, 6] | [0, 42] | hide | – |
-| `leg_br` | `leg_back_right` | [-7, 1, 3] | [-4, 4, 6] | [0, 42] (gespiegelt) | hide | – |
-| `foot_fl` | `leg_front_left` | [4, 0, -7] | [8, 1, -2] | [12, 42] | hide_dark | – |
-| `foot_fr` | `leg_front_right` | [-8, 0, -7] | [-4, 1, -2] | [12, 42] (gespiegelt) | hide_dark | – |
-| `foot_bl` | `leg_back_left` | [4, 0, 2] | [8, 1, 7] | [12, 42] | hide_dark | – |
-| `foot_br` | `leg_back_right` | [-8, 0, 2] | [-4, 1, 7] | [12, 42] (gespiegelt) | hide_dark | – |
-| `tail_base` | `tail` | [-2, 4, 7] | [2, 7, 13] | [30, 42] | hide | – |
-| `tail_end` | `tail_tip` | [-1, 4.5, 13] | [1, 6.5, 19] | [46, 33] | hide | – |
-| `crystal_main` | `crystals` | [-1, 10.5, -3] | [1, 16.5, -1] | [50, 42] | quartz | [-6, 0, 8] |
-| `crystal_mid_r` | `crystals` | [1.5, 10.5, -1] | [3.5, 14.5, 1] | [0, 49] | quartz | [8, 0, -16] |
-| `crystal_mid_l` | `crystals` | [-3.5, 10.5, 0] | [-1.5, 14.5, 2] | [0, 49] | quartz | [6, 0, 15] |
-| `crystal_small_b` | `crystals` | [0, 10.5, 2] | [1, 13.5, 3] | [8, 49] | quartz | [14, 0, -6] |
-| `crystal_small_f` | `crystals` | [-2, 10.5, -5] | [-1, 13.5, -4] | [8, 49] | quartz | [-10, 0, 12] |
+| `snout` | `head` | [-2, 3, -17] | [2, 6, -13] | [44, 0] | hide | – |
+| `leg_fl` | `leg_front_left` | [4, 0, -7] | [8, 4, -2] | [0, 42] | hide | – |
+| `leg_fr` | `leg_front_right` | [-8, 0, -7] | [-4, 4, -2] | [0, 42] (gespiegelt) | hide | – |
+| `leg_bl` | `leg_back_left` | [4, 0, 2] | [8, 4, 7] | [0, 42] | hide | – |
+| `leg_br` | `leg_back_right` | [-8, 0, 2] | [-4, 4, 7] | [0, 42] (gespiegelt) | hide | – |
+| `tail_base` | `tail` | [-2, 4, 7] | [2, 7, 13] | [28, 33] | hide | – |
+| `tail_end` | `tail_tip` | [-1, 4.5, 13] | [1, 6.5, 19] | [44, 7] | hide | – |
+| `crystal_main` | `crystals` | [-1, 10.5, -3] | [1, 16.5, -1] | [48, 33] | quartz | [-6, 0, 8] |
+| `crystal_mid_r` | `crystals` | [1.5, 10.5, -1] | [3.5, 14.5, 1] | [18, 42] | quartz | [8, 0, -16] |
+| `crystal_mid_l` | `crystals` | [-3.5, 10.5, 0] | [-1.5, 14.5, 2] | [18, 42] | quartz | [6, 0, 15] |
+| `crystal_small_f` | `crystals` | [-2, 10.5, -5] | [-1, 13.5, -4] | [26, 42] | quartz | [-10, 0, 12] |
 
 **Animationen:**
 
@@ -205,11 +203,16 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 | Größe | ca. 0,75 Block breit, 0,9 Block hoch |
 | Drop | Sporenbeutel (Zutat für „Keimfrische“, die die Verfestigung zurücksetzt) |
 | Spawn | Sporenzeit, auf Myzel, Gruppen von 1–3 |
-| Textur | 128×64, Box-UV |
+| Textur | 64×64, Box-UV |
 | Umfang | 6 Knochen, 9 Würfel, 3 Animationen |
 | Design-Prüfung | 7/10 (Silhouette 7 · Proportionen 7 · Textur 7 · Animation 7 · Thema 7) |
 
-**Verhalten:** Ein pilziger Sack auf drei Wurzelbeinen. Er hüpft auf Spieler zu, pumpt sich auf und stößt eine grüne Sporenwolke aus. Die Wolke macht keinen Schaden, sondern **verdoppelt 3 Sekunden lang die Verfestigung**. So setzt er den Spieler unter Zeitdruck.
+**Verhalten:** Ein pilziger Sack auf drei Wurzelbeinen. Er hüpft auf Spieler zu, pumpt sich auf und stößt eine grüne Sporenwolke aus. Die Wolke macht keinen Schaden, sondern **beschleunigt die Verfestigung** (×2,5 für 5 Sekunden). So setzt er den Spieler unter Zeitdruck.
+
+**Fähigkeiten** (Details, Effekte und Startwerte in [`MOBS.md`](MOBS.md#spezialfähigkeiten)):
+- **Sporenstoß:** Wolke, in der die Verfestigung ×2,5 läuft. Vorwarnung: 0,6 s Aufpumpen, die Bernsteinpunkte leuchten.
+- **Wurzelgriff:** Bei der Landung neben dem Spieler gibt es 2 s Langsamkeit II.
+- **Letzter Atemzug:** Platzt beim Tod und hinterlässt eine schwächere Wolke.
 
 **Gestaltung:**
 - **Sack:** helle Membran (`#CFC39A`) mit Adern (`#9C8F6A`) und einem breiteren Bauchwulst.
@@ -233,15 +236,15 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 
 | Würfel | Knochen | von | bis | UV | Material | Rotation |
 |---|---|---|---|---|---|---|
-| `sack_core` | `sack` | [-4, 3, -4] | [4, 10, 4] | [0, 0] | membrane | – |
-| `belly` | `sack` | [-5, 4, -5] | [5, 8, 5] | [0, 15] | membrane | – |
-| `gills` | `cap` | [-5, 9, -5] | [5, 10, 5] | [0, 29] | gill | – |
-| `cap_main` | `cap` | [-6, 10, -6] | [6, 12, 6] | [0, 40] | cap | – |
-| `cap_mid` | `cap` | [-5, 12, -5] | [5, 13, 5] | [64, 0] | cap | – |
-| `cap_top` | `cap` | [-3, 13, -3] | [3, 14, 3] | [32, 0] | cap | – |
-| `root_left` | `leg_left` | [2, 0, -1] | [4, 3, 1] | [40, 15] | root | [0, 0, 15] |
-| `root_right` | `leg_right` | [-4, 0, -1] | [-2, 3, 1] | [40, 15] (gespiegelt) | root | [0, 0, -15] |
-| `root_back` | `leg_back` | [-1, 0, 2] | [1, 3, 4] | [40, 15] | root | [-15, 0, 0] |
+| `sack_core` | `sack` | [-4, 3, -4] | [4, 9, 4] | [0, 14] | membrane | – |
+| `belly` | `sack` | [-5, 4, -5] | [5, 8, 5] | [0, 28] | membrane | – |
+| `gills` | `cap` | [-5, 9, -5] | [5, 10, 5] | [0, 42] | gill | – |
+| `cap_main` | `cap` | [-6, 10, -6] | [6, 12, 6] | [0, 0] | cap | – |
+| `cap_mid` | `cap` | [-5, 12, -5] | [5, 13, 5] | [0, 53] | cap | – |
+| `cap_top` | `cap` | [-3, 13, -3] | [3, 14, 3] | [32, 14] | cap | – |
+| `root_left` | `leg_left` | [2, 0, -1] | [4, 3, 1] | [48, 0] | root | [0, 0, 15] |
+| `root_right` | `leg_right` | [-4, 0, -1] | [-2, 3, 1] | [48, 0] (gespiegelt) | root | [0, 0, -15] |
+| `root_back` | `leg_back` | [-1, 0, 2] | [1, 3, 4] | [48, 0] | root | [-15, 0, 0] |
 
 **Animationen:**
 
@@ -262,11 +265,17 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 | Größe | ca. 1,6 Blöcke breit, 1,9 Blöcke hoch |
 | Drop | Kodex-Fragment (schaltet Erdkodex-Knoten frei), selten versteinerter Stein mit Ammonit |
 | Spawn | entsteht aus versteinerten Blöcken bei Spielern, die zu lange in einer Epoche bleiben (per Config abschaltbar) |
-| Textur | 128×64, Box-UV |
+| Textur | 64×64, Box-UV |
 | Umfang | 10 Knochen, 15 Würfel, 4 Animationen |
 | Design-Prüfung | 7,5/10 (Silhouette 7 · Proportionen 7 · Textur 7 · Animation 7 · Thema 8) |
 
 **Verhalten:** Das Echo eines Reisenden, der zu lange blieb. Er erwacht langsam aus versteinertem Stein und schlägt mit beiden Fäusten zu wie ein Golem. Er macht die Strafe der Verfestigung sichtbar.
+
+**Fähigkeiten** (Details, Effekte und Startwerte in [`MOBS.md`](MOBS.md#spezialfähigkeiten)):
+- **Erwachen aus Stein:** Entsteht aus versteinerten Blöcken bei Spielern in der Stufe `SOLIDIFYING`. Während des Erwachens ist er unverwundbar.
+- **Hammerschlag:** Doppelfaust-Schlag mit 9 Schaden. Die Bodenwelle verursacht im Umkreis von 2 Blöcken Langsamkeit.
+- **Sanduhr-Puls:** Goldene Welle, die 10 s erlaubte Zeit abzieht. Wirkt nur auf 3–8 Blöcke und braucht Sichtlinie.
+- **Steinhaut:** Unter 50 % Leben verhärtet er sich 4 s lang. Ein Spitzhackentreffer auf den Kern bricht die Steinhaut.
 
 **Gestaltung:**
 - **Körper:** breiter Steinkörper. Die Gesteinsschichten richten sich nach der Welthöhe und laufen über Torso, Arme und Beine auf gleicher Höhe durch. Farben: Schiefer `#3C3742`, Grau `#77707C`, Ocker `#B08A5A`, Calcit-Linie `#DCD6CF`. Dazu Risse mit Goldadern.
@@ -296,20 +305,20 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von einem **Designer-Age
 | Würfel | Knochen | von | bis | UV | Material | Rotation |
 |---|---|---|---|---|---|---|
 | `torso` | `body` | [-7, 12, -4] | [7, 25, 4] | [0, 0] | strata | – |
-| `ammonite` | `body` | [-4, 14, 4] | [4, 22, 5] | [92, 5] | strata_dark | – |
-| `skull` | `head` | [-4, 23, -5] | [4, 30, 2] | [44, 0] | strata | – |
-| `brow` | `head` | [-4, 27, -5.5] | [4, 28, -4.5] | [74, 0] | strata_dark | – |
-| `cap_top` | `core` | [-2.5, 20, -4.5] | [2.5, 21, -2.5] | [92, 0] | gold | – |
-| `cap_bottom` | `core` | [-2.5, 15, -4.5] | [2.5, 16, -2.5] | [92, 0] | gold | – |
-| `glass` | `core` | [-2, 16, -4] | [2, 20, -3] | [106, 0] | glass | – |
-| `shoulder_left` | `shoulder_left` | [7, 22, -4] | [13, 26, 4] | [44, 21] | strata_dark | – |
-| `shoulder_right` | `shoulder_right` | [-13, 22, -4] | [-7, 26, 4] | [44, 21] (gespiegelt) | strata_dark | – |
-| `arm_l` | `arm_left` | [7, 10, -2.5] | [12, 24, 2.5] | [0, 21] | strata | – |
-| `arm_r` | `arm_right` | [-12, 10, -2.5] | [-7, 24, 2.5] | [0, 21] (gespiegelt) | strata | – |
-| `fist_l` | `arm_left` | [7, 6, -3] | [12, 10, 3] | [20, 21] | strata_dark | – |
-| `fist_r` | `arm_right` | [-12, 6, -3] | [-7, 10, 3] | [20, 21] (gespiegelt) | strata_dark | – |
-| `leg_l` | `leg_left` | [0.5, 0, -2.5] | [5.5, 12, 2.5] | [0, 40] | strata | – |
-| `leg_r` | `leg_right` | [-5.5, 0, -2.5] | [-0.5, 12, 2.5] | [0, 40] (gespiegelt) | strata | – |
+| `ammonite` | `body` | [-4, 14, 4] | [4, 22, 5] | [42, 35] | strata_dark | – |
+| `skull` | `head` | [-4, 23, -5] | [4, 30, 2] | [0, 21] | strata | – |
+| `brow` | `head` | [-4, 27, -5.5] | [4, 28, -4.5] | [30, 45] | strata_dark | – |
+| `cap_top` | `core` | [-2.5, 20, -4.5] | [2.5, 21, -2.5] | [44, 17] | gold | – |
+| `cap_bottom` | `core` | [-2.5, 15, -4.5] | [2.5, 16, -2.5] | [44, 17] | gold | – |
+| `glass` | `core` | [-2, 16, -4] | [2, 20, -3] | [20, 45] | glass | – |
+| `shoulder_left` | `shoulder_left` | [7, 22, -4] | [13, 26, 4] | [30, 21] | strata_dark | – |
+| `shoulder_right` | `shoulder_right` | [-13, 22, -4] | [-7, 26, 4] | [30, 21] (gespiegelt) | strata_dark | – |
+| `arm_l` | `arm_left` | [7, 10, -2.5] | [12, 24, 2.5] | [0, 35] | strata | – |
+| `arm_r` | `arm_right` | [-12, 10, -2.5] | [-7, 24, 2.5] | [0, 35] (gespiegelt) | strata | – |
+| `fist_l` | `arm_left` | [7, 6, -3] | [12, 10, 3] | [20, 35] | strata_dark | – |
+| `fist_r` | `arm_right` | [-12, 6, -3] | [-7, 10, 3] | [20, 35] (gespiegelt) | strata_dark | – |
+| `leg_l` | `leg_left` | [0.5, 0, -2.5] | [5.5, 12, 2.5] | [44, 0] | strata | – |
+| `leg_r` | `leg_right` | [-5.5, 0, -2.5] | [-0.5, 12, 2.5] | [44, 0] (gespiegelt) | strata | – |
 
 **Animationen:**
 

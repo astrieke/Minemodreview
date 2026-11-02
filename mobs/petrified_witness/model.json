@@ -2,7 +2,7 @@
   "id": "petrified_witness",
   "name": "Steinzeuge",
   "texture_size": [
-    128,
+    64,
     64
   ],
   "bones": [
@@ -131,8 +131,8 @@
         5
       ],
       "uv_offset": [
-        92,
-        5
+        42,
+        35
       ],
       "material": "strata_dark",
       "back": "ammonite"
@@ -151,8 +151,8 @@
         2
       ],
       "uv_offset": [
-        44,
-        0
+        0,
+        21
       ],
       "material": "strata",
       "face": "witness"
@@ -171,8 +171,8 @@
         -4.5
       ],
       "uv_offset": [
-        74,
-        0
+        30,
+        45
       ],
       "material": "strata_dark"
     },
@@ -190,8 +190,8 @@
         -2.5
       ],
       "uv_offset": [
-        92,
-        0
+        44,
+        17
       ],
       "material": "gold"
     },
@@ -209,8 +209,8 @@
         -2.5
       ],
       "uv_offset": [
-        92,
-        0
+        44,
+        17
       ],
       "material": "gold"
     },
@@ -228,8 +228,8 @@
         -3
       ],
       "uv_offset": [
-        106,
-        0
+        20,
+        45
       ],
       "material": "glass",
       "face": "hourglass"
@@ -248,7 +248,7 @@
         4
       ],
       "uv_offset": [
-        44,
+        30,
         21
       ],
       "material": "strata_dark"
@@ -267,7 +267,7 @@
         4
       ],
       "uv_offset": [
-        44,
+        30,
         21
       ],
       "material": "strata_dark",
@@ -288,7 +288,7 @@
       ],
       "uv_offset": [
         0,
-        21
+        35
       ],
       "material": "strata"
     },
@@ -307,7 +307,7 @@
       ],
       "uv_offset": [
         0,
-        21
+        35
       ],
       "material": "strata",
       "mirror_uv": true
@@ -327,7 +327,7 @@
       ],
       "uv_offset": [
         20,
-        21
+        35
       ],
       "material": "strata_dark"
     },
@@ -346,7 +346,7 @@
       ],
       "uv_offset": [
         20,
-        21
+        35
       ],
       "material": "strata_dark",
       "mirror_uv": true
@@ -365,8 +365,8 @@
         2.5
       ],
       "uv_offset": [
-        0,
-        40
+        44,
+        0
       ],
       "material": "strata"
     },
@@ -384,8 +384,8 @@
         2.5
       ],
       "uv_offset": [
-        0,
-        40
+        44,
+        0
       ],
       "material": "strata",
       "mirror_uv": true

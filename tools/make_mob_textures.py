@@ -46,7 +46,10 @@ PAL = {
 STRATA = [('#3c3742', 3), ('#77707c', 3), ('#b08a5a', 2), ('#5e5868', 3), ('#dcd6cf', 1), ('#77707c', 2), ('#3c3742', 2)]
 STRATA_PERIOD = sum(h for _, h in STRATA)
 
-FACE_LIGHT = {'up': 1.12, 'north': 1.0, 'east': 0.92, 'west': 0.92, 'south': 0.86, 'down': 0.7}
+# Licht als Stufe in der Palette (nicht als Farbmultiplikation), damit pro Material nur feste Töne vorkommen
+FACE_STEP = {'up': 1, 'north': 0, 'east': 0, 'west': 0, 'south': -1, 'down': -1}
+# Gesteinsschichten: 4 feste Töne je Schicht (Riss/Schatten, Seite, Vorderseite, Oberseite)
+STRATA_TONES = [0.7, 0.85, 1.0, 1.12]
 
 
 def faces(cube):
@@ -66,14 +69,16 @@ def put(img, rect, x, y, color):
         img.putpixel((x0 + x, y0 + y), rgb(color) if isinstance(color, str) else color)
 
 
-def strata_color(world_y, dark=False):
+def strata_color(world_y, step):
+    """Farbe der Schicht auf Welthöhe world_y, in Tonstufe step (0 = dunkel … 3 = hell)."""
     k = int(math.floor(world_y)) % STRATA_PERIOD
+    base = STRATA[0][0]
     for color, height in STRATA:
         if k < height:
-            c = rgb(color)
-            return shade(c, 0.78) if dark else c
+            base = color
+            break
         k -= height
-    return rgb(STRATA[0][0])
+    return shade(rgb(base), STRATA_TONES[max(0, min(3, step))])
 
 
 def paint_cube(img, cube, rnd):
@@ -81,26 +86,27 @@ def paint_cube(img, cube, rnd):
     mat = cube['material']
     top_y = cube['to'][1]
     for face, (x0, y0, w, h) in f.items():
-        light = FACE_LIGHT[face]
+        side = face not in ('up', 'down')
         for y in range(h):
             for x in range(w):
                 noise = rnd.uniform(-0.55, 0.55)
                 if mat in ('strata', 'strata_dark'):
-                    if face in ('up', 'down'):
-                        base = strata_color(top_y if face == 'up' else cube['from'][1], mat == 'strata_dark')
-                    else:
-                        base = strata_color(top_y - 1 - y, mat == 'strata_dark')
-                    c = shade(base, light * (1 + noise * 0.12))
-                    if face not in ('up', 'down') and (x * 7 + y * 3 + int(top_y)) % 23 == 0:
-                        c = shade(c, 0.6)                    # Risse, aber nie fast schwarz
-                        if sum(c[:3]) < sum(rgb('#2a2530')[:3]):
-                            c = rgb('#2a2530')
-                    img.putpixel((x0 + x, y0 + y), c)
+                    step = 2 + FACE_STEP[face] - (1 if mat == 'strata_dark' else 0)
+                    if face in ('east', 'west'):
+                        step -= 1                            # Seiten eine Stufe dunkler als vorn
+                    if noise < -0.4:
+                        step -= 1                            # Körnung nur aus den festen Tönen
+                    if side and (x * 7 + y * 3 + int(top_y)) % 23 == 0:
+                        step = 0                             # Risse
+                    world_y = (top_y if face == 'up' else cube['from'][1]) if not side else top_y - 1 - y
+                    img.putpixel((x0 + x, y0 + y), strata_color(world_y, step))
                     continue
                 pal = PAL[mat]
-                v = 2 + noise
-                if face not in ('up', 'down') and h > 2:
+                v = 2 + noise * 0.8 + FACE_STEP[face]
+                if side and h > 2:
                     v += 0.6 * (1 - y / (h - 1)) - 0.3
+                if side and h > 3 and y == h - 1 and mat not in ('quartz', 'glass'):
+                    v -= 1                                   # dunkle Unterkante
                 if mat == 'hide':
                     if face == 'up':
                         v -= 0.7                             # dunkler Rücken
@@ -109,20 +115,14 @@ def paint_cube(img, cube, rnd):
                     elif (y % 3 == 2) and ((x + y // 3) % 3 != 0):
                         v -= 1.0                             # Schuppenreihen
                 if mat == 'membrane' and ((x * 3 + y * 5) % 11 == 0 or (x + 2 * y) % 13 == 0):
-                    img.putpixel((x0 + x, y0 + y), shade(rgb('#9c8f6a'), light))   # Adern
-                    continue
+                    v = 0.6                                  # Adern
                 if mat == 'gill':
                     v = 1.0 if x % 2 == 0 else 2.2
                 if mat == 'quartz':
                     v = 4 if face == 'up' else (3 if x == 0 else 2 if x < w - 1 else 1)
                 if mat == 'calcite' and (x * 5 + y * 7) % 9 == 0:
                     v -= 1.2                                 # Calcit-Sprenkel
-                c = rgb(pal[max(0, min(4, int(round(v))))])
-                img.putpixel((x0 + x, y0 + y), shade(c, light))
-        if face not in ('up', 'down') and h > 3 and mat not in ('quartz', 'glass'):
-            for x in range(w):
-                px = img.getpixel((x0 + x, y0 + h - 1))
-                img.putpixel((x0 + x, y0 + h - 1), shade(px, 0.85))
+                img.putpixel((x0 + x, y0 + y), rgb(pal[max(0, min(4, int(round(v))))]))
     return f
 
 
@@ -136,6 +136,8 @@ def d_lizard(img, f, rnd):
         put(img, r, ex + (1 if side == 'east' else 0), 1, '#1a1206')
     # Augen auch von vorn erkennbar: Goldpixel an den vorderen Schädelecken
     r = f['north']
+    for x in range(r[2]):
+        put(img, r, x, 0, PAL['hide_dark'][1])              # Brauenwulst als Kante statt eigenem Würfel
     put(img, r, 0, 1, '#f2c14e'); put(img, r, r[2] - 1, 1, '#f2c14e')
     # Goldfleck als Erz-Hinweis an den Flanken
     for side in ('east', 'west'):
@@ -151,7 +153,7 @@ def d_snout(img, f, rnd):
 def d_claws(img, f, rnd):
     r = f['north']
     for x in range(0, r[2], 2):
-        put(img, r, x, 0, '#d8d2c4')
+        put(img, r, x, r[3] - 1, '#d8d2c4')                 # Krallen an der Unterkante des Beins
 
 
 def d_spore(img, f, rnd):
@@ -249,7 +251,7 @@ DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_sp
 
 
 def paint(mob_id):
-    model = json.load(open(os.path.join(ROOT, mob_id, 'model.json')))
+    model = json.load(open(os.path.join(ROOT, mob_id, 'model.json'), encoding='utf-8'))
     w, h = model['texture_size']
     img = Image.new('RGBA', (w, h), (0, 0, 0, 0))
     rnd = random.Random(mob_id)

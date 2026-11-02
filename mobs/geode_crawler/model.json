@@ -185,30 +185,11 @@
       "face": "lizard"
     },
     {
-      "name": "brow",
-      "bone": "head",
-      "from": [
-        -3.5,
-        8,
-        -12
-      ],
-      "to": [
-        3.5,
-        9,
-        -10
-      ],
-      "uv_offset": [
-        28,
-        33
-      ],
-      "material": "hide_dark"
-    },
-    {
       "name": "snout",
       "bone": "head",
       "from": [
         -2,
-        4,
+        3,
         -17
       ],
       "to": [
@@ -224,55 +205,37 @@
       "face": "snout"
     },
     {
-      "name": "jaw",
-      "bone": "head",
-      "from": [
-        -2,
-        3,
-        -16
-      ],
-      "to": [
-        2,
-        4,
-        -13
-      ],
-      "uv_offset": [
-        44,
-        6
-      ],
-      "material": "belly"
-    },
-    {
       "name": "leg_fl",
       "bone": "leg_front_left",
       "from": [
         4,
-        1,
-        -6
+        0,
+        -7
       ],
       "to": [
-        7,
+        8,
         4,
-        -3
+        -2
       ],
       "uv_offset": [
         0,
         42
       ],
-      "material": "hide"
+      "material": "hide",
+      "face": "claws"
     },
     {
       "name": "leg_fr",
       "bone": "leg_front_right",
       "from": [
-        -7,
-        1,
-        -6
+        -8,
+        0,
+        -7
       ],
       "to": [
         -4,
         4,
-        -3
+        -2
       ],
       "uv_offset": [
         0,
@@ -286,13 +249,13 @@
       "bone": "leg_back_left",
       "from": [
         4,
-        1,
-        3
+        0,
+        2
       ],
       "to": [
-        7,
+        8,
         4,
-        6
+        7
       ],
       "uv_offset": [
         0,
@@ -304,99 +267,20 @@
       "name": "leg_br",
       "bone": "leg_back_right",
       "from": [
-        -7,
-        1,
-        3
+        -8,
+        0,
+        2
       ],
       "to": [
         -4,
         4,
-        6
+        7
       ],
       "uv_offset": [
         0,
         42
       ],
       "material": "hide",
-      "mirror_uv": true
-    },
-    {
-      "name": "foot_fl",
-      "bone": "leg_front_left",
-      "from": [
-        4,
-        0,
-        -7
-      ],
-      "to": [
-        8,
-        1,
-        -2
-      ],
-      "uv_offset": [
-        12,
-        42
-      ],
-      "material": "hide_dark",
-      "face": "claws"
-    },
-    {
-      "name": "foot_fr",
-      "bone": "leg_front_right",
-      "from": [
-        -8,
-        0,
-        -7
-      ],
-      "to": [
-        -4,
-        1,
-        -2
-      ],
-      "uv_offset": [
-        12,
-        42
-      ],
-      "material": "hide_dark",
-      "mirror_uv": true
-    },
-    {
-      "name": "foot_bl",
-      "bone": "leg_back_left",
-      "from": [
-        4,
-        0,
-        2
-      ],
-      "to": [
-        8,
-        1,
-        7
-      ],
-      "uv_offset": [
-        12,
-        42
-      ],
-      "material": "hide_dark"
-    },
-    {
-      "name": "foot_br",
-      "bone": "leg_back_right",
-      "from": [
-        -8,
-        0,
-        2
-      ],
-      "to": [
-        -4,
-        1,
-        7
-      ],
-      "uv_offset": [
-        12,
-        42
-      ],
-      "material": "hide_dark",
       "mirror_uv": true
     },
     {
@@ -413,8 +297,8 @@
         13
       ],
       "uv_offset": [
-        30,
-        42
+        28,
+        33
       ],
       "material": "hide"
     },
@@ -432,8 +316,8 @@
         19
       ],
       "uv_offset": [
-        46,
-        33
+        44,
+        7
       ],
       "material": "hide"
     },
@@ -461,8 +345,8 @@
         -2
       ],
       "uv_offset": [
-        50,
-        42
+        48,
+        33
       ],
       "material": "quartz"
     },
@@ -490,8 +374,8 @@
         0
       ],
       "uv_offset": [
-        0,
-        49
+        18,
+        42
       ],
       "material": "quartz"
     },
@@ -519,37 +403,8 @@
         1
       ],
       "uv_offset": [
-        0,
-        49
-      ],
-      "material": "quartz"
-    },
-    {
-      "name": "crystal_small_b",
-      "bone": "crystals",
-      "from": [
-        0,
-        10.5,
-        2
-      ],
-      "to": [
-        1,
-        13.5,
-        3
-      ],
-      "rotation": [
-        14,
-        0,
-        -6
-      ],
-      "origin": [
-        0.5,
-        10.5,
-        2.5
-      ],
-      "uv_offset": [
-        8,
-        49
+        18,
+        42
       ],
       "material": "quartz"
     },
@@ -577,8 +432,8 @@
         -4.5
       ],
       "uv_offset": [
-        8,
-        49
+        26,
+        42
       ],
       "material": "quartz"
     }
