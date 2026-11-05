@@ -84,18 +84,29 @@ tools/blockbench-mcp/            MCP-Server + Blockbench-Plugin, damit Claude Mo
 
 ## Bauen und testen
 
+Alle drei Mods liegen in einem Repo, gebaut wird aber **pro Mod in ihrem Ordner**. Jeder Ordner hat ein eigenes `gradlew`, das das Gradle des Haupt-Repos nutzt.
+
+```bash
+cd core                         # bzw. epochs oder bridge
+./gradlew build                 # alle 5 Minecraft-Versionen dieser Mod
+./gradlew 1.21.1:build          # nur eine Version
+```
+
+Unter Windows heißt der Befehl `gradlew build` bzw. `gradlew 1.21.1:build`.
+
+Die fertigen Jars aller Versionen landen gesammelt in **`<mod>/build/libs/`**, z. B. `core/build/libs/strata-core-neoforge-0.1.0+1.21.1.jar`. `epochs` und `bridge` bauen ihre Abhängigkeiten (`core`, bzw. `core` und `epochs`) automatisch mit.
+
 Gradle braucht zum Starten Java 17 oder neuer. Fehlende JDKs (21 für 1.21.x, 25 für 26.x) lädt Gradle automatisch herunter.
+
+**Vom Hauptordner aus** geht weiterhin alles auf einmal:
 
 ```bash
 ./gradlew :common:test                 # Spiellogik testen
-./gradlew build                        # alle Mods für alle Versionen bauen
-./gradlew :epochs-26.3:build           # eine Mod für eine Version
-./gradlew :bridge-1.21.1:runClient     # Spiel mit dem ganzen Set + JEI + Jade starten
+./gradlew build                        # alle Mods für alle Versionen
+./gradlew :bridge:1.21.1:runClient     # Spiel mit dem ganzen Set + JEI + Jade starten
 scripts/smoke-test.sh                  # Server + Selbsttest in allen Versionen
 scripts/smoke-test.sh 1.21.1 26.3      # nur bestimmte Versionen
 ```
-
-Die fertigen Jars liegen unter `<mod>/versions/<v>/build/libs/` (core, epochs, bridge).
 
 ## Eigene Epoche hinzufügen (Pack-Autoren)
 
@@ -106,7 +117,7 @@ Eine Epoche mit Dimension kommt in `epochs/worldgen/epochs.json` (Vorlage-Biom, 
 ## Neue Minecraft-Version hinzufügen
 
 1. `versions/<v>/gradle.properties` anlegen (Vorlage: eine bestehende Version).
-2. `./gradlew :core-<v>:compileJava :epochs-<v>:compileJava` ausführen.
+2. `./gradlew :core:<v>:compileJava :epochs:<v>:compileJava :bridge:<v>:compileJava` ausführen.
 3. Meldet der Compiler Fehler, eine neue Quellgruppe unter `core/src/` bzw. `epochs/src/` mit angepasster Anbindungsklasse anlegen und in `gradle.properties` eintragen.
 4. `scripts/smoke-test.sh <v>` ausführen und die Version in die CI-Matrix (`.github/workflows/build.yml`) aufnehmen.
 

@@ -15,15 +15,20 @@ rootProject.name = 'strata'
 // Reine Spiellogik ohne Minecraft-Abhängigkeit.
 include 'common'
 
-// Für jede Minecraft-Version unter versions/<v>/ und jede Mod ein eigenes Gradle-Projekt,
-// z. B. :core-1.21.1 oder :epochs-26.3. Die Versionsdaten stehen in versions/<v>/gradle.properties.
+// Jede Mod ist ein eigener Ordner (core/, epochs/, bridge/) mit einem Unterprojekt pro
+// Minecraft-Version, z. B. :core:1.21.1 in core/versions/1.21.1. Die Versionsdaten stehen
+// in versions/<v>/gradle.properties.
+//
+// Bauen pro Mod: in den Ordner wechseln und dort gradlew aufrufen, z. B.
+//   cd core && ./gradlew build              (alle Versionen, Jars landen in core/build/libs/)
+//   cd core && ./gradlew 1.21.1:build       (nur eine Version)
 def mods = ['core', 'epochs', 'bridge']
 file('versions').eachDir { dir ->
     mods.each { mod ->
-        def name = "${mod}-${dir.name}"
+        def path = ":${mod}:${dir.name}"
         def projectDir = file("${mod}/versions/${dir.name}")
         projectDir.mkdirs()
-        include name
-        project(":${name}").projectDir = projectDir
+        include path
+        project(path).projectDir = projectDir
     }
 }

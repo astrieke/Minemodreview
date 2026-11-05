@@ -31,7 +31,7 @@ for v in "${versions[@]}"; do
 
     log="$run/smoke.log"
     echo "== $v: Server startet …"
-    ./gradlew --console=plain ":bridge-$v:runServer" > "$log" 2>&1 &
+    ./gradlew --console=plain ":bridge:$v:runServer" > "$log" 2>&1 &
     pid=$!
     result="TIMEOUT"
     for _ in $(seq 1 300); do

@@ -67,12 +67,23 @@ scripts/client-screenshot.sh  Client-Screenshot in einer Epoche
 
 ## 5. Bauen und testen
 
+Die drei Mods liegen in einem Repo, gebaut wird pro Mod in ihrem Ordner. Die Jars aller Versionen landen in `<mod>/build/libs/`:
+
+```bash
+cd core && ./gradlew build              # Strata Core, alle 5 Versionen
+cd epochs && ./gradlew 1.21.1:build     # Strata Epochs, nur 1.21.1
+```
+
+Vom Hauptordner aus:
+
 ```bash
 ./gradlew :common:test                  # Spiellogik
 ./gradlew build                         # alle 3 Mods × 5 Versionen
 scripts/smoke-test.sh                   # Server-Start + Selbsttests in allen Versionen
-./gradlew :bridge-1.21.1:runClient      # Spiel mit dem ganzen Set + JEI + Jade
+./gradlew :bridge:1.21.1:runClient      # Spiel mit dem ganzen Set + JEI + Jade
 ```
+
+Gradle-Projekte heißen `:<mod>:<version>`, z. B. `:epochs:26.3`.
 
 ## 6. Arbeitsweise (Regeln für Claude)
 

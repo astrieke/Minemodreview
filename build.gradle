@@ -12,10 +12,9 @@ def modInfo = [
 def modIds = modInfo.collectEntries { k, v -> [k, v.id] }
 
 def configureStrataProject = { Project p ->
-    def dash = p.name.indexOf('-')
-    if (dash < 0) return
-    def mod = p.name.substring(0, dash)
-    def mcLine = p.name.substring(dash + 1)
+    // Versionsprojekte heißen :<mod>:<mc-version>, z. B. :core:1.21.1
+    def mod = p.parent?.name
+    def mcLine = p.name
     def info = modInfo[mod]
     if (info == null) return
 
@@ -31,7 +30,9 @@ def configureStrataProject = { Project p ->
     if (groups.isEmpty()) throw new GradleException("versions/${mcLine}/gradle.properties: ${mod}_src_groups fehlt")
 
     version = "${rootProject.property('mod_version')}+${mcLine}"
-    group = rootProject.property('mod_group')
+    // Eigene Gruppe pro Mod: Die Versionsprojekte heißen überall gleich (z. B. 1.21.1),
+    // ohne getrennte Gruppen würde Gradle core:1.21.1 und epochs:1.21.1 verwechseln.
+    group = "${rootProject.property('mod_group')}.${mod}"
     base.archivesName = info.jar
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(versionProps.getProperty('java_version') as int)
@@ -46,7 +47,7 @@ def configureStrataProject = { Project p ->
     }
 
     // Abhängigkeiten auf andere Strata-Mods derselben MC-Version.
-    def depProjects = info.deps.collect { d -> project(":${d}-${mcLine}") }
+    def depProjects = info.deps.collect { d -> project(":${d}:${mcLine}") }
     depProjects.each { dp ->
         evaluationDependsOn(dp.path)
         dependencies { implementation dp }
@@ -82,7 +83,7 @@ def configureStrataProject = { Project p ->
             client {
                 client()
                 gameDirectory = p.file('run/client')
-                // Direkt in eine Welt springen: ./gradlew :epochs-1.21.1:runClient -PquickPlay=<Weltordner>
+                // Direkt in eine Welt springen: ./gradlew :epochs:1.21.1:runClient -PquickPlay=<Weltordner>
                 if (rootProject.hasProperty('quickPlay')) {
                     programArguments.addAll('--quickPlaySingleplayer', rootProject.property('quickPlay') as String)
                 }
@@ -123,5 +124,31 @@ def configureStrataProject = { Project p ->
 
 // In Abhängigkeitsreihenfolge konfigurieren (core vor epochs vor bridge), nicht alphabetisch.
 modInfo.keySet().each { m ->
-    subprojects.findAll { it.name.startsWith("${m}-") }.each { sp -> configure(sp, configureStrataProject) }
+    project(":${m}").subprojects.each { sp -> configure(sp, configureStrataProject) }
+}
+
+// Jede Mod (core, epochs, bridge) sammelt die Jars aller Versionen in <mod>/build/libs/.
+// `cd core && ./gradlew build` baut also alle Core-Versionen und legt die Jars dort ab.
+modInfo.keySet().each { m ->
+    project(":${m}") { modProject ->
+        def collect = tasks.register('collectJars', Copy) {
+            group = 'build'
+            description = "Sammelt die Jars aller Minecraft-Versionen von ${m} in ${m}/build/libs/"
+            modProject.subprojects.each { sp ->
+                from(sp.tasks.named('jar'))
+            }
+            into modProject.layout.buildDirectory.dir('libs')
+        }
+        tasks.register('build') {
+            group = 'build'
+            description = "Baut ${m} für alle Minecraft-Versionen"
+            dependsOn modProject.subprojects.collect { it.tasks.named('build') }
+            dependsOn collect
+        }
+        tasks.register('clean', Delete) {
+            group = 'build'
+            delete modProject.layout.buildDirectory
+            dependsOn modProject.subprojects.collect { it.tasks.named('clean') }
+        }
+    }
 }
