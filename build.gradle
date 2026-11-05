@@ -65,6 +65,19 @@ def configureStrataProject = { Project p ->
         def curios = versionProps.getProperty('curios_version')
         dependencies {
             compileOnly "maven.modrinth:curios:${curios}"
+            // KubeJS gibt es nur für 1.21.1 und 26.1; die Quellgruppe "kubejs" ist nur dort eingetragen.
+            def kubejs = versionProps.getProperty('kubejs_version')
+            if (kubejs) {
+                compileOnly "maven.modrinth:kubejs:${kubejs}"
+                compileOnly "maven.modrinth:rhino:2101.2.8-build.91+Rhino-1.21"
+                if (rootProject.hasProperty('withKubejs')) {
+                    runtimeOnly "maven.modrinth:kubejs:${kubejs}"
+                    runtimeOnly "maven.modrinth:rhino:2101.2.8-build.91+Rhino-1.21"
+                    // KubeJS für 26.1 braucht zusätzlich Better Advanced Tooltips.
+                    def extra = versionProps.getProperty('kubejs_extra')
+                    if (extra) runtimeOnly extra
+                }
+            }
             // EMI gibt es nur für 1.21.1; die Quellgruppe "emi" ist nur dort eingetragen.
             def emi = versionProps.getProperty('emi_version')
             if (emi) {

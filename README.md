@@ -112,7 +112,7 @@ Kodex-Knoten werden automatisch freigeschaltet:
 | **Jade** | Hinweis beim Anschauen: am Tor „Reise in die Epoche“ bzw. in der Epoche „Rückweg nach Hause“, an Erzen der Fundort. |
 | **FTB Quests, Heracles & Co.** | Für jeden Kodex-Knoten `ns:pfad` vergibt Strata das Advancement `ns:strata_codex/pfad`, falls es existiert. Quests prüfen das als Advancement-Aufgabe. Für die Knoten von Strata Epochs sind die Advancements dabei. Als Quest-Belohnung schaltet `/strata codex grant @p <knoten>` Knoten frei. |
 | **Curios** | Der Zeitanker passt in den Talisman-Slot und wirkt dort wie im Inventar (Spieler bekommen den Slot per Datapack). Gebaut für alle Versionen. Geprüft in 1.21.1 (Server-Test mit simuliertem Spieler) und 26.3 (Client mit echtem Spieler, `SHOT_CURIOS=1`). Andere Mods können über `Solidification.ANCHOR_SOURCES` eigene Orte für den Zeitanker anmelden. |
-| **KubeJS** | Kein Plugin nötig: Strata feuert bei jeder Freischaltung das NeoForge-Event `dev.strata.core.api.CodexNodeUnlockedEvent` (mit `getPlayer()` und `getNode()`). KubeJS kann es über `NativeEvents.onEvent(...)` abfangen (mit KubeJS selbst noch nicht getestet). |
+| **KubeJS** (1.21.1 und 26.1) | Plugin mit den Bindings `StrataAPI` (Kodex: `hasNode`, `unlock`, `epochs` …) und `Strata` (`coreSample`, `fossilChunk`, `epochOf`, `timeBonus`, `hasTimeAnchor`, `transplant`). Freischaltungen kommen als NeoForge-Event: `NativeEvents.onEvent('dev.strata.core.api.CodexNodeUnlockedEvent', e => …)`. Geprüft mit `scripts/kubejs-test.sh` in beiden Versionen. |
 
 Eigene Kodex-Knoten bekommen ein Advancement, indem der Pack-Autor einfach `data/<ns>/advancement/strata_codex/<pfad>.json` mit dem Kriterium `"trigger": "minecraft:impossible"` anlegt.
 
@@ -221,4 +221,3 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator (übersteht Neustarts), dazu der Kernanalyse-Tisch aus Phase 1. Im Client gesehen: Spiralit (1.21.1), Transplantation (1.21.1 und 26.3), siehe `docs/screenshots/phase3/`.
 - Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.
 - Weitere Biome pro Epoche und ein eigener Mob für die Aschezeit (bisher Vanilla-Magmawürfel und Schreiter).
-- Bridge: KubeJS-Plugin mit eigenen Bindings (KubeJS gibt es nur für 1.21.1 und 26.1).

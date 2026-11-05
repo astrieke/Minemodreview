@@ -1,0 +1,1 @@
+dev.strata.bridge.compat.StrataKubePlugin
