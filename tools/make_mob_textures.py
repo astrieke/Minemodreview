@@ -260,7 +260,7 @@ def d_veins(img, f, rnd, faces_=('south', 'east', 'west')):
 
 # Gemalte Adern dunkel (Ocker), damit die Sanduhr der hellste Punkt bleibt; hell sind sie nur auf der Leucht-Ebene.
 VEIN = '#9a6812'
-VEIN_END = '#6a4708'
+VEIN_END = '#6b4a10'
 
 
 def d_ammonite(img, f, rnd):
@@ -295,7 +295,7 @@ GLOW = {
     'spore_bellows': {'spores': {'colors': {'#ffb847', '#c07a1a', '#e0a030', '#ffd27a'}}},
     # Kern (Sanduhr) und Augen pulsieren; die Goldadern leuchten nur während der Steinhaut
     'petrified_witness': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a', '#ffd86b', '#f2b43a'}},
-                          'veins': {'colors': {'#9a6812', '#6a4708'}, 'glow_color': '#ffe08a'}},
+                          'veins': {'colors': {'#9a6812', '#6b4a10'}, 'glow_color': '#ffe08a'}},
 }
 
 

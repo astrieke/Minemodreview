@@ -291,7 +291,7 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 | Spawn | entsteht aus versteinerten Blöcken bei Spielern, die zu lange in einer Epoche bleiben (per Config abschaltbar) |
 | Textur | 64×64, Box-UV |
 | Umfang | 11 Knochen, 15 Würfel, 6 Animationen |
-| Prüfung | Design 6 · Game Design 6 · Technik 6 → wird umgebaut |
+| Prüfung | Design 7 · Game Design 7 · Technik 7 (nach Umbau, 2. Runde, 05.11.) → freigegeben |
 
 **Verhalten:** Das Echo eines Reisenden, der zu lange blieb. Er erwacht langsam aus versteinertem Stein und schlägt mit beiden Fäusten zu wie ein Golem. Er macht die Strafe der Verfestigung sichtbar.
 
@@ -380,5 +380,5 @@ Arbeitsplan des Projektmanagers vom 03.11.2026. Details stehen in [`MOBS.md`](MO
 **Danach im Code:**
 - M0: Mob-Basis, Modell-Builder, Abspieler, Renderer mit Leucht-Ebenen, Fähigkeiten-Gerüst, Verfestigungs-API, Tuning (**erledigt**)
 - **Gate B:** Client-Screenshot unter 1.21.1 (**erreicht**)
-- M1: Geodenkriecher (**im Spiel**, Reste siehe [`MOBS.md`](MOBS.md#umsetzung-im-code))
+- M1: Geodenkriecher, M2: Sporenbalg, M3: Steinzeuge (**alle im Spiel**, Reste siehe [`MOBS.md`](MOBS.md#umsetzung-im-code))
 - **Gate C**

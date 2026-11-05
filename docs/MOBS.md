@@ -8,7 +8,9 @@ Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früh
 
 **Sporenbalg freigegeben (05.11.2026, 2. Runde):** Design 8, Game Design 7, Technik 8. Behoben wurden die Lücke zwischen Hut und Sack beim Pumpen (Sack-Drehpunkt unten, neuer Stiel), die gekreuzten Wurzeln beim Hüpfen und der schwache Rand vor dem Nebel. Optional für später: oberste Randzeile auf `#f6b98a`, Stauchung beim Hüpfen erst ab 0,5 s, Ventilrand auch seitlich auf der Leucht-Ebene.
 
-**Im Code (05.11.2026):** M0 steht. Geodenkriecher (M1) und Sporenbalg (M2) laufen in allen 5 Versionen, Reste siehe unten. **Gate B ist erreicht:** Im Client-Screenshot unter 1.21.1 sieht er aus wie in Blockbench, und die Kristalle leuchten auch im Dunkeln (`mobs/geode_crawler/shots/ingame_1.21.1.png`, `ingame_dark_1.21.1.png`).
+**Steinzeuge freigegeben (05.11.2026, nach Umbau zum „wandelnden Felsvorsprung“):** Runde 1 6/6/6, Runde 2 7/7/7. Geändert in Runde 2: Schichtplatten verankert (Überhang statt Hut), Hammerschlag mit 0,5 s Ausholen und Bodenkontakt, dunkle Adern, die nur bei der Steinhaut leuchten, Geräusche aus Stein statt Eisengolem. Optional für später: Oberseite der oberen Platte im Schieferton statt Ocker (wirkt sonst wie Holz), Hitbox 1,5 × 2,3 statt 1,3 × 2,4.
+
+**Im Code (05.11.2026):** M0 steht. Geodenkriecher (M1), Sporenbalg (M2) und Steinzeuge (M3) laufen in allen 5 Versionen, Reste siehe unten. **Gate B ist erreicht:** Im Client-Screenshot unter 1.21.1 sieht er aus wie in Blockbench, und die Kristalle leuchten auch im Dunkeln (`mobs/geode_crawler/shots/ingame_1.21.1.png`, `ingame_dark_1.21.1.png`).
 
 **Nachprüfung am 02.11.2026** (nach der Anpassung an die Stilregeln: höchstens 15 Würfel, 64×64, feste Paletten), drei Prüfer:
 
@@ -40,6 +42,7 @@ Alles liegt in Strata Epochs (`epochs/src/`). Der Mob-Code ist bis auf wenige Ad
 | Mob-Basis | `shared/…/mob/StrataMob`, `StrataMobDef` | Aktion und Leuchtstärke als synchronisierte Zahl, Datapack-Werte, Advancement „Begegnung“ |
 | Fähigkeiten | `shared/…/mob/StrataAbility` | Vorwarnung → Wirkung → Abklingzeit, Werte aus dem Datapack |
 | Geodenkriecher | `shared/…/mob/GeodeCrawler` | Erzwitterung, Kratzfund, Kristallpanzer, anlockbar mit Kristallquarz |
+| Steinzeuge | `shared/…/mob/PetrifiedWitness`, `WitnessAwakening` | Erwachen aus versteinertem Stein (bei Spielern in SOLIDIFYING), Hammerschlag mit Bodenwelle, Sanduhr-Puls (−10 s), Steinhaut (Spitzhacke auf den Kern bricht sie); Drop Kodex-Fragment → Knoten „Echo eines Reisenden“ |
 | Sporenbalg | `shared/…/mob/SporeBellows`, `SporeClouds` | hüpft, Sporenstoß (Wolke: Verfestigung ×2,5), Wurzelgriff, Letzter Atemzug; Drop Sporenbeutel → Keimfrische (`GermTonic`, dreht die Uhr 60 s zurück) |
 | Modell-Builder, Pose | `shared/…/client/MobModelBuilder`, `MobPoser` | Blockbench → `LayerDefinition`; Idle + Laufen + Aktion + Kopfdrehung |
 | Renderer | `client_1_21_1`, `client_states` + `glow_crumbling`/`glow_uvmap` | 1.21.1 ohne Render States; ab 1.21.11 mit Render States, Leucht-Ebene je nach Version |
@@ -53,6 +56,7 @@ Alles liegt in Strata Epochs (`epochs/src/`). Der Mob-Code ist bis auf wenige Ad
 
 **Im Spiel geprüft (1.21.1, Bildserien mit `SHOT_ACT=1`):**
 - Geodenkriecher: Spur zum Erz, Hinlaufen, Kratzen mit Partikeln, Kristallquarz fällt, nach einem Treffer Einrollen und Aufstehen (`mobs/geode_crawler/shots/ingame_actions_1.21.1.png`).
+- Steinzeuge: läuft heran, Sanduhr-Puls als goldener Ring, Hammerschlag mit Ausholen über dem Kopf (`mobs/petrified_witness/shots/ingame_attack_1.21.1.png`). Das Erwachen aus Stein ist nur im Server-Code geprüft, nicht im Bild (man muss dafür erst lange verfestigen).
 - Sporenbalg: hüpft auf den Spieler zu, Sporenwolke mit grüner Statusmeldung, Advancement „Begegnung“ (`mobs/spore_bellows/shots/ingame_cloud_1.21.1.png`).
 
 **Geodenkriecher, offen für die Definition of Done:**

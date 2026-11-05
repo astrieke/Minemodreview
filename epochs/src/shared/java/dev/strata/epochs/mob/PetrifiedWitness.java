@@ -308,8 +308,8 @@ public class PetrifiedWitness extends StrataMob {
     // ---- Hammerschlag ----
 
     private final class HammerGoal extends Goal {
-        /** Schlag bei 0,62 s: 0,5 s Ausholen mit Halten über dem Kopf als Vorwarnung. */
-        private static final int IMPACT_TICK = 12;
+        /** Schlag bei 0,62–0,65 s (Bodenkontakt): 0,5 s Ausholen mit Halten über dem Kopf als Vorwarnung. */
+        private static final int IMPACT_TICK = 13;
         private int swing = -1;
         private int cooldown;
 
