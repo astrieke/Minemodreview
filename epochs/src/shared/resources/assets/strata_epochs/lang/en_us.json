@@ -33,5 +33,13 @@
   "subtitles.strata_epochs.spore_bellows.hurt": "Spore Bellows hurts",
   "subtitles.strata_epochs.spore_bellows.death": "Spore Bellows bursts",
   "message.strata_epochs.spores": "Spores! Solidification runs ×%s",
-  "message.strata_epochs.germ_tonic": "Germ Tonic: solidification rewound by %s s"
+  "message.strata_epochs.germ_tonic": "Germ Tonic: solidification rewound by %s s",
+  "entity.strata_epochs.petrified_witness": "Petrified Witness",
+  "item.strata_epochs.petrified_witness_spawn_egg": "Petrified Witness Spawn Egg",
+  "item.strata_epochs.codex_fragment": "Codex Fragment",
+  "subtitles.strata_epochs.petrified_witness.ambient": "Petrified Witness grinds",
+  "subtitles.strata_epochs.petrified_witness.hurt": "Petrified Witness hurts",
+  "subtitles.strata_epochs.petrified_witness.death": "Petrified Witness crumbles",
+  "message.strata_epochs.codex_fragment": "The fragment shows the echo of a traveller.",
+  "message.strata_epochs.codex_fragment.known": "You already know this echo."
 }

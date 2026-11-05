@@ -5,6 +5,7 @@ import dev.strata.core.api.StrataAPI;
 import dev.strata.core.mc.Mc;
 import dev.strata.core.MobTuning;
 import dev.strata.epochs.mob.GeodeCrawler;
+import dev.strata.epochs.mob.PetrifiedWitness;
 import dev.strata.epochs.mob.SporeBellows;
 import dev.strata.epochs.mob.MobAnimation;
 import dev.strata.epochs.mob.MobModelData;
@@ -66,12 +67,15 @@ final class SelfTest {
         }
         failures += testMob(server, GeodeCrawler.DEF, l -> new GeodeCrawler(EpochsMobs.GEODE_CRAWLER.get(), l), "crystal_age");
         failures += testMob(server, SporeBellows.DEF, l -> new SporeBellows(EpochsMobs.SPORE_BELLOWS.get(), l), "spore_age");
+        failures += testMob(server, PetrifiedWitness.DEF, l -> new PetrifiedWitness(EpochsMobs.PETRIFIED_WITNESS.get(), l), "crystal_age");
         StrataEpochs.LOG.info("[Strata-Test] Fertig, {} Fehler", failures);
     }
 
     /** Prüft einen Mob: Modell und Animationen, Loot, Spawn-Modifier, Datapack-Werte und ein echtes Exemplar. */
     private static int testMob(MinecraftServer server, StrataMobDef def,
                                java.util.function.Function<ServerLevel, StrataMob> factory, String epochName) {
+        // Der Steinzeuge spawnt nicht natürlich, er erwacht aus versteinertem Stein.
+        boolean naturalSpawn = !def.name().equals("petrified_witness");
         List<String> problems = new ArrayList<>();
         MobModelData model;
         try {
@@ -96,7 +100,9 @@ final class SelfTest {
         }
         requireResource(problems, "/assets/" + def.modId() + "/textures/entity/" + def.name() + ".png");
         requireResource(problems, "/data/" + def.modId() + "/loot_table/entities/" + def.name() + ".json");
-        requireResource(problems, "/data/" + def.modId() + "/neoforge/biome_modifier/" + def.name() + "_spawns.json");
+        if (naturalSpawn) {
+            requireResource(problems, "/data/" + def.modId() + "/neoforge/biome_modifier/" + def.name() + "_spawns.json");
+        }
 
         // Abspieler: Ein Wert mitten in der Idle-Animation muss zwischen den Keyframes liegen.
         MobAnimation idle = def.idle() == null ? null : model.animation(def.idle());

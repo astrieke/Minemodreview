@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/first_core",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:petrified_stone"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.met_petrified_witness.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.met_petrified_witness.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

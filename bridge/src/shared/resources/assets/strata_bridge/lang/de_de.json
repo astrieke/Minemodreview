@@ -23,5 +23,9 @@
   "advancements.strata_epochs.met_geode_crawler.title": "Geodenkriecher",
   "advancements.strata_epochs.met_geode_crawler.description": "Begegne einem Geodenkriecher. Wer ihm folgt, findet Erz.",
   "advancements.strata_epochs.met_spore_bellows.title": "Sporenbalg",
-  "advancements.strata_epochs.met_spore_bellows.description": "Begegne einem Sporenbalg. Seine Wolken lassen die Zeit schneller laufen."
+  "advancements.strata_epochs.met_spore_bellows.description": "Begegne einem Sporenbalg. Seine Wolken lassen die Zeit schneller laufen.",
+  "advancements.strata_epochs.met_petrified_witness.title": "Steinzeuge",
+  "advancements.strata_epochs.met_petrified_witness.description": "Begegne einem Steinzeugen. Wer zu lange bleibt, wird zu Stein.",
+  "advancements.strata_epochs.witness_echo.title": "Echo eines Reisenden",
+  "advancements.strata_epochs.witness_echo.description": "Lies ein Kodex-Fragment eines Steinzeugen."
 }

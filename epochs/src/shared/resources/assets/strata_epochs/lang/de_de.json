@@ -33,5 +33,13 @@
   "subtitles.strata_epochs.spore_bellows.hurt": "Sporenbalg wird verletzt",
   "subtitles.strata_epochs.spore_bellows.death": "Sporenbalg platzt",
   "message.strata_epochs.spores": "Sporen! Die Verfestigung läuft ×%s",
-  "message.strata_epochs.germ_tonic": "Keimfrische: Verfestigung um %s s zurückgedreht"
+  "message.strata_epochs.germ_tonic": "Keimfrische: Verfestigung um %s s zurückgedreht",
+  "entity.strata_epochs.petrified_witness": "Steinzeuge",
+  "item.strata_epochs.petrified_witness_spawn_egg": "Steinzeugen-Spawn-Ei",
+  "item.strata_epochs.codex_fragment": "Kodex-Fragment",
+  "subtitles.strata_epochs.petrified_witness.ambient": "Steinzeuge knirscht",
+  "subtitles.strata_epochs.petrified_witness.hurt": "Steinzeuge wird verletzt",
+  "subtitles.strata_epochs.petrified_witness.death": "Steinzeuge zerfällt",
+  "message.strata_epochs.codex_fragment": "Das Fragment zeigt das Echo eines Reisenden.",
+  "message.strata_epochs.codex_fragment.known": "Dieses Echo kennst du schon."
 }

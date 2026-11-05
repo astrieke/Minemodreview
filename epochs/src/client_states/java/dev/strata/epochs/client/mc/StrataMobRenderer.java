@@ -19,7 +19,9 @@ public final class StrataMobRenderer<T extends StrataMob> extends MobRenderer<T,
     public StrataMobRenderer(EntityRendererProvider.Context ctx, StrataMobDef def) {
         super(ctx, new StrataMobModel(ctx.bakeLayer(MobClient.layer(def)), def), def.shadow());
         this.texture = MobClient.texture(def, "");
-        for (String glow : def.glowLayers()) addLayer(new GlowLayer(MobClient.texture(def, "_glow_" + glow)));
+        for (int i = 0; i < def.glowLayers().size(); i++) {
+            addLayer(new GlowLayer(MobClient.texture(def, "_glow_" + def.glowLayers().get(i)), i));
+        }
     }
 
     @Override
@@ -32,7 +34,7 @@ public final class StrataMobRenderer<T extends StrataMob> extends MobRenderer<T,
         super.extractRenderState(entity, state, partialTick);
         state.action = entity.currentAction();
         state.actionSeconds = entity.actionSeconds(partialTick);
-        state.glow = entity.isInvisible() ? 0f : entity.glow();
+        for (int i = 0; i < state.glow.length; i++) state.glow[i] = entity.isInvisible() ? 0f : entity.glow(i);
     }
 
     @Override
@@ -43,17 +45,20 @@ public final class StrataMobRenderer<T extends StrataMob> extends MobRenderer<T,
     /** Leuchtet unabhängig vom Umgebungslicht; die Stärke kommt vom Mob (0..1). */
     private final class GlowLayer extends RenderLayer<StrataMobRenderState, StrataMobModel> {
         private final RenderType renderType;
+        private final int index;
 
-        GlowLayer(Identifier texture) {
+        GlowLayer(Identifier texture, int index) {
             super(StrataMobRenderer.this);
             this.renderType = RenderTypes.eyes(texture);
+            this.index = index;
         }
 
         @Override
         public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, StrataMobRenderState state,
                            float yRot, float xRot) {
-            if (state.glow <= 0.01f) return;
-            int c = Math.round(state.glow * 255);
+            float glow = state.glow[index];
+            if (glow <= 0.01f) return;
+            int c = Math.round(glow * 255);
             GlowSubmit.submit(collector, getParentModel(), state, poseStack, renderType, 0xFF000000 | c << 16 | c << 8 | c);
         }
     }

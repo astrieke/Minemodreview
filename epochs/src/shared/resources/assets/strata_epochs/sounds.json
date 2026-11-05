@@ -55,5 +55,35 @@
       }
     ],
     "subtitle": "subtitles.strata_epochs.spore_bellows.death"
+  },
+  "entity.petrified_witness.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.iron_golem.step",
+        "type": "event",
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.petrified_witness.ambient"
+  },
+  "entity.petrified_witness.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.iron_golem.hurt",
+        "type": "event",
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.petrified_witness.hurt"
+  },
+  "entity.petrified_witness.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.iron_golem.death",
+        "type": "event",
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.petrified_witness.death"
   }
 }

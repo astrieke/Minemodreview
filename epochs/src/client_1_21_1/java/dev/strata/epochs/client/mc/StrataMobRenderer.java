@@ -19,7 +19,9 @@ public final class StrataMobRenderer<T extends StrataMob> extends MobRenderer<T,
     public StrataMobRenderer(EntityRendererProvider.Context ctx, StrataMobDef def) {
         super(ctx, new StrataMobModel<>(ctx.bakeLayer(MobClient.layer(def)), def), def.shadow());
         this.texture = MobClient.texture(def, "");
-        for (String glow : def.glowLayers()) addLayer(new GlowLayer(MobClient.texture(def, "_glow_" + glow)));
+        for (int i = 0; i < def.glowLayers().size(); i++) {
+            addLayer(new GlowLayer(MobClient.texture(def, "_glow_" + def.glowLayers().get(i)), i));
+        }
     }
 
     @Override
@@ -30,16 +32,18 @@ public final class StrataMobRenderer<T extends StrataMob> extends MobRenderer<T,
     /** Leuchtet unabhängig vom Umgebungslicht; die Stärke kommt vom Mob (0..1). */
     private final class GlowLayer extends RenderLayer<T, StrataMobModel<T>> {
         private final RenderType renderType;
+        private final int index;
 
-        GlowLayer(ResourceLocation texture) {
+        GlowLayer(ResourceLocation texture, int index) {
             super(StrataMobRenderer.this);
             this.renderType = RenderType.eyes(texture);
+            this.index = index;
         }
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource buffers, int light, T entity, float limbSwing,
                            float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
-            float glow = entity.glow();
+            float glow = entity.glow(index);
             if (glow <= 0.01f || entity.isInvisible()) return;
             int c = Math.round(glow * 255);
             int color = 0xFF000000 | c << 16 | c << 8 | c;

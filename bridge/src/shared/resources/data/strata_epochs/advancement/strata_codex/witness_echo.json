@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/met_petrified_witness",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:codex_fragment"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.witness_echo.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.witness_echo.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

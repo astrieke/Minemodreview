@@ -31,9 +31,9 @@ public abstract class StrataMob extends PathfinderMob {
     /** Laufende Aktion: (Zähler << 8) | (Index in {@link StrataMobDef#actions()} + 1), 0 = keine. */
     private static final EntityDataAccessor<Integer> DATA_ACTION =
             SynchedEntityData.defineId(StrataMob.class, EntityDataSerializers.INT);
-    /** Stärke der Leucht-Ebene 0..1, vom Server gesetzt. */
-    private static final EntityDataAccessor<Float> DATA_GLOW =
-            SynchedEntityData.defineId(StrataMob.class, EntityDataSerializers.FLOAT);
+    /** Stärke der Leucht-Ebenen, je 8 Bit (0..255) für bis zu 4 Ebenen, vom Server gesetzt. */
+    private static final EntityDataAccessor<Integer> DATA_GLOW =
+            SynchedEntityData.defineId(StrataMob.class, EntityDataSerializers.INT);
 
     private static final int TUNING_REFRESH_TICKS = 200;
     private static final int ENCOUNTER_INTERVAL = 40;
@@ -59,7 +59,7 @@ public abstract class StrataMob extends PathfinderMob {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ACTION, 0);
-        builder.define(DATA_GLOW, 0f);
+        builder.define(DATA_GLOW, 0);
     }
 
     @Override
@@ -132,13 +132,26 @@ public abstract class StrataMob extends PathfinderMob {
 
     // ---- Leucht-Ebene ----
 
+    /** Stärke der ersten Leucht-Ebene (0..1). */
     public void setGlow(float strength) {
-        float clamped = Math.max(0f, Math.min(1f, strength));
-        if (entityData.get(DATA_GLOW) != clamped) entityData.set(DATA_GLOW, clamped);
+        setGlow(0, strength);
+    }
+
+    /** Stärke der Leucht-Ebene {@code layer} (Reihenfolge wie {@link StrataMobDef#glowLayers()}), 0..1. */
+    public void setGlow(int layer, float strength) {
+        int value = Math.round(Math.max(0f, Math.min(1f, strength)) * 255);
+        int shift = layer * 8;
+        int packed = entityData.get(DATA_GLOW);
+        int updated = (packed & ~(0xFF << shift)) | (value << shift);
+        if (updated != packed) entityData.set(DATA_GLOW, updated);
     }
 
     public float glow() {
-        return entityData.get(DATA_GLOW);
+        return glow(0);
+    }
+
+    public float glow(int layer) {
+        return ((entityData.get(DATA_GLOW) >>> (layer * 8)) & 0xFF) / 255f;
     }
 
     // ---- Datapack-Werte ----

@@ -2,7 +2,7 @@
   "_hinweis": "Grundlage für das Worldgen der Epochen. Der Task generateEpochData baut daraus pro Minecraft-Version passendes JSON, abgeleitet von den Vanilla-Dateien genau dieser Version.",
   "namespace": "strata_epochs",
   "_mobs": "Mobs im Spiel: Modell, Textur und Leucht-Ebenen werden aus mobs/<name>/ ins Jar kopiert.",
-  "mobs": ["geode_crawler", "spore_bellows"],
+  "mobs": ["geode_crawler", "spore_bellows", "petrified_witness"],
   "ore_replaceables_tag": "strata_epochs:epoch_ore_replaceables",
   "epochs": [
     {

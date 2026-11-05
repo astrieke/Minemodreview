@@ -1,0 +1,40 @@
+{
+  "entity": "strata_epochs:petrified_witness",
+  "attributes": {
+    "max_health": 50,
+    "attack_damage": 9,
+    "armor": 6,
+    "movement_speed": 0.2
+  },
+  "abilities": {
+    "awaken": {
+      "enabled": true,
+      "range": 8,
+      "cooldown": 1200
+    },
+    "hammer": {
+      "enabled": true,
+      "reach": 3,
+      "cooldown": 50,
+      "lift": 0.4,
+      "wave_radius": 2,
+      "slow_duration": 40
+    },
+    "pulse": {
+      "enabled": true,
+      "warning": 20,
+      "cooldown": 240,
+      "radius": 8,
+      "min_range": 3,
+      "time_penalty": 200,
+      "fatigue_duration": 80
+    },
+    "stone_skin": {
+      "enabled": true,
+      "duration": 80,
+      "damage_factor": 0.2,
+      "heal": 4,
+      "stun": 20
+    }
+  }
+}

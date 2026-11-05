@@ -2,6 +2,8 @@ package dev.strata.epochs;
 
 import dev.strata.epochs.mc.MobReg;
 import dev.strata.epochs.mob.GeodeCrawler;
+import dev.strata.epochs.mob.PetrifiedWitness;
+import dev.strata.epochs.mob.WitnessAwakening;
 import dev.strata.epochs.mob.SporeBellows;
 import dev.strata.epochs.mob.SporeClouds;
 import dev.strata.epochs.mob.StrataMob;
@@ -36,12 +38,20 @@ public final class EpochsMobs {
     public static final Supplier<Item> SPORE_BELLOWS_SPAWN_EGG =
             REG.spawnEgg("spore_bellows_spawn_egg", SPORE_BELLOWS, 0xcfc39a, 0xc0502a);
 
+    public static final Supplier<EntityType<PetrifiedWitness>> PETRIFIED_WITNESS =
+            REG.entity("petrified_witness", PetrifiedWitness::new, MobCategory.MONSTER, 1.3f, 2.4f, 10);
+    public static final Supplier<Item> PETRIFIED_WITNESS_SPAWN_EGG =
+            REG.spawnEgg("petrified_witness_spawn_egg", PETRIFIED_WITNESS, 0x3c3742, 0xffd86b);
+
     public static final Supplier<SoundEvent> GEODE_CRAWLER_AMBIENT = REG.sound("entity.geode_crawler.ambient");
     public static final Supplier<SoundEvent> GEODE_CRAWLER_HURT = REG.sound("entity.geode_crawler.hurt");
     public static final Supplier<SoundEvent> GEODE_CRAWLER_DEATH = REG.sound("entity.geode_crawler.death");
     public static final Supplier<SoundEvent> SPORE_BELLOWS_AMBIENT = REG.sound("entity.spore_bellows.ambient");
     public static final Supplier<SoundEvent> SPORE_BELLOWS_HURT = REG.sound("entity.spore_bellows.hurt");
     public static final Supplier<SoundEvent> SPORE_BELLOWS_DEATH = REG.sound("entity.spore_bellows.death");
+    public static final Supplier<SoundEvent> PETRIFIED_WITNESS_AMBIENT = REG.sound("entity.petrified_witness.ambient");
+    public static final Supplier<SoundEvent> PETRIFIED_WITNESS_HURT = REG.sound("entity.petrified_witness.hurt");
+    public static final Supplier<SoundEvent> PETRIFIED_WITNESS_DEATH = REG.sound("entity.petrified_witness.death");
 
     private EpochsMobs() {}
 
@@ -50,6 +60,7 @@ public final class EpochsMobs {
         modBus.addListener((EntityAttributeCreationEvent event) -> {
             event.put(GEODE_CRAWLER.get(), GeodeCrawler.createAttributes().build());
             event.put(SPORE_BELLOWS.get(), SporeBellows.createAttributes().build());
+            event.put(PETRIFIED_WITNESS.get(), PetrifiedWitness.createAttributes().build());
         });
         modBus.addListener((RegisterSpawnPlacementsEvent event) -> {
             event.register(GEODE_CRAWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -66,6 +77,7 @@ public final class EpochsMobs {
         NeoForge.EVENT_BUS.addListener(StrataMob::handleIncomingDamage);
         NeoForge.EVENT_BUS.addListener(SporeBellows::onDeath);
         NeoForge.EVENT_BUS.addListener(SporeClouds::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(WitnessAwakening::onLevelTick);
     }
 
     /** Höchstzahl aller Strata-Mobs pro Dimension (Config {@code mobs.max_per_epoch}). */

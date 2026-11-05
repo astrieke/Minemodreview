@@ -21,7 +21,8 @@ ROOT = os.path.join(os.path.dirname(__file__), '..', 'mobs')
 BACKGROUNDS = [('Kristallzeit dunkel', '#2a1f4d'), ('Kristallzeit Nebel', '#6e56b8'),
                ('Sporenzeit dunkel', '#1f3318'), ('Sporenzeit Nebel', '#4f7a3a')]
 # Gegen welche Hintergründe die Oberseiten bestehen müssen (dunkel und Nebel der eigenen Epoche).
-EPOCH_BG = {'geode_crawler': ['#2a1f4d', '#6e56b8'], 'spore_bellows': ['#1f3318', '#4f7a3a']}
+EPOCH_BG = {'geode_crawler': ['#2a1f4d', '#6e56b8'], 'spore_bellows': ['#1f3318', '#4f7a3a'],
+            'petrified_witness': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a']}
 PLAYER_PX = 28.8
 CELL = 256
 

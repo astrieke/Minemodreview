@@ -321,6 +321,9 @@ public class GeodeCrawler extends StrataMob {
 
         @Override
         public void tick() {
+            // Minecraft prüft canContinueToUse nur jeden zweiten Tick: Nach einem Fund oder Abbruch
+            // kann tick() noch einmal ohne Erz kommen.
+            if (ore == null || step == null) return;
             getLookControl().setLookAt(ore.getX() + 0.5, ore.getY() + 0.5, ore.getZ() + 0.5);
             timer--;
             switch (step) {

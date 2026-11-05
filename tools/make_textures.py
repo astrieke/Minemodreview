@@ -500,6 +500,56 @@ def spore_bellows_spawn_egg():
     return outline(from_grid(rows, pal), '#2a2116')
 
 
+def codex_fragment():
+    # Drop des Steinzeugen: abgebrochene Steintafel mit Gesteinsschichten und goldener Sanduhr-Rune.
+    pal = {'s': '#3c3742', 'S': '#5e5868', 'g': '#77707c', 'o': '#b08a5a', 'c': '#dcd6cf',
+           'G': '#ffd86b', 'y': '#d9a43a'}
+    rows = [
+        '................',
+        '...gggggg.......',
+        '..gSSSSSSg......',
+        '..gScccccSg.....',
+        '..oooooooooo....',
+        '..sSSSGGGSSSg...',
+        '..sSSSSGSSSSSg..',
+        '..sSSSSySSSSSg..',
+        '..sSSSGGGSSSSg..',
+        '..oooooooooooo..',
+        '..sssssssssss...',
+        '..sSSSSSSSSs....',
+        '...ssssssss.....',
+        '................',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1c1824')
+
+
+def petrified_witness_spawn_egg():
+    # Spawn-Ei: Gesteinsschichten mit goldener Ader und glühender Sanduhr in der Mitte.
+    pal = {'s': '#3c3742', 'S': '#5e5868', 'g': '#77707c', 'o': '#b08a5a', 'c': '#dcd6cf',
+           'G': '#ffd86b', 'y': '#e6b84a', 'n': '#1c1824'}
+    rows = [
+        '................',
+        '......gggg......',
+        '.....gSSSSS.....',
+        '....gSSSSySs....',
+        '....ooooyooo....',
+        '...gSSSnnSSSs...',
+        '...SSSSGGSSSs...',
+        '..gSSSSnGSySSs..',
+        '..cccccGGccccc..',
+        '..sSSySnnSSSSs..',
+        '..sSSSySSSSSss..',
+        '..soooooooooss..',
+        '...sSSSSSSSss...',
+        '....ssSSSsss....',
+        '......ssss......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1c1824')
+
+
 def geode_crawler_spawn_egg():
     # Spawn-Ei (ab 1.21.5 eigene Textur): Echsenhaut mit Calcitband und Kristallflecken.
     pal = {'d': '#4a4054', 'm': '#6d6078', 'l': '#918190', 'c': '#e6e0d6', 'C': '#bfb6a8',
@@ -543,10 +593,12 @@ ITEMS = {
     'calcite_scale': calcite_scale,
     'spore_sac': spore_sac,
     'germ_tonic': germ_tonic,
+    'codex_fragment': codex_fragment,
 }
 SPAWN_EGGS = {
     'geode_crawler_spawn_egg': geode_crawler_spawn_egg,
     'spore_bellows_spawn_egg': spore_bellows_spawn_egg,
+    'petrified_witness_spawn_egg': petrified_witness_spawn_egg,
 }
 
 

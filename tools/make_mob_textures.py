@@ -221,22 +221,43 @@ def d_witness(img, f, rnd):
 
 
 def d_niche(img, f, rnd):
-    r = f['north']                                          # Torso 14 x 13; Sanduhr bei x 4.5..9.5, y 4..10 (von oben)
-    for y in range(3, 11):
-        for x in range(4, 10):
+    r = f['north']                                          # Torso vorn; dunkle Nische hinter der Sanduhr (5 x 7)
+    w = r[2]
+    x0 = (w - 7) // 2
+    for y in range(3, 13):
+        for x in range(x0, x0 + 7):
             put(img, r, x, y, '#1c1824')
-    for x, y in [(2, 6), (3, 7), (11, 3), (12, 4)]:
-        put(img, r, x, y, '#d9a43a')                        # Goldadern in Rissen
+    for x, y in [(2, 6), (3, 7), (4, 8), (w - 3, 3), (w - 2, 4)]:
+        put(img, r, x, y, VEIN)                             # Goldadern in Rissen
 
 
 def d_hourglass(img, f, rnd):
-    r = f['north']                                          # 4 x 4 Glas
-    rows = ['vvvv', '.vv.', '.v..', 'vVVv']
-    pal = {'v': '#ffd27a', 'V': '#e0a030', '.': '#4a3a70'}
+    r = f['north']                                          # 5 x 7: Kappen oben und unten, Glas mit Taille und Sand
+    rows = ['GGGGG', '.vvv.', '..v..', '..v..', '.vVv.', 'vVVVv', 'ggggg']
+    pal = {'G': '#f2c45a', 'g': '#9c6a12', 'v': '#ffd27a', 'V': '#e0a030', '.': '#3a2c5c'}
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
             put(img, r, x, y, pal[ch])
-    put(img, r, 0, 0, '#5c4a86'); put(img, r, 3, 0, '#5c4a86')
+
+
+def d_veins(img, f, rnd, faces_=('south', 'east', 'west')):
+    """Goldadern: 1-px-Risse, die schräg nach unten laufen. Sie leuchten nur während der Steinhaut."""
+    for face in faces_:
+        x0, y0, w, h = f[face]
+        if w < 3 or h < 4:
+            continue
+        for _ in range(1 + (w * h) // 90):
+            x = rnd.randrange(1, w - 1)
+            y = rnd.randrange(0, max(1, h // 3))
+            for _ in range(rnd.randrange(h // 2, h)):
+                if 0 <= x < w and 0 <= y < h:
+                    img.putpixel((x0 + x, y0 + y), rgb(VEIN))
+                y += 1
+                if rnd.random() < 0.45:
+                    x += rnd.choice((-1, 1))
+
+
+VEIN = '#e6b84a'
 
 
 def d_ammonite(img, f, rnd):
@@ -269,6 +290,9 @@ GLOW = {
     'geode_crawler': {'crystals': {'materials': {'quartz'}}},
     # Augen, Ventilrand und Bernsteinpunkte: schwach immer, voll beim Aufpumpen
     'spore_bellows': {'spores': {'colors': {'#ffb847', '#c07a1a', '#e0a030', '#ffd27a'}}},
+    # Kern (Sanduhr) und Augen pulsieren; die Goldadern leuchten nur während der Steinhaut
+    'petrified_witness': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a', '#ffd86b', '#f2b43a'}},
+                          'veins': {'colors': {'#e6b84a'}}},
 }
 
 
@@ -310,6 +334,9 @@ def paint(mob_id):
             DETAILS[cube['face']](img, f, rnd)
         if cube.get('back') == 'ammonite':
             d_ammonite(img, f, rnd)
+        if cube.get('veins'):
+            d_veins(img, f, rnd, ('south', 'east', 'west', 'north') if cube['bone'] == 'back_plates' else
+                    ('south', 'east', 'west'))
     check_light(model, img, mob_id)
     out = os.path.join(ROOT, mob_id, 'texture.png')
     img.save(out)
@@ -335,6 +362,8 @@ def check_light(model, img, mob_id):
     for cube in model['cubes']:
         if cube['material'] == 'glass':                     # leuchtendes Glas vorn ist gewollt
             continue
+        if max(abs(r) for r in cube.get('rotation') or [0]) > 45:
+            continue                                        # stark gekippt: „oben“ ist dann eine andere Seite
         f = faces(cube)
         if brightness(img, f['up']) + 0.5 < brightness(img, f['north']):
             bad.append(f"{cube['name']} (oben {brightness(img, f['up']):.0f} < vorn {brightness(img, f['north']):.0f})")

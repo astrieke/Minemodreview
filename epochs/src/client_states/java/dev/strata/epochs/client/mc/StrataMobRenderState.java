@@ -6,5 +6,6 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 public class StrataMobRenderState extends LivingEntityRenderState {
     public String action;
     public float actionSeconds;
-    public float glow;
+    /** Leuchtstärke je Ebene (0..1). */
+    public final float[] glow = new float[4];
 }

@@ -43,6 +43,8 @@ public final class EpochsContent {
     /** Drop des Sporenbalgs, Zutat für die Keimfrische. */
     public static final Supplier<Item> SPORE_SAC = REG.item("spore_sac", p -> p);
     /** Keimfrische: dreht die Verfestigungs-Uhr ein Stück zurück (siehe {@link GermTonic}). */
+    /** Drop des Steinzeugen: Rechtsklick schaltet den Kodex-Knoten „Echo eines Reisenden“ frei. */
+    public static final Supplier<Item> CODEX_FRAGMENT = REG.item("codex_fragment", p -> p.stacksTo(16));
     public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
 
     static {

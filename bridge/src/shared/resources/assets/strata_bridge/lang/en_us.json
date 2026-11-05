@@ -23,5 +23,9 @@
   "advancements.strata_epochs.met_geode_crawler.title": "Geode Crawler",
   "advancements.strata_epochs.met_geode_crawler.description": "Meet a Geode Crawler. Follow it to find ore.",
   "advancements.strata_epochs.met_spore_bellows.title": "Spore Bellows",
-  "advancements.strata_epochs.met_spore_bellows.description": "Meet a Spore Bellows. Its clouds make time run faster."
+  "advancements.strata_epochs.met_spore_bellows.description": "Meet a Spore Bellows. Its clouds make time run faster.",
+  "advancements.strata_epochs.met_petrified_witness.title": "Petrified Witness",
+  "advancements.strata_epochs.met_petrified_witness.description": "Meet a Petrified Witness. Stay too long and you turn to stone.",
+  "advancements.strata_epochs.witness_echo.title": "Echo of a Traveller",
+  "advancements.strata_epochs.witness_echo.description": "Read a codex fragment from a Petrified Witness."
 }

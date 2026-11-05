@@ -62,7 +62,10 @@ public final class Solidification {
                         .withStyle(ChatFormatting.RED));
                 player.addEffect(new MobEffectInstance(Mc.slowness(), 60, 1));
                 player.addEffect(new MobEffectInstance(Mc.miningFatigue(), 60, 1));
-                if (ticks % PETRIFY_INTERVAL == 0) petrifyNear(level, player.blockPosition());
+                if (player.tickCount % PETRIFY_INTERVAL == 0) {   // nach Spielzeit, der Zeitfaktor verschiebt die Uhr
+                    petrifyNear(level, player.blockPosition());
+                    dev.strata.epochs.mob.WitnessAwakening.tryAwaken(level, player);
+                }
             }
         }
     }

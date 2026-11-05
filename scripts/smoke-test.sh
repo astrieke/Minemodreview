@@ -14,10 +14,10 @@ if [ ${#versions[@]} -eq 0 ]; then
     for dir in versions/*/; do versions+=("$(basename "$dir")"); done
 fi
 
-# Demo-Datapack (2 Epochen, 3 Knoten) + Strata Epochs (2 Epochen, 3 Knoten)
-expected_core='\[Strata\] 4 Epochen und 6 Kodex-Knoten geladen, 0 Fehler'
+# Demo-Datapack (2 Epochen, 3 Knoten) + Strata Epochs (2 Epochen, 4 Knoten)
+expected_core='\[Strata\] 4 Epochen und 7 Kodex-Knoten geladen, 0 Fehler'
 expected_test='\[Strata-Test\] Fertig, 0 Fehler'
-expected_bridge='\[Strata-Bridge-Test\] 6 von 6 Advancements geladen'
+expected_bridge='\[Strata-Bridge-Test\] 8 von 8 Advancements geladen'
 expected_chain='\[Strata-Bridge-Test\] Freischaltung: .* -> OK'
 failed=()
 
