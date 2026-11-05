@@ -75,5 +75,14 @@
   "message.strata_epochs.fossil.rushed": "Präparieren %s · zu hastig, der Stein knackt!",
   "message.strata_epochs.fossil.broken": "Der Fossilbrocken ist zerbrochen.",
   "message.strata_epochs.fossil.broken_rushed": "Zu schnell gearbeitet: Der Fossilbrocken ist zerbrochen.",
-  "message.strata_epochs.fossil.done": "Freigelegt: %s"
+  "message.strata_epochs.fossil.done": "Freigelegt: %s",
+  "entity.strata_epochs.spiralit": "Spiralit",
+  "subtitles.strata_epochs.spiralit.ambient": "Spiralit klingt",
+  "subtitles.strata_epochs.spiralit.hurt": "Spiralit wird verletzt",
+  "subtitles.strata_epochs.spiralit.death": "Spiralit zerspringt",
+  "message.strata_epochs.spiralit.how": "Keimfrische in die zweite Hand, um den Ammoniten zu erwecken",
+  "message.strata_epochs.spiralit.hatched": "Ein Spiralit ist geschlüpft und folgt dir.",
+  "message.strata_epochs.spiralit.bonded": "Der Spiralit schließt sich dir an.",
+  "message.strata_epochs.spiralit.stay": "Spiralit wartet hier.",
+  "message.strata_epochs.spiralit.follow": "Spiralit folgt dir."
 }

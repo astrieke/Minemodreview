@@ -79,6 +79,14 @@ public final class FossilPrep {
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
         if (!event.getLevel().getBlockState(event.getPos()).is(EpochsContent.FOSSIL_TABLE.get())) return;
         ItemStack chisel = event.getItemStack();
+        if (chisel.is(EpochsContent.AMMONITE_FOSSIL.get())) {
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            if (!event.getLevel().isClientSide() && event.getEntity() instanceof ServerPlayer player) {
+                revive(player, chisel, event.getPos());
+            }
+            return;
+        }
         if (!chisel.is(EpochsContent.CHISEL.get())) {
             if (chisel.is(EpochsContent.FOSSIL_CHUNK.get()) && event.getEntity() instanceof ServerPlayer player) {
                 Mc.actionbar(player, Component.translatable("message.strata_epochs.fossil.how").withStyle(ChatFormatting.GRAY));
@@ -158,6 +166,26 @@ public final class FossilPrep {
         Mc.actionbar(player, Component.translatable("message.strata_epochs.fossil.done",
                 Component.translatable(fossilFor(epoch).getDescriptionId())).withStyle(ChatFormatting.GREEN));
         onPrepared(player, epoch);
+    }
+
+    /** Ammonit in der Haupthand, Keimfrische in der zweiten: Ein Spiralit schlüpft über dem Tisch. */
+    static void revive(ServerPlayer player, ItemStack fossil, BlockPos table) {
+        ItemStack tonic = player.getOffhandItem();
+        if (!tonic.is(EpochsContent.GERM_TONIC.get())) {
+            Mc.actionbar(player, Component.translatable("message.strata_epochs.spiralit.how").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        ServerLevel level = (ServerLevel) player.level();
+        double x = table.getX() + 0.5, y = table.getY() + 1.1, z = table.getZ() + 0.5;
+        if (!player.isCreative()) {
+            fossil.shrink(1);
+            tonic.shrink(1);
+        }
+        dev.strata.epochs.mob.Spiralit.hatch(level, new net.minecraft.world.phys.Vec3(x, y, z), player);
+        level.playSound(null, x, y, z, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.2f, 0.8f);
+        level.playSound(null, x, y, z, SoundEvents.BOTTLE_EMPTY, SoundSource.PLAYERS, 1.0f, 1.0f);
+        level.sendParticles(ParticleTypes.END_ROD, x, y + 0.3, z, 16, 0.3, 0.3, 0.3, 0.03);
+        Mc.actionbar(player, Component.translatable("message.strata_epochs.spiralit.hatched").withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 
     /** Kodex: erstes Fossil einer Epoche, danach gilt die Epoche als erforscht (Voraussetzung für den Transplantator). */

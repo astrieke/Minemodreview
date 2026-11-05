@@ -1,0 +1,19 @@
+{
+  "entity": "strata_epochs:spiralit",
+  "attributes": {
+    "max_health": 12,
+    "movement_speed": 0.3
+  },
+  "abilities": {
+    "calm": {
+      "enabled": true,
+      "range": 16,
+      "factor": 0.8
+    },
+    "ore_sense": {
+      "enabled": true,
+      "radius": 6,
+      "interval": 100
+    }
+  }
+}

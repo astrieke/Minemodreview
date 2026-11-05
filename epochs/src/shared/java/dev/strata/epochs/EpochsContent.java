@@ -92,6 +92,11 @@ public final class EpochsContent {
     public static final Supplier<AttachmentType<EpochVisit>> VISIT =
             Mc.attachment(ATTACHMENTS, "visit", () -> EpochVisit.NONE, EpochVisit.CODEC, false);
 
+    /** Am Spiralit: wem er gehört und ob er wartet. */
+    public static final Supplier<AttachmentType<dev.strata.epochs.mob.SpiralitBond>> BOND =
+            Mc.attachment(ATTACHMENTS, "spiralit_bond", () -> dev.strata.epochs.mob.SpiralitBond.NONE,
+                    dev.strata.epochs.mob.SpiralitBond.CODEC, false);
+
     private EpochsContent() {}
 
     /** Stufe eines Kernbohrers (1 bis 3), 0 für alles andere. */

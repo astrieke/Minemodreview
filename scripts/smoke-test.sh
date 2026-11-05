@@ -17,7 +17,7 @@ fi
 # Demo-Datapack (2 Epochen, 3 Knoten) + Strata Epochs (3 Epochen, 11 Knoten)
 expected_core='\[Strata\] 5 Epochen und 14 Kodex-Knoten geladen, 0 Fehler'
 expected_test='\[Strata-Test\] Fertig, 0 Fehler'
-expected_bridge='\[Strata-Bridge-Test\] 15 von 15 Advancements geladen'
+expected_bridge='\[Strata-Bridge-Test\] 16 von 16 Advancements geladen'
 expected_chain='\[Strata-Bridge-Test\] Freischaltung: .* -> OK'
 failed=()
 

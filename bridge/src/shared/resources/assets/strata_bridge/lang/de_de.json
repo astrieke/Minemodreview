@@ -56,5 +56,8 @@
   "advancements.strata_epochs.mastered_ash_age.description": "Die Aschezeit ist im Kodex vollständig. Der Transplantator kann sie in die Oberwelt holen",
   "jei.strata_bridge.info.fossil_chunk": "Fossilbrocken fallen in den Epochen aus Zeitgestein (2 %) und versteinertem Stein (15 %). Zum Präparieren: Meißel in die Haupthand, Brocken in die zweite Hand, Rechtsklick auf den Präparationstisch. Fünf Schläge legen das Fossil frei. Wer zu schnell schlägt, riskiert bis zu 30 % Bruch pro Schlag; mit gut einer Sekunde Pause sind es nur 3 %.",
   "jei.strata_bridge.info.fossil": "Ein präpariertes Fossil. Das erste einer Epoche schließt sie im Kodex ab; der Transplantator verbraucht eines pro Einsatz.",
-  "jei.strata_bridge.info.ammonite_fossil": "Ein präpariertes Fossil aus der Kristallzeit. Das erste schließt die Epoche im Kodex ab. Auf dem Präparationstisch mit Keimfrische erweckt, schlüpft daraus ein Spiralit."
+  "jei.strata_bridge.info.ammonite_fossil": "Ein präpariertes Fossil aus der Kristallzeit. Das erste schließt die Epoche im Kodex ab. Auf dem Präparationstisch mit Keimfrische erweckt, schlüpft daraus ein Spiralit.",
+  "advancements.strata_epochs.met_spiralit.title": "Spiralit",
+  "advancements.strata_epochs.met_spiralit.description": "Erwecke einen Ammoniten mit Keimfrische",
+  "jade.strata_bridge.mob.spiralit": "Begleiter · bremst die Verfestigung, spürt Erze"
 }

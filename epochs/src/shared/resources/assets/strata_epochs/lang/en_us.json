@@ -75,5 +75,14 @@
   "message.strata_epochs.fossil.rushed": "Preparing %s · too hasty, the stone creaks!",
   "message.strata_epochs.fossil.broken": "The fossil chunk broke.",
   "message.strata_epochs.fossil.broken_rushed": "Worked too fast: the fossil chunk broke.",
-  "message.strata_epochs.fossil.done": "Uncovered: %s"
+  "message.strata_epochs.fossil.done": "Uncovered: %s",
+  "entity.strata_epochs.spiralit": "Spiralit",
+  "subtitles.strata_epochs.spiralit.ambient": "Spiralit chimes",
+  "subtitles.strata_epochs.spiralit.hurt": "Spiralit hurts",
+  "subtitles.strata_epochs.spiralit.death": "Spiralit shatters",
+  "message.strata_epochs.spiralit.how": "Hold Germ Tonic in your off hand to revive the Ammonite",
+  "message.strata_epochs.spiralit.hatched": "A Spiralit hatched and follows you.",
+  "message.strata_epochs.spiralit.bonded": "The Spiralit joins you.",
+  "message.strata_epochs.spiralit.stay": "Spiralit waits here.",
+  "message.strata_epochs.spiralit.follow": "Spiralit follows you."
 }

@@ -85,5 +85,32 @@
       }
     ],
     "subtitle": "subtitles.strata_epochs.petrified_witness.death"
+  },
+  "entity.spiralit.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_block.chime",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.spiralit.ambient"
+  },
+  "entity.spiralit.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_block.hit",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.spiralit.hurt"
+  },
+  "entity.spiralit.death": {
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_block.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.spiralit.death"
   }
 }

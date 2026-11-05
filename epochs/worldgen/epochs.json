@@ -5,7 +5,8 @@
   "mobs": [
     "geode_crawler",
     "spore_bellows",
-    "petrified_witness"
+    "petrified_witness",
+    "spiralit"
   ],
   "ore_replaceables_tag": "strata_epochs:epoch_ore_replaceables",
   "epochs": [

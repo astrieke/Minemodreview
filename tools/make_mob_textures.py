@@ -48,6 +48,9 @@ PAL = {
     'gold':          ['#6a4708', '#9c6a12', '#d9a43a', '#f2c45a', '#ffe08a'],
     # Schiefer ohne Ockerband, für gekippte Platten (sonst wirkt die Ockerseite wie Holz)
     'slate':         ['#2e2a35', '#3c3742', '#4a4552', '#5e5868', '#77707c'],
+    'shell':         ['#8a7458', '#b39c78', '#d6c29a', '#e9dbb8', '#f7efd8'],
+    'hood':          ['#5a3438', '#7a4a4a', '#9a6560', '#b8837a', '#d4a596'],
+    'eye':           ['#1a3a3a', '#2a6a68', '#4fb0a8', '#8fe8dc', '#d8fff8'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
 }
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
@@ -284,8 +287,61 @@ def d_ammonite(img, f, rnd):
             put(img, r, x, y, pal[ch])
 
 
+SPIRAL = {'S': '#8a5a34', 'V': '#7a52d8', 'v': '#b48cff', 'k': '#3a2a6a'}
+
+
+def spiral_cells(w, h, margin=1):
+    """Eckige Spirale vom Zentrum nach außen, mit einer Zeile Schale zwischen den Windungen
+    und einem freien Schalenrand von {margin} Pixeln.
+    Liefert {(x, y): Zeichen}: k = Zentrum, v = innere Windung (hell), V = äußere Windungen."""
+    x, y = w // 2 - 1, h // 2 - 1
+    cells = {(x, y): 'k'}
+    dirs = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+    length, d, n = 2, 0, 0
+    while True:
+        for _ in range(2):
+            dx, dy = dirs[d % 4]
+            for _ in range(length):
+                x, y = x + dx, y + dy
+                if not (margin <= x < w - margin and margin <= y < h - margin):
+                    return cells
+                cells[(x, y)] = 'v' if n < 4 else 'V'
+                n += 1
+            d += 1
+        length += 2
+
+
+def d_spiral(img, f, rnd):
+    # Eckige Spirale auf beiden Seiten der Schale (auf wenigen Pixeln liest sich das besser als rund).
+    # Braune Streifen wie beim Nautilus quer über die Schale, die Rille leuchtet violett als Uhr.
+    r = f['east']
+    w, h = r[2], r[3]
+    cells = spiral_cells(w, h)
+    for side in ('east', 'west'):
+        r = f[side]
+        for y in range(h):
+            for x in range(w):
+                ch = cells.get((x, y))
+                if ch is None and (x + 2 * y) % 4 == 0 and (x in (0, w - 1) or y in (0, h - 1)):
+                    ch = 'S'                                  # Streifen am Rand der Schale
+                if ch:
+                    put(img, r, x if side == 'east' else w - 1 - x, y, SPIRAL[ch])
+
+
+def d_hood(img, f, rnd):
+    # Vorn an der Kapuze: dunkle Öffnung, aus der die Fangarme kommen, mit hellem Rand oben.
+    r = f['north']
+    for y in range(r[3]):
+        for x in range(r[2]):
+            if y >= 2 and 1 <= x <= r[2] - 2:
+                put(img, r, x, y, PAL['hood'][0] if y >= 3 else PAL['hood'][1])
+    for x in range(r[2]):
+        put(img, r, x, 0, PAL['hood'][4])
+
+
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
            'amber_top': d_amber_top,
+           'spiral': d_spiral, 'hood': d_hood,
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass}
 
 
@@ -298,6 +354,9 @@ GLOW = {
     # Kern (Sanduhr) und Augen pulsieren; die Goldadern leuchten nur während der Steinhaut
     'petrified_witness': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a', '#ffd86b', '#f2b43a'}},
                           'veins': {'colors': {'#9a6812', '#6b4a10'}, 'glow_color': '#ffe08a'}},
+    # Die Spiralrille ist die Uhr (Helligkeit = verbleibende Zeit), die Augen glimmen immer
+    'spiralit': {'spiral': {'colors': {'#7a52d8', '#b48cff', '#3a2a6a'}, 'glow_color': '#c9a8ff'},
+                 'eyes': {'materials': {'eye'}}},
 }
 
 

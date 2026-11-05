@@ -84,9 +84,27 @@ public final class Solidification {
         });
     }
 
-    /** Aktueller Zeitfaktor des Spielers (1 = normal): Sporenwolken beschleunigen, die Geodenrüstung bremst. */
+    /** Stand der Uhr: verbleibender Anteil der erlaubten Zeit (0..1) und Phase. */
+    public record Clock(double remaining, SolidificationClock.Stage stage) {}
+
+    /** Die Uhr des Spielers in seiner aktuellen Epoche; leer außerhalb einer Epoche. */
+    public static Optional<Clock> clock(ServerPlayer player) {
+        ServerLevel level = (ServerLevel) player.level();
+        Optional<String> epochId = EpochTravel.epochOf(level);
+        if (epochId.isEmpty()) return Optional.empty();
+        Epoch epoch = StrataAPI.epochs(level.getServer()).get(epochId.get());
+        if (epoch == null || epoch.solidifySeconds() <= 0) return Optional.empty();
+        long ticks = player.getData(EpochsContent.VISIT.get()).ticks();
+        double bonus = player.getInventory().contains(EpochsContent.TIME_ANCHOR.get().getDefaultInstance()) ? 1.0 : 0.0;
+        long allowed = SolidificationClock.allowedTicks(epoch.solidifySeconds() * 20L, bonus);
+        double remaining = allowed <= 0 ? 0 : Math.max(0, Math.min(1, 1 - ticks / (double) allowed));
+        return Optional.of(new Clock(remaining, SolidificationClock.stage(ticks, allowed)));
+    }
+
+    /** Aktueller Zeitfaktor des Spielers (1 = normal): Sporenwolken beschleunigen, Geodenrüstung und Spiralit bremsen. */
     public static double factor(ServerPlayer player) {
         double armor = EpochsGear.hasFullGeodeSet(player) ? EpochsGear.GEODE_SET_FACTOR : 1.0;
+        armor *= dev.strata.epochs.mob.Spiralit.factorFor(player);
         Factor f = FACTORS.get(player.getUUID());
         if (f == null) return armor;
         if (f.until <= player.level().getGameTime()) {

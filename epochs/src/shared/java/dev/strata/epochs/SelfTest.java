@@ -72,6 +72,8 @@ final class SelfTest {
         failures += testMob(server, GeodeCrawler.DEF, l -> new GeodeCrawler(EpochsMobs.GEODE_CRAWLER.get(), l), "crystal_age");
         failures += testMob(server, SporeBellows.DEF, l -> new SporeBellows(EpochsMobs.SPORE_BELLOWS.get(), l), "spore_age");
         failures += testMob(server, PetrifiedWitness.DEF, l -> new PetrifiedWitness(EpochsMobs.PETRIFIED_WITNESS.get(), l), "crystal_age");
+        failures += testMob(server, dev.strata.epochs.mob.Spiralit.DEF,
+                l -> new dev.strata.epochs.mob.Spiralit(EpochsMobs.SPIRALIT.get(), l), "ash_age");
         StrataEpochs.LOG.info("[Strata-Test] Fertig, {} Fehler", failures);
     }
 
@@ -79,7 +81,7 @@ final class SelfTest {
     private static int testMob(MinecraftServer server, StrataMobDef def,
                                java.util.function.Function<ServerLevel, StrataMob> factory, String epochName) {
         // Der Steinzeuge spawnt nicht natürlich, er erwacht aus versteinertem Stein.
-        boolean naturalSpawn = !def.name().equals("petrified_witness");
+        boolean naturalSpawn = !def.name().equals("petrified_witness") && !def.name().equals("spiralit");
         List<String> problems = new ArrayList<>();
         MobModelData model;
         try {

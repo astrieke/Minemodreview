@@ -6,6 +6,7 @@ import dev.strata.epochs.mob.PetrifiedWitness;
 import dev.strata.epochs.mob.WitnessAwakening;
 import dev.strata.epochs.mob.SporeBellows;
 import dev.strata.epochs.mob.SporeClouds;
+import dev.strata.epochs.mob.Spiralit;
 import dev.strata.epochs.mob.StrataMob;
 import java.util.function.Supplier;
 import net.minecraft.server.level.ServerLevel;
@@ -43,6 +44,10 @@ public final class EpochsMobs {
     public static final Supplier<Item> PETRIFIED_WITNESS_SPAWN_EGG =
             REG.spawnEgg("petrified_witness_spawn_egg", PETRIFIED_WITNESS, 0x3c3742, 0xffd86b);
 
+    /** Begleiter aus dem Ammonit-Fossil, spawnt nicht natürlich. */
+    public static final Supplier<EntityType<Spiralit>> SPIRALIT =
+            REG.entity("spiralit", Spiralit::new, MobCategory.CREATURE, 0.5f, 0.6f, 8);
+
     public static final Supplier<SoundEvent> GEODE_CRAWLER_AMBIENT = REG.sound("entity.geode_crawler.ambient");
     public static final Supplier<SoundEvent> GEODE_CRAWLER_HURT = REG.sound("entity.geode_crawler.hurt");
     public static final Supplier<SoundEvent> GEODE_CRAWLER_DEATH = REG.sound("entity.geode_crawler.death");
@@ -52,6 +57,9 @@ public final class EpochsMobs {
     public static final Supplier<SoundEvent> PETRIFIED_WITNESS_AMBIENT = REG.sound("entity.petrified_witness.ambient");
     public static final Supplier<SoundEvent> PETRIFIED_WITNESS_HURT = REG.sound("entity.petrified_witness.hurt");
     public static final Supplier<SoundEvent> PETRIFIED_WITNESS_DEATH = REG.sound("entity.petrified_witness.death");
+    public static final Supplier<SoundEvent> SPIRALIT_AMBIENT = REG.sound("entity.spiralit.ambient");
+    public static final Supplier<SoundEvent> SPIRALIT_HURT = REG.sound("entity.spiralit.hurt");
+    public static final Supplier<SoundEvent> SPIRALIT_DEATH = REG.sound("entity.spiralit.death");
 
     private EpochsMobs() {}
 
@@ -61,6 +69,7 @@ public final class EpochsMobs {
             event.put(GEODE_CRAWLER.get(), GeodeCrawler.createAttributes().build());
             event.put(SPORE_BELLOWS.get(), SporeBellows.createAttributes().build());
             event.put(PETRIFIED_WITNESS.get(), PetrifiedWitness.createAttributes().build());
+            event.put(SPIRALIT.get(), Spiralit.createAttributes().build());
         });
         modBus.addListener((RegisterSpawnPlacementsEvent event) -> {
             event.register(GEODE_CRAWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -78,6 +87,8 @@ public final class EpochsMobs {
         NeoForge.EVENT_BUS.addListener(SporeBellows::onDeath);
         NeoForge.EVENT_BUS.addListener(SporeClouds::onLevelTick);
         NeoForge.EVENT_BUS.addListener(WitnessAwakening::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(Spiralit::onInteract);
+        NeoForge.EVENT_BUS.addListener(Spiralit::onChangedDimension);
     }
 
     /** Höchstzahl aller Strata-Mobs pro Dimension (Config {@code mobs.max_per_epoch}). */
