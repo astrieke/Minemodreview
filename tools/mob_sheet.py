@@ -19,11 +19,12 @@ from make_mob_textures import faces  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'mobs')
 BACKGROUNDS = [('Kristallzeit dunkel', '#2a1f4d'), ('Kristallzeit Nebel', '#6e56b8'),
-               ('Sporenzeit dunkel', '#1f3318'), ('Sporenzeit Nebel', '#4f7a3a')]
+               ('Sporenzeit dunkel', '#1f3318'), ('Sporenzeit Nebel', '#4f7a3a'),
+               ('Aschezeit dunkel', '#1d110d'), ('Aschezeit Nebel', '#5b3a2e')]
 # Gegen welche Hintergründe die Oberseiten bestehen müssen (dunkel und Nebel der eigenen Epoche).
 EPOCH_BG = {'geode_crawler': ['#2a1f4d', '#6e56b8'], 'spore_bellows': ['#1f3318', '#4f7a3a'],
             'petrified_witness': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a'],
-            'spiralit': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a']}
+            'spiralit': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a', '#1d110d', '#5b3a2e']}
 PLAYER_PX = 28.8
 CELL = 256
 
@@ -130,7 +131,8 @@ def sheet(mob):
     cols = 4
     anim_rows = (len(anims) + cols - 1) // cols
     clock = os.path.isfile(os.path.join(ROOT, mob, 'texture_glow_spiral_1.png'))
-    rows = 1 + anim_rows + 1 + 1 + (1 if clock else 0)
+    bg_rows = (len(BACKGROUNDS) + cols - 1) // cols
+    rows = 1 + anim_rows + bg_rows + 1 + (1 if clock else 0)
     lh = 18
     out = Image.new('RGBA', (cols * CELL, rows * (CELL + lh)), (235, 235, 238, 255))
     d = ImageDraw.Draw(out)
@@ -151,7 +153,7 @@ def sheet(mob):
     iso = Image.open(os.path.join(shots, 'iso.png'))
     for k, (label, bg) in enumerate(BACKGROUNDS):
         place(iso, row * cols + k, label, bg)
-    row += 1
+    row += bg_rows
     place(scale_panel(model), row * cols, 'Massstab (blau = Spieler)')
     top = top_color(model, tex)
     bgs = EPOCH_BG.get(mob, ['#2a1f4d'])
