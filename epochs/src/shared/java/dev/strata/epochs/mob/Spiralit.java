@@ -225,7 +225,7 @@ public class Spiralit extends StrataMob {
         double yaw = Math.toRadians(owner.getYRot());
         double fx = -Math.sin(yaw), fz = Math.cos(yaw);       // Blickrichtung
         double rx = -Math.cos(yaw), rz = -Math.sin(yaw);      // rechte Hand
-        return owner.position().add(rx * 0.9 + fx * 1.1, 1.0, rz * 0.9 + fz * 1.1);
+        return owner.position().add(rx * 1.3 + fx * 1.6, 1.0, rz * 1.3 + fz * 1.6);
     }
 
     /** Die inneren {@code lit} Segmente leuchten mit {@code strength}, die äußeren sind aus. */

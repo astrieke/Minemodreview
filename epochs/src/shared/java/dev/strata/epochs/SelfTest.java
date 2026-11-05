@@ -48,6 +48,7 @@ final class SelfTest {
         failures += testFossils();
         failures += testPreparation(server);
         failures += testTransplant(server);
+        for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) failures += testGrowth(server, epoch);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -236,6 +237,26 @@ final class SelfTest {
                 probe.toShortString(), level.getBlockState(probe), level.getBlockState(probe.below()));
         StrataEpochs.LOG.info("[Strata-Test] Transplantation: Blöcke={}, Oberfläche={}, Unterschicht={}, Bau erhalten={}, Biom={} -> {}",
                 job.changed(), top, under, kept, biome, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /** Wachsen die Features einer Landschaft (Geoden, Riesenpilze, Basaltsäulen)? Zählt Blöcke über dem Boden. */
+    private static int testGrowth(MinecraftServer server, String name) {
+        ServerLevel level = server.overworld();
+        String epochId = StrataEpochs.id(name);
+        var landscape = StrataAPI.epochs(server).get(epochId).landscape().orElseThrow();
+        int cx = 5000 + 200 * List.of("crystal_age", "spore_age", "ash_age").indexOf(name), cz = 5000;
+        for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++) level.getChunk((cx >> 4) + x, (cz >> 4) + z);
+        int ground = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz) - 1;
+        TransplantJob job = Transplanter.start(level, new BlockPos(cx, ground + 1, cz), epochId, landscape, 10, null);
+        job.runToEnd();
+        int grown = 0;
+        for (BlockPos pos : BlockPos.betweenClosed(cx - 10, ground + 1, cz - 10, cx + 10, ground + 12, cz + 10)) {
+            if (!level.getBlockState(pos).isAir()) grown++;
+        }
+        boolean ok = grown > 0;
+        StrataEpochs.LOG.info("[Strata-Test] Wachsen {}: {} Blöcke über dem Boden ({}) -> {}", name, grown,
+                landscape.features(), ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

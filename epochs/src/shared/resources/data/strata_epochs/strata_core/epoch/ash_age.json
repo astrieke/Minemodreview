@@ -10,9 +10,8 @@
     "filler": "strata_epochs:chronostone",
     "depth": 10,
     "features": [
-      "minecraft:small_basalt_columns",
-      "minecraft:large_basalt_columns"
+      "strata_epochs:basalt_cluster"
     ],
-    "feature_count": 6
+    "feature_count": 5
   }
 }

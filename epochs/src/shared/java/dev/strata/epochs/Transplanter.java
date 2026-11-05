@@ -128,8 +128,11 @@ public final class Transplanter {
 
     /** Führt einen Befehl als Server aus, ohne Ausgabe im Chat (für /fillbiome, /place, /summon). */
     static void command(ServerLevel level, String command) {
-        level.getServer().getCommands().performPrefixedCommand(
-                level.getServer().createCommandSourceStack().withSuppressedOutput().withLevel(level), command);
+        var source = level.getServer().createCommandSourceStack().withSuppressedOutput().withLevel(level)
+                .withCallback((success, result) -> {
+                    if (!success) StrataEpochs.LOG.warn("[Strata] Befehl fehlgeschlagen: {}", command);
+                });
+        level.getServer().getCommands().performPrefixedCommand(source, command);
     }
 
     static void onLevelTick(LevelTickEvent.Post event) {

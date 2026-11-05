@@ -13,7 +13,8 @@ import java.util.List;
  * @param under    die drei Blöcke darunter
  * @param filler   Gestein darunter bis zur Tiefe {@code depth}
  * @param depth    wie tief umgewandelt wird (Blöcke unter der Oberfläche)
- * @param features konfigurierte Features, die danach „wachsen“ (z. B. Riesenpilze)
+ * @param features was danach „wächst“: konfigurierte Features (z. B. {@code minecraft:huge_red_mushroom}) oder die
+ *                 Wuchsformen von Strata Epochs ({@code strata_epochs:crystal_spire}, {@code strata_epochs:basalt_cluster})
  * @param featureCount wie viele davon pro Transplantation (bei Radius 12; skaliert mit der Fläche)
  */
 public record Landscape(String biome, String top, String under, String filler, int depth,

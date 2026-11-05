@@ -17,6 +17,9 @@
 # SHOT_GEAR=1: Spieler trägt die Geodenrüstung und hält Strata-Werkzeuge; das Bild zeigt ihn von vorn (F5).
 # SHOT_AWAKEN=1 (mit SHOT_MOB): Verfestigung nach 20 s, Bildserie von oben (F5), bis ein Steinzeuge erwacht.
 # SHOT_PITCH=<Grad> ändert den Blickwinkel nach unten (Standard 28, für große Mobs kleiner).
+# SHOT_TRANSPLANT=<epoche>: in der Oberwelt (flache Testwelt) startet nach 31 s eine Transplantation
+#   (Radius 10) vor dem Spieler; Bildserie 40 s lang (alle 1 s), damit man Welle, Displays und Wachsen sieht.
+# SHOT_SPIRALIT=1: in der Epoche schlüpft nach 29 s ein Spiralit für den Spieler; Bildserie 20 s lang.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 v="$1"; epoch="$2"; out="$(realpath -m "$3")"
@@ -54,6 +57,23 @@ item replace entity @a[tag=!strata_shot] hotbar.7 with strata_epochs:amber_ore
 item replace entity @a[tag=!strata_shot] hotbar.8 with strata_epochs:chronostone
 tag @a add strata_shot
 MC
+if [ -n "${SHOT_TRANSPLANT:-}" ]; then
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in minecraft:overworld run tp @s 0.5 -55 -15.5 0 18\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:transplant 620t|" "$f"
+    cat > "$dp/data/strata_shot/function/transplant.mcfunction" <<MC
+time set day
+execute in minecraft:overworld positioned 0 -60 0 run strata_epochs transplant strata_epochs:$SHOT_TRANSPLANT 10
+MC
+fi
+if [ -n "${SHOT_SPIRALIT:-}" ]; then
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i "s|^tag @a add strata_shot|execute if entity @a[tag=!strata_shot] run schedule function strata_shot:spiralit 580t\ntag @a add strata_shot|" "$f"
+    cat > "$dp/data/strata_shot/function/spiralit.mcfunction" <<MC
+effect give @a minecraft:night_vision infinite 0 true
+execute as @a at @s run tp @s ~ ~ ~ -90 15
+execute as @a at @s run strata_epochs spiralit
+MC
+fi
 if [ -n "${SHOT_GEAR:-}" ]; then
     f="$dp/data/strata_shot/function/tick.mcfunction"
     sed -i '/^tag @a add strata_shot/d' "$f"
@@ -165,7 +185,14 @@ if [ $ok -eq 1 ]; then
     fi
     DISPLAY="$display" import -window root "$out"
     echo "Screenshot: $out"
-    if [ -n "${SHOT_AWAKEN:-}" ] && [ -n "${PYTHON:-}" ]; then
+    if [ -n "${SHOT_TRANSPLANT:-}${SHOT_SPIRALIT:-}" ]; then
+        n=$([ -n "${SHOT_TRANSPLANT:-}" ] && echo 39 || echo 19)
+        for i in $(seq -w 0 "$n"); do
+            DISPLAY="$display" import -window root "${out%.png}_act_$i.png"
+            sleep 1
+        done
+        echo "Bildserie: ${out%.png}_act_*.png"
+    elif [ -n "${SHOT_AWAKEN:-}" ] && [ -n "${PYTHON:-}" ]; then
         DISPLAY="$display" "$PYTHON" tools/xclick.py key F5; sleep 1
         for i in $(seq -w 0 44); do
             DISPLAY="$display" import -window root "${out%.png}_act_$i.png"

@@ -10,9 +10,8 @@
     "filler": "strata_epochs:chronostone",
     "depth": 10,
     "features": [
-      "minecraft:amethyst_geode",
-      "minecraft:large_dripstone"
+      "strata_epochs:crystal_spire"
     ],
-    "feature_count": 5
+    "feature_count": 6
   }
 }

@@ -45,11 +45,30 @@ public final class TransplantJob {
     private static final int UNDER_LAYERS = 3;
     private static final int SEARCH_DOWN = 8;
     private static final int RISE_TICKS = 8;
-    private static final int MAX_RISING = 48;
-    private static final int GROW_INTERVAL = 6;
+    private static final int SETTLE_TICKS = 6;
+    private static final int MAX_RISING = 96;
+    private static final int GROW_INTERVAL = 10;
+    /** Die Welle läuft so viele Blöcke pro Tick nach außen (0,08 = 1,6 Blöcke pro Sekunde). */
+    private static final double WAVE_SPEED = 0.08;
+    private static final int WAVE_START = 20;
     private static final int RUMBLE_INTERVAL = 12;
 
-    private record Rising(Display.BlockDisplay display, BlockPos pos, BlockState state, int doneTick) {}
+    /** Ein aufsteigender Block: erst über den Boden gewölbt, dann gesetzt. */
+    private static final class Rising {
+        final Display.BlockDisplay display;
+        final BlockPos pos;
+        final BlockState state;
+        final int settleTick, doneTick;
+        boolean settling;
+
+        Rising(Display.BlockDisplay display, BlockPos pos, BlockState state, int settleTick, int doneTick) {
+            this.display = display;
+            this.pos = pos;
+            this.state = state;
+            this.settleTick = settleTick;
+            this.doneTick = doneTick;
+        }
+    }
 
     final ServerLevel level;
     final BlockPos center;
@@ -64,6 +83,9 @@ public final class TransplantJob {
     private final Deque<int[]> biomeColumns = new ArrayDeque<>();
     private final Deque<BlockPos> growSpots = new ArrayDeque<>();
     private final List<Rising> rising = new ArrayList<>();
+    /** Blöcke eigener Wuchsformen, die nacheinander erscheinen: {x, y, z, Tick} und der Zustand. */
+    private final java.util.PriorityQueue<Object[]> growing =
+            new java.util.PriorityQueue<>((a, b) -> Integer.compare((int) a[1], (int) b[1]));
     private Phase phase = Phase.LAYERS;
     private int ticks;
     private int minTop = Integer.MAX_VALUE, maxTop = Integer.MIN_VALUE;
@@ -150,7 +172,9 @@ public final class TransplantJob {
             columns.addAll(waiting);
             waiting.clear();
         }
-        while (used < budget && !columns.isEmpty()) {
+        // Die Welle bestimmt das Tempo (sichtbar), das Budget nur die Obergrenze (Performance).
+        double front = instant ? Double.MAX_VALUE : 1.5 + Math.max(0, ticks - WAVE_START) * WAVE_SPEED;
+        while (used < budget && !columns.isEmpty() && columns.peek()[2] <= front * 100) {
             int[] c = columns.poll();
             BlockPos column = new BlockPos(c[0], center.getY(), c[1]);
             if (!level.hasChunkAt(column)) {
@@ -186,7 +210,7 @@ public final class TransplantJob {
             if (!old.is(TRANSPLANTABLE)) continue;
             BlockState state = depth == 0 ? top : depth <= UNDER_LAYERS ? under : filler;
             if (old == state) continue;
-            if (depth == 0 && !instant && rising.size() < MAX_RISING && random.nextInt(3) == 0
+            if (depth == 0 && !instant && rising.size() < MAX_RISING && random.nextInt(2) == 0
                     && rise(pos.immutable(), state)) {
                 count++;
                 continue;
@@ -213,22 +237,32 @@ public final class TransplantJob {
                 pos.getX(), pos.getY(), pos.getZ(), name, tilt, w);
         Transplanter.command(level, cmd);
         List<Display.BlockDisplay> found = level.getEntitiesOfClass(Display.BlockDisplay.class, new AABB(pos).inflate(0.1),
-                d -> d.blockPosition().equals(pos) && rising.stream().noneMatch(r -> r.display() == d));
+                d -> d.blockPosition().equals(pos) && rising.stream().noneMatch(r -> r.display == d));
         if (found.isEmpty()) return false;                      // Befehl nicht verfügbar: Block einfach setzen
         Display.BlockDisplay display = found.get(0);
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-        Transplanter.command(level, "data merge entity " + display.getStringUUID()
-                + " {start_interpolation:1,interpolation_duration:" + RISE_TICKS + ",transformation:{left_rotation:[0f,0f,0f,1f],"
-                + "right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}");
-        rising.add(new Rising(display, pos, state, ticks + RISE_TICKS + 2));
+        // Erst über den Boden heben (die Schicht wölbt sich auf), dann setzen.
+        float lift = 0.35f + random.nextFloat() * 0.4f;
+        transform(display, RISE_TICKS, String.format(Locale.ROOT, "%.2ff", lift));
+        rising.add(new Rising(display, pos, state, ticks + RISE_TICKS + 1, ticks + RISE_TICKS + SETTLE_TICKS + 2));
         return true;
+    }
+
+    private void transform(Display.BlockDisplay display, int duration, String y) {
+        Transplanter.command(level, "data merge entity " + display.getStringUUID()
+                + " {start_interpolation:0,interpolation_duration:" + duration + ",transformation:{left_rotation:[0f,0f,0f,1f],"
+                + "right_rotation:[0f,0f,0f,1f],translation:[0f," + y + ",0f],scale:[1f,1f,1f]}}");
     }
 
     private void finishRising(boolean all) {
         rising.removeIf(r -> {
-            if (!all && ticks < r.doneTick()) return false;
-            r.display().discard();
-            if (level.getBlockState(r.pos()).isAir()) level.setBlock(r.pos(), r.state(), 3);
+            if (!all && !r.settling && ticks >= r.settleTick) {
+                r.settling = true;
+                transform(r.display, SETTLE_TICKS, "0f");
+            }
+            if (!all && ticks < r.doneTick) return false;
+            r.display.discard();
+            if (level.getBlockState(r.pos).isAir()) level.setBlock(r.pos, r.state, 3);
             return true;
         });
     }
@@ -273,7 +307,8 @@ public final class TransplantJob {
             int z = center.getZ() + (int) Math.round(Math.sin(angle) * dist);
             if (Math.abs(x - center.getX()) <= 1 && Math.abs(z - center.getZ()) <= 1) continue;   // nicht auf den Tisch
             if (!level.hasChunkAt(new BlockPos(x, center.getY(), z))) continue;
-            int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            // Höhe über den ersten Nicht-Luft-Block (die Bewegungs-Höhenkarte zählt in 26.x nicht jeden Block gleich).
+            int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
             if (!level.getBlockState(new BlockPos(x, y - 1, z)).is(top.getBlock())) continue;
             BlockPos spot = new BlockPos(x, y, z);
             if (growSpots.stream().anyMatch(p -> p.distSqr(spot) < 16)) continue;
@@ -282,22 +317,72 @@ public final class TransplantJob {
     }
 
     private void tickGrow() {
+        while (!growing.isEmpty() && (instant || (int) growing.peek()[1] <= ticks)) {
+            Object[] g = growing.poll();
+            BlockPos pos = (BlockPos) g[0];
+            if (level.getBlockState(pos).canBeReplaced()) level.setBlock(pos, (BlockState) g[2], 3);
+        }
         if (!instant && ticks % GROW_INTERVAL != 0) return;
         BlockPos spot = growSpots.poll();
         if (spot != null) {
             String feature = landscape.features().get(random.nextInt(landscape.features().size()));
-            Transplanter.command(level, String.format(Locale.ROOT, "place feature %s %d %d %d",
-                    feature, spot.getX(), spot.getY(), spot.getZ()));
+            if (!growBuiltIn(feature, spot)) {
+                Transplanter.command(level, String.format(Locale.ROOT, "place feature %s %d %d %d",
+                        feature, spot.getX(), spot.getY(), spot.getZ()));
+            }
             if (!instant) {
                 level.sendParticles(ParticleTypes.HAPPY_VILLAGER, spot.getX() + 0.5, spot.getY() + 1, spot.getZ() + 0.5,
                         12, 0.8, 1.0, 0.8, 0.0);
                 level.playSound(null, spot, SoundEvents.BONE_MEAL_USE, SoundSource.BLOCKS, 1.0f, 0.7f);
             }
         }
-        if (growSpots.isEmpty()) {
+        if (growSpots.isEmpty() && growing.isEmpty()) {
             finishRising(true);
             phase = Phase.DONE;
         }
+    }
+
+    // ---- eigene Wuchsformen ----
+
+    /**
+     * Eigene Wuchsformen, die überall funktionieren (Vanilla-Geoden und Basaltsäulen brauchen Höhlen bzw. den Nether):
+     * {@code strata_epochs:crystal_spire} (Amethystspitze mit Kristallquarzerz) und
+     * {@code strata_epochs:basalt_cluster} (Basaltsäulen mit Glutsteinerz). Sie wachsen Block für Block.
+     */
+    private boolean growBuiltIn(String feature, BlockPos spot) {
+        if (feature.equals(StrataEpochs.id("crystal_spire"))) {
+            BlockState body = MobCompat.block("minecraft:amethyst_block").defaultBlockState();
+            BlockState ore = EpochsContent.CRYSTAL_QUARTZ_ORE.get().defaultBlockState();
+            int height = 3 + random.nextInt(4);
+            column(spot, height, body, ore, 0.25, MobCompat.block("minecraft:amethyst_cluster").defaultBlockState(), 0);
+            for (int i = 0; i < 2; i++) {
+                BlockPos side = spot.offset(random.nextInt(3) - 1, 0, random.nextInt(3) - 1);
+                if (!side.equals(spot)) column(side, 1 + random.nextInt(2), body, ore, 0.4,
+                        MobCompat.block("minecraft:medium_amethyst_bud").defaultBlockState(), 6);
+            }
+            return true;
+        }
+        if (feature.equals(StrataEpochs.id("basalt_cluster"))) {
+            BlockState body = MobCompat.block("minecraft:basalt").defaultBlockState();
+            BlockState ore = EpochsContent.EMBER_ORE.get().defaultBlockState();
+            int count = 3 + random.nextInt(3);
+            for (int i = 0; i < count; i++) {
+                BlockPos at = i == 0 ? spot : spot.offset(random.nextInt(5) - 2, 0, random.nextInt(5) - 2);
+                column(at, 1 + random.nextInt(i == 0 ? 6 : 4), body, ore, 0.15, null, i * 3);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /** Eine Säule ab {@code base} (auf dem Boden), Block für Block alle 3 Ticks, mit Erz-Anteil und optionaler Spitze. */
+    private void column(BlockPos base, int height, BlockState body, BlockState ore, double oreChance, BlockState tip, int delay) {
+        int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, base.getX(), base.getZ());
+        for (int i = 0; i < height; i++) {
+            BlockState state = random.nextDouble() < oreChance ? ore : body;
+            growing.add(new Object[] {new BlockPos(base.getX(), y + i, base.getZ()), ticks + delay + i * 3, state});
+        }
+        if (tip != null) growing.add(new Object[] {new BlockPos(base.getX(), y + height, base.getZ()), ticks + delay + height * 3, tip});
     }
 
     /** Abbruch (z. B. Server stoppt): schwebende Displays aufräumen, Blöcke setzen. */
