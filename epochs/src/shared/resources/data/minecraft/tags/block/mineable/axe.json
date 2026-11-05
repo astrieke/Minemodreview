@@ -1,5 +1,6 @@
 {
   "values": [
-    "strata_epochs:fossil_table"
+    "strata_epochs:fossil_table",
+    "strata_epochs:analysis_table"
   ]
 }

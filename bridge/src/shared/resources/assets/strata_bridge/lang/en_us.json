@@ -62,5 +62,8 @@
   "jade.strata_bridge.mob.spiralit": "Companion · slows solidification, senses ores",
   "advancements.strata_epochs.first_transplant.title": "Primeval Garden",
   "advancements.strata_epochs.first_transplant.description": "Bring an epoch to the Overworld with the Transplanter",
-  "jei.strata_bridge.info.transplanter": "Right-click with a core sample to permanently turn the surroundings (radius 12, configurable) into that epoch: rock, surface, biome, then giant mushrooms, geodes or basalt columns grow. Requires the epoch to be explored (visited and a fossil prepared). Uses the core sample and one fossil of the epoch. Only natural blocks change, builds stay. Overworld only."
+  "jei.strata_bridge.info.transplanter": "Right-click with a core sample to permanently turn the surroundings (radius 12, configurable) into that epoch: rock, surface, biome, then giant mushrooms, geodes or basalt columns grow. Requires the epoch to be explored (visited and a fossil prepared). Uses the core sample and one fossil of the epoch. Only natural blocks change, builds stay. Overworld only.",
+  "advancements.strata_epochs.first_analysis.title": "Under the Lens",
+  "advancements.strata_epochs.first_analysis.description": "Analyze a core sample at the Core Analysis Table",
+  "jei.strata_bridge.info.analysis_table": "Right-click with core samples to analyze the stack. The note on the core shows depth, time limit, finds and whether the epoch is explored for the Transplanter. Entering an epoch with an analyzed core gives 25% more time before solidification."
 }

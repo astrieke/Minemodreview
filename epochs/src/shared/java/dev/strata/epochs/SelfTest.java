@@ -46,6 +46,7 @@ final class SelfTest {
         }
 
         failures += testFossils();
+        failures += testAnalysis(server);
         failures += testPreparation(server);
         failures += testTransplant(server);
         for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) failures += testGrowth(server, epoch);
@@ -286,6 +287,18 @@ final class SelfTest {
                 StrataAPI.epochs(server).get(epochId).landscape().orElseThrow(), 8, null);
         StrataEpochs.LOG.info("[Strata-Test] Neustart-Test: Transplantation gestartet, Server fährt herunter");
         server.halt(false);
+    }
+
+    /** Kernanalyse: Kern wird markiert, Notiz hat Epoche, Bonus, Tiefe, Fundstücke und Kodex-Zeile. */
+    private static int testAnalysis(MinecraftServer server) {
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(server.overworld());
+        var sample = CoreSamples.create(StrataEpochs.id("ash_age"));
+        CoreSamples.analyze(sample, player);
+        var lore = sample.get(net.minecraft.core.component.DataComponents.LORE);
+        boolean ok = CoreSamples.isAnalyzed(sample) && lore != null && lore.lines().size() == 5;
+        StrataEpochs.LOG.info("[Strata-Test] Kernanalyse: analysiert={}, Zeilen={} -> {}", CoreSamples.isAnalyzed(sample),
+                lore == null ? 0 : lore.lines().size(), ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
     }
 
     private static void requireResource(List<String> problems, String path) {

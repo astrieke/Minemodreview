@@ -96,5 +96,15 @@
   "message.strata_epochs.transplanter.too_many": "Zu viele Transplantationen gleichzeitig, warte kurz.",
   "message.strata_epochs.transplanter.need_fossil": "Der Transplantator braucht ein Fossil als Keim: %s",
   "message.strata_epochs.transplanter.start": "Der Boden bebt … %s steigt herauf.",
-  "message.strata_epochs.transplanter.done": "%s ist in die Oberwelt verpflanzt."
+  "message.strata_epochs.transplanter.done": "%s ist in die Oberwelt verpflanzt.",
+  "block.strata_epochs.analysis_table": "Kernanalyse-Tisch",
+  "tooltip.strata_epochs.analysis.bonus": "Analysiert: +%s %% Zeit beim Betreten",
+  "tooltip.strata_epochs.analysis.depth": "Tiefe: Stufe %s · Verfestigung nach %s min",
+  "tooltip.strata_epochs.analysis.finds": "Fundstücke: %s",
+  "tooltip.strata_epochs.analysis.codex": "Kodex: besucht %s · Fossil %s (Transplantator)",
+  "epoch.strata_epochs.crystal_age.finds": "Kristallquarz, Geodenkriecher, Ammonit",
+  "epoch.strata_epochs.spore_age.finds": "Bernstein, Sporenbalg, Farnabdruck",
+  "epoch.strata_epochs.ash_age.finds": "Glutsplitter, Magmawürfel, Urzeitschädel",
+  "message.strata_epochs.analysis.done": "Bohrkern analysiert: %s",
+  "message.strata_epochs.analysis.known": "Dieser Kern ist schon analysiert."
 }

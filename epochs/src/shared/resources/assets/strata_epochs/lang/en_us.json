@@ -96,5 +96,15 @@
   "message.strata_epochs.transplanter.too_many": "Too many transplants at once, wait a moment.",
   "message.strata_epochs.transplanter.need_fossil": "The Transplanter needs a fossil as a seed: %s",
   "message.strata_epochs.transplanter.start": "The ground trembles … %s rises.",
-  "message.strata_epochs.transplanter.done": "%s has been transplanted to the Overworld."
+  "message.strata_epochs.transplanter.done": "%s has been transplanted to the Overworld.",
+  "block.strata_epochs.analysis_table": "Core Analysis Table",
+  "tooltip.strata_epochs.analysis.bonus": "Analyzed: +%s%% time on entry",
+  "tooltip.strata_epochs.analysis.depth": "Depth: tier %s · solidifies after %s min",
+  "tooltip.strata_epochs.analysis.finds": "Finds: %s",
+  "tooltip.strata_epochs.analysis.codex": "Codex: visited %s · fossil %s (Transplanter)",
+  "epoch.strata_epochs.crystal_age.finds": "Crystal Quartz, Geode Crawler, Ammonite",
+  "epoch.strata_epochs.spore_age.finds": "Amber, Spore Bellows, Fern Imprint",
+  "epoch.strata_epochs.ash_age.finds": "Ember Shards, Magma Cubes, Ancient Skull",
+  "message.strata_epochs.analysis.done": "Core sample analyzed: %s",
+  "message.strata_epochs.analysis.known": "This core is already analyzed."
 }

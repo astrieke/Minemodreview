@@ -52,6 +52,13 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
 6. Rechtsklick auf das Tor bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.
 
+**Kernanalyse-Tisch** (Kupfer, Fernrohr, Holz, Steinstufe): Rechtsklick mit Bohrkernen analysiert den Stapel. Die Notiz am Kern zeigt:
+- Tiefe und Zeitlimit
+- Fundstücke
+- den Kodex-Stand für den Transplantator (besucht und Fossil, jeweils ✔ oder ✘)
+
+Wer mit einem analysierten Kern eine Epoche betritt, hat **25 % mehr Zeit** bis zur Verfestigung.
+
 **Fossilien:** Zeitgestein (2 %) und versteinerter Stein (15 %) lassen in den Epochen **Fossilbrocken** fallen. So präparierst du sie:
 - **Meißel** in die Haupthand, Brocken in die zweite Hand, dann Rechtsklick auf den **Präparationstisch**.
 - Fünf Schläge legen das Fossil frei.
@@ -92,6 +99,7 @@ Kodex-Knoten werden automatisch freigeschaltet:
 - `strata_epochs:first_core` mit dem ersten Bohrkern
 - `visited_<epoche>` beim ersten Besuch einer Epoche
 - `fossil_<epoche>` und `mastered_<epoche>` mit dem ersten präparierten Fossil
+- `first_analysis` nach der ersten Kernanalyse
 - `first_transplant` nach der ersten Transplantation
 
 ## Strata Bridge: Anbindung an andere Mods
@@ -208,7 +216,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Die Mob-Sounds sind eigene Ereignisse mit Untertiteln, klingen aber nach Vanilla (Gürteltier, Schleim, Schleifstein). Eigene Aufnahmen fehlen.
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
-- Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator. Im Client gesehen: Spiralit (1.21.1), Transplantation (1.21.1 und 26.3), siehe `docs/screenshots/phase3/`.
+- Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator (übersteht Neustarts), dazu der Kernanalyse-Tisch aus Phase 1. Im Client gesehen: Spiralit (1.21.1), Transplantation (1.21.1 und 26.3), siehe `docs/screenshots/phase3/`.
 - Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.
-- Kernanalyse-Tisch, weitere Biome pro Epoche und ein eigener Mob für die Aschezeit (bisher Vanilla-Magmawürfel und Schreiter).
+- Weitere Biome pro Epoche und ein eigener Mob für die Aschezeit (bisher Vanilla-Magmawürfel und Schreiter).
 - Bridge: eigenes EMI-Plugin (EMI gibt es nur für 1.21.1), KubeJS-Plugin mit eigenen Bindings, Curios-Slot für den Zeitanker.

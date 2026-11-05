@@ -42,7 +42,9 @@ public final class Solidification {
         Optional<String> epochId = EpochTravel.epochOf(level);
         EpochVisit visit = player.getData(EpochsContent.VISIT.get());
         if (epochId.isEmpty()) {
-            if (visit.ticks() != 0) player.setData(EpochsContent.VISIT.get(), visit.withTicks(0));
+            if (visit.ticks() != 0 || visit.bonus() != 0) {
+                player.setData(EpochsContent.VISIT.get(), new EpochVisit(visit.returnDimension(), visit.x(), visit.y(), visit.z(), 0, 0));
+            }
             return;
         }
 
@@ -50,7 +52,7 @@ public final class Solidification {
         player.setData(EpochsContent.VISIT.get(), visit.withTicks(ticks));
 
         Epoch epoch = StrataAPI.epochs(level.getServer()).get(epochId.get());
-        double bonus = player.getInventory().contains(EpochsContent.TIME_ANCHOR.get().getDefaultInstance()) ? 1.0 : 0.0;
+        double bonus = timeBonus(player);
         long allowed = SolidificationClock.allowedTicks(epoch.solidifySeconds() * 20L, bonus);
 
         switch (SolidificationClock.stage(ticks, allowed)) {
@@ -84,6 +86,12 @@ public final class Solidification {
         });
     }
 
+    /** Zusatzzeit als Anteil: Zeitanker +100 %, analysierter Bohrkern beim Betreten +25 %. */
+    static double timeBonus(ServerPlayer player) {
+        double anchor = player.getInventory().contains(EpochsContent.TIME_ANCHOR.get().getDefaultInstance()) ? 1.0 : 0.0;
+        return anchor + player.getData(EpochsContent.VISIT.get()).bonus();
+    }
+
     /** Stand der Uhr: verbleibender Anteil der erlaubten Zeit (0..1) und Phase. */
     public record Clock(double remaining, SolidificationClock.Stage stage) {}
 
@@ -95,7 +103,7 @@ public final class Solidification {
         Epoch epoch = StrataAPI.epochs(level.getServer()).get(epochId.get());
         if (epoch == null || epoch.solidifySeconds() <= 0) return Optional.empty();
         long ticks = player.getData(EpochsContent.VISIT.get()).ticks();
-        double bonus = player.getInventory().contains(EpochsContent.TIME_ANCHOR.get().getDefaultInstance()) ? 1.0 : 0.0;
+        double bonus = timeBonus(player);
         long allowed = SolidificationClock.allowedTicks(epoch.solidifySeconds() * 20L, bonus);
         double remaining = allowed <= 0 ? 0 : Math.max(0, Math.min(1, 1 - ticks / (double) allowed));
         return Optional.of(new Clock(remaining, SolidificationClock.stage(ticks, allowed)));

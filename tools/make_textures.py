@@ -1156,6 +1156,65 @@ def transplanter_top():
     return img
 
 
+def analysis_table_top():
+    # Kupferplatte mit Holzrahmen; darauf ein Bohrkern im Halter und eine Lupe mit Glas.
+    img = canvas()
+    cu = ['#9c5a32', '#b8693a', '#c97a48']
+    n = tile_noise(95, 8)
+    for y in range(16):
+        for x in range(16):
+            img.putpixel((x, y), pick(cu, 0.3 + n[y][x] * 0.5))
+    for i in range(16):
+        for xy in ((i, 0), (0, i)):
+            img.putpixel(xy, rgb('#b0804e'))
+        for xy in ((i, 15), (15, i)):
+            img.putpixel(xy, rgb('#5a3b22'))
+    # Bohrkern quer (Schichtfarben)
+    for x, c in zip(range(3, 10), ['#567d4f', '#77a06d', '#c38c4a', '#e3ae6c', '#8d76c6', '#b19de3', '#948ea0']):
+        img.putpixel((x, 4), rgb(c))
+        img.putpixel((x, 5), rgb(c))
+        img.putpixel((x, 6), rgb('#433e52'))
+    # Lupe: Messingring, helles Glas, Griff
+    ring = {(10, 8), (11, 8), (12, 8), (9, 9), (13, 9), (9, 10), (13, 10), (9, 11), (13, 11), (10, 12), (11, 12), (12, 12)}
+    for xy in ring:
+        img.putpixel(xy, rgb('#d9a43a'))
+    for xy in ((10, 9), (11, 9), (12, 9), (10, 10), (11, 10), (12, 10), (10, 11), (11, 11), (12, 11)):
+        img.putpixel(xy, rgb('#bfe8f0'))
+    img.putpixel((10, 9), rgb('#ffffff'))
+    for xy in ((8, 12), (7, 13), (6, 14)):
+        img.putpixel(xy, rgb('#5a3b22'))
+    return img
+
+
+def analysis_table_side():
+    # Holzgestell mit Kupferkante und Schublade mit Messinggriff.
+    pal = {'c': '#c97a48', 'C': '#9c5a32', 'w': '#b0804e', 'm': '#83593a', 'd': '#5a3b22', 'k': '#2b1d10', 'g': '#d9a43a'}
+    rows = [
+        'cccccccccccccccc',
+        'CCCCCCCCCCCCCCCC',
+        'wwwwwwwwwwwwwwww',
+        'mddddddddddddddm',
+        'md.mmmmmmmmmm.dm',
+        'md.mmmmggmmmm.dm',
+        'md.mmmmmmmmmm.dm',
+        'mddddddddddddddm',
+        'wm............wm',
+        'wm............wm',
+        'wm............wm',
+        'wm............wm',
+        'wm............wm',
+        'wm............wm',
+        'wd............wd',
+        'dd............dd',
+    ]
+    img = from_grid(rows, pal)
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch == '.':
+                img.putpixel((x, y), rgb('#2b1d10'))
+    return img
+
+
 BLOCKS = {
     'chronostone': chronostone,
     'crystal_quartz_ore': crystal_quartz_ore,
@@ -1168,6 +1227,8 @@ BLOCKS = {
     'fossil_table_side': fossil_table_side,
     'transplanter_top': transplanter_top,
     'transplanter_side': transplanter_side,
+    'analysis_table_top': analysis_table_top,
+    'analysis_table_side': analysis_table_side,
 }
 ITEMS = {
     'core_drill': core_drill,

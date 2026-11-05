@@ -26,8 +26,13 @@ public final class EpochTravel {
     }
 
     public static void enter(ServerPlayer player, ServerLevel target) {
+        enter(player, target, 0);
+    }
+
+    /** Wie {@link #enter(ServerPlayer, ServerLevel)}, mit Zusatzzeit (Anteil, 0,25 = +25 %). */
+    public static void enter(ServerPlayer player, ServerLevel target, double bonus) {
         player.setData(EpochsContent.VISIT.get(),
-                new EpochVisit(Mc.levelId(player.level()), player.getX(), player.getY(), player.getZ(), 0));
+                new EpochVisit(Mc.levelId(player.level()), player.getX(), player.getY(), player.getZ(), 0, bonus));
         BlockPos arrival = prepareArrival(target, player.getBlockX(), player.getBlockZ());
         Mc.teleport(player, target, arrival.getX() + 0.5, arrival.getY(), arrival.getZ() + 0.5);
         Mc.actionbar(player, Component.translatable("message.strata_epochs.gate.entered"));

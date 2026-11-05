@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CGC",
+    "PSP",
+    "P P"
+  ],
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "G": "minecraft:spyglass",
+    "P": "#minecraft:planks",
+    "S": "minecraft:smooth_stone_slab"
+  },
+  "result": {
+    "id": "strata_epochs:analysis_table",
+    "count": 1
+  }
+}

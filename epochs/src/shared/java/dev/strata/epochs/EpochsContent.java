@@ -37,6 +37,9 @@ public final class EpochsContent {
     /** Präparationstisch: hier legt man mit dem Meißel Fossilien frei (siehe {@link FossilPrep}). */
     public static final Supplier<Block> FOSSIL_TABLE = REG.block("fossil_table",
             p -> p.mapColor(MapColor.WOOD).strength(2.5f).sound(SoundType.WOOD));
+    /** Kernanalyse-Tisch (siehe {@link CoreAnalysis}). */
+    public static final Supplier<Block> ANALYSIS_TABLE = REG.block("analysis_table",
+            p -> p.mapColor(MapColor.METAL).strength(2.5f).sound(SoundType.COPPER));
     /** Epochen-Transplantator (siehe {@link Transplanter}). */
     public static final Supplier<Block> TRANSPLANTER = REG.block("transplanter",
             p -> p.mapColor(MapColor.COLOR_PURPLE).strength(5.0f, 1200.0f).requiresCorrectToolForDrops()
@@ -82,12 +85,17 @@ public final class EpochsContent {
         REG.blockItem(EMBER_ORE, "ember_ore");
         REG.blockItem(FOSSIL_TABLE, "fossil_table");
         REG.blockItem(TRANSPLANTER, "transplanter");
+        REG.blockItem(ANALYSIS_TABLE, "analysis_table");
         REG.blockItem(EPOCH_GATE, "epoch_gate");
     }
 
     /** Auf dem Bohrkern: welche Epoche er zeigt. */
     public static final Supplier<net.minecraft.core.component.DataComponentType<String>> SAMPLE_EPOCH =
             REG.stringComponent("sample_epoch");
+
+    /** Am Bohrkern: 1 = am Kernanalyse-Tisch analysiert. */
+    public static final Supplier<net.minecraft.core.component.DataComponentType<Integer>> ANALYZED =
+            REG.intComponent("analyzed");
 
     /** Am Fossilbrocken: wie viele Meißelschläge schon sitzen. */
     public static final Supplier<net.minecraft.core.component.DataComponentType<Integer>> PREP_PROGRESS =

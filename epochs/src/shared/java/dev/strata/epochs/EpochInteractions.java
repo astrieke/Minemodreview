@@ -102,8 +102,9 @@ final class EpochInteractions {
                     CoreSamples.epochName(epoch.get())).withStyle(ChatFormatting.GRAY));
             return;
         }
+        double bonus = CoreSamples.isAnalyzed(held) ? CoreSamples.ANALYSIS_BONUS : 0;
         if (!player.getAbilities().instabuild) held.shrink(1);
-        EpochTravel.enter(player, Mc.level(level.getServer(), dimension.get()));
+        EpochTravel.enter(player, Mc.level(level.getServer(), dimension.get()), bonus);
         StrataAPI.unlock(player, StrataEpochs.id("visited_" + epoch.get().substring(epoch.get().indexOf(':') + 1)));
     }
 }

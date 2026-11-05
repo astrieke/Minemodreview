@@ -182,6 +182,13 @@
       "replace": {
         "minecraft:obsidian": "strata_epochs:transplanter"
       }
+    },
+    {
+      "block": "analysis_table",
+      "base": "minecraft:blocks/fletching_table",
+      "replace": {
+        "minecraft:fletching_table": "strata_epochs:analysis_table"
+      }
     }
   ],
   "_fossils": "Fossilbrocken: zusätzliche Loot-Pools pro Epoche. Der Brocken merkt sich die Epoche (Komponente), die Chance gilt pro abgebautem Block.",
