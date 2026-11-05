@@ -41,5 +41,17 @@
   "subtitles.strata_epochs.petrified_witness.hurt": "Steinzeuge wird verletzt",
   "subtitles.strata_epochs.petrified_witness.death": "Steinzeuge zerfällt",
   "message.strata_epochs.codex_fragment": "Das Fragment zeigt das Echo eines Reisenden.",
-  "message.strata_epochs.codex_fragment.known": "Dieses Echo kennst du schon."
+  "message.strata_epochs.codex_fragment.known": "Dieses Echo kennst du schon.",
+  "item.strata_epochs.crystal_quartz_sword": "Kristallquarz-Schwert",
+  "item.strata_epochs.crystal_quartz_pickaxe": "Kristallquarz-Spitzhacke",
+  "item.strata_epochs.crystal_quartz_axe": "Kristallquarz-Axt",
+  "item.strata_epochs.crystal_quartz_shovel": "Kristallquarz-Schaufel",
+  "item.strata_epochs.crystal_quartz_hoe": "Kristallquarz-Hacke",
+  "item.strata_epochs.amber_blade": "Bernsteinklinge",
+  "item.strata_epochs.geode_helmet": "Geodenhelm",
+  "item.strata_epochs.geode_chestplate": "Geodenbrustpanzer",
+  "item.strata_epochs.geode_leggings": "Geodenbeinschutz",
+  "item.strata_epochs.geode_boots": "Geodenstiefel",
+  "tooltip.strata_epochs.amber_blade": "Treffer verlangsamen das Ziel kurz",
+  "tooltip.strata_epochs.geode_set": "Volles Set: Verfestigung läuft 25 % langsamer"
 }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "C C",
+    "Q Q"
+  ],
+  "key": {
+    "C": "strata_epochs:calcite_scale",
+    "Q": "strata_epochs:crystal_quartz"
+  },
+  "result": {
+    "id": "strata_epochs:geode_boots",
+    "count": 1
+  }
+}

@@ -27,6 +27,7 @@ public final class StrataEpochs {
         container.registerConfig(local, EpochsConfig.SPEC);
         EpochsContent.register(modBus);
         EpochsMobs.register(modBus);
+        EpochsGear.register(modBus);
         NeoForge.EVENT_BUS.addListener(EpochInteractions::onRightClickBlock);
         BreakHook.preventBreaking(EpochInteractions::isProtectedGate);
         NeoForge.EVENT_BUS.addListener(Solidification::onPlayerTick);

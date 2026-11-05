@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "CQC",
+    "C C"
+  ],
+  "key": {
+    "C": "strata_epochs:calcite_scale",
+    "Q": "strata_epochs:crystal_quartz"
+  },
+  "result": {
+    "id": "strata_epochs:geode_helmet",
+    "count": 1
+  }
+}

@@ -41,5 +41,17 @@
   "subtitles.strata_epochs.petrified_witness.hurt": "Petrified Witness hurts",
   "subtitles.strata_epochs.petrified_witness.death": "Petrified Witness crumbles",
   "message.strata_epochs.codex_fragment": "The fragment shows the echo of a traveller.",
-  "message.strata_epochs.codex_fragment.known": "You already know this echo."
+  "message.strata_epochs.codex_fragment.known": "You already know this echo.",
+  "item.strata_epochs.crystal_quartz_sword": "Crystal Quartz Sword",
+  "item.strata_epochs.crystal_quartz_pickaxe": "Crystal Quartz Pickaxe",
+  "item.strata_epochs.crystal_quartz_axe": "Crystal Quartz Axe",
+  "item.strata_epochs.crystal_quartz_shovel": "Crystal Quartz Shovel",
+  "item.strata_epochs.crystal_quartz_hoe": "Crystal Quartz Hoe",
+  "item.strata_epochs.amber_blade": "Amber Blade",
+  "item.strata_epochs.geode_helmet": "Geode Helmet",
+  "item.strata_epochs.geode_chestplate": "Geode Chestplate",
+  "item.strata_epochs.geode_leggings": "Geode Leggings",
+  "item.strata_epochs.geode_boots": "Geode Boots",
+  "tooltip.strata_epochs.amber_blade": "Hits briefly slow the target",
+  "tooltip.strata_epochs.geode_set": "Full set: solidification runs 25% slower"
 }

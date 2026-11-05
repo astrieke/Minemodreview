@@ -2,11 +2,13 @@
 
 Ein Modset für Minecraft-Modpacks. Das Konzept steht in [KONZEPT.md](KONZEPT.md), der Plan für eigene Mobs in [docs/MOBS.md](docs/MOBS.md).
 
-| Mod | Inhalt | Stand |
+Eine Hauptmod und zwei Addons. Alle Texte gibt es auf Deutsch und Englisch.
+
+| Mod | Rolle | Inhalt |
 |---|---|---|
-| **Strata Core** | Epochen und Kodex-Knoten per Datapack, Kodex-Fortschritt, `/strata`-Befehle, öffentliche API | fertig für den MVP |
-| **Strata Epochs** | Kernbohrer, Bohrkerne, Epochentor, Verfestigung, Dimensionen Kristallzeit und Sporenzeit | erster spielbarer Stand |
-| **Strata Bridge** | JEI-Infoseiten, Jade-Hinweise, Advancements für Quest-Mods, Event für KubeJS | erster Stand |
+| **Strata Core** | Hauptmod (Pflicht) | Epochen, Kodex-Knoten und Mob-Werte per Datapack, Kodex-Fortschritt, `/strata`-Befehle, öffentliche API |
+| **Strata Epochs** | Addon (braucht Core) | Kernbohrer, Epochentor, Verfestigung, Kristallzeit und Sporenzeit, 3 Mobs, Ausrüstung |
+| **Strata Bridge** | Addon (braucht Core und Epochs) | JEI-Infoseiten, Jade-Hinweise, Advancements für Quest-Mods, Event für KubeJS |
 
 ## Unterstützte Versionen
 
@@ -43,6 +45,18 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
 5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
 6. Rechtsklick auf das Tor bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.
+
+**Mobs:** Geodenkriecher (Kristallzeit, neutral, findet Erz), Sporenbalg (Sporenzeit, Wolken beschleunigen die Verfestigung) und Steinzeuge (erwacht aus versteinertem Stein bei Spielern, die zu lange bleiben). Details in [docs/MOBS.md](docs/MOBS.md).
+
+**Ausrüstung:**
+
+| Item | Herstellung | Besonderheit |
+|---|---|---|
+| Kristallquarz-Schwert, -Spitzhacke, -Axt, -Schaufel, -Hacke | Kristallquarz und Stöcke (Vanilla-Muster) | zwischen Eisen und Diamant (700 Haltbarkeit, Tempo 7) |
+| Geodenrüstung (Helm, Brustpanzer, Beinschutz, Stiefel) | Calcitschuppen (Drop des Geodenkriechers) und Kristallquarz | etwas stärker als Eisen; volles Set: Verfestigung läuft 25 % langsamer |
+| Bernsteinklinge | Bernstein, Sporenbeutel, Stock | Treffer verlangsamen das Ziel 2 s |
+| Keimfrische | Sporenbeutel, Bernstein, Glasflasche | Rechtsklick in einer Epoche: Uhr 60 s zurück |
+| Kodex-Fragment | Drop des Steinzeugen | Rechtsklick: Kodex-Knoten „Echo eines Reisenden“ |
 
 Kodex-Knoten werden automatisch freigeschaltet: `strata_epochs:first_core` mit dem ersten Bohrkern, `visited_crystal_age` bzw. `visited_spore_age` beim ersten Besuch einer Epoche.
 

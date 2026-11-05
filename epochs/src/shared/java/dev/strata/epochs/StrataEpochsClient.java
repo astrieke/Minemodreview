@@ -11,5 +11,10 @@ public final class StrataEpochsClient {
 
     public StrataEpochsClient(IEventBus modBus) {
         MobClient.register(modBus);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(
+                (net.neoforged.neoforge.event.entity.player.ItemTooltipEvent event) -> {
+                    var line = EpochsGear.tooltip(event.getItemStack());
+                    if (line != null) event.getToolTip().add(line);
+                });
     }
 }

@@ -9,8 +9,12 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = '''
-Kernbohrer, Bohrkerne, Epochentore und die ersten Epochen-Dimensionen
-(Kristallzeit, Sporenzeit) für das Strata-Modset.
+Addon for Strata Core: core drills, epoch gates, the Crystal Age and Spore Age dimensions,
+solidification, three mobs (Geode Crawler, Spore Bellows, Petrified Witness), crystal quartz tools,
+geode armor and the amber blade.
+
+Addon für Strata Core: Kernbohrer, Epochentore, Kristall- und Sporenzeit, Verfestigung,
+drei Mobs, Kristallquarz-Werkzeuge, Geodenrüstung und Bernsteinklinge.
 '''
 
 [[dependencies.${mod_id}]]

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "strata_epochs:geode_helmet",
+    "strata_epochs:geode_chestplate",
+    "strata_epochs:geode_leggings",
+    "strata_epochs:geode_boots"
+  ]
+}

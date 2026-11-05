@@ -14,6 +14,7 @@
 # und schlägt es nach 7 s einmal. Das Skript nimmt dann eine Bildserie (alle 0,5 s, 14 s lang) als
 # <ausgabe>_act_NN.png auf, um Laufen, Fähigkeiten und Animationen im Spiel zu prüfen.
 # SHOT_SURVIVAL=1 schaltet den Spieler dafür in den Überlebensmodus (für feindliche Mobs).
+# SHOT_GEAR=1: Spieler trägt die Geodenrüstung und hält Strata-Werkzeuge; das Bild zeigt ihn von vorn (F5).
 # SHOT_PITCH=<Grad> ändert den Blickwinkel nach unten (Standard 28, für große Mobs kleiner).
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -52,6 +53,18 @@ item replace entity @a[tag=!strata_shot] hotbar.7 with strata_epochs:amber_ore
 item replace entity @a[tag=!strata_shot] hotbar.8 with strata_epochs:chronostone
 tag @a add strata_shot
 MC
+if [ -n "${SHOT_GEAR:-}" ]; then
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i '/^tag @a add strata_shot/d' "$f"
+    for slot in "armor.head geode_helmet" "armor.chest geode_chestplate" "armor.legs geode_leggings" "armor.feet geode_boots" \
+                "hotbar.0 amber_blade" "hotbar.1 crystal_quartz_sword" "hotbar.2 crystal_quartz_pickaxe" "hotbar.3 crystal_quartz_axe" \
+                "hotbar.4 crystal_quartz_shovel" "hotbar.5 crystal_quartz_hoe"; do
+        set -- $slot
+        echo "item replace entity @a[tag=!strata_shot] $1 with strata_epochs:$2" >> "$f"
+    done
+    echo "effect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true" >> "$f"
+    echo "tag @a add strata_shot" >> "$f"
+fi
 if [ -n "${SHOT_MOB:-}" ]; then
     # Bühne erst nach 3 s bauen, wenn die Chunks am Ankunftsplatz geladen sind. Geschlossener Kasten
     # (sonst läuft Wasser hinein), Boden wie in der Epoche.
@@ -123,6 +136,10 @@ for _ in $(seq 1 60); do
 done
 if [ $ok -eq 1 ]; then
     sleep 25
+    if [ -n "${SHOT_GEAR:-}" ] && [ -n "${PYTHON:-}" ]; then
+        DISPLAY="$display" "$PYTHON" tools/xclick.py key F5; sleep 1
+        DISPLAY="$display" "$PYTHON" tools/xclick.py key F5; sleep 2      # zweimal F5: Kamera von vorn
+    fi
     DISPLAY="$display" import -window root "$out"
     echo "Screenshot: $out"
     if [ -n "${SHOT_ACT:-}" ] && [ -n "${PYTHON:-}" ]; then
@@ -133,6 +150,7 @@ if [ $ok -eq 1 ]; then
         done
         echo "Bildserie: ${out%.png}_act_*.png"
     elif [ -n "${PYTHON:-}" ]; then
+        if [ -n "${SHOT_GEAR:-}" ]; then DISPLAY="$display" "$PYTHON" tools/xclick.py key F5; sleep 1; fi
         # Zweites Bild mit geöffnetem Inventar (zeigt z. B. die JEI-Itemliste).
         DISPLAY="$display" "$PYTHON" tools/xclick.py key e
         sleep 4

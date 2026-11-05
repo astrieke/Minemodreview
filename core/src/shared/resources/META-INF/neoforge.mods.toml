@@ -9,8 +9,12 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = '''
-Kodex- und Progressions-Framework für das Strata-Modset (Tiefenzeit).
-Epochen und Kodex-Knoten werden per Datapack definiert.
+The core of the Strata modset (Deep Time): codex and progression framework.
+Epochs and codex nodes are defined by datapacks; addons build on it.
+Addons: Strata Epochs (content), Strata Bridge (integration with JEI, Jade, quest mods).
+
+Kern des Strata-Modsets (Tiefenzeit): Kodex- und Progressions-Framework.
+Epochen und Kodex-Knoten kommen per Datapack, Addons bauen darauf auf.
 '''
 
 [[dependencies.${mod_id}]]

@@ -84,15 +84,16 @@ public final class Solidification {
         });
     }
 
-    /** Aktueller Zeitfaktor des Spielers (1 = normal). */
+    /** Aktueller Zeitfaktor des Spielers (1 = normal): Sporenwolken beschleunigen, die Geodenrüstung bremst. */
     public static double factor(ServerPlayer player) {
+        double armor = EpochsGear.hasFullGeodeSet(player) ? EpochsGear.GEODE_SET_FACTOR : 1.0;
         Factor f = FACTORS.get(player.getUUID());
-        if (f == null) return 1.0;
+        if (f == null) return armor;
         if (f.until <= player.level().getGameTime()) {
             FACTORS.remove(player.getUUID());
-            return 1.0;
+            return armor;
         }
-        return f.factor;
+        return f.factor * armor;
     }
 
     /**

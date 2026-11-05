@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "strata_epochs:item/crystal_quartz_hoe"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " Q ",
+    " Q ",
+    " S "
+  ],
+  "key": {
+    "Q": "strata_epochs:crystal_quartz",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "strata_epochs:crystal_quartz_sword",
+    "count": 1
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "strata_epochs:geode"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "strata_epochs:geode"
+      }
+    ]
+  }
+}

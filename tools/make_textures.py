@@ -550,6 +550,282 @@ def petrified_witness_spawn_egg():
     return outline(from_grid(rows, pal), '#1c1824')
 
 
+# ---------------------------------------------------------------- Ausrüstung (Werkzeuge, Bernsteinklinge, Geodenrüstung)
+
+GEAR_QUARTZ = {'w': '#f2f2ff', 'l': '#b8b6ff', 'm': '#7471f2', 'd': '#4a44c0', 'h': '#3c3742', 'H': '#77707c', 'c': '#dcd6cf'}
+GEAR_AMBER = {'w': '#fff3c8', 'l': '#ffd27a', 'm': '#d9821c', 'd': '#a2560f', 'h': '#3c3742', 'H': '#77707c', 'c': '#5c2e0a', 'b': '#3e1e06'}
+SWORD = [
+    '................',
+    '.............ww.',
+    '............wlm.',
+    '...........wlmd.',
+    '..........wlmd..',
+    '.........wlmd...',
+    '........wlmd....',
+    '.......wlmd.....',
+    '...c..wlmd......',
+    '....cwlmd.......',
+    '.....cmd........',
+    '....hHc.........',
+    '...hH..c........',
+    '..hH............',
+    '.hh.............',
+    '................',
+]
+AMBER_BLADE = [
+    '................',
+    '............wwl.',
+    '...........wllm.',
+    '..........wllmd.',
+    '.........wlbmd..',
+    '........wllmd...',
+    '.......wllmd....',
+    '......wllmd.....',
+    '...c.wllmd......',
+    '....cllmd.......',
+    '.....cmd........',
+    '....hHc.........',
+    '...hH..c........',
+    '..hH............',
+    '.hh.............',
+    '................',
+]
+PICKAXE = [
+    '................',
+    '.......wwwl.....',
+    '.....wwllllmm...',
+    '....wl......mm..',
+    '...wl......hHmd.',
+    '..wl......hH..md',
+    '..l......hH....d',
+    '..l.....hH.....d',
+    '.......hH.......',
+    '......hH........',
+    '.....hH.........',
+    '....hH..........',
+    '...hH...........',
+    '..hH............',
+    '.hh.............',
+    '................',
+]
+AXE = [
+    '................',
+    '........wwl.....',
+    '......wwllmm....',
+    '.....wllllmmd...',
+    '....wlllmmmhHd..',
+    '....llmmmdhH.d..',
+    '.....lmmdhH.....',
+    '......mdhH......',
+    '.......hH.......',
+    '......hH........',
+    '.....hH.........',
+    '....hH..........',
+    '...hH...........',
+    '..hH............',
+    '.hh.............',
+    '................',
+]
+SHOVEL = [
+    '................',
+    '..........wwl...',
+    '.........wllmm..',
+    '.........wllmmd.',
+    '.........llmmmd.',
+    '..........mmdd..',
+    '.........hHd....',
+    '........hH......',
+    '.......hH.......',
+    '......hH........',
+    '.....hH.........',
+    '....hH..........',
+    '...hH...........',
+    '..hH............',
+    '.hh.............',
+    '................',
+]
+HOE = [
+    '................',
+    '.......wwllmd...',
+    '......wllmmmdd..',
+    '......lm...hHd..',
+    '......m...hH....',
+    '.........hH.....',
+    '........hH......',
+    '.......hH.......',
+    '......hH........',
+    '.....hH.........',
+    '....hH..........',
+    '...hH...........',
+    '..hH............',
+    '.hh.............',
+    '................',
+    '................',
+]
+GEAR_GEODE = {'w': '#f8f5ec', 'c': '#ddd7c9', 'C': '#c8c1b2', 'k': '#ada697', 'v': '#64566a', 'V': '#4f4356',
+         'q': '#a9a8ff', 'Q': '#6f6cf0', 'e': '#e6e6ff'}
+HELMET = [
+    '................',
+    '.......e........',
+    '......qQ........',
+    '....wccqccC.....',
+    '...wcccQcccC....',
+    '...cccccccccC...',
+    '...cCvvvvvvCk...',
+    '...cV......Vk...',
+    '...cV......Vk...',
+    '...kV......Vk...',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+]
+CHESTPLATE = [
+    '................',
+    '..wcC......Cck..',
+    '.qwcCC....CCckQ.',
+    '.qcccCCCCCCcckQ.',
+    '..ccccccccccck..',
+    '...cccvqQvccC...',
+    '...ccccQQcccC...',
+    '...ccccccccck...',
+    '...cvvvvvvvvk...',
+    '...ccccccccck...',
+    '...ccccccccck...',
+    '...cCCCCCCCCk...',
+    '...kkkkkkkkkk...',
+    '................',
+    '................',
+    '................',
+]
+LEGGINGS = [
+    '................',
+    '................',
+    '...wccccccccC...',
+    '...vvvvQqvvvV...',
+    '...cccccccccC...',
+    '...cccC..cccC...',
+    '...cccC..cccC...',
+    '...cccC..cccC...',
+    '...cvvV..cvvV...',
+    '...cccC..cccC...',
+    '...cccC..cccC...',
+    '...cccC..cccC...',
+    '...kkkk..kkkk...',
+    '................',
+    '................',
+    '................',
+]
+BOOTS = [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '...wccC..wccC...',
+    '...cccC..cccC...',
+    '...cqcC..cqcC...',
+    '...cccC..cccC...',
+    '..vccccCvccccC..',
+    '..vvvvVVvvvvVV..',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+]
+
+
+def gear(rows, pal, edge):
+    return lambda: outline(from_grid(rows, pal), edge)
+
+
+GEAR = {
+    'crystal_quartz_sword': gear(SWORD, GEAR_QUARTZ, '#1a1450'),
+    'crystal_quartz_pickaxe': gear(PICKAXE, GEAR_QUARTZ, '#1a1450'),
+    'crystal_quartz_axe': gear(AXE, GEAR_QUARTZ, '#1a1450'),
+    'crystal_quartz_shovel': gear(SHOVEL, GEAR_QUARTZ, '#1a1450'),
+    'crystal_quartz_hoe': gear(HOE, GEAR_QUARTZ, '#1a1450'),
+    'amber_blade': gear(AMBER_BLADE, GEAR_AMBER, '#3a1b04'),
+    'geode_helmet': gear(HELMET, GEAR_GEODE, '#231c2a'),
+    'geode_chestplate': gear(CHESTPLATE, GEAR_GEODE, '#231c2a'),
+    'geode_leggings': gear(LEGGINGS, GEAR_GEODE, '#231c2a'),
+    'geode_boots': gear(BOOTS, GEAR_GEODE, '#231c2a'),
+}
+
+
+def armor_layers():
+    """Geodenrüstung am Körper (64 x 32, Box-UV wie Vanilla): Calcit, violette Kanten, Kristallquarz-Akzente.
+
+    Ebene 1 (humanoid): Helm (Kopf), Brustpanzer (Körper, Arme), Stiefel (untere Beinzeilen).
+    Ebene 2 (humanoid_leggings): Gürtel (untere Körperzeilen) und Beine.
+    """
+    import random
+    rnd = random.Random('geode_armor')
+    calcite = ['#8f887c', '#ada697', '#c8c1b2', '#ddd7c9', '#efebe0']
+    trim, trim_dark = '#64566a', '#4f4356'
+    quartz = ['#4a43b8', '#6f6cf0', '#a9a8ff', '#e6e6ff']
+
+    def box(u, v, w, h, d):
+        return {'up': (u + d, v, w, d), 'down': (u + d + w, v, w, d), 'east': (u, v + d, d, h),
+                'north': (u + d, v + d, w, h), 'west': (u + d + w, v + d, d, h), 'south': (u + 2 * d + w, v + d, w, h)}
+
+    def fill(img, rect, rows=None, cols=None, step=0, trim_rows=(), gem=None):
+        x0, y0, w, h = rect
+        for y in range(h):
+            if rows is not None and y not in rows:
+                continue
+            for x in range(w):
+                if cols is not None and x not in cols:
+                    continue
+                if y in trim_rows:
+                    c = trim if (x + y) % 3 else trim_dark
+                else:
+                    k = 2 + step + rnd.uniform(-0.6, 0.6) + (0.5 if y == 0 else 0) - (0.6 if y == h - 1 else 0)
+                    c = calcite[max(0, min(4, int(round(k))))]
+                img.putpixel((x0 + x, y0 + y), rgb(c))
+        if gem:
+            for gx, gy, gi in gem:
+                img.putpixel((x0 + gx, y0 + gy), rgb(quartz[gi]))
+
+    l1 = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
+    head = box(0, 0, 8, 8, 8)
+    fill(l1, head['up'], step=1, gem=[(3, y, 2) for y in range(8)] + [(4, y, 1) for y in range(8)])
+    fill(l1, head['north'], rows=range(0, 2), gem=[(3, 0, 3), (4, 0, 2), (3, 1, 1), (4, 1, 0)])
+    fill(l1, head['north'], rows=range(2, 8), cols=(0, 7), trim_rows=(7,))
+    for side in ('east', 'west'):
+        fill(l1, head[side], rows=range(0, 7), step=-1, trim_rows=(6,))
+    fill(l1, head['south'], rows=range(0, 7), trim_rows=(6,))
+    body = box(16, 16, 8, 12, 4)
+    fill(l1, body['up'], step=1)
+    fill(l1, body['north'], trim_rows=(0, 10), gem=[(3, 3, 2), (4, 3, 3), (3, 4, 1), (4, 4, 2), (3, 5, 0), (4, 5, 1)])
+    fill(l1, body['south'], trim_rows=(0, 10), step=-1)
+    for side in ('east', 'west'):
+        fill(l1, body[side], step=-1, trim_rows=(10,))
+    arm = box(40, 16, 4, 12, 4)
+    fill(l1, arm['up'], gem=[(x, y, 2 if (x + y) % 2 else 3) for x in range(1, 3) for y in range(1, 3)])
+    for side in ('north', 'east', 'west', 'south'):
+        fill(l1, arm[side], rows=range(0, 7), trim_rows=(6,), step=0 if side == 'north' else -1,
+             gem=[(1, 0, 2), (2, 0, 1)] if side in ('east', 'west') else None)
+    leg = box(0, 16, 4, 12, 4)
+    for side in ('north', 'east', 'west', 'south'):
+        fill(l1, leg[side], rows=range(8, 12), trim_rows=(8,), step=0 if side == 'north' else -1,
+             gem=[(1, 10, 2), (2, 10, 1)] if side == 'north' else None)
+    fill(l1, leg['down'], step=-1)
+
+    l2 = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
+    for side in ('north', 'east', 'west', 'south'):
+        fill(l2, body[side], rows=range(8, 12), trim_rows=(8,), step=0 if side == 'north' else -1,
+             gem=[(3, 9, 3), (4, 9, 2)] if side == 'north' else None)
+    fill(l2, leg['up'])
+    for side in ('north', 'east', 'west', 'south'):
+        fill(l2, leg[side], rows=range(0, 9), trim_rows=(8,), step=0 if side == 'north' else -1,
+             gem=[(1, 4, 2), (2, 4, 1)] if side == 'north' else None)
+    return l1, l2
+
+
 def geode_crawler_spawn_egg():
     # Spawn-Ei (ab 1.21.5 eigene Textur): Echsenhaut mit Calcitband und Kristallflecken.
     pal = {'d': '#4a4054', 'm': '#6d6078', 'l': '#918190', 'c': '#e6e0d6', 'C': '#bfb6a8',
@@ -611,6 +887,22 @@ def save_all():
             os.makedirs(os.path.dirname(path), exist_ok=True)
             img.save(path)
             images[(kind, name)] = img
+    for name, fn in GEAR.items():
+        img = fn()
+        path = os.path.join(OUT, 'item', name + '.png')
+        img.save(path)
+        images[('item', name)] = img
+    # Rüstung am Körper: 1.21.1 textures/models/armor/<name>_layer_1/2.png, ab 1.21.2 entity/equipment/...
+    l1, l2 = armor_layers()
+    epochs = os.path.join(os.path.dirname(__file__), '..', 'epochs', 'src')
+    for path, img in (
+            (('reg_1_21_1', 'textures', 'models', 'armor', 'geode_layer_1.png'), l1),
+            (('reg_1_21_1', 'textures', 'models', 'armor', 'geode_layer_2.png'), l2),
+            (('reg_1_21_11_plus', 'textures', 'entity', 'equipment', 'humanoid', 'geode.png'), l1),
+            (('reg_1_21_11_plus', 'textures', 'entity', 'equipment', 'humanoid_leggings', 'geode.png'), l2)):
+        full = os.path.join(epochs, path[0], 'resources', 'assets', 'strata_epochs', *path[1:])
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        img.save(full)
     # Spawn-Eier haben erst ab 1.21.5 eigene Texturen (1.21.1 färbt eine Vorlage ein).
     for name, fn in SPAWN_EGGS.items():
         img = fn()

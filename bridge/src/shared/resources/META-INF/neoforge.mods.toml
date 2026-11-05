@@ -9,8 +9,12 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = '''
-Verbindet Strata mit anderen Mods: JEI-Infoseiten, Jade-Tooltips und Advancements
-für jeden Kodex-Knoten (für FTB Quests, Heracles & Co.). Alle Fremd-Mods sind optional.
+Addon for Strata Core and Strata Epochs: connects Strata with other mods. JEI info pages,
+Jade tooltips and an advancement for every codex node (for FTB Quests, Heracles & co.).
+All other mods are optional.
+
+Addon für Strata Core und Strata Epochs: JEI-Infoseiten, Jade-Tooltips und Advancements
+für jeden Kodex-Knoten. Alle Fremd-Mods sind optional.
 '''
 
 [[dependencies.${mod_id}]]
