@@ -3,7 +3,7 @@
  * Blockbench-MCP-Server
  *
  * Claude startet diesen Server über MCP (stdio). Der Server öffnet einen WebSocket auf
- * 127.0.0.1:<BLOCKBENCH_MCP_PORT> (Standard 9333). Das Blockbench-Plugin „Claude Bridge“
+ * 127.0.0.1:<BLOCKBENCH_MCP_PORT> (Standard: erster freier aus 9333–9336). Das Blockbench-Plugin „Claude Bridge“
  * (plugin/claude_bridge.js) verbindet sich damit und führt die Befehle in Blockbench aus.
  *
  * Umgebungsvariablen:
@@ -17,7 +17,11 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { WebSocketServer } from 'ws';
 import { z } from 'zod';
 
-const PORT = Number(process.env.BLOCKBENCH_MCP_PORT || 9333);
+// Ohne BLOCKBENCH_MCP_PORT nimmt der Server den ersten freien Port aus 9333–9336, denn die
+// Claude-App startet ihn oft mehrfach. Das Plugin verbindet sich mit allen vier Ports.
+const FIXED_PORT = process.env.BLOCKBENCH_MCP_PORT ? Number(process.env.BLOCKBENCH_MCP_PORT) : null;
+const PORTS = FIXED_PORT ? [FIXED_PORT] : [9333, 9334, 9335, 9336];
+let PORT = PORTS[0];
 const ALLOW_EVAL = process.env.BLOCKBENCH_MCP_ALLOW_EVAL === '1';
 const TIMEOUT_MS = 60_000;
 
@@ -34,18 +38,38 @@ const pending = new Map();
 // oder die offizielle Web-Version. Andere Webseiten im Browser werden abgewiesen.
 const ALLOWED_ORIGINS = [/^$/, /^null$/, /^file:\/\//, /^app:\/\//, /^https:\/\/web\.blockbench\.net$/,
     /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/];
-const wss = new WebSocketServer({
-    host: '127.0.0.1',
-    port: PORT,
-    verifyClient: ({ origin }) => {
-        const ok = ALLOWED_ORIGINS.some(re => re.test(origin || ''));
-        if (!ok) log('Verbindung abgelehnt von Origin', origin);
-        return ok;
-    },
-});
-wss.on('listening', () => log(`wartet auf Blockbench-Plugin auf ws://127.0.0.1:${PORT}`));
-wss.on('error', e => log('WebSocket-Fehler:', e.message));
-wss.on('connection', socket => {
+// Ist ein Port belegt (z. B. vom Server eines zweiten Claude-Fensters), kommt der nächste dran.
+// Sind alle belegt, wird es nach 2 Sekunden von vorn versucht.
+function listen(i = 0) {
+    PORT = PORTS[i];
+    const wss = new WebSocketServer({
+        host: '127.0.0.1',
+        port: PORT,
+        verifyClient: ({ origin }) => {
+            const ok = ALLOWED_ORIGINS.some(re => re.test(origin || ''));
+            if (!ok) log('Verbindung abgelehnt von Origin', origin);
+            return ok;
+        },
+    });
+    wss.on('listening', () => log(`wartet auf Blockbench-Plugin auf ws://127.0.0.1:${PORT}`));
+    wss.on('error', e => {
+        if (e.code === 'EADDRINUSE') {
+            wss.close();
+            if (i + 1 < PORTS.length) {
+                listen(i + 1);
+            } else {
+                log(`Ports ${PORTS.join(', ')} sind belegt, neuer Versuch in 2 s`);
+                setTimeout(listen, 2000);
+            }
+        } else {
+            log('WebSocket-Fehler:', e.message);
+        }
+    });
+    wss.on('connection', onConnection);
+}
+listen();
+
+function onConnection(socket) {
     if (plugin) plugin.close();
     plugin = socket;
     log('Blockbench verbunden');
@@ -71,7 +95,7 @@ wss.on('connection', socket => {
         if (plugin === socket) plugin = null;
         log('Blockbench getrennt');
     });
-});
+}
 
 function call(command, args = {}) {
     if (!plugin || plugin.readyState !== 1) {

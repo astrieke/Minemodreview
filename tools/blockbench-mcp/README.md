@@ -44,7 +44,9 @@ Für Claude Desktop trägst du ihn in `claude_desktop_config.json` ein:
 
 **3. Plugin in Blockbench laden**
 
-*Datei → Plugins → „Load Plugin from File“ → `plugin/claude_bridge.js`*. Unter *Tools* erscheint dann „Claude Bridge: verbunden“, sobald Claude den Server gestartet hat. Das Plugin versucht es alle 2 Sekunden erneut, die Reihenfolge ist also egal.
+*Datei → Plugins → „Load Plugin from File“ → `plugin/claude_bridge.js`*. Unter *Tools* erscheint dann „Claude Bridge: verbunden (Port …)“, sobald Claude den Server gestartet hat. Das Plugin versucht es alle 2 Sekunden erneut, die Reihenfolge ist also egal.
+
+Die Claude-App startet den Server oft mehrfach, etwa einmal pro Fenster oder Sitzung. Jeder Server nimmt deshalb den ersten freien Port aus 9333–9336, und das Plugin verbindet sich mit allen. Wer `BLOCKBENCH_MCP_PORT` setzt, legt den Port fest. So macht es das Headless-Bauskript.
 
 Danach kannst du Claude zum Beispiel sagen: *„Bau in Blockbench einen Zeitschwund-Mob: schwebender Kristallkörper, zwei Arme, Idle-Animation. Zeig mir einen Screenshot und exportier ihn nach models/zeitschwund.bbmodel.“*
 

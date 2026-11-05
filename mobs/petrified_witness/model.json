@@ -2,7 +2,7 @@
   "id": "petrified_witness",
   "name": "Steinzeuge",
   "texture_size": [
-    128,
+    64,
     64
   ],
   "bones": [
@@ -131,8 +131,8 @@
         5
       ],
       "uv_offset": [
-        92,
-        5
+        42,
+        35
       ],
       "material": "strata_dark",
       "back": "ammonite"
@@ -151,8 +151,8 @@
         2
       ],
       "uv_offset": [
-        44,
-        0
+        0,
+        21
       ],
       "material": "strata",
       "face": "witness"
@@ -163,16 +163,16 @@
       "from": [
         -4,
         27,
-        -5.5
+        -6
       ],
       "to": [
         4,
         28,
-        -4.5
+        -5
       ],
       "uv_offset": [
-        74,
-        0
+        30,
+        45
       ],
       "material": "strata_dark"
     },
@@ -190,8 +190,8 @@
         -2.5
       ],
       "uv_offset": [
-        92,
-        0
+        44,
+        17
       ],
       "material": "gold"
     },
@@ -209,8 +209,8 @@
         -2.5
       ],
       "uv_offset": [
-        92,
-        0
+        44,
+        17
       ],
       "material": "gold"
     },
@@ -220,16 +220,16 @@
       "from": [
         -2,
         16,
-        -4
+        -4.5
       ],
       "to": [
         2,
         20,
-        -3
+        -3.5
       ],
       "uv_offset": [
-        106,
-        0
+        20,
+        45
       ],
       "material": "glass",
       "face": "hourglass"
@@ -248,7 +248,7 @@
         4
       ],
       "uv_offset": [
-        44,
+        30,
         21
       ],
       "material": "strata_dark"
@@ -267,7 +267,7 @@
         4
       ],
       "uv_offset": [
-        44,
+        30,
         21
       ],
       "material": "strata_dark",
@@ -288,7 +288,7 @@
       ],
       "uv_offset": [
         0,
-        21
+        35
       ],
       "material": "strata"
     },
@@ -307,7 +307,7 @@
       ],
       "uv_offset": [
         0,
-        21
+        35
       ],
       "material": "strata",
       "mirror_uv": true
@@ -327,7 +327,7 @@
       ],
       "uv_offset": [
         20,
-        21
+        35
       ],
       "material": "strata_dark"
     },
@@ -346,7 +346,7 @@
       ],
       "uv_offset": [
         20,
-        21
+        35
       ],
       "material": "strata_dark",
       "mirror_uv": true
@@ -365,8 +365,8 @@
         2.5
       ],
       "uv_offset": [
-        0,
-        40
+        44,
+        0
       ],
       "material": "strata"
     },
@@ -384,8 +384,8 @@
         2.5
       ],
       "uv_offset": [
-        0,
-        40
+        44,
+        0
       ],
       "material": "strata",
       "mirror_uv": true
@@ -772,7 +772,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "arm_left",
@@ -783,7 +783,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "arm_left",
@@ -827,7 +827,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "arm_right",
@@ -838,7 +838,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "arm_right",
@@ -882,7 +882,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
@@ -893,7 +893,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
@@ -926,7 +926,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_left",
@@ -937,7 +937,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_left",
@@ -970,7 +970,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_right",
@@ -981,7 +981,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_right",
@@ -1025,7 +1025,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "shoulder_left",
@@ -1036,7 +1036,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "shoulder_left",
@@ -1080,7 +1080,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "shoulder_right",
@@ -1091,7 +1091,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "shoulder_right",
@@ -1164,7 +1164,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
@@ -1175,14 +1175,14 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "leg_left",
           "channel": "rotation",
           "time": 0,
           "value": [
-            25,
+            15,
             0,
             0
           ],
@@ -1204,7 +1204,7 @@
           "channel": "rotation",
           "time": 0,
           "value": [
-            25,
+            15,
             0,
             0
           ],
@@ -1230,7 +1230,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "head",
@@ -1241,7 +1241,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "head",
@@ -1307,7 +1307,7 @@
             0.01,
             0.01
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "core",
@@ -1318,7 +1318,7 @@
             0.01,
             0.01
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "core",
@@ -1355,28 +1355,6 @@
         },
         {
           "bone": "root",
-          "channel": "position",
-          "time": 1.6,
-          "value": [
-            0,
-            0,
-            0
-          ],
-          "interpolation": "catmullrom"
-        },
-        {
-          "bone": "body",
-          "channel": "position",
-          "time": 0,
-          "value": [
-            0,
-            -2,
-            0
-          ],
-          "interpolation": "catmullrom"
-        },
-        {
-          "bone": "body",
           "channel": "position",
           "time": 1.6,
           "value": [

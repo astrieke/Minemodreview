@@ -4,7 +4,26 @@ Ergebnis einer Runde mit Game Designer, 3D-Modellierer/Animator, Programmierer u
 
 ## Stand
 
-Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Ein Designer-Agent hat sie in drei Runden anhand von Screenshots geprüft und freigegeben: Geodenkriecher 8/10, Sporenbalg 7/10, Steinzeuge 7,5/10. Die genauen Maße stehen in [`docs/BRIEFING.md`](BRIEFING.md), Abschnitt 8. Als Nächstes folgt die Grundlage im Code (M0).
+Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früheren Noten aus einer einzelnen Designer-Prüfung (8 / 7 / 7,5) sind überholt. Es gilt die Nachprüfung durch drei Prüfer unten. Danach ist nur der Geodenkriecher freigegeben. Die genauen Maße stehen in [`docs/BRIEFING.md`](BRIEFING.md), Abschnitt 8. Als Nächstes folgt die Grundlage im Code (M0).
+
+**Nachprüfung am 02.11.2026** (nach der Anpassung an die Stilregeln: höchstens 15 Würfel, 64×64, feste Paletten), drei Prüfer:
+
+| Mob | Designer | Game Design | Technik |
+|---|---|---|---|
+| Geodenkriecher | 7 | 7 | 7 |
+| Sporenbalg | 7 | 6 | 7 |
+| Steinzeuge | 6 | 6 | 6 |
+
+Offen sind vor allem:
+- **Lesbarkeit:** Alle drei Mobs verschwinden in den Farben ihrer Epoche.
+- **Steinzeuge:** Er sieht dem Eisengolem zu ähnlich und ist von der Seite nur eine flache Säule.
+- **Technische Fehler:** sind behoben.
+  - Der Schwanz des Geodenkriechers dreht nicht mehr doppelt.
+  - Beim Kratzen schweben die Hinterbeine nicht mehr.
+  - Glas und Brauenleiste des Steinzeugen flackern nicht mehr (kein Z-Fighting).
+  - Der Kern des Steinzeugen wird beim Erwachen nicht mehr negativ skaliert, und der Steinzeuge lehnt sich danach nicht mehr zurück.
+  - Das Aufpumpen des Sporenbalgs ist auf 1,2 begrenzt.
+  - Haltephasen sind linear.
 
 ## Entscheidung in Kürze
 
@@ -12,6 +31,44 @@ Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Ein Desig
 - **Nur Bodenmobs am Anfang.** Fliegen, Schweben in der Luft, Schwärme und Bosse sind technisch die teuersten Fälle. Sie kommen erst, wenn die Pipeline steht.
 - **Jeder Mob bedient genau einen Schritt im Spielablauf:** Erz finden → abbauen → unter Zeitdruck geraten → Kodex-Fortschritt.
 - **Keine Fremd-Bibliothek** wie GeckoLib, weil unklar ist, ob es sie für 26.x gibt. Modelle und Animationen kommen aus Blockbench, über das eigene Blockbench-MCP.
+
+## Entscheidungen des Projektmanagers (03.11.2026)
+
+Der Projektmanager trifft die offenen Entscheidungen. Kurzfassung:
+
+- **Freigabe:** Jeder der drei Prüfer (Design, Game Design, Technik) gibt mindestens 7. Es zählt die niedrigste Note, nicht der Durchschnitt.
+- **Steinzeuge wird jetzt umgebaut, vor M0.** Ziel ist ein „wandelnder Felsvorsprung“ statt eines Golems:
+  - Höhe: Kopf bis y 31, Schichtplatten bis 38 px.
+  - Torso [−8, 10, −5] bis [8, 26, 5], Beine y 0–10.
+  - Kopf vorgezogen: [−4, 24, −10] bis [4, 31, −3].
+  - lange Arme
+  - Sanduhr als ein Würfel 5×7×1 mit gemalter Taille
+  - 2 gedrehte Schichtplatten am neuen Knochen `back_plates`
+  - Ammonit auf dem unteren Rücken
+  - insgesamt 15 Würfel und 11 Knochen, ohne Mantelsaum
+  - Höchstens 2 Prüfrunden, sonst wird er geparkt. Dann blockiert er nur M3.
+- **Farben für Lesbarkeit:**
+  - **Geodenkriecher:** Der Rücken wird die hellste Fläche, die Haut heller und wärmer (`#3b3142 … #918190`). Dazu ein heller Bauchsaum. Abnahme: Kontrast mindestens 3:1 zu `#2a1f4d`.
+  - **Sporenbalg:** Der Hutrand wird orange-rot (`#6e2a14 … #e8915a`). Bernsteinpunkte gibt es nur noch auf den Oberseiten, damit nur ein Gesicht bleibt. Grün ist nur für Wolke und Partikel reserviert.
+  - **Steinzeuge:** Goldadern als 1-px-Risse auf Rücken, Seiten, Armen und Platten. Sie leuchten nur während der Steinhaut.
+- **Lichtstufen:** Oberseite +1, Unterseite −2, unterste Seitenzeile −1 ab 3 px Höhe. Der Texturmaler prüft automatisch, dass jede Oberseite mindestens so hell ist wie ihre Vorderseite.
+- **Aktionen deutlicher:**
+  - **Geodenkriecher:** Er kratzt mit 55° Ausschlag, der Kopf senkt sich um 10°, dazu Erzpartikel.
+  - **Sporenbalg, Pumpen:** Er pumpt auf 1,2 mit Höhepunkt bei 0,6 s, der Hut hebt sich um 2 px, das Ventil leuchtet.
+  - **Sporenbalg, Hüpfen:** Die Wurzeln werden 2 px länger, der Sprung geht 5 px hoch. Dabei wird er auf y 1,15 gestreckt und auf 0,8 gestaucht, die Wurzeln spreizen sich um z ±10°.
+  - Das Prüfblatt zeigt die Animationen am größten Ausschlag.
+- **Leucht-Ebenen:**
+  - Sie sind in M0 Pflicht. `StrataMobDef` bekommt eine Liste von Leucht-Ebenen mit einer Stärke von 0 bis 1 je Zustand.
+  - Die `*_glow*.png` erzeugt der Texturmaler schon jetzt.
+- **Animationen für Fähigkeiten** entstehen jetzt im Grafik-Block, nicht erst im jeweiligen Meilenstein: `sniff` und `curl` für den Geodenkriecher, `pulse` und `harden` für den Steinzeugen.
+- **Hitboxen (Breite × Höhe):**
+  - Geodenkriecher 0,9 × 0,7. Bei 1,0 bräuchte die Wegfindung 2 Blöcke breite Gänge.
+  - Sporenbalg 0,75 × 1,0.
+  - Steinzeuge 1,3 × 2,4. Er erwacht nur, wenn 2×3 Blöcke frei sind.
+- **Regelauslegung:**
+  - Jede Schicht-Grundfarbe zählt als eigenes Material: höchstens 5 Grundfarben mit je höchstens 5 Tönen.
+  - Hilfsteile für gedrehte Würfel (`<würfel>_pivot`, nie animiert) zählen nicht zur Grenze von 12 Knochen.
+- **Reihenfolge:** zuerst der Grafik-Block (ca. 3 Tage), dann M0, dann M1. Die Gates stehen unter „Meilensteine“.
 
 ## Das Start-Set
 
@@ -29,10 +86,10 @@ Eine träge Urzeitechse, vierbeinig, mit Rückenplatten aus Calcit und blauviole
 
 Ein pilziger Sack auf kurzen Wurzelbeinen, mit Bernsteinpunkten auf dem Hut.
 
-- **Verhalten:** Er hüpft auf Spieler zu, pumpt sich auf und stößt eine grüne Sporenwolke aus. Die Wolke macht keinen Schaden, sondern verdoppelt 3 Sekunden lang die **Verfestigung**.
+- **Verhalten:** Er hüpft auf Spieler zu, pumpt sich auf und stößt eine grüne Sporenwolke aus. Die Wolke macht keinen Schaden, sondern beschleunigt die **Verfestigung** (Startwert ×2,5 für 5 Sekunden, siehe „Spezialfähigkeiten“).
 - **Drop:** Sporenbeutel, Zutat für „Keimfrische“, die die Verfestigung kurz zurücksetzt (kommt später).
 - **Thema:** Er setzt den Spieler direkt unter Zeitdruck. Das ist der „Zeitschwund“ aus dem Konzept, als echter Gegner umgesetzt.
-- **Technik:** Laut Modellierer die einfachste Form überhaupt: 32×32, ca. 5 Würfel, 4 Knochen, Squash & Stretch beim Hüpfen. Pump-Animation als Keyframes.
+- **Technik:** Laut Modellierer die einfachste Form überhaupt: ca. 5 Würfel (gebaut wurden 9, die Textur ist daher 64×64 statt 32×32), 4 Knochen, Squash & Stretch beim Hüpfen. Pump-Animation als Keyframes.
 
 ### 3. Steinzeuge (`petrified_witness`): beide Epochen, Gegner (danach)
 
@@ -43,6 +100,58 @@ Ein breiter, blockiger Steinkörper in Schichtoptik. Auf der Brust leuchtet ein 
 - **Thema:** Er macht die Strafmechanik der Verfestigung sichtbar.
 - **Technik:** 64×64, ca. 14 Würfel, Leucht-Ebene für den Sanduhr-Kern. Er ist die Vorlage für einen späteren Mini-Boss.
 - **Warum erst als Dritter:** Er hängt an der Verfestigungs-Mechanik und braucht eine Leucht-Ebene und eine Aufwach-Animation. Das ist mehr Neues als bei 1 und 2.
+
+## Spezialfähigkeiten
+
+Jeder Mob hat 3–4 Fähigkeiten, die zu seiner Rolle im Spielablauf passen. Für alle gelten drei Regeln:
+
+- **Jede Fähigkeit kündigt sich an.** Bevor sie wirkt, gibt es mindestens 0,5 s lang ein Signal: eine Pose, Leuchten oder einen Ton. Der Spieler kann darauf reagieren.
+- **Jede Fähigkeit hat eine Antwort.** Es gibt einen Gegenzug, mit Ausrüstung oder mit Verhalten. Nichts wirkt einfach nur unfair.
+- **Werte stehen im Datapack.** Schaden, Dauer, Abklingzeit, Radius und Stärke kommen aus `strata:mob_tuning` (siehe unten). Die Zahlen hier sind Startwerte.
+
+Effekte nutzen nur Vanilla-Partikel und -Sounds. Das spart Assets und funktioniert in allen 5 Versionen. Wenn die Mod eigene Sounds bekommt, können sie später ersetzt werden.
+
+### Geodenkriecher: 3 Fähigkeiten (neutral, hilft beim Erzfinden)
+
+| Fähigkeit | Auslöser | Wirkung | Signal und Effekte | Gegenzug | Startwerte |
+|---|---|---|---|---|---|
+| **Erzwitterung** | passiv, alle 20–40 s | Sucht im Umkreis nach Kristallquarz-Erz. Bei einem Fund hebt er den Kopf, und eine Spur aus violetten Partikeln zieht 3 Blöcke weit in Richtung Erz. Danach läuft er hin. | Animation `sniff` (Kopf hoch, Schnauze zuckt). Partikel `dust` #b48cff in Erzrichtung, `electric_spark` an den Kristallspitzen. Sound `block.amethyst_block.chime`, Tonhöhe 1,4. | – (Hilfe für den Spieler) | Radius 12, Intervall 20–40 s |
+| **Kratzfund** | kratzt 3 s an einem Erz | Lockert dabei einen **Kristallquarz-Splitter** (Item-Drop), ohne den Block abzubauen. Wer ihn mit Kristallquarz anlockt, bekommt ihn schneller. | Animation `scratch`. Partikel `block` des Erzes an der Pfote, am Ende ein `crit`-Funkenstoß. Sound `block.amethyst_cluster.hit` im Kratztakt. | – | Abklingzeit 120 s, angelockt 60 s |
+| **Kristallpanzer** | wird angegriffen | Rollt sich 3 s ein. Er nimmt 60 % weniger Schaden, und wer ihn in dieser Zeit im Nahkampf trifft, bekommt 2 Schaden zurück (Splitter). Danach greift er wie gewohnt an. | 0,4 s Vorwarnung: Die Kristalle blitzen auf. Animation `curl` (Kopf und Schwanz eingezogen, Kristalle aufgestellt). Partikel `block` Calcit beim Einrollen, beim Rücktreffer `item` Kristallquarz. Sound `block.amethyst_block.resonate`. | Abwarten oder mit Bogen angreifen. Fernkampf löst keinen Rücktreffer aus. | Dauer 3 s, Schaden −60 %, Rücktreffer 2, Abklingzeit 20 s |
+
+### Sporenbalg: 3 Fähigkeiten (Gegner, setzt unter Zeitdruck)
+
+| Fähigkeit | Auslöser | Wirkung | Signal und Effekte | Gegenzug | Startwerte |
+|---|---|---|---|---|---|
+| **Sporenstoß** | Spieler ≤ 3 Blöcke | Pumpt sich auf und stößt eine Wolke aus (Area Effect Cloud). Wer darin steht, **verfestigt doppelt so schnell**. Kein Schaden. | 0,6 s Aufpumpen mit Zittern (Animation `pump`). Die Bernsteinpunkte leuchten auf. Partikel `spore_blossom_air` und `dust` #4f7a3a, Wolke als `entity_effect` in Grün. Sound `entity.puffer_fish.blow_up`, dann `block.fungus.break`. | Während des Aufpumpens zurückweichen oder ihn mit einem Treffer unterbrechen (Rückstoß bricht ab). **Keimfrische** setzt die Uhr zurück. Damit der Spieler die Strafe bemerkt, flackert die Verfestigungsanzeige im HUD grün, solange der Faktor wirkt. | Radius 2,5, Dauer 5 s, Faktor ×2,5, Abklingzeit 8 s |
+| **Wurzelgriff** | landet nach einem Sprung ≤ 2 Blöcke neben einem Spieler | Myzelwurzeln greifen nach den Füßen: Langsamkeit II für 2 s. | Beim Absprung blitzen die Wurzelbeine hell auf. Bei der Landung ein Partikelring `block` aus Myzel und `falling_spore_blossom`. Sound `block.roots.break` und `block.mud.step`. | Hochspringen, im Moment der Landung nicht neben ihm stehen. Milch hebt den Effekt auf. | Langsamkeit II, 2 s, Abklingzeit 8 s |
+| **Letzter Atemzug** | Tod | Er platzt und hinterlässt eine schwächere Sporenwolke. | Animation: kurzes, starkes Aufblähen, dann Vanilla-Tod. Partikel `spore_blossom_air` in großer Menge, `poof`. Sound `entity.slime.squish`, Tonhöhe 0,6. | Nach dem Todesstoß zurücktreten oder ihn auf Distanz töten. | Radius 2, Dauer 2 s, Faktor ×1,5 |
+
+### Steinzeuge: 4 Fähigkeiten (Gegner, Vorlage für den Mini-Boss)
+
+| Fähigkeit | Auslöser | Wirkung | Signal und Effekte | Gegenzug | Startwerte |
+|---|---|---|---|---|---|
+| **Erwachen aus Stein** | ein Spieler ist in der Verfestigungs-Stufe `SOLIDIFYING`, versteinerte Blöcke ≤ 8 Blöcke entfernt | Ein versteinerter Block wird zum Steinzeugen. Während des Erwachens (2,2 s) ist er unverwundbar. | Animation `awaken`. Der Block bekommt vorher 1 s lang Risse (Block-Break-Overlay). Partikel `block` versteinerter Stein, aus dem Kern `dust` #ffe08a. Sound `block.stone.break`, dann `block.respawn_anchor.charge`. | Die Epoche rechtzeitig verlassen oder einen **Zeitanker** setzen. Stabilisatoren verschieben die Stufe. | Höchstens 1 pro Spieler gleichzeitig, Abklingzeit 60 s |
+| **Hammerschlag** | Nahkampf | Schlägt mit beiden Fäusten auf den Boden: 9 Schaden, hebt das Ziel leicht an. Im Umkreis von 2 Blöcken Langsamkeit I für 2 s. | Langes Ausholen (Animation `attack`, Arme über dem Kopf, 0,35 s). Partikel `block` vom Boden und `explosion` (klein). Sound `entity.iron_golem.attack`, dann `block.anvil.land`, leise. | Beim Ausholen zur Seite gehen. Schilde blocken den Schlag, aber nicht die Bodenwelle. | Schaden 9, Rückstoß 0,4 nach oben, Abklingzeit 2,5 s |
+| **Sanduhr-Puls** | Spieler 3–8 Blöcke entfernt, alle 12 s | Der Kern sendet eine goldene Welle aus. Getroffene Spieler **verlieren 10 s erlaubte Zeit** (Verfestigung springt vor) und bekommen Abbaulähmung I für 4 s. | 1 s Vorwarnung: Der Kern leuchtet auf und vergrößert sich (Animation `pulse`). Partikel: Ring aus `dust` #ffe08a, der sich ausbreitet, dazu `end_rod` am Kern. Sound `block.bell.resonate`, Tonhöhe 0,5. | Nah bei ihm bleiben (innerhalb von 3 Blöcken wirkt der Puls nicht) oder hinter einen Block treten (die Welle braucht Sichtlinie). | Radius 8, −200 Ticks, Abbaulähmung I 4 s |
+| **Steinhaut** | einmal, wenn er unter 50 % Leben fällt | Er verhärtet sich 4 s: 80 % weniger Schaden, regeneriert 4 Leben. Ein Treffer mit einer **Spitzhacke** auf den Kern bricht die Steinhaut sofort und betäubt ihn 1 s. | Risse in der Haut leuchten golden (Leucht-Ebene). Animation `harden` (Arme vor der Brust, Kopf eingezogen). Partikel `wax_on` und `block` Stein. Sound `block.deepslate.place` und `block.grindstone.use`. | Spitzhacke ziehen und den Kern treffen. Das ist der Kniff für den späteren Mini-Boss. | Dauer 4 s, Schaden −80 %, Heilung 4, einmal pro Leben |
+
+### Was das für Modelle und Code bedeutet
+
+- **Neue Animationen** (entstehen im Grafik-Block):
+  - Geodenkriecher: `sniff`, `curl`
+  - Steinzeuge: `pulse`, `harden`
+  - Sporenbalg: keine. Er nutzt `hop` und `pump`, das Aufblähen beim Tod ist eine kurze Skalierung.
+  - Alle neuen Animationen werden über das Blockbench-MCP gebaut und gehen durch die Designer-Prüfung.
+- **Leucht-Ebene:** Gebraucht bei allen drei Mobs. Die Stärke hängt vom Zustand ab:
+  - Kristalle: dauerhaft 0,6, vor dem Einrollen 1,0
+  - Ventil und Punkte: nur beim Pumpen
+  - Adern: nur bei der Steinhaut
+  - Kern: pulsiert
+
+  Die Leucht-Ebene gehört in den generischen Renderer aus M0.
+- **Code:** Jede Fähigkeit ist ein eigenes Goal mit Vorwarnzeit, Wirkung und Abklingzeit. Ein gemeinsames `StrataAbility`-Gerüst in M0 hält den Aufwand pro Fähigkeit klein. Effekte laufen über Server-Partikel und Sounds, ohne eigene Pakete.
+- **Verfestigung:** Sporenstoß und Sanduhr-Puls greifen in die Uhr ein (`SolidificationClock`). Sie brauchen dafür eine kleine API: einen Zeitfaktor pro Spieler und „Zeit abziehen“.
 
 ## Später (gesammelt, nicht eingeplant)
 
@@ -65,6 +174,17 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
 - **Eigener kleiner Keyframe-Abspieler:** spielt Blockbench-Animationen ab und setzt die Rotationen der Modellteile direkt. Das umgeht die Vanilla-Animations-API, die sich mehrfach geändert hat. Laufen und Atmen laufen prozedural per Sinus.
 - **Spawns per Datapack:** NeoForge-Biome-Modifier für die Epochen-Biome, Spawnregeln als gemeinsame Prädikate.
 
+**Anforderungen an Abspieler und Modell-Builder** (aus der technischen Prüfung der drei Baupläne):
+- **Alle drei Kanäle:** Neben Rotation auch Position und Skalierung. Hüpfen, Pumpen und Erwachen brauchen sie.
+  - Position wird zur Ruheposition addiert, mit umgedrehtem y für den Minecraft-Raum.
+  - Skalierung läuft über `ModelPart.xScale/yScale/zScale`.
+- **Addieren statt setzen:** Wie Blockbench addiert der Abspieler die Animationswerte auf die Ruhepose. Also erst `resetPose()`, dann `+=`.
+- **Euler-Winkel:** Komponentenweise interpolieren, Reihenfolge ZYX wie `rotationZYX`. Nicht in Quaternionen umrechnen und nicht auf ±180° normalisieren, denn der Steinzeuge holt mit 160° aus.
+- **Catmull-Rom wie Blockbench:** Der Spline läuft über die Punkte (Zeit, Wert). Haltephasen in den Bauplänen auf `linear` setzen, sonst schwingen sie über.
+- **Gedrehte Würfel:** Vanilla-Würfel haben keine eigene Rotation. Der Builder legt dafür ein Kind-Teil am Drehpunkt des Würfels an. Das betrifft die Kristalle des Geodenkriechers und die Wurzeln des Sporenbalgs.
+- **Umrechnung prüfen:** Ein Mob wird einmal per Blockbench-Java-Export erzeugt. Der Selbsttest vergleicht ihn mit dem eigenen Builder, damit nichts seitenverkehrt ist.
+- **Überblenden:** Laufen und Hüpfen beginnen nicht in der Ruhepose. Der Abspieler blendet sie über `limbSwingAmount` ein.
+
 **Aufwand (Programmierer):**
 - erster Mob 6–9 Personentage, davon rund 60 % einmalige Infrastruktur
 - jeder weitere einfache Mob 1–2 Personentage
@@ -73,8 +193,9 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
 ## Wann ist ein Mob fertig? (Definition of Done, Projektmanager)
 
 1. **Modell:** über das Blockbench-MCP gebaut, als `.bbmodel` im Repo, Hitbox passend.
-2. **Textur:** Prüf-Agent ≥ 7/10, auch im Dunkeln lesbar.
-3. **Animationen:** Idle, Laufen, Angriff bzw. Interaktion. Treffer und Tod liefert Vanilla.
+2. **Prüfung:** Designer, Game Designer und Technical Artist geben je mindestens 7/10. Der Mob ist auch im Dunkeln lesbar.
+3. **Animationen:** Idle, Laufen, Angriff bzw. Interaktion, dazu eine Animation pro Fähigkeit mit eigener Pose. Treffer und Tod liefert Vanilla.
+3a. **Fähigkeiten:** Alle Fähigkeiten aus „Spezialfähigkeiten“ wirken, haben Vorwarnung und Gegenzug und lassen sich im Datapack einstellen.
 4. **Sounds:** ambient, hurt, death, mit Untertiteln.
 5. **Spawn:** nur in der eigenen Epoche, mit Licht- und Anzahlgrenze.
 6. **Drops:** als Loot-Table, mit mindestens einem Drop, der irgendwo gebraucht wird.
@@ -91,7 +212,7 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
   - Spawn-Gewicht, Gruppengröße und Biome (Biome-Modifier, auch in fremden Dimensionen)
   - Drops (Loot-Tables)
   - Stärke über `strata:mob_tuning` (Leben, Schaden, Rüstung, Tempo)
-  - Stärke der Sporenwolke
+  - Fähigkeiten über `strata:mob_tuning` → `abilities`: pro Fähigkeit an/aus, Abklingzeit, Dauer, Radius, Stärke (z. B. Faktor der Sporenwolke, Zeitabzug des Sanduhr-Pulses)
 - **Config:**
   - jeden Mob einzeln abschalten
   - Höchstzahl pro Epoche
@@ -101,11 +222,14 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
 
 | | Inhalt | Aufwand |
 |---|---|---|
-| **M0 Grundlagen** | Mob-Basis, generischer Renderer für 3 Versionsgruppen, Modell- und Animations-Pipeline aus Blockbench, Selbsttest, Tuning-JSON, Config | 1–1,5 PW |
-| **M1 Geodenkriecher** | komplette Definition of Done auf 5 Versionen | 1–1,5 PW |
-| **M2 Sporenbalg** | inklusive Sporenwolke und Verfestigungs-Verdopplung | 1 PW |
-| **M3 Steinzeuge** | inklusive Entstehung aus versteinerten Blöcken und Leucht-Ebene | 1–1,5 PW |
+| **M0 Grundlagen** | Mob-Basis, generischer Renderer für 3 Versionsgruppen mit Leucht-Ebene, Modell- und Animations-Pipeline aus Blockbench, `StrataAbility`-Gerüst, Verfestigungs-API (Zeitfaktor, Zeit abziehen), Selbsttest, Tuning-JSON, Config | 1,5–2 PW |
+| **M1 Geodenkriecher** | komplette Definition of Done auf 5 Versionen, mit Erzwitterung, Kratzfund, Kristallpanzer | 1,5–2 PW |
+| **M2 Sporenbalg** | mit Sporenstoß, Wurzelgriff, Letztem Atemzug | 1–1,5 PW |
+| **M3 Steinzeuge** | mit Erwachen aus Stein, Hammerschlag, Sanduhr-Puls, Steinhaut | 1,5–2 PW |
 
-**Go/No-Go nach M1:** Braucht der Geodenkriecher mehr als 2 Personenwochen, wird zuerst die Pipeline verbessert, bevor ein weiterer Mob dazukommt.
+**Gates:**
+- **Gate A, vor M0:** Geodenkriecher und Sporenbalg bekommen von allen drei Prüfern mindestens 7. Für den Steinzeugen gilt dasselbe, oder er wird nach 2 Runden geparkt.
+- **Gate B, in M0 nach dem Renderer:** Der Geodenkriecher sieht im Client-Screenshot unter 1.21.1 genauso aus wie in Blockbench, und das Leuchten ist sichtbar. Dafür sind höchstens 5 Personentage eingeplant. Sonst wird die Pipeline überprüft, als Rückfall dient der Blockbench-Java-Export als Codegenerator.
+- **Gate C, nach M1:** Braucht der Geodenkriecher mehr als 2 Personenwochen, wird zuerst die Pipeline verbessert, bevor ein weiterer Mob dazukommt.
 
 **Bekannte Lücke:** Der Client lässt sich in der Cloud-Testumgebung nur für 1.21.1 starten. Für 26.x braucht der Screenshot-Test entweder eine bessere OpenGL-Umgebung oder einen Test auf einem echten PC, etwa bei dir mit der Claude-App und `scripts/client-screenshot.sh`.

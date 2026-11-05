@@ -12,8 +12,10 @@
 (function () {
     const PLUGIN_ID = 'claude_bridge';
     const DEFAULT_PORT = 9333;
-    let socket = null;
-    let reconnectTimer = null;
+    // Die Claude-App startet den MCP-Server oft mehrfach (ein Server pro Fenster/Sitzung).
+    // Jeder nimmt den nächsten freien Port ab 9333; das Plugin verbindet sich mit allen.
+    const PORT_COUNT = 4;
+    const links = new Map();          // Port -> { socket, timer }
     let stopped = false;
     let statusAction = null;
 
@@ -290,20 +292,29 @@
         console.log('[Claude Bridge] ' + text);
     }
 
+    function updateStatus() {
+        const open = [...links.entries()].filter(([, l]) => l.socket && l.socket.readyState === 1).map(([p]) => p);
+        setStatus(open.length ? 'verbunden (Port ' + open.join(', ') + ')' : 'wartet auf Claude …');
+    }
+
     function connect(port) {
         if (stopped) return;
+        const link = links.get(port) || { socket: null, timer: null };
+        links.set(port, link);
+        let socket;
         try {
-            socket = new WebSocket('ws://127.0.0.1:' + port);
+            socket = link.socket = new WebSocket('ws://127.0.0.1:' + port);
         } catch (e) {
             scheduleReconnect(port);
             return;
         }
         socket.onopen = () => {
-            setStatus('verbunden');
+            updateStatus();
             socket.send(JSON.stringify({ type: 'hello', blockbench: Blockbench.version }));
         };
         socket.onclose = () => {
-            setStatus('getrennt, versuche erneut …');
+            if (link.socket === socket) link.socket = null;
+            updateStatus();
             scheduleReconnect(port);
         };
         socket.onerror = () => { /* onclose folgt */ };
@@ -326,22 +337,28 @@
     }
 
     function scheduleReconnect(port) {
-        if (stopped || reconnectTimer) return;
-        reconnectTimer = setTimeout(() => {
-            reconnectTimer = null;
+        const link = links.get(port);
+        if (stopped || !link || link.timer) return;
+        link.timer = setTimeout(() => {
+            link.timer = null;
             connect(port);
         }, 2000);
     }
 
+    // start(): alle Standard-Ports; start(port): nur dieser eine (Headless-Betrieb, Tests).
     function start(port) {
         stopped = false;
-        connect(port || DEFAULT_PORT);
+        const ports = port ? [port] : Array.from({ length: PORT_COUNT }, (_, i) => DEFAULT_PORT + i);
+        ports.forEach(connect);
     }
 
     function stop() {
         stopped = true;
-        if (reconnectTimer) clearTimeout(reconnectTimer);
-        if (socket) socket.close();
+        for (const link of links.values()) {
+            if (link.timer) clearTimeout(link.timer);
+            if (link.socket) link.socket.close();
+        }
+        links.clear();
     }
 
     // Für den Headless-Betrieb (tools/blockbench-mcp/headless.js) und zum Testen.
@@ -364,7 +381,7 @@
                     },
                 });
                 MenuBar.addAction(statusAction, 'tools');
-                start(DEFAULT_PORT);
+                start();
             },
             onunload() {
                 stop();
