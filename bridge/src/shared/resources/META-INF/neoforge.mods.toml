@@ -9,12 +9,12 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = '''
-Addon for Strata Core and Strata Epochs: connects Strata with other mods. JEI info pages,
-Jade tooltips and an advancement for every codex node (for FTB Quests, Heracles & co.).
-All other mods are optional.
+Addon for Strata Core and Strata Epochs: connects Strata with other mods. JEI and EMI info pages,
+Jade tooltips, a Curios charm slot for the Time Anchor, KubeJS bindings and an advancement for
+every codex node (for FTB Quests, Heracles & co.). All other mods are optional.
 
-Addon für Strata Core und Strata Epochs: JEI-Infoseiten, Jade-Tooltips und Advancements
-für jeden Kodex-Knoten. Alle Fremd-Mods sind optional.
+Addon für Strata Core und Strata Epochs: JEI- und EMI-Infoseiten, Jade-Tooltips, Curios-Slot für
+den Zeitanker, KubeJS-Bindings und Advancements für jeden Kodex-Knoten. Alle Fremd-Mods sind optional.
 '''
 
 [[dependencies.${mod_id}]]
@@ -40,6 +40,13 @@ side = "CLIENT"
 
 [[dependencies.${mod_id}]]
 modId = "jade"
+type = "optional"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "curios"
 type = "optional"
 versionRange = "[0,)"
 ordering = "NONE"
