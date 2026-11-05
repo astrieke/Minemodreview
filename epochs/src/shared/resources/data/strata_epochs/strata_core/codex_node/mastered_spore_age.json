@@ -1,0 +1,6 @@
+{
+  "requires": [
+    "strata_epochs:visited_spore_age",
+    "strata_epochs:fossil_spore_age"
+  ]
+}

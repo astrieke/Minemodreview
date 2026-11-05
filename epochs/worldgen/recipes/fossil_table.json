@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "PBP",
+    "P P"
+  ],
+  "key": {
+    "S": "minecraft:smooth_stone_slab",
+    "P": "#minecraft:planks",
+    "B": "minecraft:brush"
+  },
+  "result": {
+    "id": "strata_epochs:fossil_table",
+    "count": 1
+  }
+}

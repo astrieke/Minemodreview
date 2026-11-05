@@ -34,6 +34,9 @@ public final class EpochsContent {
     public static final Supplier<Block> EMBER_ORE = REG.block("ember_ore",
             p -> p.mapColor(MapColor.COLOR_RED).strength(3.0f, 6.0f).requiresCorrectToolForDrops()
                     .lightLevel(s -> 9).sound(SoundType.DEEPSLATE));
+    /** Präparationstisch: hier legt man mit dem Meißel Fossilien frei (siehe {@link FossilPrep}). */
+    public static final Supplier<Block> FOSSIL_TABLE = REG.block("fossil_table",
+            p -> p.mapColor(MapColor.WOOD).strength(2.5f).sound(SoundType.WOOD));
     public static final Supplier<Block> EPOCH_GATE = REG.block("epoch_gate",
             p -> p.mapColor(MapColor.COLOR_CYAN).strength(5.0f, 1200.0f).requiresCorrectToolForDrops()
                     .lightLevel(s -> 12).sound(SoundType.AMETHYST));
@@ -58,6 +61,14 @@ public final class EpochsContent {
     /** Keimfrische: dreht die Verfestigungs-Uhr ein Stück zurück (siehe {@link GermTonic}). */
     public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
 
+    // Fossilien
+    /** Roher Fossilbrocken aus einer Epoche; trägt die Epoche und den Präparationsfortschritt. */
+    public static final Supplier<Item> FOSSIL_CHUNK = REG.item("fossil_chunk", p -> p.stacksTo(16));
+    public static final Supplier<Item> CHISEL = REG.item("chisel", p -> p.durability(128));
+    public static final Supplier<Item> AMMONITE_FOSSIL = REG.item("ammonite_fossil", p -> p.stacksTo(16));
+    public static final Supplier<Item> FERN_FOSSIL = REG.item("fern_fossil", p -> p.stacksTo(16));
+    public static final Supplier<Item> ANCIENT_SKULL = REG.item("ancient_skull", p -> p.stacksTo(16));
+
     static {
         REG.blockItem(CHRONOSTONE, "chronostone");
         REG.blockItem(CRYSTAL_QUARTZ_ORE, "crystal_quartz_ore");
@@ -65,12 +76,17 @@ public final class EpochsContent {
         REG.blockItem(PETRIFIED_STONE, "petrified_stone");
         REG.blockItem(VOLCANIC_ASH, "volcanic_ash");
         REG.blockItem(EMBER_ORE, "ember_ore");
+        REG.blockItem(FOSSIL_TABLE, "fossil_table");
         REG.blockItem(EPOCH_GATE, "epoch_gate");
     }
 
     /** Auf dem Bohrkern: welche Epoche er zeigt. */
     public static final Supplier<net.minecraft.core.component.DataComponentType<String>> SAMPLE_EPOCH =
             REG.stringComponent("sample_epoch");
+
+    /** Am Fossilbrocken: wie viele Meißelschläge schon sitzen. */
+    public static final Supplier<net.minecraft.core.component.DataComponentType<Integer>> PREP_PROGRESS =
+            REG.intComponent("prep_progress");
 
     /** Am Spieler: Rückkehrpunkt und Zeit in der aktuellen Epoche. */
     public static final Supplier<AttachmentType<EpochVisit>> VISIT =

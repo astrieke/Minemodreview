@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/fossil_spore_age",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:fossil_table"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.mastered_spore_age.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.mastered_spore_age.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

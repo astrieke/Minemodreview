@@ -61,5 +61,19 @@
   "item.strata_epochs.ember_shard": "Ember Shard",
   "epoch.strata_epochs.ash_age": "Ash Age",
   "message.strata_epochs.drill.too_deep": "%s lies below, too deep for this drill (tier %s needed).",
-  "tooltip.strata_epochs.drill_tier": "Drill depth: tier %s"
+  "tooltip.strata_epochs.drill_tier": "Drill depth: tier %s",
+  "block.strata_epochs.fossil_table": "Preparation Table",
+  "item.strata_epochs.fossil_chunk": "Fossil Chunk",
+  "item.strata_epochs.chisel": "Chisel",
+  "item.strata_epochs.ammonite_fossil": "Ammonite",
+  "item.strata_epochs.fern_fossil": "Fern Imprint",
+  "item.strata_epochs.ancient_skull": "Ancient Skull",
+  "tooltip.strata_epochs.fossil_progress": "Uncovered: %s of %s",
+  "tooltip.strata_epochs.fossil_chunk": "Chisel in main hand, chunk in off hand, then right-click a Preparation Table",
+  "message.strata_epochs.fossil.how": "Chisel in your main hand, fossil chunk in your off hand",
+  "message.strata_epochs.fossil.progress": "Preparing %s",
+  "message.strata_epochs.fossil.rushed": "Preparing %s · too hasty, the stone creaks!",
+  "message.strata_epochs.fossil.broken": "The fossil chunk broke.",
+  "message.strata_epochs.fossil.broken_rushed": "Worked too fast: the fossil chunk broke.",
+  "message.strata_epochs.fossil.done": "Uncovered: %s"
 }

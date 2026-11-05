@@ -1,0 +1,6 @@
+{
+  "requires": [
+    "strata_epochs:visited_crystal_age",
+    "strata_epochs:fossil_crystal_age"
+  ]
+}

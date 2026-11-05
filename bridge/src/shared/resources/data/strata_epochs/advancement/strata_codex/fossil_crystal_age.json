@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/visited_crystal_age",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:ammonite_fossil"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.fossil_crystal_age.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.fossil_crystal_age.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

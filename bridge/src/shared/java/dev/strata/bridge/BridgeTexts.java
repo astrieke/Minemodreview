@@ -32,6 +32,12 @@ public final class BridgeTexts {
         info.put(() -> EpochsContent.EMBER_ORE.get().asItem(), "jei.strata_bridge.info.ember_ore");
         info.put(EpochsContent.EMBER_SHARD, "jei.strata_bridge.info.ember_shard");
         info.put(() -> EpochsContent.PETRIFIED_STONE.get().asItem(), "jei.strata_bridge.info.petrified_stone");
+        info.put(EpochsContent.FOSSIL_CHUNK, "jei.strata_bridge.info.fossil_chunk");
+        info.put(EpochsContent.CHISEL, "jei.strata_bridge.info.fossil_chunk");
+        info.put(() -> EpochsContent.FOSSIL_TABLE.get().asItem(), "jei.strata_bridge.info.fossil_chunk");
+        info.put(EpochsContent.AMMONITE_FOSSIL, "jei.strata_bridge.info.ammonite_fossil");
+        info.put(EpochsContent.FERN_FOSSIL, "jei.strata_bridge.info.fossil");
+        info.put(EpochsContent.ANCIENT_SKULL, "jei.strata_bridge.info.fossil");
         info.put(EpochsContent.CALCITE_SCALE, "jei.strata_bridge.info.calcite_scale");
         info.put(EpochsContent.SPORE_SAC, "jei.strata_bridge.info.spore_sac");
         info.put(EpochsContent.GERM_TONIC, "jei.strata_bridge.info.germ_tonic");

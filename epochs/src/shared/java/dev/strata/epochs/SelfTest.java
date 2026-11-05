@@ -45,6 +45,9 @@ final class SelfTest {
             failures++;
         }
 
+        failures += testFossils();
+        failures += testPreparation(server);
+
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
             String dim = entry.getValue().dimension().get();
@@ -147,6 +150,59 @@ final class SelfTest {
                 def.name(), model.bones().size(), model.cubes().size(), model.animations().size(), health,
                 problems.isEmpty() ? "OK" : "FEHLER");
         return problems.isEmpty() ? 0 : 1;
+    }
+
+    /** Fossilbrocken: Epoche im Item, passendes Fossil, Loot-Pools für jede Epoche. */
+    private static int testFossils() {
+        List<String> problems = new ArrayList<>();
+        String spore = StrataEpochs.id("spore_age");
+        var chunk = FossilPrep.chunk(spore);
+        if (!spore.equals(chunk.get(EpochsContent.SAMPLE_EPOCH.get()))) problems.add("Brocken speichert die Epoche nicht");
+        if (FossilPrep.fossilFor(spore) != EpochsContent.FERN_FOSSIL.get()) problems.add("falsches Fossil für die Sporenzeit");
+        if (!FossilPrep.epochOfFossil(new net.minecraft.world.item.ItemStack(EpochsContent.ANCIENT_SKULL.get()))
+                .orElse("").equals(StrataEpochs.id("ash_age"))) problems.add("Schädel gehört nicht zur Aschezeit");
+        for (String block : List.of("chronostone", "petrified_stone")) {
+            String path = "/data/" + StrataEpochs.MOD_ID + "/loot_table/blocks/" + block + ".json";
+            try (var in = SelfTest.class.getResourceAsStream(path)) {
+                String text = in == null ? "" : new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+                for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) {
+                    if (!text.contains("fossil_chunk") || !text.contains(StrataEpochs.id(epoch))) {
+                        problems.add(block + ": kein Fossil-Pool für " + epoch);
+                    }
+                }
+            } catch (java.io.IOException e) {
+                problems.add(block + ": " + e);
+            }
+        }
+        StrataEpochs.LOG.info("[Strata-Test] Fossilien: {}", problems.isEmpty() ? "OK" : "FEHLER " + problems);
+        return problems.isEmpty() ? 0 : 1;
+    }
+
+    /** Präparation mit einem simulierten Spieler: fünf ruhige Schläge legen frei, ein Fehlschlag zerbricht. */
+    private static int testPreparation(MinecraftServer server) {
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(server.overworld());
+        var main = net.minecraft.world.InteractionHand.MAIN_HAND;
+        var off = net.minecraft.world.InteractionHand.OFF_HAND;
+        BlockPos table = BlockPos.ZERO;
+        player.setItemInHand(main, new net.minecraft.world.item.ItemStack(EpochsContent.CHISEL.get()));
+        player.setItemInHand(off, FossilPrep.chunk(StrataEpochs.id("ash_age")).copyWithCount(3));
+        for (int i = 0; i < FossilPrep.STEPS; i++) {
+            FossilPrep.stroke(player, player.getMainHandItem(), table, FossilPrep.CALM_TICKS, () -> 0.99);
+        }
+        boolean done = player.getOffhandItem().is(EpochsContent.ANCIENT_SKULL.get());
+        int restCount = player.getInventory().countItem(EpochsContent.FOSSIL_CHUNK.get());
+        boolean rest = restCount == 2;
+        boolean worn = player.getMainHandItem().getDamageValue() == FossilPrep.STEPS;
+
+        player.setItemInHand(off, FossilPrep.chunk(StrataEpochs.id("ash_age")));
+        FossilPrep.stroke(player, player.getMainHandItem(), table, 0, () -> 0.2);   // hastig: 30 % Risiko
+        boolean broken = player.getOffhandItem().isEmpty();
+        boolean risks = FossilPrep.risk(0) > 0.29 && FossilPrep.risk(FossilPrep.CALM_TICKS) < 0.04;
+        player.getInventory().clearContent();
+        boolean ok = done && rest && worn && broken && risks;
+        StrataEpochs.LOG.info("[Strata-Test] Präparation: Fossil={}, Rest={}, Meißel={}, Bruch={}, Risiko={} -> {}",
+                done, rest, worn, broken, risks, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
     }
 
     private static void requireResource(List<String> problems, String path) {

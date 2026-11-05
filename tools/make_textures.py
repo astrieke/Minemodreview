@@ -929,6 +929,188 @@ def geode_crawler_spawn_egg():
 
 # ---------------------------------------------------------------- Ausgabe
 
+
+# ---------------------------------------------------------------- Fossilien (Phase 3)
+
+BONE = {'w': '#f6efd9', 'l': '#e6d8b4', 'm': '#cbb98f', 'd': '#9c8a64', 'k': '#5e5038'}
+ROCK = {'w': '#a8a2ae', 'l': '#8c8694', 'm': '#706a78', 'd': '#55505d', 'k': '#3a3641'}
+
+
+def fossil_chunk():
+    # Rundlicher Gesteinsbrocken, aus dem eine Rippe und ein Spiralrand herausschauen.
+    pal = dict(ROCK)
+    pal.update({'B': BONE['l'], 'b': BONE['m'], 'n': BONE['d']})
+    rows = [
+        '................',
+        '................',
+        '.....llmm.......',
+        '....lwllmmd.....',
+        '...lwlmmBbmd....',
+        '..lwllmBbnmmd...',
+        '..llmmmbnmmdd...',
+        '.lllmmmmmmmmdd..',
+        '.llmBBbmmmmddd..',
+        '.lmmmbbnmmmdddk.',
+        '.lmmmmmnmmddddk.',
+        '..mmmmmmdddddk..',
+        '..dmmmdddddkk...',
+        '...ddddddkk.....',
+        '.....kkkk.......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1f1c24')
+
+
+def chisel():
+    # Flacher Stahlmeißel mit Holzgriff, diagonal.
+    steel = {-1: '#eef3f7', 0: '#a9b4bf', 1: '#5d6670'}
+    wood = {-1: '#b0804e', 0: '#83593a', 1: '#5a3b22'}
+
+    def spec(t, du):
+        if t <= -3:                              # Holzgriff, 3 breit
+            return wood.get(du)
+        if t == -2:                              # Zwinge
+            return '#3b3b44' if -1 <= du <= 1 else None
+        if t <= 6:                               # Stahlschaft, 2 breit
+            return {0: steel[-1], 1: steel[1]}.get(du)
+        if t <= 9:                               # Schneide, breiter und heller
+            if -1 <= du <= 2:
+                return steel[-1] if du <= 0 else steel[0] if du == 1 else steel[1]
+        return None
+
+    return outline(diag_shape(spec, (-12, 9)), '#1e140c')
+
+
+def ammonite_fossil():
+    # Spiralschale, cremefarben: klare dunkle Rille, Licht oben links, Mündung unten rechts.
+    import math
+    img = canvas()
+    cx, cy, radius, turn = 7.6, 7.4, 6.7, 3.0
+    for y in range(16):
+        for x in range(16):
+            dx, dy = x + 0.5 - cx, y + 0.5 - cy
+            r = math.hypot(dx, dy)
+            if r > radius:
+                continue
+            light = -(dx + dy) / (radius * 1.41)
+            angle = (math.atan2(dy, dx) / (2 * math.pi)) % 1.0
+            phase = (r / turn - angle) % 1.0
+            if phase < 0.3 and r > 1.0:
+                c = BONE['k'] if light < 0.25 else BONE['d']
+            elif phase < 0.45:
+                c = BONE['w'] if light > 0.0 else BONE['l']       # Grat neben der Rille
+            else:
+                c = BONE['l'] if light > 0.3 else BONE['m'] if light > -0.35 else BONE['d']
+            img.putpixel((x, y), rgb(c))
+    return outline(img, '#3a2f22')
+
+
+def fern_fossil():
+    # Flache Schieferplatte mit dunklem Farnwedel-Abdruck.
+    pal = {'w': '#9fa7a2', 'l': '#87908b', 'm': '#717a75', 'd': '#5a625e', 'k': '#3e4542',
+           'f': '#3b4a36', 'F': '#56704c'}
+    rows = [
+        '................',
+        '...lllllllll....',
+        '..lwwlllllllm...',
+        '..lwl.F..llmmd..',
+        '..ll.FfF.lmmmd..',
+        '..lmFfFfFmmmmd..',
+        '..lmmFfFlmmmmd..',
+        '..lmFfFfFmmmmd..',
+        '..lmmFfFmmmmmd..',
+        '..lmFfFfFmmmdd..',
+        '..lmmmfFmmmmdd..',
+        '..lmmmmfmmmddd..',
+        '..mmmmmmfmdddd..',
+        '...dddddddddk...',
+        '................',
+        '................',
+    ]
+    img = from_grid([r.replace('.', '.') for r in rows], pal)
+    # Lücken in der Platte (die Punkte im Wedel) mit Plattenfarbe füllen
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch == '.' and 3 <= y <= 12 and 3 <= x <= 12:
+                img.putpixel((x, y), rgb(pal['l'] if y < 5 else pal['m']))
+    return outline(img, '#25292a')
+
+
+def ancient_skull():
+    # Seitenansicht eines Echsenschädels mit Glutrest in der Augenhöhle.
+    pal = dict(BONE)
+    pal.update({'e': '#2a1a12', 'g': '#e0531c', 'G': '#ffb24a', 't': '#fff8e6'})
+    rows = [
+        '................',
+        '................',
+        '....lllll.......',
+        '...lwwllllm.....',
+        '..lwllllmmmmd...',
+        '..lleGllmmmmmd..',
+        '..legeelmmmmmmd.',
+        '..leeedlmmmmmmd.',
+        '..lmmmddmmmddmmd',
+        '...dmmmmmmdtdtdd',
+        '....dddkdtdtdt..',
+        '.....kddtdtd....',
+        '......kkkk......',
+        '................',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#2a2014')
+
+
+def fossil_table_top():
+    # Glatte Steinplatte mit Holzrahmen, darauf ein halb freigelegtes Ammonit und Pinselstriche.
+    img = canvas()
+    stone = ['#9a9a9a', '#a6a6a6', '#b2b2b2']
+    n = tile_noise(91, 8)
+    for y in range(16):
+        for x in range(16):
+            img.putpixel((x, y), pick(stone, 0.3 + n[y][x] * 0.5))
+    for i in range(16):
+        for xy in ((i, 0), (0, i)):
+            img.putpixel(xy, rgb('#b0804e'))
+        for xy in ((i, 15), (15, i)):
+            img.putpixel(xy, rgb('#5a3b22'))
+    stamp(img, 4, 4, ['.mmm..', 'mlwlm.', 'mlkdlm', 'mdlkdm', '.mdddm', '..mmm.'], dict(BONE, k='#5e5038'))
+    for x, y in [(11, 3), (12, 4), (11, 11), (12, 12), (3, 12)]:
+        img.putpixel((x, y), rgb('#c9c4bb'))
+    return img
+
+
+def fossil_table_side():
+    # Holzbeine und Zarge unter einer Steinplatte, mit Werkzeugen an der Seite.
+    pal = {'s': '#b2b2b2', 'S': '#8a8a8a', 'w': '#b0804e', 'm': '#83593a', 'd': '#5a3b22', 'k': '#3a2614',
+           'i': '#a9b4bf', 'I': '#5d6670'}
+    rows = [
+        'ssssssssssssssss',
+        'SSSSSSSSSSSSSSSS',
+        'wwwwwwwwwwwwwwww',
+        'mmmmmmmmmmmmmmmm',
+        'dddddddddddddddd',
+        'wm.kkkkkkkkkk.wm',
+        'wm.kiikkkkkkk.wm',
+        'wm.kkIkkkwkkk.wm',
+        'wm.kkkikkwkkk.wm',
+        'wm.kkkkkkmkkk.wm',
+        'wm.kkkkkkkkkk.wm',
+        'wm............wm',
+        'wm............wm',
+        'wm............wm',
+        'wd............wd',
+        'dd............dd',
+    ]
+    img = from_grid(rows, pal)
+    # Zwischenraum hinter den Beinen: dunkles Holz statt Loch (der Block ist voll)
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch == '.':
+                img.putpixel((x, y), rgb('#2b1d10'))
+    return img
+
+
 BLOCKS = {
     'chronostone': chronostone,
     'crystal_quartz_ore': crystal_quartz_ore,
@@ -937,12 +1119,19 @@ BLOCKS = {
     'epoch_gate': epoch_gate,
     'volcanic_ash': volcanic_ash,
     'ember_ore': ember_ore,
+    'fossil_table_top': fossil_table_top,
+    'fossil_table_side': fossil_table_side,
 }
 ITEMS = {
     'core_drill': core_drill,
     'crystal_core_drill': crystal_core_drill,
     'deep_core_drill': deep_core_drill,
     'ember_shard': ember_shard,
+    'fossil_chunk': fossil_chunk,
+    'chisel': chisel,
+    'ammonite_fossil': ammonite_fossil,
+    'fern_fossil': fern_fossil,
+    'ancient_skull': ancient_skull,
     'core_sample': core_sample,
     'crystal_quartz': crystal_quartz,
     'amber_shard': amber_shard,

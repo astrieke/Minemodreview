@@ -48,6 +48,11 @@ public final class Reg {
                 b -> b.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
     }
 
+    public Supplier<DataComponentType<Integer>> intComponent(String name) {
+        return components.registerComponentType(name,
+                b -> b.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    }
+
     public void register(IEventBus modBus) {
         blocks.register(modBus);
         items.register(modBus);

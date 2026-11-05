@@ -167,6 +167,22 @@
       "replace": {
         "minecraft:dirt": "strata_epochs:volcanic_ash"
       }
+    },
+    {
+      "block": "fossil_table",
+      "base": "minecraft:blocks/fletching_table",
+      "replace": {
+        "minecraft:fletching_table": "strata_epochs:fossil_table"
+      }
     }
-  ]
+  ],
+  "_fossils": "Fossilbrocken: zusätzliche Loot-Pools pro Epoche. Der Brocken merkt sich die Epoche (Komponente), die Chance gilt pro abgebautem Block.",
+  "fossils": {
+    "item": "strata_epochs:fossil_chunk",
+    "component": "strata_epochs:sample_epoch",
+    "blocks": {
+      "chronostone": 0.02,
+      "petrified_stone": 0.15
+    }
+  }
 }

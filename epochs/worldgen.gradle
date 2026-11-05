@@ -209,6 +209,20 @@ def generate = tasks.register('generateEpochData') {
             l.replace.each { from, to -> text = text.replace("\"${from}\"", "\"${to}\"") }
             def table = slurper.parseText(text)
             table.remove('random_sequence')
+            // Fossilbrocken: ein Pool pro Epoche, nur in deren Dimension, mit der Epoche als Komponente.
+            def fossilChance = spec.fossils?.blocks?.get(l.block)
+            if (fossilChance != null) {
+                spec.epochs.each { e ->
+                    table.pools << [
+                            rolls     : 1,
+                            entries   : [[type     : 'minecraft:item', name: spec.fossils.item,
+                                          functions: [[function: 'minecraft:set_components',
+                                                       components: [(spec.fossils.component): "${ns}:${e.id}".toString()]]]]],
+                            conditions: [[condition: 'minecraft:random_chance', chance: fossilChance],
+                                         [condition: 'minecraft:location_check', predicate: [dimension: "${ns}:${e.id}".toString()]]]
+                    ]
+                }
+            }
             write("data/${ns}/loot_table/blocks/${l.block}.json", table)
         }
 

@@ -1,0 +1,6 @@
+{
+  "requires": [
+    "strata_epochs:visited_ash_age",
+    "strata_epochs:fossil_ash_age"
+  ]
+}

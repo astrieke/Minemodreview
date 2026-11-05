@@ -61,5 +61,19 @@
   "item.strata_epochs.ember_shard": "Glutsplitter",
   "epoch.strata_epochs.ash_age": "Aschezeit",
   "message.strata_epochs.drill.too_deep": "Darunter liegt %s, zu tief für diesen Bohrer (Stufe %s nötig).",
-  "tooltip.strata_epochs.drill_tier": "Bohrtiefe: Stufe %s"
+  "tooltip.strata_epochs.drill_tier": "Bohrtiefe: Stufe %s",
+  "block.strata_epochs.fossil_table": "Präparationstisch",
+  "item.strata_epochs.fossil_chunk": "Fossilbrocken",
+  "item.strata_epochs.chisel": "Meißel",
+  "item.strata_epochs.ammonite_fossil": "Ammonit",
+  "item.strata_epochs.fern_fossil": "Farnabdruck",
+  "item.strata_epochs.ancient_skull": "Urzeitschädel",
+  "tooltip.strata_epochs.fossil_progress": "Freigelegt: %s von %s",
+  "tooltip.strata_epochs.fossil_chunk": "Meißel in die Haupthand, Brocken in die zweite Hand, dann Rechtsklick auf einen Präparationstisch",
+  "message.strata_epochs.fossil.how": "Meißel in die Haupthand, Fossilbrocken in die zweite Hand",
+  "message.strata_epochs.fossil.progress": "Präparieren %s",
+  "message.strata_epochs.fossil.rushed": "Präparieren %s · zu hastig, der Stein knackt!",
+  "message.strata_epochs.fossil.broken": "Der Fossilbrocken ist zerbrochen.",
+  "message.strata_epochs.fossil.broken_rushed": "Zu schnell gearbeitet: Der Fossilbrocken ist zerbrochen.",
+  "message.strata_epochs.fossil.done": "Freigelegt: %s"
 }

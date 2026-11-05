@@ -32,6 +32,7 @@ public final class StrataEpochs {
         BreakHook.preventBreaking(EpochInteractions::isProtectedGate);
         NeoForge.EVENT_BUS.addListener(Solidification::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(GermTonic::onRightClick);
+        NeoForge.EVENT_BUS.addListener(FossilPrep::onRightClickBlock);
         NeoForge.EVENT_BUS.addListener(SelfTest::onServerStarted);
     }
 

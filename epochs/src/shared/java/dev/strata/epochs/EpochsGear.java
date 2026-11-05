@@ -80,6 +80,9 @@ public final class EpochsGear {
 
     /** Zusatzzeile im Tooltip (Client), damit man die Sonderwirkung im Spiel findet. */
     public static Component tooltip(ItemStack stack) {
+        if (stack.is(EpochsContent.FOSSIL_CHUNK.get())) {
+            return Component.translatable("tooltip.strata_epochs.fossil_chunk").withStyle(ChatFormatting.GRAY);
+        }
         int tier = EpochsContent.drillTier(stack);
         if (tier > 0) {
             return Component.translatable("tooltip.strata_epochs.drill_tier", tier).withStyle(ChatFormatting.GRAY);
