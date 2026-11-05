@@ -39,12 +39,42 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 
 *Ankunft in den Epochen (Minecraft 1.21.1). Vorne das Epochentor für den Rückweg, unten alle neuen Items.*
 
-1. **Kernbohrer** bauen (Eisen, Kupfer, Stock) und auf den Boden rechtsklicken. Du bekommst einen **Bohrkern**. Er zeigt, welche Epoche unter diesem Ort liegt. Jede Region von 8 × 8 Chunks hat ihre eigene Epoche.
+1. **Kernbohrer** bauen (Eisen, Kupfer, Stock) und auf den Boden rechtsklicken. Du bekommst einen **Bohrkern**. Er zeigt, welche Epoche unter diesem Ort liegt. Jede Region von 8 × 8 Chunks hat ihre eigene Epoche. Epochen liegen verschieden tief:
+   - Der Kernbohrer (Stufe 1) erreicht die Kristallzeit.
+   - Der **Kristall-Kernbohrer** (Stufe 2: Kernbohrer und 4 Kristallquarz) erreicht auch die Sporenzeit.
+   - Der **Tiefenkernbohrer** (Stufe 3: Kristall-Kernbohrer, Bernstein und eine Spitze aus dem Tag `strata_epochs:deep_drill_tips`, Standard Diamant) erreicht auch die **Aschezeit**.
 2. **Epochentor** bauen (Obsidian, Amethyst, Kompass) und mit dem Bohrkern rechtsklicken. Der Kern wird verbraucht, und du landest in der Epoche. Neben dir steht ein Tor für den Rückweg.
-3. In der **Kristallzeit** findest du Kristallquarz, in der **Sporenzeit** Bernstein. Beide Dimensionen sind Höhlenwelten aus **Zeitgestein**.
-4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
+3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein**:
+   - In der **Kristallzeit** findest du Kristallquarz.
+   - In der **Sporenzeit** findest du Bernstein.
+   - In der **Aschezeit** liegen Basaltdeltas mit Vulkanasche. Dort findest du Glutsteinerz, das **Glutsplitter** liefert (Brennstoff wie eine Lohenrute).
+4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min, Aschezeit 5 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
 5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
 6. Rechtsklick auf das Tor bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.
+
+**Fossilien:** Zeitgestein (2 %) und versteinerter Stein (15 %) lassen in den Epochen **Fossilbrocken** fallen. So präparierst du sie:
+- **Meißel** in die Haupthand, Brocken in die zweite Hand, dann Rechtsklick auf den **Präparationstisch**.
+- Fünf Schläge legen das Fossil frei.
+- Wer hastig schlägt, riskiert bis zu 30 % Bruch pro Schlag. Mit gut einer Sekunde Pause sind es nur 3 %.
+
+Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitschädel. Das erste Fossil einer Epoche schließt sie im Kodex ab (`mastered_<epoche>`).
+
+**Spiralit (Begleiter):** Ammonit in die Haupthand, Keimfrische in die zweite, Rechtsklick auf den Präparationstisch. Er schlüpft und schwebt rechts vor dir (einer pro Spieler).
+- **Uhr:** Seine Spirale zeigt in 4 Segmenten die Restzeit in der Epoche. In der Warnphase blinkt das innerste Segment, und er läutet.
+- **Ruhe:** In seiner Nähe läuft die Verfestigung 20 % langsamer. Das stapelt nicht mit der Geodenrüstung.
+- **Erzsuche:** Alle 15 s zeigt er auf ein nahes Epochen-Erz.
+- Er reist durch Epochentore mit. Schleichen + Rechtsklick: warten oder folgen; Kristallquarz heilt ihn.
+
+**Epochen-Transplantator** (Kristallquarz, Bernstein, Glutsplitter, Zeitanker, Zeitgestein): Rechtsklick mit einem Bohrkern einer erforschten Epoche verwandelt die Umgebung (Radius 12) dauerhaft in diese Epoche. Er verbraucht den Kern und ein Fossil der Epoche. Der Ablauf:
+1. Eine Welle läuft nach außen, die Bodenschichten wölben sich sichtbar auf.
+2. Das Biom wechselt.
+3. Je nach Epoche wachsen Amethystspitzen mit Kristallquarzerz, Riesenpilze oder Basaltgruppen mit Glutsteinerz.
+
+Nur natürliche Blöcke (Tag `strata_epochs:transplantable`) werden verändert, Bauten bleiben. Er wirkt nur in der Oberwelt. Radius, Tempo und Anzahl stehen in der Config (`[transplanter]`), die Landschaft im Datapack (Feld `landscape` der Epoche).
+
+| Transplantation (Kristallzeit, 26.3) | Spiralit (1.21.1) |
+|---|---|
+| ![Transplantation](docs/screenshots/phase3/transplant_crystal_26.3.png) | ![Spiralit](docs/screenshots/phase3/spiralit_follow_1.21.1.png) |
 
 **Mobs:** Geodenkriecher (Kristallzeit, neutral, findet Erz), Sporenbalg (Sporenzeit, Wolken beschleunigen die Verfestigung) und Steinzeuge (erwacht aus versteinertem Stein bei Spielern, die zu lange bleiben). Details in [docs/MOBS.md](docs/MOBS.md).
 
@@ -58,7 +88,11 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 | Keimfrische | Sporenbeutel, Bernstein, Glasflasche | Rechtsklick in einer Epoche: Uhr 60 s zurück |
 | Kodex-Fragment | Drop des Steinzeugen | Rechtsklick: Kodex-Knoten „Echo eines Reisenden“ |
 
-Kodex-Knoten werden automatisch freigeschaltet: `strata_epochs:first_core` mit dem ersten Bohrkern, `visited_crystal_age` bzw. `visited_spore_age` beim ersten Besuch einer Epoche.
+Kodex-Knoten werden automatisch freigeschaltet:
+- `strata_epochs:first_core` mit dem ersten Bohrkern
+- `visited_<epoche>` beim ersten Besuch einer Epoche
+- `fossil_<epoche>` und `mastered_<epoche>` mit dem ersten präparierten Fossil
+- `first_transplant` nach der ersten Transplantation
 
 ## Strata Bridge: Anbindung an andere Mods
 
@@ -139,7 +173,10 @@ Eine Epoche mit Dimension kommt in `epochs/worldgen/epochs.json` (Vorlage-Biom, 
 
 ```
 data/<namespace>/strata_core/epoch/<name>.json
-{ "weight": 3, "solidify_seconds": 600, "dimension": "strata_epochs:crystal_age" }
+{ "weight": 3, "solidify_seconds": 600, "dimension": "strata_epochs:crystal_age", "depth": 1,
+  "landscape": { "biome": "strata_epochs:crystal_hollows", "top": "minecraft:calcite", "under": "minecraft:smooth_basalt",
+                 "filler": "strata_epochs:chronostone", "depth": 10,
+                 "features": ["strata_epochs:crystal_spire"], "feature_count": 6 } }
 
 data/<namespace>/strata_core/codex_node/<name>.json
 { "requires": ["<namespace>:first_core"] }
@@ -148,6 +185,10 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - `weight`: Häufigkeit der Epoche unter der Oberwelt (0 = nie).
 - `solidify_seconds`: Zeit bis zur Verfestigung (0 = aus, Standard 600).
 - `dimension`: optional.
+- `depth`: 1–3, ab welcher Bohrer-Stufe die Epoche erreichbar ist (Standard 1).
+- `landscape`: optional, für den Transplantator.
+  - `features` nimmt konfigurierte Features wie `minecraft:huge_red_mushroom` oder die eigenen Wuchsformen `strata_epochs:crystal_spire` und `strata_epochs:basalt_cluster`.
+  - `feature_count` gilt für Radius 12 und wächst mit der Fläche.
 
 ## Befehle
 
@@ -158,6 +199,8 @@ data/<namespace>/strata_core/codex_node/<name>.json
 | `/strata codex unlock <knoten>` | OP | Knoten für sich selbst freischalten |
 | `/strata codex grant <spieler> <knoten>` | OP | Knoten für Spieler freischalten (z. B. Quest-Belohnung) |
 | `/strata codex validate` | OP | Kodex-Datapack auf Tippfehler und Zyklen prüfen |
+| `/strata_epochs transplant <epoche> [radius]` | OP | Transplantation an der eigenen Position (ohne Voraussetzungen, zum Testen) |
+| `/strata_epochs spiralit` | OP | Lässt einen Spiralit für sich schlüpfen |
 
 ## Noch offen
 
@@ -165,5 +208,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Die Mob-Sounds sind eigene Ereignisse mit Untertiteln, klingen aber nach Vanilla (Gürteltier, Schleim, Schleifstein). Eigene Aufnahmen fehlen.
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
-- Kernanalyse-Tisch, Fossilien, Transplantator und weitere Biome pro Epoche (siehe Konzept, Phase 3).
+- Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator. Im Client gesehen: Spiralit (1.21.1), Transplantation (1.21.1 und 26.3), siehe `docs/screenshots/phase3/`.
+- Laufende Transplantationen werden nicht gespeichert: Ein Server-Neustart mitten drin hinterlässt ein halb fertiges Gebiet. Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.
+- Kernanalyse-Tisch, weitere Biome pro Epoche und ein eigener Mob für die Aschezeit (bisher Vanilla-Magmawürfel und Schreiter).
 - Bridge: eigenes EMI-Plugin (EMI gibt es nur für 1.21.1), KubeJS-Plugin mit eigenen Bindings, Curios-Slot für den Zeitanker.

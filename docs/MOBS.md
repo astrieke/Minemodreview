@@ -10,6 +10,16 @@ Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früh
 
 **Steinzeuge freigegeben (05.11.2026, nach Umbau zum „wandelnden Felsvorsprung“):** Runde 1 6/6/6, Runde 2 7/7/7. Geändert in Runde 2: Schichtplatten verankert (Überhang statt Hut), Hammerschlag mit 0,5 s Ausholen und Bodenkontakt, dunkle Adern, die nur bei der Steinhaut leuchten, Geräusche aus Stein statt Eisengolem. Optional für später: Oberseite der oberen Platte im Schieferton statt Ocker (wirkt sonst wie Holz), Hitbox 1,5 × 2,3 statt 1,3 × 2,4.
 
+**Spiralit freigegeben (05.11.2026, Begleiter aus Phase 3, `strata_epochs:spiralit`):**
+- Ergebnisse: Runde 1 6/5/6, Runde 2 7/6/6, Runde 3 8/7/7.
+- Die Uhr hat jetzt 4 Leucht-Segmente, die von außen nach innen erlöschen; die Spirale ist dunkel und leuchtet hell, damit man sie auch bei Tag liest.
+- Er schwebt rechts vorn auf Schulterhöhe, damit er am Bildrand bleibt.
+- Schlüpfen: Er bricht aus einer Steinhülle in den Farben des Ammonit-Items und bleibt dabei über dem Tisch.
+- Beim Zeigen schwebt er neben statt auf der Sichtlinie zum Erz.
+- Erzsuche nur mit Epochen-Erzen (eigener Tag), nur in Epochen, alle 15 s.
+- Die Bremse stapelt nicht mit der Geodenrüstung. Es gibt höchstens einen Spiralit pro Spieler.
+- Optional für später: Rippen auf der Oberseite quer zur Windung, Aschezeit-Hintergrund im Prüfblatt.
+
 **Im Code (05.11.2026):** M0 steht. Geodenkriecher (M1), Sporenbalg (M2) und Steinzeuge (M3) laufen in allen 5 Versionen, Reste siehe unten. **Gate B ist erreicht:** Im Client-Screenshot unter 1.21.1 sieht er aus wie in Blockbench, und die Kristalle leuchten auch im Dunkeln (`mobs/geode_crawler/shots/ingame_1.21.1.png`, `ingame_dark_1.21.1.png`).
 
 **Nachprüfung am 02.11.2026** (nach der Anpassung an die Stilregeln: höchstens 15 Würfel, 64×64, feste Paletten), drei Prüfer:
@@ -198,7 +208,6 @@ Effekte nutzen nur Vanilla-Partikel und -Sounds. Das spart Assets und funktionie
 | Bernsteinmotte (`amber_moth`) | Sporenzeit | passiv; man fängt sie, und sie reift zu Bernstein mit Einschluss (Fossil-Quelle) | Fliegen ist am teuersten, und das Insektenmodell ist schwer |
 | Resonanzling (`resonant_shard`) | Kristallzeit | neutral; lässt Erz in der Nähe aufleuchten und pausiert kurz die Verfestigung | schwebt, braucht also Flug-Navigation |
 | Harzschnecke (`resin_snail`) | Sporenzeit | passiv; ihre Spur härtet zu Bernsteinplatten aus | gut, aber ohne Bezug zum Kern-Ablauf |
-| Spiralit (`ammonite_familiar`) | Begleiter | präpariertes Ammonit-Fossil; zeigt als Uhr die verbleibende Zeit an | gehört zu Phase 3 (Fossil-Präparation), Begleiter mit Zähmung ist teuer |
 | **Stratolith** (`stratolith`) | Arena | Mini-Boss mit drei Gesteinsschichten als Phasen (Kristall, Sporen, Grundgestein mit „Zurückspulen“); Belohnung: Herz der Tiefenzeit für den Transplantator | ein Boss kostet laut Programmierer 5–10 Personentage |
 
 ## Technische Architektur
