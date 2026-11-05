@@ -2,5 +2,17 @@
   "weight": 2,
   "solidify_seconds": 420,
   "dimension": "strata_epochs:spore_age",
-  "depth": 2
+  "depth": 2,
+  "landscape": {
+    "biome": "strata_epochs:spore_grotto",
+    "top": "minecraft:mycelium",
+    "under": "minecraft:dirt",
+    "filler": "strata_epochs:chronostone",
+    "depth": 10,
+    "features": [
+      "minecraft:huge_red_mushroom",
+      "minecraft:huge_brown_mushroom"
+    ],
+    "feature_count": 7
+  }
 }

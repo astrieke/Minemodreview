@@ -37,6 +37,10 @@ public final class EpochsContent {
     /** Präparationstisch: hier legt man mit dem Meißel Fossilien frei (siehe {@link FossilPrep}). */
     public static final Supplier<Block> FOSSIL_TABLE = REG.block("fossil_table",
             p -> p.mapColor(MapColor.WOOD).strength(2.5f).sound(SoundType.WOOD));
+    /** Epochen-Transplantator (siehe {@link Transplanter}). */
+    public static final Supplier<Block> TRANSPLANTER = REG.block("transplanter",
+            p -> p.mapColor(MapColor.COLOR_PURPLE).strength(5.0f, 1200.0f).requiresCorrectToolForDrops()
+                    .lightLevel(s -> 7).sound(SoundType.AMETHYST));
     public static final Supplier<Block> EPOCH_GATE = REG.block("epoch_gate",
             p -> p.mapColor(MapColor.COLOR_CYAN).strength(5.0f, 1200.0f).requiresCorrectToolForDrops()
                     .lightLevel(s -> 12).sound(SoundType.AMETHYST));
@@ -77,6 +81,7 @@ public final class EpochsContent {
         REG.blockItem(VOLCANIC_ASH, "volcanic_ash");
         REG.blockItem(EMBER_ORE, "ember_ore");
         REG.blockItem(FOSSIL_TABLE, "fossil_table");
+        REG.blockItem(TRANSPLANTER, "transplanter");
         REG.blockItem(EPOCH_GATE, "epoch_gate");
     }
 

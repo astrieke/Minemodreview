@@ -25,4 +25,15 @@ public final class MobCompat {
     public static AttributeSupplier.Builder baseAttributes() {
         return Mob.createMobAttributes();
     }
+
+    /** Block-Tag aus Text, z. B. {@code "strata_epochs:spiralit_senses"}. */
+    public static net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> blockTag(String id) {
+        return net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK,
+                net.minecraft.resources.ResourceLocation.parse(id));
+    }
+
+    /** Block aus Text, z. B. {@code "minecraft:calcite"}; unbekannte IDs liefern Luft. */
+    public static net.minecraft.world.level.block.Block block(String id) {
+        return net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(net.minecraft.resources.ResourceLocation.parse(id));
+    }
 }

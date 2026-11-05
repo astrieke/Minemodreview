@@ -5,6 +5,7 @@
     "strata_epochs:amber_ore",
     "strata_epochs:petrified_stone",
     "strata_epochs:epoch_gate",
-    "strata_epochs:ember_ore"
+    "strata_epochs:ember_ore",
+    "strata_epochs:transplanter"
   ]
 }

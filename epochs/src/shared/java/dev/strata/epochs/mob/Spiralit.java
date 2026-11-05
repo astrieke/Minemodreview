@@ -35,7 +35,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -77,6 +76,8 @@ public class Spiralit extends StrataMob {
     private record Near(long time, double factor) {}
 
     private static final Map<UUID, Near> NEAR_OWNER = new ConcurrentHashMap<>();
+    /** Besitzer -> Spielzeit, zu der sein Spiralit ihm zuletzt gefolgt ist (für den Dimensionswechsel). */
+    private static final Map<UUID, Long> LAST_FOLLOW = new ConcurrentHashMap<>();
     /** Besitzer -> sein Spiralit (höchstens einer pro Spieler; für Dimensionswechsel und Erzspür). */
     private static final Map<UUID, Spiralit> BY_OWNER = new ConcurrentHashMap<>();
 
@@ -149,24 +150,35 @@ public class Spiralit extends StrataMob {
         boolean main = owner != null && BY_OWNER.get(owner.getUUID()) == this;
         Vec3 target = null;
         Vec3 face = null;
-        if (owner != null && !bond().staying()) {
+        if (owner != null && hatchTicks >= 0) {
+            face = owner.getEyePosition();                  // beim Schlüpfen still über dem Tisch, Blick zum Spieler
+            target = position();
+        } else if (owner != null && !bond().staying()) {
             double distance = distanceTo(owner);
             if (distance > TELEPORT_DISTANCE || stuckTicks > STUCK_TICKS) {
                 Vec3 to = shoulder(owner);
+                // Kein freier Platz neben dem Spieler (enger Gang)? Dann über seinem Kopf erscheinen.
+                if (!level.noCollision(this, getBoundingBox().move(to.subtract(position())))) {
+                    to = owner.getEyePosition().add(0, 0.5, 0);
+                }
                 setPos(to.x, to.y, to.z);
                 setDeltaMovement(Vec3.ZERO);
                 stuckTicks = 0;
                 oreTicks = 0;
                 distance = 0;
             }
+            if (main) LAST_FOLLOW.put(owner.getUUID(), level.getGameTime());
             if (main && tuning().abilityEnabled("calm") && distance <= tuning().ability("calm", "range", BONUS_RANGE)) {
                 NEAR_OWNER.put(owner.getUUID(), new Near(level.getGameTime(), tuning().ability("calm", "factor", SOLIDIFY_FACTOR)));
             }
             if (oreTicks > 0 && oreTarget != null) {
                 oreTicks--;
+                // Neben und über dem Erz, nicht auf der Sichtlinie: Der Spieler soll das Erz abbauen können.
                 Vec3 ore = Vec3.atCenterOf(oreTarget);
-                Vec3 toOwner = owner.getEyePosition().subtract(ore);
-                target = ore.add(toOwner.normalize().scale(Math.min(1.6, toOwner.length())));
+                Vec3 toEye = owner.getEyePosition().subtract(ore);
+                Vec3 side = new Vec3(-toEye.z, 0, toEye.x);
+                side = side.lengthSqr() < 1.0e-4 ? new Vec3(1, 0, 0) : side.normalize();
+                target = ore.add(0, 1.0, 0).add(side.scale(0.9)).add(toEye.normalize().scale(0.6));
                 face = ore;
             } else {
                 target = shoulder(owner);
@@ -196,6 +208,12 @@ public class Spiralit extends StrataMob {
         if (hatchTicks >= 0) {
             // Nach dem Schlüpfen gehen die Spiral-Segmente von innen nach außen an.
             showSegments(Math.min(SEGMENTS, hatchTicks * SEGMENTS / HATCH_GLOW_TICKS + 1), 1.0f);
+            if (hatchTicks == 12) {                           // die Steinhülle bricht auf
+                level.sendParticles(new net.minecraft.core.particles.BlockParticleOption(ParticleTypes.BLOCK,
+                        net.minecraft.world.level.block.Blocks.CALCITE.defaultBlockState()), getX(), getY() + 0.5, getZ(),
+                        24, 0.35, 0.35, 0.35, 0.1);
+                level.playSound(null, getX(), getY(), getZ(), SoundEvents.STONE_BREAK, SoundSource.NEUTRAL, 1.0f, 1.2f);
+            }
             if (++hatchTicks > HATCH_GLOW_TICKS) hatchTicks = -1;
         } else if (tickCount % CLOCK_INTERVAL == 0) {
             updateClock(owner);
@@ -207,7 +225,7 @@ public class Spiralit extends StrataMob {
         double yaw = Math.toRadians(owner.getYRot());
         double fx = -Math.sin(yaw), fz = Math.cos(yaw);       // Blickrichtung
         double rx = -Math.cos(yaw), rz = -Math.sin(yaw);      // rechte Hand
-        return owner.position().add(rx * 0.8 + fx * 0.9, 1.0, rz * 0.8 + fz * 0.9);
+        return owner.position().add(rx * 0.9 + fx * 1.1, 1.0, rz * 0.9 + fz * 1.1);
     }
 
     /** Die inneren {@code lit} Segmente leuchten mit {@code strength}, die äußeren sind aus. */
@@ -242,8 +260,10 @@ public class Spiralit extends StrataMob {
         }
     }
 
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> SENSES = MobCompat.blockTag(SENSE_TAG);
+
     private static boolean senses(net.minecraft.world.level.block.state.BlockState state) {
-        return state.is(Tags.Blocks.ORES) && state.getTags().anyMatch(t -> t.location().toString().equals(SENSE_TAG));
+        return state.is(SENSES);
     }
 
     private void senseOre(ServerLevel level, ServerPlayer owner) {
@@ -355,11 +375,12 @@ public class Spiralit extends StrataMob {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         Spiralit old = BY_OWNER.get(player.getUUID());
         if (old == null || !old.isAlive() || old.bond().staying() || old.level() == player.level()) return;
-        Near near = NEAR_OWNER.get(player.getUUID());       // war er in der Nähe, als der Spieler ging?
-        if (near == null || player.level().getGameTime() - near.time() > 40) return;
+        Long followed = LAST_FOLLOW.get(player.getUUID());  // ist er gerade noch gefolgt, als der Spieler ging?
+        if (followed == null || player.level().getGameTime() - followed > 40) return;
         ServerLevel level = (ServerLevel) player.level();
         Spiralit copy = new Spiralit(EpochsMobs.SPIRALIT.get(), level);
-        copy.setPos(player.getX(), player.getY() + 1.6, player.getZ());
+        Vec3 at = shoulder(player);
+        copy.setPos(at.x, at.y, at.z);
         copy.setData(EpochsContent.BOND.get(), old.bond());
         copy.setHealth(old.getHealth());
         copy.setCustomName(old.getCustomName());
@@ -377,6 +398,7 @@ public class Spiralit extends StrataMob {
     /** Beim Herunterfahren (oder Weltwechsel im Einzelspieler) alles vergessen. */
     public static void onServerStopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event) {
         NEAR_OWNER.clear();
+        LAST_FOLLOW.clear();
         BY_OWNER.clear();
     }
 }

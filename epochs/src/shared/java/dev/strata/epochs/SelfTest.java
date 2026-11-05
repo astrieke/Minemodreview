@@ -47,6 +47,7 @@ final class SelfTest {
 
         failures += testFossils();
         failures += testPreparation(server);
+        failures += testTransplant(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -204,6 +205,37 @@ final class SelfTest {
         boolean ok = done && rest && worn && broken && risks;
         StrataEpochs.LOG.info("[Strata-Test] Präparation: Fossil={}, Rest={}, Meißel={}, Bruch={}, Risiko={} -> {}",
                 done, rest, worn, broken, risks, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /** Transplantation im Testgebiet: Oberfläche, Unterschicht, Biom; ein „Bau“-Block bleibt unberührt. */
+    private static int testTransplant(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        String epochId = StrataEpochs.id("crystal_age");
+        var landscape = StrataAPI.epochs(server).get(epochId).landscape();
+        if (landscape.isEmpty()) {
+            StrataEpochs.LOG.error("[Strata-Test] Transplantation: Kristallzeit hat keine Landschaft");
+            return 1;
+        }
+        int cx = 4000, cz = 4000;
+        for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++) level.getChunk((cx >> 4) + x, (cz >> 4) + z);
+        int ground = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz) - 1;
+        BlockPos build = new BlockPos(cx + 2, ground, cz);
+        level.setBlock(build, net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState(), 2);
+        BlockPos table = new BlockPos(cx, ground + 1, cz);
+        TransplantJob job = Transplanter.start(level, table, epochId, landscape.get(), 5, null);
+        job.runToEnd();
+        BlockPos probe = new BlockPos(cx - 2, ground, cz + 1);
+        String biome = level.getBiome(probe.above()).getRegisteredName();
+        boolean top = level.getBlockState(probe).is(net.minecraft.world.level.block.Blocks.CALCITE);
+        boolean under = level.getBlockState(probe.below()).is(net.minecraft.world.level.block.Blocks.SMOOTH_BASALT);
+        boolean kept = level.getBlockState(build).is(net.minecraft.world.level.block.Blocks.OAK_PLANKS);
+        boolean biomeOk = biome.equals(StrataEpochs.id("crystal_hollows"));
+        boolean ok = top && under && kept && biomeOk && job.phase() == TransplantJob.Phase.DONE;
+        if (!ok) StrataEpochs.LOG.info("[Strata-Test] Transplantation: Boden y={}, Probe {} = {}, darunter {}", ground,
+                probe.toShortString(), level.getBlockState(probe), level.getBlockState(probe.below()));
+        StrataEpochs.LOG.info("[Strata-Test] Transplantation: Blöcke={}, Oberfläche={}, Unterschicht={}, Bau erhalten={}, Biom={} -> {}",
+                job.changed(), top, under, kept, biome, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

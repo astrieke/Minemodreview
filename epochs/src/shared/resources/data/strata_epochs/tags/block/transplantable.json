@@ -1,0 +1,32 @@
+{
+  "_hinweis": "Blöcke, die der Transplantator umwandeln darf. Alles andere (Bauten, Erze, Holz) bleibt unberührt. Grasblöcke stehen einzeln drin, weil #minecraft:dirt sie ab 26.1 nicht mehr enthält.",
+  "values": [
+    "#minecraft:base_stone_overworld",
+    "#minecraft:dirt",
+    "minecraft:dirt",
+    "minecraft:mud",
+    "minecraft:moss_block",
+    "minecraft:rooted_dirt",
+    "minecraft:coarse_dirt",
+    "minecraft:mycelium",
+    "minecraft:podzol",
+    "minecraft:grass_block",
+    "#minecraft:sand",
+    "minecraft:gravel",
+    "minecraft:clay",
+    "minecraft:sandstone",
+    "minecraft:red_sandstone",
+    "minecraft:calcite",
+    "minecraft:snow_block",
+    "minecraft:packed_ice",
+    "minecraft:dirt_path",
+    "minecraft:farmland",
+    "minecraft:smooth_basalt",
+    "minecraft:basalt",
+    "minecraft:dripstone_block",
+    "minecraft:terracotta",
+    "strata_epochs:chronostone",
+    "strata_epochs:petrified_stone",
+    "strata_epochs:volcanic_ash"
+  ]
+}

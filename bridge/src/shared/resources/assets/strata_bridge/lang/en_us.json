@@ -59,5 +59,8 @@
   "jei.strata_bridge.info.ammonite_fossil": "A prepared fossil from the Crystal Age; the first one completes the epoch in the codex. Ammonite in main hand, Germ Tonic in off hand, right-click the Preparation Table: a Spiralit hatches (one per player). It floats at your right, its spiral shows the time left in the epoch (four segments, one per quarter), solidification runs 20% slower near it (does not stack with Geode armor), and every 15 s it points at a nearby epoch ore. Sneak + right-click: stay/follow; Crystal Quartz heals it.",
   "advancements.strata_epochs.met_spiralit.title": "Spiralit",
   "advancements.strata_epochs.met_spiralit.description": "Revive an Ammonite with Germ Tonic",
-  "jade.strata_bridge.mob.spiralit": "Companion · slows solidification, senses ores"
+  "jade.strata_bridge.mob.spiralit": "Companion · slows solidification, senses ores",
+  "advancements.strata_epochs.first_transplant.title": "Primeval Garden",
+  "advancements.strata_epochs.first_transplant.description": "Bring an epoch to the Overworld with the Transplanter",
+  "jei.strata_bridge.info.transplanter": "Right-click with a core sample to permanently turn the surroundings (radius 12, configurable) into that epoch: rock, surface, biome, then giant mushrooms, geodes or basalt columns grow. Requires the epoch to be explored (visited and a fossil prepared). Uses the core sample and one fossil of the epoch. Only natural blocks change, builds stay. Overworld only."
 }

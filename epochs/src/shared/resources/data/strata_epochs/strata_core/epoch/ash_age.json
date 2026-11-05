@@ -2,5 +2,17 @@
   "weight": 1,
   "solidify_seconds": 300,
   "dimension": "strata_epochs:ash_age",
-  "depth": 3
+  "depth": 3,
+  "landscape": {
+    "biome": "strata_epochs:ash_wastes",
+    "top": "strata_epochs:volcanic_ash",
+    "under": "minecraft:basalt",
+    "filler": "strata_epochs:chronostone",
+    "depth": 10,
+    "features": [
+      "minecraft:small_basalt_columns",
+      "minecraft:large_basalt_columns"
+    ],
+    "feature_count": 6
+  }
 }

@@ -166,7 +166,8 @@
         0,
         32
       ],
-      "material": "slate"
+      "material": "fossil",
+      "face": "fossil"
     },
     {
       "name": "hood",
@@ -213,7 +214,7 @@
       "from": [
         1,
         6,
-        -3.5
+        -4
       ],
       "to": [
         2,
@@ -232,7 +233,7 @@
       "from": [
         -2,
         6,
-        -3.5
+        -4
       ],
       "to": [
         -1,
@@ -586,7 +587,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_left",
@@ -619,7 +620,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_right",
@@ -630,7 +631,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_right",
@@ -663,7 +664,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "hood",
@@ -1120,38 +1121,27 @@
           "channel": "scale",
           "time": 0,
           "value": [
-            1.55,
-            1.4,
-            1.45
+            1.65,
+            1.6,
+            1.6
           ],
           "interpolation": "linear"
         },
         {
           "bone": "fossil",
           "channel": "scale",
-          "time": 0.45,
+          "time": 0.55,
           "value": [
-            1.55,
-            1.4,
-            1.45
+            1.65,
+            1.6,
+            1.6
           ],
-          "interpolation": "linear"
+          "interpolation": "step"
         },
         {
           "bone": "fossil",
           "channel": "scale",
           "time": 0.6,
-          "value": [
-            1.6,
-            1.5,
-            1.5
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "fossil",
-          "channel": "scale",
-          "time": 0.75,
           "value": [
             1,
             1,

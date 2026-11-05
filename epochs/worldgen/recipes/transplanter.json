@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "QAQ",
+    "ETE",
+    "CCC"
+  ],
+  "key": {
+    "Q": "strata_epochs:crystal_quartz",
+    "A": "strata_epochs:amber_shard",
+    "E": "strata_epochs:ember_shard",
+    "T": "strata_epochs:time_anchor",
+    "C": "strata_epochs:chronostone"
+  },
+  "result": {
+    "id": "strata_epochs:transplanter",
+    "count": 1
+  }
+}

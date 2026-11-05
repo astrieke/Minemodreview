@@ -1,6 +1,7 @@
 {
   "values": [
     "strata_epochs:epoch_gate",
-    "strata_epochs:ember_ore"
+    "strata_epochs:ember_ore",
+    "strata_epochs:transplanter"
   ]
 }

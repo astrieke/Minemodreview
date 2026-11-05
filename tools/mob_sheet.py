@@ -129,7 +129,8 @@ def sheet(mob):
     anims = sorted(f for f in os.listdir(shots) if f.startswith('anim_'))
     cols = 4
     anim_rows = (len(anims) + cols - 1) // cols
-    rows = 1 + anim_rows + 1 + 1
+    clock = os.path.isfile(os.path.join(ROOT, mob, 'texture_glow_spiral_1.png'))
+    rows = 1 + anim_rows + 1 + 1 + (1 if clock else 0)
     lh = 18
     out = Image.new('RGBA', (cols * CELL, rows * (CELL + lh)), (235, 235, 238, 255))
     d = ImageDraw.Draw(out)
@@ -169,6 +170,20 @@ def sheet(mob):
         side = min(im.width, im.height)
         im = im.crop(((im.width - side) // 2, 0, (im.width + side) // 2, side))
         place(im, row * cols + 3, 'im Spiel, dunkel (1.21.1)')
+    if clock:
+        # Uhr: Seite der Schale mit den Leucht-Segmenten, wie sie je nach Restzeit leuchten (bei Tageslicht).
+        row += 1
+        core = next(c for c in model['cubes'] if c.get('face') == 'spiral')
+        fx, fy, fw, fh = faces(core)['west']
+        masks = [Image.open(os.path.join(ROOT, mob, f'texture_glow_spiral_{i}.png')).convert('RGBA') for i in range(1, 5)]
+        for k, (lit, label) in enumerate([(4, 'Uhr 4/4 (volle Zeit)'), (3, 'Uhr 3/4'), (1, 'Uhr 1/4'),
+                                          (0, 'Warnphase, Blinken aus')]):
+            face = tex.crop((fx, fy, fx + fw, fy + fh))
+            for i in range(4 - lit, 4):
+                face.alpha_composite(masks[i].crop((fx, fy, fx + fw, fy + fh)))
+            panel = Image.new('RGBA', (fw + 2, fh + 2), (138, 180, 248, 255))
+            panel.alpha_composite(face, (1, 1))
+            place(panel.resize((CELL, CELL), Image.NEAREST), row * cols + k, label)
     path = os.path.join(ROOT, mob, 'review_sheet.png')
     out.save(path)
     return path, ratio

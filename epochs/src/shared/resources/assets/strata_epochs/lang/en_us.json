@@ -85,5 +85,16 @@
   "message.strata_epochs.spiralit.bonded": "The Spiralit joins you.",
   "message.strata_epochs.spiralit.stay": "Spiralit waits here.",
   "message.strata_epochs.spiralit.follow": "Spiralit follows you.",
-  "message.strata_epochs.spiralit.only_one": "You already have a Spiralit."
+  "message.strata_epochs.spiralit.only_one": "You already have a Spiralit.",
+  "block.strata_epochs.transplanter": "Epoch Transplanter",
+  "message.strata_epochs.transplanter.need_sample": "The Transplanter needs a core sample of the epoch.",
+  "message.strata_epochs.transplanter.disabled": "The Transplanter is disabled on this server.",
+  "message.strata_epochs.transplanter.overworld_only": "The Transplanter only works in the Overworld.",
+  "message.strata_epochs.transplanter.no_landscape": "%s cannot be transplanted.",
+  "message.strata_epochs.transplanter.not_mastered": "Explore %s first: visit it and prepare a fossil.",
+  "message.strata_epochs.transplanter.busy": "A transplant is already running here.",
+  "message.strata_epochs.transplanter.too_many": "Too many transplants at once, wait a moment.",
+  "message.strata_epochs.transplanter.need_fossil": "The Transplanter needs a fossil as a seed: %s",
+  "message.strata_epochs.transplanter.start": "The ground trembles … %s rises.",
+  "message.strata_epochs.transplanter.done": "%s has been transplanted to the Overworld."
 }

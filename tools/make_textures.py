@@ -1111,6 +1111,51 @@ def fossil_table_side():
     return img
 
 
+def transplanter_side():
+    # Rahmen aus Zeitgestein mit Goldsäulen; innen die drei Epochen-Schichten als Bänder (Asche, Sporen, Kristall).
+    pal = {'A': '#6f6488', 'B': '#4c4262', 'C': '#2e2739', 'G': '#ffe08a', 'g': '#d9a43a', 'h': '#8f6414',
+           'a': '#5b3a2e', 'e': '#e0531c', 's': '#567d4f', 'S': '#77a06d', 'v': '#8d76c6', 'V': '#b19de3', 'k': '#140f1e'}
+    rows = [
+        'AAAAAAAAAAAAAAAB',
+        'AgGGGGGGGGGGGGhC',
+        'AgkkkkkkkkkkkkhC',
+        'AgVVvVVVVvVVVVhC',
+        'AgvVVVvVVVVvVvhC',
+        'AgvvvvvvvvvvvvhC',
+        'AgSSsSSSSsSSSShC',
+        'AgsSSsSSSSSsSshC',
+        'AgsssssssssssshC',
+        'AgaaeaaaaaeaaahC',
+        'AgaaaaaaeaaaaahC',
+        'AgaaaaaaaaaaaahC',
+        'AgkkkkkkkkkkkkhC',
+        'AghhhhhhhhhhhhhC',
+        'ABCCCCCCCCCCCCCC',
+        'BCCCCCCCCCCCCCCC',
+    ]
+    return from_grid(rows, pal)
+
+
+def transplanter_top():
+    # Goldrahmen, darin konzentrische Schichtringe um einen leuchtenden Zeitkern.
+    import math
+    img = canvas()
+    rings = ['#5b3a2e', '#567d4f', '#8d76c6', '#b19de3', '#e6dcff']
+    for y in range(16):
+        for x in range(16):
+            if x in (0, 15) or y in (0, 15):
+                c = '#6f6488' if (x == 0 or y == 0) else '#2e2739'
+            elif x in (1, 14) or y in (1, 14):
+                c = '#ffe08a' if (x == 1 or y == 1) else '#8f6414'
+            else:
+                r = math.hypot(x - 7.5, y - 7.5)
+                c = rings[max(0, min(4, 4 - int(r / 1.4)))] if r < 6.3 else '#140f1e'
+            img.putpixel((x, y), rgb(c))
+    for x, y in ((2, 2), (13, 2), (2, 13), (13, 13)):
+        img.putpixel((x, y), rgb('#d9a43a'))
+    return img
+
+
 BLOCKS = {
     'chronostone': chronostone,
     'crystal_quartz_ore': crystal_quartz_ore,
@@ -1121,6 +1166,8 @@ BLOCKS = {
     'ember_ore': ember_ore,
     'fossil_table_top': fossil_table_top,
     'fossil_table_side': fossil_table_side,
+    'transplanter_top': transplanter_top,
+    'transplanter_side': transplanter_side,
 }
 ITEMS = {
     'core_drill': core_drill,

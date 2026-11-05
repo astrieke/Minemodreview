@@ -38,6 +38,7 @@ public final class BridgeTexts {
         info.put(EpochsContent.AMMONITE_FOSSIL, "jei.strata_bridge.info.ammonite_fossil");
         info.put(EpochsContent.FERN_FOSSIL, "jei.strata_bridge.info.fossil");
         info.put(EpochsContent.ANCIENT_SKULL, "jei.strata_bridge.info.fossil");
+        info.put(() -> EpochsContent.TRANSPLANTER.get().asItem(), "jei.strata_bridge.info.transplanter");
         info.put(EpochsContent.CALCITE_SCALE, "jei.strata_bridge.info.calcite_scale");
         info.put(EpochsContent.SPORE_SAC, "jei.strata_bridge.info.spore_sac");
         info.put(EpochsContent.GERM_TONIC, "jei.strata_bridge.info.germ_tonic");

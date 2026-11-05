@@ -59,5 +59,8 @@
   "jei.strata_bridge.info.ammonite_fossil": "Ein präpariertes Fossil aus der Kristallzeit; das erste schließt die Epoche im Kodex ab. Ammonit in die Haupthand, Keimfrische in die zweite, Rechtsklick auf den Präparationstisch: Ein Spiralit schlüpft (einer pro Spieler). Er schwebt rechts neben dir, seine Spirale zeigt die Restzeit in der Epoche (vier Segmente, je eines pro Viertel), in seiner Nähe läuft die Verfestigung 20 % langsamer (stapelt nicht mit der Geodenrüstung), und alle 15 s zeigt er auf ein nahes Epochen-Erz. Schleichen + Rechtsklick: warten/folgen; Kristallquarz heilt ihn.",
   "advancements.strata_epochs.met_spiralit.title": "Spiralit",
   "advancements.strata_epochs.met_spiralit.description": "Erwecke einen Ammoniten mit Keimfrische",
-  "jade.strata_bridge.mob.spiralit": "Begleiter · bremst die Verfestigung, spürt Erze"
+  "jade.strata_bridge.mob.spiralit": "Begleiter · bremst die Verfestigung, spürt Erze",
+  "advancements.strata_epochs.first_transplant.title": "Urzeit-Garten",
+  "advancements.strata_epochs.first_transplant.description": "Hole eine Epoche mit dem Transplantator in die Oberwelt",
+  "jei.strata_bridge.info.transplanter": "Rechtsklick mit einem Bohrkern verwandelt die Umgebung (Radius 12, per Config) dauerhaft in diese Epoche: Gestein, Oberfläche, Biom, danach wachsen Riesenpilze, Geoden oder Basaltsäulen. Voraussetzung: Die Epoche ist erforscht (besucht und ein Fossil präpariert). Verbraucht den Bohrkern und ein Fossil der Epoche. Nur natürliche Blöcke werden verändert, Bauten bleiben. Nur in der Oberwelt."
 }

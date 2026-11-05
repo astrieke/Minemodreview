@@ -2,5 +2,17 @@
   "weight": 3,
   "solidify_seconds": 600,
   "dimension": "strata_epochs:crystal_age",
-  "depth": 1
+  "depth": 1,
+  "landscape": {
+    "biome": "strata_epochs:crystal_hollows",
+    "top": "minecraft:calcite",
+    "under": "minecraft:smooth_basalt",
+    "filler": "strata_epochs:chronostone",
+    "depth": 10,
+    "features": [
+      "minecraft:amethyst_geode",
+      "minecraft:large_dripstone"
+    ],
+    "feature_count": 5
+  }
 }

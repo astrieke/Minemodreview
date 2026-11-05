@@ -51,6 +51,7 @@ PAL = {
     'shell':         ['#8a7458', '#b39c78', '#d6c29a', '#e9dbb8', '#f7efd8'],
     'hood':          ['#5a3438', '#7a4a4a', '#9a6560', '#b8837a', '#d4a596'],
     'eye':           ['#6a4708', '#9c6a12', '#d9a43a', '#f2c45a', '#ffe08a'],
+    'fossil':        ['#6e5f44', '#9c8a64', '#cbb98f', '#e6d8b4', '#f2e8cc'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
 }
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
@@ -145,6 +146,8 @@ def paint_cube(img, cube, rnd):
                         v -= 0.9                             # Anwachsstreifen quer über die Schale
                     if (x * 7 + y * 3) % 11 == 0:
                         v -= 0.6                             # Körnung
+                if mat == 'eye':
+                    v = 2 if face == 'down' else 4           # Augen hell, Unterseite dunkler (leuchten mit Segment 4)
                 if mat == 'calcite' and (x * 5 + y * 7) % 9 == 0:
                     v -= 1.2                                 # Calcit-Sprenkel
                 img.putpixel((x0 + x, y0 + y), rgb(pal[max(0, min(4, int(round(v))))]))
@@ -293,8 +296,11 @@ def d_ammonite(img, f, rnd):
 
 
 # Spiralrille in 4 Segmenten (außen -> innen), je eine Leucht-Ebene: Die Uhr erlischt von außen nach innen.
-SPIRAL_SEGMENTS = ['#7a52d8', '#8862e4', '#9c74f0', '#b48cff']
-SPIRAL_CENTER = '#3a2a6a'
+# Grundfarbe einheitlich dunkel (erloschen gut von Leuchten zu unterscheiden); die Segmente unterscheiden sich
+# nur um eine unsichtbare Stufe im Blau, damit die Leucht-Masken sie trennen können.
+SPIRAL_SEGMENTS = ['#4a3590', '#4a3591', '#4a3592', '#4a3593']
+SPIRAL_CENTER = '#2a1d50'
+SPIRAL_GLOW = '#c9a8ff'
 SPIRAL_STRIPE = '#8a5a34'
 
 
@@ -345,6 +351,15 @@ def d_spiral(img, f, rnd):
                     put(img, r, w - 1 - x if side == 'east' else x, y, c)
 
 
+def d_fossil(img, f, rnd):
+    # Versteinerte Hülle wie das Ammonit-Item: Spirale als dunkles Relief auf beiden Seiten.
+    for side in ('east', 'west'):
+        r = f[side]
+        cells = spiral_cells(r[2], r[3], margin=1)
+        for x, y in cells:
+            put(img, r, x, y, '#5e5038')
+
+
 def d_ribs(img, f, rnd):
     # Rückseite der Schale: senkrechte Rippen statt Flecken.
     r = f['south']
@@ -374,7 +389,7 @@ def d_hood(img, f, rnd):
 
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
            'amber_top': d_amber_top,
-           'spiral': d_spiral, 'hood': d_hood,
+           'spiral': d_spiral, 'hood': d_hood, 'fossil': d_fossil,
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass}
 
 
@@ -389,10 +404,12 @@ GLOW = {
                           'veins': {'colors': {'#9a6812', '#6b4a10'}, 'glow_color': '#ffe08a'}},
     # Die Spiralrille ist die Uhr: 4 Segmente (außen 1 -> innen 4), die von außen nach innen erlöschen.
     # Die Augen leuchten mit dem innersten Segment.
-    'spiralit': {'spiral_1': {'colors': {'#7a52d8'}, 'glow_color': '#a98aff'},
-                 'spiral_2': {'colors': {'#8862e4'}, 'glow_color': '#b89cff'},
-                 'spiral_3': {'colors': {'#9c74f0'}, 'glow_color': '#c8afff'},
-                 'spiral_4': {'colors': {'#b48cff', '#3a2a6a', '#ffe08a', '#f2c45a'}}},
+    'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
+                 'spiral_2': {'colors': {'#4a3591'}, 'glow_color': '#c9a8ff'},
+                 'spiral_3': {'colors': {'#4a3592'}, 'glow_color': '#c9a8ff'},
+                 # innerstes Segment und die Augen (die eigene Leuchtfarbe je Farbe über glow_map)
+                 'spiral_4': {'colors': {'#4a3593', '#2a1d50', '#ffe08a'},
+                              'glow_map': {'#4a3593': '#c9a8ff', '#2a1d50': '#c9a8ff', '#ffe08a': '#fff0b0'}}},
 }
 
 
@@ -404,6 +421,7 @@ def paint_glow(model, img, mob_id):
         materials = spec.get('materials', set())
         colors = {rgb(c)[:3] for c in spec.get('colors', set())}
         fixed = rgb(spec['glow_color']) if 'glow_color' in spec else None   # eigene Leuchtfarbe statt Texturfarbe
+        glow_map = {rgb(k)[:3]: rgb(v) for k, v in spec.get('glow_map', {}).items()}
         for cube in model['cubes']:
             if materials and cube['material'] not in materials:
                 continue
@@ -411,7 +429,9 @@ def paint_glow(model, img, mob_id):
                 for y in range(y0, y0 + h):
                     for x in range(x0, x0 + w):
                         r, g, b, a = img.getpixel((x, y))
-                        if a and (not colors or (r, g, b) in colors) and fixed:
+                        if a and (r, g, b) in glow_map:
+                            glow.putpixel((x, y), glow_map[(r, g, b)])
+                        elif a and (not colors or (r, g, b) in colors) and fixed:
                             glow.putpixel((x, y), fixed)
                         elif a and (not colors or (r, g, b) in colors):
                             glow.putpixel((x, y), (min(255, int(r * 1.15)), min(255, int(g * 1.15)), min(255, int(b * 1.15)), 255))

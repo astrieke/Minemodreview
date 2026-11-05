@@ -85,5 +85,16 @@
   "message.strata_epochs.spiralit.bonded": "Der Spiralit schließt sich dir an.",
   "message.strata_epochs.spiralit.stay": "Spiralit wartet hier.",
   "message.strata_epochs.spiralit.follow": "Spiralit folgt dir.",
-  "message.strata_epochs.spiralit.only_one": "Du hast schon einen Spiralit."
+  "message.strata_epochs.spiralit.only_one": "Du hast schon einen Spiralit.",
+  "block.strata_epochs.transplanter": "Epochen-Transplantator",
+  "message.strata_epochs.transplanter.need_sample": "Der Transplantator braucht einen Bohrkern der Epoche.",
+  "message.strata_epochs.transplanter.disabled": "Der Transplantator ist auf diesem Server abgeschaltet.",
+  "message.strata_epochs.transplanter.overworld_only": "Der Transplantator wirkt nur in der Oberwelt.",
+  "message.strata_epochs.transplanter.no_landscape": "%s lässt sich nicht verpflanzen.",
+  "message.strata_epochs.transplanter.not_mastered": "Erforsche erst %s: besuchen und ein Fossil präparieren.",
+  "message.strata_epochs.transplanter.busy": "Hier wird schon verpflanzt.",
+  "message.strata_epochs.transplanter.too_many": "Zu viele Transplantationen gleichzeitig, warte kurz.",
+  "message.strata_epochs.transplanter.need_fossil": "Der Transplantator braucht ein Fossil als Keim: %s",
+  "message.strata_epochs.transplanter.start": "Der Boden bebt … %s steigt herauf.",
+  "message.strata_epochs.transplanter.done": "%s ist in die Oberwelt verpflanzt."
 }

@@ -96,7 +96,7 @@ final class EpochInteractions {
             return;
         }
         Optional<String> dimension = StrataAPI.epochs(level.getServer()).getOrDefault(epoch.get(),
-                new dev.strata.core.Epoch(0, 0, Optional.empty(), 1)).dimension();
+                new dev.strata.core.Epoch(0, 0, Optional.empty())).dimension();
         if (dimension.isEmpty() || Mc.level(level.getServer(), dimension.get()) == null) {
             Mc.actionbar(player, Component.translatable("message.strata_epochs.gate.unreachable",
                     CoreSamples.epochName(epoch.get())).withStyle(ChatFormatting.GRAY));

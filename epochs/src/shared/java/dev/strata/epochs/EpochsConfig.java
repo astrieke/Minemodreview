@@ -10,6 +10,10 @@ public final class EpochsConfig {
     public static final ModConfigSpec.BooleanValue SPORE_BELLOWS;
     public static final ModConfigSpec.BooleanValue PETRIFIED_WITNESS;
     public static final ModConfigSpec.IntValue MAX_MOBS_PER_EPOCH;
+    public static final ModConfigSpec.BooleanValue TRANSPLANTER;
+    public static final ModConfigSpec.IntValue TRANSPLANT_RADIUS;
+    public static final ModConfigSpec.IntValue TRANSPLANT_BLOCKS_PER_TICK;
+    public static final ModConfigSpec.IntValue TRANSPLANT_MAX_JOBS;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -19,6 +23,14 @@ public final class EpochsConfig {
         PETRIFIED_WITNESS = b.comment("Steinzeugen erwachen aus versteinertem Stein bei Spielern, die verfestigen")
                 .define("petrified_witness", true);
         MAX_MOBS_PER_EPOCH = b.comment("Höchstzahl aller Strata-Mobs pro Epochen-Dimension").defineInRange("max_per_epoch", 60, 0, 10_000);
+        b.pop();
+        b.comment("Epochen-Transplantator: verwandelt ein Gebiet der Oberwelt dauerhaft in eine Epoche").push("transplanter");
+        TRANSPLANTER = b.comment("Transplantator erlaubt (aus = kein Eingriff in die Landschaft)").define("enabled", true);
+        TRANSPLANT_RADIUS = b.comment("Radius des Gebiets in Blöcken").defineInRange("radius", 12, 4, 32);
+        TRANSPLANT_BLOCKS_PER_TICK = b.comment("Höchstens so viele Blockänderungen pro Tick und Transplantation")
+                .defineInRange("blocks_per_tick", 256, 16, 8192);
+        TRANSPLANT_MAX_JOBS = b.comment("Höchstens so viele Transplantationen gleichzeitig pro Server")
+                .defineInRange("max_jobs", 2, 1, 16);
         b.pop();
         SPEC = b.build();
     }

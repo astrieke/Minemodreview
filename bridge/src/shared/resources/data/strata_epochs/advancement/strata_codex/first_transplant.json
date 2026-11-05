@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/first_core",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:transplanter"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.first_transplant.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.first_transplant.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}
