@@ -27,5 +27,14 @@
   "advancements.strata_epochs.met_petrified_witness.title": "Petrified Witness",
   "advancements.strata_epochs.met_petrified_witness.description": "Meet a Petrified Witness. Stay too long and you turn to stone.",
   "advancements.strata_epochs.witness_echo.title": "Echo of a Traveller",
-  "advancements.strata_epochs.witness_echo.description": "Read a codex fragment from a Petrified Witness."
+  "advancements.strata_epochs.witness_echo.description": "Read a codex fragment from a Petrified Witness.",
+  "jade.strata_bridge.mob.geode_crawler": "Crystal Age · neutral, leads to ore",
+  "jade.strata_bridge.mob.spore_bellows": "Spore Age · spores speed up solidification",
+  "jade.strata_bridge.mob.petrified_witness": "Echo of a traveller · a pickaxe breaks its stone skin",
+  "jei.strata_bridge.info.calcite_scale": "Dropped by the Geode Crawler (Crystal Age). Material for geode armor and a second time anchor recipe.",
+  "jei.strata_bridge.info.spore_sac": "Dropped by the Spore Bellows (Spore Age). Ingredient for the germ tonic and the amber blade.",
+  "jei.strata_bridge.info.germ_tonic": "Right-click inside an epoch: turns the solidification clock back by 60 seconds.",
+  "jei.strata_bridge.info.codex_fragment": "Dropped by the Petrified Witness. Right-click unlocks the codex node \"Echo of a Traveller\".",
+  "jei.strata_bridge.info.amber_blade": "A sword of amber. Every melee hit slows the target for 2 seconds.",
+  "jei.strata_bridge.info.geode_armor": "Slightly stronger than iron. With all four pieces, solidification in epochs runs 25% slower."
 }

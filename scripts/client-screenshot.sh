@@ -15,6 +15,7 @@
 # <ausgabe>_act_NN.png auf, um Laufen, Fähigkeiten und Animationen im Spiel zu prüfen.
 # SHOT_SURVIVAL=1 schaltet den Spieler dafür in den Überlebensmodus (für feindliche Mobs).
 # SHOT_GEAR=1: Spieler trägt die Geodenrüstung und hält Strata-Werkzeuge; das Bild zeigt ihn von vorn (F5).
+# SHOT_AWAKEN=1 (mit SHOT_MOB): Verfestigung nach 20 s, Bildserie von oben (F5), bis ein Steinzeuge erwacht.
 # SHOT_PITCH=<Grad> ändert den Blickwinkel nach unten (Standard 28, für große Mobs kleiner).
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -77,7 +78,18 @@ execute in strata_epochs:$epoch run fill $((x - 6)) $((y - 2)) $((z + 2)) $((x +
 execute in strata_epochs:$epoch run fill $((x - 5)) $((y - 1)) $((z + 3)) $((x + 5)) $((y - 1)) $((z + 13)) $floor
 execute in strata_epochs:$epoch run setblock $((x + 3)) $y $((z + 10)) strata_epochs:crystal_quartz_ore
 MC
-    if [ -n "${SHOT_ACT:-}" ]; then
+    if [ -n "${SHOT_AWAKEN:-}" ]; then
+        # Erwachen aus Stein testen: Verfestigung nach 20 s statt 10 min, Spieler ohne Zeitanker im Überlebensmodus
+        # mitten auf der Bühne. Ein Steinzeuge erwacht dann aus einem versteinerten Bodenblock in der Nähe.
+        mkdir -p "$dp/data/strata_epochs/strata_core/epoch"
+        printf '{\n  "weight": 3,\n  "solidify_seconds": 20,\n  "dimension": "strata_epochs:%s"\n}\n' "$epoch" \
+            > "$dp/data/strata_epochs/strata_core/epoch/$epoch.json"
+        cat >> "$dp/data/strata_shot/function/stage.mcfunction" <<MC
+clear @a strata_epochs:time_anchor
+gamemode survival @a
+execute in strata_epochs:$epoch run tp @a $x.5 $y $((z + 8)).5 0 ${SHOT_PITCH:-80}
+MC
+    elif [ -n "${SHOT_ACT:-}" ]; then
         # Start, sobald der Spieler Hotbar-Platz 9 wählt (das Skript drückt dazu die Taste 9).
         sed -i "1i execute as @a[tag=strata_shot,tag=!strata_act] if items entity @s weapon.mainhand strata_epochs:chronostone run function strata_shot:act" \
             "$dp/data/strata_shot/function/tick.mcfunction"
@@ -142,7 +154,14 @@ if [ $ok -eq 1 ]; then
     fi
     DISPLAY="$display" import -window root "$out"
     echo "Screenshot: $out"
-    if [ -n "${SHOT_ACT:-}" ] && [ -n "${PYTHON:-}" ]; then
+    if [ -n "${SHOT_AWAKEN:-}" ] && [ -n "${PYTHON:-}" ]; then
+        DISPLAY="$display" "$PYTHON" tools/xclick.py key F5; sleep 1
+        for i in $(seq -w 0 44); do
+            DISPLAY="$display" import -window root "${out%.png}_act_$i.png"
+            sleep 1
+        done
+        echo "Bildserie: ${out%.png}_act_*.png"
+    elif [ -n "${SHOT_ACT:-}" ] && [ -n "${PYTHON:-}" ]; then
         DISPLAY="$display" "$PYTHON" tools/xclick.py key 9
         for i in $(seq -w 0 27); do
             DISPLAY="$display" import -window root "${out%.png}_act_$i.png"

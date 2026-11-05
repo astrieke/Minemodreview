@@ -336,7 +336,7 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 | `brow` | `head` | [-4, 28, -11] | [4, 29, -10] | [23, 26] | strata_dark | – |
 | `hourglass` | `core` | [-2.5, 14.5, -6] | [2.5, 21.5, -5] | [52, 10] | gold | – |
 | `plate_lower` | `back_plates` | [-7, 26, 0] | [7, 33, 2] | [20, 44] | strata | [15, 0, -8] |
-| `plate_upper` | `back_plates` | [-5, 31.5, 0] | [5, 39.5, 2] | [18, 53] | strata | [-62, 0, 10] |
+| `plate_upper` | `back_plates` | [-5, 31.5, 0] | [5, 39.5, 2] | [18, 53] | slate | [-62, 0, 10] |
 | `shoulder_left` | `shoulder_left` | [8, 23, -4] | [13, 27, 4] | [22, 32] | strata_dark | – |
 | `shoulder_right` | `shoulder_right` | [-13, 23, -4] | [-8, 27, 4] | [22, 32] (gespiegelt) | strata_dark | – |
 | `arm_l` | `arm_left` | [9, 6, -2] | [13, 24, 2] | [48, 22] | strata | – |

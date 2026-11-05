@@ -43,9 +43,11 @@ PAL = {
     # Hut-Oberseiten heller, damit sie sich vom Sporennebel abheben (Prüfung 05.11.)
     'cap_top':       ['#6e5a38', '#857048', '#98804f', '#a8905e', '#b8a06c'],
     # Warnfarbe am Hutrand: Gegenfarbe zum Grün der Sporenzeit, hell genug für 2:1 zum Nebel
-    'rim':           ['#8f3a1d', '#c0502a', '#e8915a', '#f4b07c', '#ffc89a'],
+    'rim':           ['#8f3a1d', '#c0502a', '#e8915a', '#f6b98a', '#ffc89a'],
     'root':          ['#3e2a18', '#563b22', '#6f4e2e', '#8a663e', '#a5804f'],
     'gold':          ['#6a4708', '#9c6a12', '#d9a43a', '#f2c45a', '#ffe08a'],
+    # Schiefer ohne Ockerband, für gekippte Platten (sonst wirkt die Ockerseite wie Holz)
+    'slate':         ['#2e2a35', '#3c3742', '#4a4552', '#5e5868', '#77707c'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
 }
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie

@@ -424,7 +424,7 @@
         {
           "bone": "body",
           "channel": "scale",
-          "time": 0.45,
+          "time": 0.5,
           "value": [
             1,
             1,
