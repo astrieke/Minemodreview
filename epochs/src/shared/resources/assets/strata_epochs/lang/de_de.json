@@ -106,5 +106,9 @@
   "epoch.strata_epochs.spore_age.finds": "Bernstein, Sporenbalg, Farnabdruck",
   "epoch.strata_epochs.ash_age.finds": "Glutsplitter, Magmawürfel, Urzeitschädel",
   "message.strata_epochs.analysis.done": "Bohrkern analysiert: %s",
-  "message.strata_epochs.analysis.known": "Dieser Kern ist schon analysiert."
+  "message.strata_epochs.analysis.known": "Dieser Kern ist schon analysiert.",
+  "tag.item.strata_epochs.amber_tool_materials": "Bernstein-Werkzeugmaterial",
+  "tag.item.strata_epochs.crystal_quartz_tool_materials": "Kristallquarz-Werkzeugmaterial",
+  "tag.item.strata_epochs.deep_drill_tips": "Tiefenbohrer-Spitzen",
+  "tag.item.strata_epochs.repairs_geode_armor": "Repariert Geodenrüstung"
 }

@@ -106,5 +106,9 @@
   "epoch.strata_epochs.spore_age.finds": "Amber, Spore Bellows, Fern Imprint",
   "epoch.strata_epochs.ash_age.finds": "Ember Shards, Magma Cubes, Ancient Skull",
   "message.strata_epochs.analysis.done": "Core sample analyzed: %s",
-  "message.strata_epochs.analysis.known": "This core is already analyzed."
+  "message.strata_epochs.analysis.known": "This core is already analyzed.",
+  "tag.item.strata_epochs.amber_tool_materials": "Amber Tool Materials",
+  "tag.item.strata_epochs.crystal_quartz_tool_materials": "Crystal Quartz Tool Materials",
+  "tag.item.strata_epochs.deep_drill_tips": "Deep Drill Tips",
+  "tag.item.strata_epochs.repairs_geode_armor": "Repairs Geode Armor"
 }

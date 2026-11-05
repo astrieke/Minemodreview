@@ -65,6 +65,12 @@ def configureStrataProject = { Project p ->
         def curios = versionProps.getProperty('curios_version')
         dependencies {
             compileOnly "maven.modrinth:curios:${curios}"
+            // EMI gibt es nur für 1.21.1; die Quellgruppe "emi" ist nur dort eingetragen.
+            def emi = versionProps.getProperty('emi_version')
+            if (emi) {
+                compileOnly "maven.modrinth:emi:${emi}"
+                if (rootProject.hasProperty('withEmi')) runtimeOnly "maven.modrinth:emi:${emi}"
+            }
             runtimeOnly "maven.modrinth:curios:${curios}"
             compileOnly "mezz.jei:jei-${jeiLine}-neoforge-api:${jei}"
             runtimeOnly "mezz.jei:jei-${jeiLine}-neoforge:${jei}"

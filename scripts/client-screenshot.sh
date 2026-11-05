@@ -173,7 +173,7 @@ display=":97"
 Xvfb "$display" -screen 0 "${XVFB_SCREEN:-1280x720x24}" +extension GLX +render >/dev/null 2>&1 &
 xpid=$!
 sleep 2
-DISPLAY="$display" ./gradlew --console=plain ":bridge:$v:runClient" -PquickPlay=strata_shot > "$log" 2>&1 &
+DISPLAY="$display" ./gradlew --console=plain ":bridge:$v:runClient" -PquickPlay=strata_shot ${GRADLE_ARGS:-} > "$log" 2>&1 &
 gpid=$!
 
 # Warten, bis die Welt geöffnet wird, dann die Experimentell-Warnung bestätigen.
