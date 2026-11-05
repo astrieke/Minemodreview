@@ -84,7 +84,9 @@ def configureStrataProject = { Project p ->
                 compileOnly "maven.modrinth:emi:${emi}"
                 if (rootProject.hasProperty('withEmi')) runtimeOnly "maven.modrinth:emi:${emi}"
             }
-            runtimeOnly "maven.modrinth:curios:${curios}"
+            // Curios zur Laufzeit nur auf Wunsch (-PwithCurios): Der Server-Test nutzt es; im Client zeigt Curios
+            // in 26.2 einen Warnbildschirm, der den Direktstart in die Testwelt blockiert.
+            if (rootProject.hasProperty('withCurios')) runtimeOnly "maven.modrinth:curios:${curios}"
             compileOnly "mezz.jei:jei-${jeiLine}-neoforge-api:${jei}"
             runtimeOnly "mezz.jei:jei-${jeiLine}-neoforge:${jei}"
             compileOnly "maven.modrinth:jade:${jade}"

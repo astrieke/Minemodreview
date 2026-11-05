@@ -214,10 +214,10 @@ data/<namespace>/strata_core/codex_node/<name>.json
 
 ## Noch offen
 
-- Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 haben denselben Renderer-Code wie 1.21.11, ihr Client wurde nicht einzeln gestartet. Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
+- Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
 - Die Mob-Sounds sind eigene Ereignisse mit Untertiteln, klingen aber nach Vanilla (Gürteltier, Schleim, Schleifstein). Eigene Aufnahmen fehlen.
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
-- Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator (übersteht Neustarts), dazu der Kernanalyse-Tisch aus Phase 1. Im Client gesehen: Spiralit (1.21.1), Transplantation (1.21.1 und 26.3), siehe `docs/screenshots/phase3/`.
+- Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator (übersteht Neustarts), dazu der Kernanalyse-Tisch aus Phase 1. Im Client gesehen: Spiralit (1.21.1 und 26.1), Transplantation (1.21.1, 26.2 und 26.3), siehe `docs/screenshots/phase3/`.
 - Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.
 - Weitere Biome pro Epoche und ein eigener Mob für die Aschezeit (bisher Vanilla-Magmawürfel und Schreiter).

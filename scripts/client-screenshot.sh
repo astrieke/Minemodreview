@@ -67,6 +67,7 @@ execute in minecraft:overworld positioned 0 -60 0 run strata_epochs transplant s
 MC
 fi
 if [ -n "${SHOT_CURIOS:-}" ]; then
+    GRADLE_ARGS="${GRADLE_ARGS:-} -PwithCurios"
     f="$dp/data/strata_shot/function/tick.mcfunction"
     sed -i "s|^tag @a add strata_shot|execute if entity @a[tag=!strata_shot] run schedule function strata_shot:curios 60t\ntag @a add strata_shot|" "$f"
     cat > "$dp/data/strata_shot/function/curios.mcfunction" <<MC
