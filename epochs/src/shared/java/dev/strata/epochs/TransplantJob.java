@@ -91,6 +91,10 @@ public final class TransplantJob {
     private int minTop = Integer.MAX_VALUE, maxTop = Integer.MIN_VALUE;
     private int changed;
     private boolean finished;
+    /** Wird bei jedem Phasenwechsel aufgerufen (zum Speichern). */
+    Runnable onPhaseChange = () -> { };
+    /** UUID des Spielers, der sie gestartet hat (leer = Befehl/Test). */
+    String owner = "";
     /** Nur für den Selbsttest: ohne Block-Displays, alles sofort. */
     boolean instant;
 
@@ -130,6 +134,32 @@ public final class TransplantJob {
 
     public Phase phase() {
         return phase;
+    }
+
+    private void setPhase(Phase next) {
+        phase = next;
+        onPhaseChange.run();
+    }
+
+    /**
+     * Nach einem Neustart in einer gespeicherten Phase weitermachen. Übrig gebliebene Block-Displays
+     * (mit dem Tag {@code strata_rise}) werden entfernt; die Schichten-Phase läuft einfach noch einmal,
+     * fertige Spalten bleiben dabei unverändert.
+     */
+    void resumeAt(Phase saved) {
+        Transplanter.command(level, String.format(Locale.ROOT,
+                "execute positioned %d %d %d run kill @e[type=minecraft:block_display,tag=strata_rise,distance=..%d]",
+                center.getX(), center.getY(), center.getZ(), radius + 16));
+        if (saved == Phase.LAYERS || saved == Phase.DONE) return;
+        columns.clear();
+        int surface = level.getHeight(Heightmap.Types.WORLD_SURFACE, center.getX(), center.getZ()) - 1;
+        minTop = surface - 8;
+        maxTop = surface + 8;
+        phase = saved;
+        if (saved == Phase.GROW) {
+            biomeColumns.clear();
+            planGrowth();
+        }
     }
 
     /** Wie viele Blöcke bisher verändert wurden. */
@@ -184,7 +214,7 @@ public final class TransplantJob {
             used += transformColumn(c[0], c[1]);
         }
         if (!instant && ticks % RUMBLE_INTERVAL == 0) rumble();
-        if (columns.isEmpty() && waiting.isEmpty()) phase = Phase.BIOME;
+        if (columns.isEmpty() && waiting.isEmpty()) setPhase(Phase.BIOME);
     }
 
     private int transformColumn(int x, int z) {
@@ -231,7 +261,7 @@ public final class TransplantJob {
         String name = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
         float tilt = (random.nextBoolean() ? 1 : -1) * (0.17f + random.nextFloat() * 0.12f);   // sin(Winkel/2)
         float w = (float) Math.sqrt(1 - tilt * tilt);
-        String cmd = String.format(Locale.ROOT, "summon minecraft:block_display %d %d %d {block_state:{Name:\"%s\"},"
+        String cmd = String.format(Locale.ROOT, "summon minecraft:block_display %d %d %d {Tags:[\"strata_rise\"],block_state:{Name:\"%s\"},"
                         + "transformation:{left_rotation:[%.3ff,0f,0f,%.3ff],right_rotation:[0f,0f,0f,1f],"
                         + "translation:[0f,-0.9f,0f],scale:[1f,0.3f,1f]}}",
                 pos.getX(), pos.getY(), pos.getZ(), name, tilt, w);
@@ -290,7 +320,7 @@ public final class TransplantJob {
                     q[0], y1, q[1], q[0] + 3, y2, q[1] + 3, landscape.biome()));
         }
         if (biomeColumns.isEmpty()) {
-            phase = Phase.GROW;
+            setPhase(Phase.GROW);
             planGrowth();
         }
     }
@@ -385,7 +415,12 @@ public final class TransplantJob {
         if (tip != null) growing.add(new Object[] {new BlockPos(base.getX(), y + height, base.getZ()), ticks + delay + height * 3, tip});
     }
 
-    /** Abbruch (z. B. Server stoppt): schwebende Displays aufräumen, Blöcke setzen. */
+    /** Server stoppt: schwebende Displays entfernen und ihre Blöcke setzen; die Phase bleibt für den Neustart. */
+    void parkDisplays() {
+        finishRising(true);
+    }
+
+    /** Abbruch: schwebende Displays aufräumen, Blöcke setzen. */
     void abort() {
         finishRising(true);
         phase = Phase.DONE;

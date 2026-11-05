@@ -102,6 +102,10 @@ public final class EpochsContent {
             Mc.attachment(ATTACHMENTS, "spiralit_bond", () -> dev.strata.epochs.mob.SpiralitBond.NONE,
                     dev.strata.epochs.mob.SpiralitBond.CODEC, false);
 
+    /** An der Dimension: laufende Transplantationen (überstehen so einen Neustart). */
+    public static final Supplier<AttachmentType<java.util.List<TransplantRecord>>> TRANSPLANTS =
+            Mc.attachment(ATTACHMENTS, "transplants", java.util.List::of, TransplantRecord.LIST_CODEC, false);
+
     private EpochsContent() {}
 
     /** Stufe eines Kernbohrers (1 bis 3), 0 für alles andere. */

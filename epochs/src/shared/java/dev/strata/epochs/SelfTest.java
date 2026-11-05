@@ -77,6 +77,7 @@ final class SelfTest {
         failures += testMob(server, dev.strata.epochs.mob.Spiralit.DEF,
                 l -> new dev.strata.epochs.mob.Spiralit(EpochsMobs.SPIRALIT.get(), l), "ash_age");
         StrataEpochs.LOG.info("[Strata-Test] Fertig, {} Fehler", failures);
+        persistTest(server);
     }
 
     /** Prüft einen Mob: Modell und Animationen, Loot, Spawn-Modifier, Datapack-Werte und ein echtes Exemplar. */
@@ -232,11 +233,20 @@ final class SelfTest {
         boolean under = level.getBlockState(probe.below()).is(net.minecraft.world.level.block.Blocks.SMOOTH_BASALT);
         boolean kept = level.getBlockState(build).is(net.minecraft.world.level.block.Blocks.OAK_PLANKS);
         boolean biomeOk = biome.equals(StrataEpochs.id("crystal_hollows"));
-        boolean ok = top && under && kept && biomeOk && job.phase() == TransplantJob.Phase.DONE;
+        // Block-Display wie beim Aufsteigen beschwören und über den Tag wieder entfernen (Aufräumen nach Neustart).
+        BlockPos d = new BlockPos(cx, ground + 4, cz);
+        Transplanter.command(level, "summon minecraft:block_display " + d.getX() + " " + d.getY() + " " + d.getZ()
+                + " {Tags:[\"strata_rise\"],block_state:{Name:\"minecraft:calcite\"}}");
+        var displays = level.getEntitiesOfClass(net.minecraft.world.entity.Display.BlockDisplay.class,
+                new net.minecraft.world.phys.AABB(d).inflate(0.5));
+        Transplanter.command(level, "execute positioned " + d.getX() + " " + d.getY() + " " + d.getZ()
+                + " run kill @e[type=minecraft:block_display,tag=strata_rise,distance=..3]");
+        boolean display = displays.size() == 1 && displays.get(0).isRemoved();
+        boolean ok = top && under && kept && biomeOk && display && job.phase() == TransplantJob.Phase.DONE;
         if (!ok) StrataEpochs.LOG.info("[Strata-Test] Transplantation: Boden y={}, Probe {} = {}, darunter {}", ground,
                 probe.toShortString(), level.getBlockState(probe), level.getBlockState(probe.below()));
-        StrataEpochs.LOG.info("[Strata-Test] Transplantation: Blöcke={}, Oberfläche={}, Unterschicht={}, Bau erhalten={}, Biom={} -> {}",
-                job.changed(), top, under, kept, biome, ok ? "OK" : "FEHLER");
+        StrataEpochs.LOG.info("[Strata-Test] Transplantation: Blöcke={}, Oberfläche={}, Unterschicht={}, Bau erhalten={}, Biom={}, "
+                + "Display={} -> {}", job.changed(), top, under, kept, biome, display, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 
@@ -258,6 +268,24 @@ final class SelfTest {
         StrataEpochs.LOG.info("[Strata-Test] Wachsen {}: {} Blöcke über dem Boden ({}) -> {}", name, grown,
                 landscape.features(), ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
+    }
+
+    /**
+     * Neustart-Test für Transplantationen ({@code -Dstrata.persisttest=start}): startet eine langsame Transplantation
+     * und fährt den Server sauber herunter. Beim nächsten Start muss sie fortgesetzt werden (Log „fortgesetzt“).
+     */
+    private static void persistTest(MinecraftServer server) {
+        if (!"start".equals(System.getProperty("strata.persisttest"))) return;
+        ServerLevel level = server.overworld();
+        int cx = 6000, cz = 6000;
+        level.getChunk(cx >> 4, cz >> 4);
+        Transplanter.command(level, "forceload add " + (cx - 16) + " " + (cz - 16) + " " + (cx + 16) + " " + (cz + 16));
+        int ground = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, cx, cz);
+        String epochId = StrataEpochs.id("spore_age");
+        Transplanter.start(level, new BlockPos(cx, ground, cz), epochId,
+                StrataAPI.epochs(server).get(epochId).landscape().orElseThrow(), 8, null);
+        StrataEpochs.LOG.info("[Strata-Test] Neustart-Test: Transplantation gestartet, Server fährt herunter");
+        server.halt(false);
     }
 
     private static void requireResource(List<String> problems, String path) {

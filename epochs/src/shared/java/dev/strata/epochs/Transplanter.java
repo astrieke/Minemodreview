@@ -95,15 +95,10 @@ public final class Transplanter {
     /** Startet eine Transplantation (auch für Tests und Befehle). */
     public static TransplantJob start(ServerLevel level, BlockPos pos, String epochId, Landscape landscape, int radius,
                                       ServerPlayer player) {
-        TransplantJob job = new TransplantJob(level, pos.below(), radius, epochId, landscape, done -> {
-            level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, 2.0f, 0.6f);
-            if (player != null) {
-                Mc.actionbar(player, Component.translatable("message.strata_epochs.transplanter.done",
-                        CoreSamples.epochName(epochId)).withStyle(ChatFormatting.GREEN));
-                StrataAPI.unlock(player, StrataEpochs.id("first_transplant"));
-            }
-        });
+        TransplantJob job = create(level, pos.below(), radius, epochId, landscape,
+                player == null ? "" : player.getUUID().toString());
         JOBS.add(job);
+        save(level);
         level.playSound(null, pos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.5f, 0.6f);
         level.sendParticles(ParticleTypes.REVERSE_PORTAL, pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5,
                 60, 0.6, 0.6, 0.6, 0.3);
@@ -112,6 +107,54 @@ public final class Transplanter {
                     CoreSamples.epochName(epochId)).withStyle(ChatFormatting.LIGHT_PURPLE));
         }
         return job;
+    }
+
+    private static TransplantJob create(ServerLevel level, BlockPos center, int radius, String epochId, Landscape landscape,
+                                        String owner) {
+        TransplantJob job = new TransplantJob(level, center, radius, epochId, landscape, done -> {
+            level.playSound(null, center.above(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, 2.0f, 0.6f);
+            if (!done.instant) StrataEpochs.LOG.info("[Strata] Transplantation fertig: {} bei {}, {} Blöcke", epochId,
+                    center.toShortString(), done.changed());
+            ServerPlayer player = owner.isEmpty() ? null
+                    : level.getServer().getPlayerList().getPlayer(java.util.UUID.fromString(owner));
+            if (player != null) {
+                Mc.actionbar(player, Component.translatable("message.strata_epochs.transplanter.done",
+                        CoreSamples.epochName(epochId)).withStyle(ChatFormatting.GREEN));
+                StrataAPI.unlock(player, StrataEpochs.id("first_transplant"));
+            }
+        });
+        job.owner = owner;
+        job.onPhaseChange = () -> save(level);
+        return job;
+    }
+
+    /** Laufende Transplantationen dieser Dimension am Level speichern (überstehen so einen Neustart). */
+    private static void save(ServerLevel level) {
+        List<TransplantRecord> records = JOBS.stream()
+                .filter(j -> j.level == level && j.phase() != TransplantJob.Phase.DONE)
+                .map(j -> new TransplantRecord(j.center.asLong(), j.radius, j.epochId, j.owner, j.phase().ordinal()))
+                .toList();
+        if (!records.isEmpty() || !level.getData(EpochsContent.TRANSPLANTS.get()).isEmpty()) {
+            level.setData(EpochsContent.TRANSPLANTS.get(), records);
+        }
+    }
+
+    /** Nach dem Serverstart: gespeicherte Transplantationen fortsetzen. */
+    static void onServerStarted(net.neoforged.neoforge.event.server.ServerStartedEvent event) {
+        for (ServerLevel level : event.getServer().getAllLevels()) {
+            List<TransplantRecord> records = level.getData(EpochsContent.TRANSPLANTS.get());
+            for (TransplantRecord r : records) {
+                Epoch epoch = StrataAPI.epochs(event.getServer()).get(r.epoch());
+                if (epoch == null || epoch.landscape().isEmpty()) continue;
+                TransplantJob job = create(level, BlockPos.of(r.center()), r.radius(), r.epoch(), epoch.landscape().get(), r.owner());
+                TransplantJob.Phase[] phases = TransplantJob.Phase.values();
+                job.resumeAt(phases[Math.max(0, Math.min(phases.length - 1, r.phase()))]);
+                JOBS.add(job);
+                StrataEpochs.LOG.info("[Strata] Transplantation fortgesetzt: {} bei {} ({})", r.epoch(),
+                        BlockPos.of(r.center()).toShortString(), job.phase());
+            }
+            if (!records.isEmpty()) save(level);
+        }
     }
 
     private static int findSlot(ServerPlayer player, Item item) {
@@ -137,11 +180,21 @@ public final class Transplanter {
 
     static void onLevelTick(LevelTickEvent.Post event) {
         if (JOBS.isEmpty() || !(event.getLevel() instanceof ServerLevel level)) return;
-        JOBS.removeIf(job -> job.level == level && !job.tick());
+        boolean[] ended = {false};
+        JOBS.removeIf(job -> {
+            boolean done = job.level == level && !job.tick();
+            ended[0] |= done;
+            return done;
+        });
+        if (ended[0]) save(level);
     }
 
+    /** Beim Herunterfahren: Displays aufräumen, Stand speichern (die Jobs laufen nach dem Start weiter). */
     static void onServerStopping(ServerStoppingEvent event) {
-        JOBS.forEach(TransplantJob::abort);
+        for (TransplantJob job : JOBS) {
+            job.parkDisplays();
+            save(job.level);
+        }
         JOBS.clear();
     }
 }

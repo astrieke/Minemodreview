@@ -209,6 +209,6 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator. Im Client gesehen: Spiralit (1.21.1), Transplantation (1.21.1 und 26.3), siehe `docs/screenshots/phase3/`.
-- Laufende Transplantationen werden nicht gespeichert: Ein Server-Neustart mitten drin hinterlässt ein halb fertiges Gebiet. Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.
+- Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.
 - Kernanalyse-Tisch, weitere Biome pro Epoche und ein eigener Mob für die Aschezeit (bisher Vanilla-Magmawürfel und Schreiter).
 - Bridge: eigenes EMI-Plugin (EMI gibt es nur für 1.21.1), KubeJS-Plugin mit eigenen Bindings, Curios-Slot für den Zeitanker.

@@ -36,6 +36,7 @@ public final class StrataEpochs {
         NeoForge.EVENT_BUS.addListener(Transplanter::onRightClickBlock);
         NeoForge.EVENT_BUS.addListener(Transplanter::onLevelTick);
         NeoForge.EVENT_BUS.addListener(Transplanter::onServerStopping);
+        NeoForge.EVENT_BUS.addListener(Transplanter::onServerStarted);
         NeoForge.EVENT_BUS.addListener(EpochsCommands::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(SelfTest::onServerStarted);
     }
