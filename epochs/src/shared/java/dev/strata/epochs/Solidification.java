@@ -86,9 +86,23 @@ public final class Solidification {
         });
     }
 
+    /**
+     * Weitere Orte, an denen ein Zeitanker zählt (z. B. ein Curios-Slot). Strata Bridge trägt sich hier ein,
+     * Strata Epochs selbst kennt keine Fremd-Mods.
+     */
+    public static final java.util.List<java.util.function.Predicate<ServerPlayer>> ANCHOR_SOURCES =
+            new java.util.concurrent.CopyOnWriteArrayList<>();
+
+    /** Trägt der Spieler einen Zeitanker (Inventar oder ein angemeldeter Ort wie ein Curios-Slot)? */
+    public static boolean hasTimeAnchor(ServerPlayer player) {
+        if (player.getInventory().contains(EpochsContent.TIME_ANCHOR.get().getDefaultInstance())) return true;
+        for (var source : ANCHOR_SOURCES) if (source.test(player)) return true;
+        return false;
+    }
+
     /** Zusatzzeit als Anteil: Zeitanker +100 %, analysierter Bohrkern beim Betreten +25 %. */
-    static double timeBonus(ServerPlayer player) {
-        double anchor = player.getInventory().contains(EpochsContent.TIME_ANCHOR.get().getDefaultInstance()) ? 1.0 : 0.0;
+    public static double timeBonus(ServerPlayer player) {
+        double anchor = hasTimeAnchor(player) ? 1.0 : 0.0;
         return anchor + player.getData(EpochsContent.VISIT.get()).bonus();
     }
 

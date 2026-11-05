@@ -19,6 +19,7 @@
 # SHOT_PITCH=<Grad> ändert den Blickwinkel nach unten (Standard 28, für große Mobs kleiner).
 # SHOT_TRANSPLANT=<epoche>: in der Oberwelt (flache Testwelt) startet nach 31 s eine Transplantation
 #   (Radius 10) vor dem Spieler; Bildserie 40 s lang (alle 1 s), damit man Welle, Displays und Wachsen sieht.
+# SHOT_CURIOS=1: legt nach 3 s einen Zeitanker in den Curios-Talisman-Slot und schreibt /strata_epochs status ins Log.
 # SHOT_SPIRALIT=1: in der Epoche schlüpft nach 29 s ein Spiralit für den Spieler; Bildserie 20 s lang.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -63,6 +64,20 @@ if [ -n "${SHOT_TRANSPLANT:-}" ]; then
     cat > "$dp/data/strata_shot/function/transplant.mcfunction" <<MC
 time set day
 execute in minecraft:overworld positioned 0 -60 0 run strata_epochs transplant strata_epochs:$SHOT_TRANSPLANT 10
+MC
+fi
+if [ -n "${SHOT_CURIOS:-}" ]; then
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i "s|^tag @a add strata_shot|execute if entity @a[tag=!strata_shot] run schedule function strata_shot:curios 60t\ntag @a add strata_shot|" "$f"
+    cat > "$dp/data/strata_shot/function/curios.mcfunction" <<MC
+item replace entity @a hotbar.4 with minecraft:air
+execute as @a run strata_epochs status
+# Curios kennt seine Slot-Typen erst nach dem Laden der Funktionen: Befehl daher über einen Befehlsblock.
+execute at @p run setblock ~ ~-3 ~ minecraft:command_block{Command:"curios replace charm 0 @p with strata_epochs:time_anchor",auto:1b}
+schedule function strata_shot:curios_check 20t
+MC
+    cat > "$dp/data/strata_shot/function/curios_check.mcfunction" <<MC
+execute as @a run strata_epochs status
 MC
 fi
 if [ -n "${SHOT_SPIRALIT:-}" ]; then

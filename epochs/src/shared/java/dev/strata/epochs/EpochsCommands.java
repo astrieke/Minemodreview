@@ -22,6 +22,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
  *   <li>{@code /strata_epochs transplant <epoche> [radius]} – Transplantation an der eigenen Position,
  *       ohne Kodex-Voraussetzung und ohne Verbrauch</li>
  *   <li>{@code /strata_epochs spiralit} – lässt einen Spiralit für sich schlüpfen</li>
+ *   <li>{@code /strata_epochs status} – Zeitanker (auch in Curios-Slots) und Zeitbonus des Spielers</li>
  * </ul>
  */
 final class EpochsCommands {
@@ -35,7 +36,8 @@ final class EpochsCommands {
                                 .executes(ctx -> transplant(ctx, EpochsConfig.TRANSPLANT_RADIUS.get()))
                                 .then(Commands.argument("radius", IntegerArgumentType.integer(2, 32))
                                         .executes(ctx -> transplant(ctx, IntegerArgumentType.getInteger(ctx, "radius"))))))
-                .then(Commands.literal("spiralit").executes(EpochsCommands::spiralit)));
+                .then(Commands.literal("spiralit").executes(EpochsCommands::spiralit))
+                .then(Commands.literal("status").executes(EpochsCommands::status)));
     }
 
     private static int transplant(CommandContext<CommandSourceStack> ctx, int radius) {
@@ -50,6 +52,17 @@ final class EpochsCommands {
         Transplanter.start(level, pos, id, epoch.landscape().get(), radius, ctx.getSource().getPlayer());
         ctx.getSource().sendSuccess(() -> Component.literal("Transplantation gestartet: " + id + ", Radius " + radius), true);
         return 1;
+    }
+
+    private static int status(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        boolean anchor = Solidification.hasTimeAnchor(player);
+        long bonus = Math.round(Solidification.timeBonus(player) * 100);
+        String text = "[Strata] " + player.getName().getString() + ": Zeitanker " + (anchor ? "ja" : "nein")
+                + ", Zeitbonus +" + bonus + " %";
+        StrataEpochs.LOG.info(text);
+        ctx.getSource().sendSuccess(() -> Component.literal(text), false);
+        return anchor ? 1 : 0;
     }
 
     private static int spiralit(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {

@@ -35,8 +35,8 @@ for v in "${versions[@]}"; do
     pid=$!
     result="TIMEOUT"
     for _ in $(seq 1 300); do
+        if grep -qE '\[Strata-Test\] Fertig, [1-9]|Advancement fehlt|Freischaltung: .* -> FEHLER|Curios: .* -> FEHLER|\[Strata\] .*, [1-9][0-9]* Fehler|Failed to start|Crash report|Exception in server tick|BUILD FAILED' "$log"; then result="FEHLER"; break; fi
         if grep -qE "$expected_core" "$log" && grep -qE "$expected_test" "$log" && grep -qE "$expected_bridge" "$log" && grep -qE "$expected_chain" "$log"; then result="OK"; break; fi
-        if grep -qE '\[Strata-Test\] Fertig, [1-9]|Advancement fehlt|Freischaltung: .* -> FEHLER|\[Strata\] .*, [1-9][0-9]* Fehler|Failed to start|Crash report|Exception in server tick|BUILD FAILED' "$log"; then result="FEHLER"; break; fi
         if ! kill -0 "$pid" 2>/dev/null; then result="BEENDET"; break; fi
         sleep 2
     done

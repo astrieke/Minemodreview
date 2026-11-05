@@ -57,6 +57,7 @@ public final class StrataBridge {
         NeoForge.EVENT_BUS.addListener(StrataBridge::onNodeUnlocked);
         NeoForge.EVENT_BUS.addListener(StrataBridge::onLogin);
         NeoForge.EVENT_BUS.addListener(StrataBridge::onServerStarted);
+        if (net.neoforged.fml.ModList.get().isLoaded("curios")) dev.strata.bridge.compat.CuriosCompat.register();
     }
 
     /** {@code strata_epochs:first_core} → {@code strata_epochs:strata_codex/first_core} */
@@ -96,6 +97,21 @@ public final class StrataBridge {
         boolean ok = unlocked && stored && events[0] == 1;
         LOG.info("[Strata-Bridge-Test] Freischaltung: unlock={}, gespeichert={}, Events={} -> {}",
                 unlocked, stored, events[0], ok ? "OK" : "FEHLER");
+
+        // Curios: Zeitanker im Talisman-Slot zählt wie im Inventar.
+        if (net.neoforged.fml.ModList.get().isLoaded("curios")) {
+            ServerPlayer wearer = FakePlayerFactory.get(server.overworld(),
+                    new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "strata_curios_test"));
+            boolean before = dev.strata.epochs.Solidification.hasTimeAnchor(wearer);
+            boolean equipped = dev.strata.bridge.compat.CuriosCompat.equipForTest(wearer);
+            boolean after = dev.strata.epochs.Solidification.hasTimeAnchor(wearer);
+            if (!equipped) {
+                LOG.info("[Strata-Bridge-Test] Curios: Test-Spieler ohne Talisman-Slot (Curios 14+), übersprungen");
+            } else {
+                LOG.info("[Strata-Bridge-Test] Curios: vorher={}, angelegt={}, nachher={} -> {}", before, equipped, after,
+                        !before && after ? "OK" : "FEHLER");
+            }
+        }
     }
 
 }

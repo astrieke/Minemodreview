@@ -62,7 +62,10 @@ def configureStrataProject = { Project p ->
         def jei = versionProps.getProperty('jei_version')
         def jeiLine = versionProps.getProperty('jei_mc')
         def jade = versionProps.getProperty('jade_version')
+        def curios = versionProps.getProperty('curios_version')
         dependencies {
+            compileOnly "maven.modrinth:curios:${curios}"
+            runtimeOnly "maven.modrinth:curios:${curios}"
             compileOnly "mezz.jei:jei-${jeiLine}-neoforge-api:${jei}"
             runtimeOnly "mezz.jei:jei-${jeiLine}-neoforge:${jei}"
             compileOnly "maven.modrinth:jade:${jade}"
