@@ -7,7 +7,7 @@
   "advancements.strata_epochs.visited_crystal_age.description": "Travel to the Crystal Age",
   "advancements.strata_epochs.visited_spore_age.title": "Spore Age",
   "advancements.strata_epochs.visited_spore_age.description": "Travel to the Spore Age",
-  "jei.strata_bridge.info.core_drill": "Right-click the ground to drill a core sample. It shows which epoch lies beneath this region (8×8 chunks).",
+  "jei.strata_bridge.info.core_drill": "Right-click the ground to drill a core sample. It shows which epoch lies beneath this region (8×8 chunks). Epochs lie at different depths: tier 1 (Core Drill) reaches the Crystal Age, tier 2 (Crystal Core Drill) also the Spore Age, tier 3 (Deep Core Drill) also the Ash Age.",
   "jei.strata_bridge.info.core_sample": "Shows an epoch. Right-click an Epoch Gate with it to travel there. The sample is used up.",
   "jei.strata_bridge.info.epoch_gate": "Right-click with a core sample to enter its epoch. Inside an epoch, right-click the gate to return. Gates inside epochs cannot be broken.",
   "jei.strata_bridge.info.time_anchor": "Keep it in your inventory to double the time you can stay in an epoch before you solidify.",
@@ -36,5 +36,10 @@
   "jei.strata_bridge.info.germ_tonic": "Right-click inside an epoch: turns the solidification clock back by 60 seconds.",
   "jei.strata_bridge.info.codex_fragment": "Dropped by the Petrified Witness. Right-click unlocks the codex node \"Echo of a Traveller\".",
   "jei.strata_bridge.info.amber_blade": "A sword of amber. Every melee hit slows the target for 2 seconds.",
-  "jei.strata_bridge.info.geode_armor": "Slightly stronger than iron. With all four pieces, solidification in epochs runs 25% slower."
+  "jei.strata_bridge.info.geode_armor": "Slightly stronger than iron. With all four pieces, solidification in epochs runs 25% slower.",
+  "advancements.strata_epochs.visited_ash_age.title": "Ash Age",
+  "advancements.strata_epochs.visited_ash_age.description": "Travel to the Ash Age",
+  "jei.strata_bridge.info.ember_ore": "Found in the Ash Age. Needs an iron pickaxe.",
+  "jei.strata_bridge.info.ember_shard": "Burns in a furnace as long as a blaze rod.",
+  "jade.strata_bridge.found_in.ash_age": "Found in the Ash Age"
 }

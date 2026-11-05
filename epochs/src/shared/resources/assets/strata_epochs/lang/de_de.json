@@ -53,5 +53,13 @@
   "item.strata_epochs.geode_leggings": "Geodenbeinschutz",
   "item.strata_epochs.geode_boots": "Geodenstiefel",
   "tooltip.strata_epochs.amber_blade": "Treffer verlangsamen das Ziel kurz",
-  "tooltip.strata_epochs.geode_set": "Volles Set: Verfestigung läuft 25 % langsamer"
+  "tooltip.strata_epochs.geode_set": "Volles Set: Verfestigung läuft 25 % langsamer",
+  "block.strata_epochs.volcanic_ash": "Vulkanasche",
+  "block.strata_epochs.ember_ore": "Glutsteinerz",
+  "item.strata_epochs.crystal_core_drill": "Kristall-Kernbohrer",
+  "item.strata_epochs.deep_core_drill": "Tiefenkernbohrer",
+  "item.strata_epochs.ember_shard": "Glutsplitter",
+  "epoch.strata_epochs.ash_age": "Aschezeit",
+  "message.strata_epochs.drill.too_deep": "Darunter liegt %s, zu tief für diesen Bohrer (Stufe %s nötig).",
+  "tooltip.strata_epochs.drill_tier": "Bohrtiefe: Stufe %s"
 }

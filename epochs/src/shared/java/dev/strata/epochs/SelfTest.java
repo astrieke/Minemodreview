@@ -57,7 +57,8 @@ final class SelfTest {
             ChunkAccess chunk = level.getChunk(0, 0);
             int base = count(level, chunk, EpochsContent.CHRONOSTONE.get());
             int ores = count(level, chunk, EpochsContent.CRYSTAL_QUARTZ_ORE.get())
-                    + count(level, chunk, EpochsContent.AMBER_ORE.get());
+                    + count(level, chunk, EpochsContent.AMBER_ORE.get())
+                    + count(level, chunk, EpochsContent.EMBER_ORE.get());
             BlockPos arrival = EpochTravel.prepareArrival(level, 8, 8);
             boolean gate = level.getBlockState(arrival.east(2)).is(EpochsContent.EPOCH_GATE.get());
             boolean ok = base > 1000 && ores > 0 && gate;

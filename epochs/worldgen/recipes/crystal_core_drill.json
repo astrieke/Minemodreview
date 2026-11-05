@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " Q ",
+    "QDQ",
+    " Q "
+  ],
+  "key": {
+    "Q": "strata_epochs:crystal_quartz",
+    "D": "strata_epochs:core_drill"
+  },
+  "result": {
+    "id": "strata_epochs:crystal_core_drill",
+    "count": 1
+  }
+}

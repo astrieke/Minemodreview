@@ -1,0 +1,6 @@
+{
+  "weight": 1,
+  "solidify_seconds": 300,
+  "dimension": "strata_epochs:ash_age",
+  "depth": 3
+}

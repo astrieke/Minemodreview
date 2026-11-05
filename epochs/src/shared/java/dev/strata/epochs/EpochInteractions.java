@@ -30,7 +30,7 @@ final class EpochInteractions {
     static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         ItemStack stack = event.getItemStack();
         boolean gate = event.getLevel().getBlockState(event.getPos()).is(EpochsContent.EPOCH_GATE.get());
-        boolean drill = stack.is(EpochsContent.CORE_DRILL.get());
+        boolean drill = EpochsContent.drillTier(stack) > 0;
         if (!gate && !drill) return;
 
         event.setCanceled(true);
@@ -63,6 +63,17 @@ final class EpochInteractions {
             Mc.actionbar(player, Component.translatable("message.strata_epochs.drill.nothing"));
             return;
         }
+        int depth = StrataAPI.epochs(level.getServer()).get(epoch.get()).depth();
+        int tier = EpochsContent.drillTier(drill);
+        if (depth > tier) {
+            // Der Bohrer stößt an: Die Epoche wird verraten, der Kern aber nicht gezogen.
+            drill.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+            Mc.addCooldown(player, drill, DRILL_COOLDOWN_TICKS);
+            level.playSound(null, pos, net.minecraft.sounds.SoundEvents.ANVIL_LAND, net.minecraft.sounds.SoundSource.PLAYERS, 0.5f, 1.6f);
+            Mc.actionbar(player, Component.translatable("message.strata_epochs.drill.too_deep",
+                    CoreSamples.epochName(epoch.get()), depth).withStyle(ChatFormatting.GOLD));
+            return;
+        }
         ItemStack sample = CoreSamples.create(epoch.get());
         if (!player.getInventory().add(sample)) {
             level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), sample));
@@ -85,7 +96,7 @@ final class EpochInteractions {
             return;
         }
         Optional<String> dimension = StrataAPI.epochs(level.getServer()).getOrDefault(epoch.get(),
-                new dev.strata.core.Epoch(0, 0, Optional.empty())).dimension();
+                new dev.strata.core.Epoch(0, 0, Optional.empty(), 1)).dimension();
         if (dimension.isEmpty() || Mc.level(level.getServer(), dimension.get()) == null) {
             Mc.actionbar(player, Component.translatable("message.strata_epochs.gate.unreachable",
                     CoreSamples.epochName(epoch.get())).withStyle(ChatFormatting.GRAY));

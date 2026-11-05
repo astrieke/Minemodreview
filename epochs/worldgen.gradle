@@ -136,6 +136,15 @@ def generate = tasks.register('generateEpochData') {
                 biome.attributes['minecraft:visual/fog_color'] = e.colors.fog
                 biome.attributes['minecraft:visual/sky_color'] = e.colors.sky
             }
+            // Unpassende Vanilla-Spawns des Basisbioms entfernen (z. B. Ghasts aus den Basaltdeltas).
+            def excluded = (e.exclude_mobs ?: []) as Set
+            if (!excluded.isEmpty()) {
+                def lists = biome.spawners instanceof Map ? biome.spawners
+                        : biome.attributes?.get('minecraft:gameplay/natural_mob_spawns')?.argument?.spawns_by_category
+                lists?.each { cat, entries ->
+                    if (entries instanceof List) entries.removeAll { it instanceof Map && excluded.contains(it.type) }
+                }
+            }
             def UNDERGROUND_ORES = 6
             while (biome.features.size() <= UNDERGROUND_ORES) biome.features << []
             biome.features[UNDERGROUND_ORES].addAll(placedOres)

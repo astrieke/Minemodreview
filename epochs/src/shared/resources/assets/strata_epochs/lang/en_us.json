@@ -53,5 +53,13 @@
   "item.strata_epochs.geode_leggings": "Geode Leggings",
   "item.strata_epochs.geode_boots": "Geode Boots",
   "tooltip.strata_epochs.amber_blade": "Hits briefly slow the target",
-  "tooltip.strata_epochs.geode_set": "Full set: solidification runs 25% slower"
+  "tooltip.strata_epochs.geode_set": "Full set: solidification runs 25% slower",
+  "block.strata_epochs.volcanic_ash": "Volcanic Ash",
+  "block.strata_epochs.ember_ore": "Ember Ore",
+  "item.strata_epochs.crystal_core_drill": "Crystal Core Drill",
+  "item.strata_epochs.deep_core_drill": "Deep Core Drill",
+  "item.strata_epochs.ember_shard": "Ember Shard",
+  "epoch.strata_epochs.ash_age": "Ash Age",
+  "message.strata_epochs.drill.too_deep": "%s lies below, too deep for this drill (tier %s needed).",
+  "tooltip.strata_epochs.drill_tier": "Drill depth: tier %s"
 }

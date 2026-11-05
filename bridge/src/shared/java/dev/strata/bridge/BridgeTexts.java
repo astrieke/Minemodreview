@@ -22,11 +22,15 @@ public final class BridgeTexts {
     public static Map<Supplier<Item>, String> jeiInfo() {
         Map<Supplier<Item>, String> info = new LinkedHashMap<>();
         info.put(EpochsContent.CORE_DRILL, "jei.strata_bridge.info.core_drill");
+        info.put(EpochsContent.CRYSTAL_CORE_DRILL, "jei.strata_bridge.info.core_drill");
+        info.put(EpochsContent.DEEP_CORE_DRILL, "jei.strata_bridge.info.core_drill");
         info.put(EpochsContent.CORE_SAMPLE, "jei.strata_bridge.info.core_sample");
         info.put(() -> EpochsContent.EPOCH_GATE.get().asItem(), "jei.strata_bridge.info.epoch_gate");
         info.put(EpochsContent.TIME_ANCHOR, "jei.strata_bridge.info.time_anchor");
         info.put(() -> EpochsContent.CRYSTAL_QUARTZ_ORE.get().asItem(), "jei.strata_bridge.info.crystal_quartz_ore");
         info.put(() -> EpochsContent.AMBER_ORE.get().asItem(), "jei.strata_bridge.info.amber_ore");
+        info.put(() -> EpochsContent.EMBER_ORE.get().asItem(), "jei.strata_bridge.info.ember_ore");
+        info.put(EpochsContent.EMBER_SHARD, "jei.strata_bridge.info.ember_shard");
         info.put(() -> EpochsContent.PETRIFIED_STONE.get().asItem(), "jei.strata_bridge.info.petrified_stone");
         info.put(EpochsContent.CALCITE_SCALE, "jei.strata_bridge.info.calcite_scale");
         info.put(EpochsContent.SPORE_SAC, "jei.strata_bridge.info.spore_sac");
@@ -54,6 +58,9 @@ public final class BridgeTexts {
         }
         if (block == EpochsContent.CRYSTAL_QUARTZ_ORE.get()) return "jade.strata_bridge.found_in.crystal_age";
         if (block == EpochsContent.AMBER_ORE.get()) return "jade.strata_bridge.found_in.spore_age";
+        if (block == EpochsContent.EMBER_ORE.get() || block == EpochsContent.VOLCANIC_ASH.get()) {
+            return "jade.strata_bridge.found_in.ash_age";
+        }
         if (block == EpochsContent.PETRIFIED_STONE.get()) return "jade.strata_bridge.petrified";
         return null;
     }

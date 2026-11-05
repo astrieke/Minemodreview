@@ -7,7 +7,7 @@
   "advancements.strata_epochs.visited_crystal_age.description": "Reise in die Kristallzeit",
   "advancements.strata_epochs.visited_spore_age.title": "Sporenzeit",
   "advancements.strata_epochs.visited_spore_age.description": "Reise in die Sporenzeit",
-  "jei.strata_bridge.info.core_drill": "Rechtsklick auf den Boden bohrt einen Bohrkern. Er zeigt, welche Epoche unter dieser Region (8 × 8 Chunks) liegt.",
+  "jei.strata_bridge.info.core_drill": "Rechtsklick auf den Boden bohrt einen Bohrkern. Er zeigt, welche Epoche unter dieser Region (8 × 8 Chunks) liegt. Jede Epoche liegt verschieden tief: Stufe 1 (Kernbohrer) erreicht die Kristallzeit, Stufe 2 (Kristall-Kernbohrer) auch die Sporenzeit, Stufe 3 (Tiefenkernbohrer) auch die Aschezeit.",
   "jei.strata_bridge.info.core_sample": "Zeigt eine Epoche. Mit Rechtsklick auf ein Epochentor reist du dorthin. Der Kern wird dabei verbraucht.",
   "jei.strata_bridge.info.epoch_gate": "Rechtsklick mit einem Bohrkern bringt dich in dessen Epoche. In einer Epoche bringt dich ein Rechtsklick auf das Tor zurück. Tore in Epochen lassen sich nicht abbauen.",
   "jei.strata_bridge.info.time_anchor": "Im Inventar verdoppelt er die Zeit, die du in einer Epoche bleiben kannst, bevor du versteinerst.",
@@ -36,5 +36,10 @@
   "jei.strata_bridge.info.germ_tonic": "Rechtsklick in einer Epoche: dreht die Verfestigungs-Uhr um 60 Sekunden zurück.",
   "jei.strata_bridge.info.codex_fragment": "Drop des Steinzeugen. Rechtsklick schaltet den Kodex-Knoten „Echo eines Reisenden“ frei.",
   "jei.strata_bridge.info.amber_blade": "Schwert aus Bernstein. Jeder Nahkampftreffer verlangsamt das Ziel für 2 Sekunden.",
-  "jei.strata_bridge.info.geode_armor": "Etwas stärker als Eisen. Mit allen vier Teilen läuft die Verfestigung in Epochen 25 % langsamer."
+  "jei.strata_bridge.info.geode_armor": "Etwas stärker als Eisen. Mit allen vier Teilen läuft die Verfestigung in Epochen 25 % langsamer.",
+  "advancements.strata_epochs.visited_ash_age.title": "Aschezeit",
+  "advancements.strata_epochs.visited_ash_age.description": "Reise in die Aschezeit",
+  "jei.strata_bridge.info.ember_ore": "Kommt in der Aschezeit vor. Braucht eine Eisenspitzhacke.",
+  "jei.strata_bridge.info.ember_shard": "Brennt im Ofen so lange wie eine Lohenrute.",
+  "jade.strata_bridge.found_in.ash_age": "Kommt in der Aschezeit vor"
 }

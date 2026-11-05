@@ -157,6 +157,65 @@ def amber_ore():
     return img
 
 
+# Vulkanasche: weiches, körniges Grau mit warmem Stich und vereinzelten Glutfunken.
+ASH = ['#2f2b2b', '#3b3636', '#474141', '#544d4c', '#625a58', '#736a66']
+
+
+def volcanic_ash():
+    img = canvas()
+    rnd = random.Random(71)
+    coarse = tile_noise(72, 8)
+    fine = tile_noise(73, 4)
+    for y in range(16):
+        for x in range(16):
+            v = 0.5 + (coarse[y][x] - 0.5) * 0.45 + (fine[y][x] - 0.5) * 0.25 + rnd.uniform(-0.12, 0.12)
+            img.putpixel((x, y), pick(ASH, v))
+    # Glutfunken (2er-Gruppen, nie am Rand) und helle Bimskörner
+    for x, y in [(3, 4), (11, 9), (6, 13)]:
+        img.putpixel((x, y), rgb('#e0602a'))
+        img.putpixel((x + 1, y), rgb('#8f3a1d'))
+    for x, y in [(9, 2), (1, 10), (13, 14), (7, 7)]:
+        img.putpixel((x, y), rgb('#8a817b'))
+    return img
+
+
+EMBER = {'k': '#4a0f05', 'd': '#9e2a0c', 'm': '#e0531c', 'l': '#ff9a3c', 'y': '#ffd27a', 'w': '#fff1c4', 'p': '#1f1a1c'}
+
+
+def ember_ore():
+    # Glühende Adern im Zeitgestein, die heller werden, je weiter sie im Inneren liegen.
+    img = chronostone(seed=81)
+    stamp(img, 2, 2, ['..lm.', '.lymd', 'lywmd', 'mymdk', 'pddkp'], EMBER)
+    stamp(img, 9, 7, ['.lm..', 'lymm.', 'mwymd', '.mmdk', '..pk.'], EMBER)
+    stamp(img, 11, 1, ['lm', 'dk'], EMBER)
+    stamp(img, 3, 11, ['.l.', 'lym', 'mdk'], EMBER)
+    return img
+
+
+def ember_shard():
+    # Kantiger, rotglühender Splitter mit heller Mitte.
+    pal = {'k': '#5a1205', 'd': '#9e2a0c', 'm': '#e0531c', 'l': '#ff9a3c', 'y': '#ffd27a', 'w': '#fff1c4'}
+    rows = [
+        '................',
+        '................',
+        '.........l......',
+        '........lyl.....',
+        '.......lywm.....',
+        '......lyywmd....',
+        '......lywymd....',
+        '.....lyywmmd....',
+        '.....lywymmdk...',
+        '....lyywmmmdk...',
+        '....lmywmmddk...',
+        '.....mmmmddk....',
+        '......mdddk.....',
+        '.......dkk......',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#2a0904')
+
+
 # Versteinerter Stein: Sandgrau mit Violettstich (entsteht aus Zeitgestein) und gerippter Ammonit.
 PETRI = ['#4a4152', '#5e5468', '#74697c', '#8a7f8c', '#a0959c', '#b8adae']
 
@@ -257,11 +316,14 @@ def diag_shape(spec, t_range, u_center=15):
     return img
 
 
-def core_drill():
-    # Seitenansicht: Querbalken-Griff aus Holz, Holzschaft, Muffe, Kupferrohr, Stahlkrone mit Sägezähnen.
-    wood_l, wood_m, wood_d = '#b0804e', '#83593a', '#5a3b22'
-    copper = {-1: '#f2a56a', 0: '#c66d33', 1: '#8a4520'}
-    steel = {-1: '#eef3f7', 0: '#a9b4bf', 1: '#5d6670'}
+DRILL_COPPER = {-1: '#f2a56a', 0: '#c66d33', 1: '#8a4520', 'shade': '#6a3418'}
+DRILL_STEEL = {-1: '#eef3f7', 0: '#a9b4bf', 1: '#5d6670'}
+
+
+def core_drill(copper=DRILL_COPPER, steel=DRILL_STEEL, sleeve='#3b3b44', wood=('#b0804e', '#83593a', '#5a3b22')):
+    # Seitenansicht: Querbalken-Griff aus Holz, Holzschaft, Muffe, Rohr, Bohrkrone mit Sägezähnen.
+    # Stufe 1: Kupferrohr und Stahlkrone; höhere Stufen tauschen Rohr und Krone.
+    wood_l, wood_m, wood_d = wood
 
     def spec(t, du):
         if t in (-12, -11):                     # Querbalken quer zum Schaft, 2 px dick
@@ -271,9 +333,9 @@ def core_drill():
         if t <= -5:                             # Holzschaft, 2 breit
             return {0: wood_l, 1: wood_d}.get(du)
         if t <= -3:                             # Muffe
-            return '#3b3b44' if -1 <= du <= 1 else None
-        if t <= 2:                              # Kupferrohr, mit zusätzlicher Schattenkante
-            return copper.get(du) or ('#6a3418' if du == 2 and t % 2 == 0 else None)
+            return sleeve if -1 <= du <= 1 else None
+        if t <= 2:                              # Rohr, mit zusätzlicher Schattenkante
+            return copper.get(du) or (copper['shade'] if du == 2 and t % 2 == 0 else None)
         if t <= 8:                              # Stahlkrone, so breit wie das Rohr
             return steel.get(du)
         if t <= 10:                             # Sägezähne: abwechselnd hell und dunkel
@@ -283,6 +345,20 @@ def core_drill():
         return None
 
     return outline(diag_shape(spec, (-12, 10)), '#1e140c')
+
+
+def crystal_core_drill():
+    # Stufe 2: Rohr mit Kristallquarz-Einlage, Krone aus Kristallquarz.
+    tube = {-1: '#b8b6ff', 0: '#6f6cf0', 1: '#3d379e', 'shade': '#2c2470'}
+    crown = {-1: '#f2f2ff', 0: '#a9a8ff', 1: '#4a43b8'}
+    return core_drill(tube, crown, sleeve='#2c2638')
+
+
+def deep_core_drill():
+    # Stufe 3: Bernsteinrohr, Diamantkrone, dunkler Griff aus Zeitgestein-Holz.
+    tube = {-1: '#ffd27a', 0: '#d9821c', 1: '#8a4710', 'shade': '#5a2a06'}
+    crown = {-1: '#e9fffd', 0: '#6fe0d6', 1: '#1f8f88'}
+    return core_drill(tube, crown, sleeve='#1b1624', wood=('#7a6a8a', '#584a68', '#3a2f48'))
 
 
 def core_sample():
@@ -859,9 +935,14 @@ BLOCKS = {
     'amber_ore': amber_ore,
     'petrified_stone': petrified_stone,
     'epoch_gate': epoch_gate,
+    'volcanic_ash': volcanic_ash,
+    'ember_ore': ember_ore,
 }
 ITEMS = {
     'core_drill': core_drill,
+    'crystal_core_drill': crystal_core_drill,
+    'deep_core_drill': deep_core_drill,
+    'ember_shard': ember_shard,
     'core_sample': core_sample,
     'crystal_quartz': crystal_quartz,
     'amber_shard': amber_shard,

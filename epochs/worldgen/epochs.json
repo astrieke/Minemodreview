@@ -2,7 +2,11 @@
   "_hinweis": "Grundlage für das Worldgen der Epochen. Der Task generateEpochData baut daraus pro Minecraft-Version passendes JSON, abgeleitet von den Vanilla-Dateien genau dieser Version.",
   "namespace": "strata_epochs",
   "_mobs": "Mobs im Spiel: Modell, Textur und Leucht-Ebenen werden aus mobs/<name>/ ins Jar kopiert.",
-  "mobs": ["geode_crawler", "spore_bellows", "petrified_witness"],
+  "mobs": [
+    "geode_crawler",
+    "spore_bellows",
+    "petrified_witness"
+  ],
   "ore_replaceables_tag": "strata_epochs:epoch_ore_replaceables",
   "epochs": [
     {
@@ -32,7 +36,12 @@
         "under": "minecraft:smooth_basalt"
       },
       "mobs": [
-        { "entity": "strata_epochs:geode_crawler", "weight": 40, "min": 1, "max": 2 }
+        {
+          "entity": "strata_epochs:geode_crawler",
+          "weight": 40,
+          "min": 1,
+          "max": 2
+        }
       ],
       "ambient_light": 0.1
     },
@@ -63,9 +72,47 @@
         "under": "minecraft:dirt"
       },
       "mobs": [
-        { "entity": "strata_epochs:spore_bellows", "weight": 80, "min": 1, "max": 3 }
+        {
+          "entity": "strata_epochs:spore_bellows",
+          "weight": 80,
+          "min": 1,
+          "max": 3
+        }
       ],
       "ambient_light": 0.1
+    },
+    {
+      "id": "ash_age",
+      "dimension_type": "minecraft:overworld_caves",
+      "noise_settings": "minecraft:caves",
+      "default_block": "strata_epochs:chronostone",
+      "biome": "ash_wastes",
+      "biome_base": "minecraft:basalt_deltas",
+      "_exclude_mobs": "Vanilla-Spawns des Basisbioms, die in einer Höhlen-Epoche nicht passen (Ghasts brauchen offenen Himmel).",
+      "exclude_mobs": [
+        "minecraft:ghast"
+      ],
+      "colors": {
+        "fog": "#5b3a2e",
+        "sky": "#1d110d",
+        "water": "#b4612c",
+        "water_fog": "#2a140b"
+      },
+      "ores": [
+        {
+          "id": "ember",
+          "block": "strata_epochs:ember_ore",
+          "size": 5,
+          "count": 16,
+          "max_y": 100
+        }
+      ],
+      "surface": {
+        "top": "strata_epochs:volcanic_ash",
+        "under": "minecraft:basalt"
+      },
+      "mobs": [],
+      "ambient_light": 0.15
     }
   ],
   "loot_tables": [
@@ -104,6 +151,21 @@
       "replace": {
         "minecraft:emerald_ore": "strata_epochs:amber_ore",
         "minecraft:emerald": "strata_epochs:amber_shard"
+      }
+    },
+    {
+      "block": "ember_ore",
+      "base": "minecraft:blocks/emerald_ore",
+      "replace": {
+        "minecraft:emerald_ore": "strata_epochs:ember_ore",
+        "minecraft:emerald": "strata_epochs:ember_shard"
+      }
+    },
+    {
+      "block": "volcanic_ash",
+      "base": "minecraft:blocks/dirt",
+      "replace": {
+        "minecraft:dirt": "strata_epochs:volcanic_ash"
       }
     }
   ]
