@@ -59,9 +59,9 @@
   "entity.petrified_witness.ambient": {
     "sounds": [
       {
-        "name": "minecraft:entity.iron_golem.step",
+        "name": "minecraft:block.grindstone.use",
         "type": "event",
-        "pitch": 0.5
+        "pitch": 0.4
       }
     ],
     "subtitle": "subtitles.strata_epochs.petrified_witness.ambient"
@@ -69,7 +69,7 @@
   "entity.petrified_witness.hurt": {
     "sounds": [
       {
-        "name": "minecraft:entity.iron_golem.hurt",
+        "name": "minecraft:block.deepslate.hit",
         "type": "event",
         "pitch": 0.6
       }
@@ -79,9 +79,9 @@
   "entity.petrified_witness.death": {
     "sounds": [
       {
-        "name": "minecraft:entity.iron_golem.death",
+        "name": "minecraft:block.deepslate.break",
         "type": "event",
-        "pitch": 0.6
+        "pitch": 0.5
       }
     ],
     "subtitle": "subtitles.strata_epochs.petrified_witness.death"

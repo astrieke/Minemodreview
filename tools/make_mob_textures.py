@@ -249,15 +249,18 @@ def d_veins(img, f, rnd, faces_=('south', 'east', 'west')):
         for _ in range(1 + (w * h) // 90):
             x = rnd.randrange(1, w - 1)
             y = rnd.randrange(0, max(1, h // 3))
-            for _ in range(rnd.randrange(h // 2, h)):
+            length = rnd.randrange(h // 2, h)
+            for i in range(length):
                 if 0 <= x < w and 0 <= y < h:
-                    img.putpixel((x0 + x, y0 + y), rgb(VEIN))
+                    img.putpixel((x0 + x, y0 + y), rgb(VEIN_END if i == length - 1 else VEIN))
                 y += 1
                 if rnd.random() < 0.45:
                     x += rnd.choice((-1, 1))
 
 
-VEIN = '#e6b84a'
+# Gemalte Adern dunkel (Ocker), damit die Sanduhr der hellste Punkt bleibt; hell sind sie nur auf der Leucht-Ebene.
+VEIN = '#9a6812'
+VEIN_END = '#6a4708'
 
 
 def d_ammonite(img, f, rnd):
@@ -292,7 +295,7 @@ GLOW = {
     'spore_bellows': {'spores': {'colors': {'#ffb847', '#c07a1a', '#e0a030', '#ffd27a'}}},
     # Kern (Sanduhr) und Augen pulsieren; die Goldadern leuchten nur während der Steinhaut
     'petrified_witness': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a', '#ffd86b', '#f2b43a'}},
-                          'veins': {'colors': {'#e6b84a'}}},
+                          'veins': {'colors': {'#9a6812', '#6a4708'}, 'glow_color': '#ffe08a'}},
 }
 
 
@@ -303,6 +306,7 @@ def paint_glow(model, img, mob_id):
         glow = Image.new('RGBA', img.size, (0, 0, 0, 0))
         materials = spec.get('materials', set())
         colors = {rgb(c)[:3] for c in spec.get('colors', set())}
+        fixed = rgb(spec['glow_color']) if 'glow_color' in spec else None   # eigene Leuchtfarbe statt Texturfarbe
         for cube in model['cubes']:
             if materials and cube['material'] not in materials:
                 continue
@@ -310,7 +314,9 @@ def paint_glow(model, img, mob_id):
                 for y in range(y0, y0 + h):
                     for x in range(x0, x0 + w):
                         r, g, b, a = img.getpixel((x, y))
-                        if a and (not colors or (r, g, b) in colors):
+                        if a and (not colors or (r, g, b) in colors) and fixed:
+                            glow.putpixel((x, y), fixed)
+                        elif a and (not colors or (r, g, b) in colors):
                             glow.putpixel((x, y), (min(255, int(r * 1.15)), min(255, int(g * 1.15)), min(255, int(b * 1.15)), 255))
         out = os.path.join(ROOT, mob_id, f'texture_glow_{layer}.png')
         glow.save(out)

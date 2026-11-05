@@ -285,12 +285,12 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 |---|---|
 | Epoche | beide |
 | Rolle | Gegner, Vorlage für einen späteren Mini-Boss |
-| Größe | ca. 1,6 Blöcke breit, 1,9 Blöcke hoch (wird umgebaut auf 38 px) |
+| Größe | ca. 1,7 Blöcke breit (mit Armen), 2,3 Blöcke hoch (bis 37 px) |
 | Hitbox | 1,3 × 2,4 (passt absichtlich nicht durch 1×2-Gänge). Er erwacht nur, wenn über dem Block 2×3 frei sind. |
 | Drop | Kodex-Fragment (schaltet Erdkodex-Knoten frei), selten versteinerter Stein mit Ammonit |
 | Spawn | entsteht aus versteinerten Blöcken bei Spielern, die zu lange in einer Epoche bleiben (per Config abschaltbar) |
 | Textur | 64×64, Box-UV |
-| Umfang | 10 Knochen, 15 Würfel, 4 Animationen |
+| Umfang | 11 Knochen, 15 Würfel, 6 Animationen |
 | Prüfung | Design 6 · Game Design 6 · Technik 6 → wird umgebaut |
 
 **Verhalten:** Das Echo eines Reisenden, der zu lange blieb. Er erwacht langsam aus versteinertem Stein und schlägt mit beiden Fäusten zu wie ein Golem. Er macht die Strafe der Verfestigung sichtbar.
@@ -302,10 +302,11 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 - **Steinhaut:** Unter 50 % Leben verhärtet er sich 4 s lang. Ein Spitzhackentreffer auf den Kern bricht die Steinhaut.
 
 **Gestaltung:**
-- **Körper:** breiter Steinkörper. Die Gesteinsschichten richten sich nach der Welthöhe und laufen über Torso, Arme und Beine auf gleicher Höhe durch. Farben: Schiefer `#3C3742`, Grau `#77707C`, Ocker `#B08A5A`, Calcit-Linie `#DCD6CF`. Dazu Risse mit Goldadern.
-- **Kopf:** eingesunken und nach vorne geschoben, mit Stirnkante, glühenden Augenschlitzen (`#FFD86B`) und einem Ockerband auf Augenhöhe.
-- **Brust:** goldene Sanduhr (Kappen oben und unten, Glas mit goldenem Sand) in einer dunklen Nische.
-- **Rücken:** Ammonit-Relief (8×8), von Hand gezeichnete Spirale.
+- **Form:** ein „wandelnder Felsvorsprung“: Torso 16×16×10, kurze Beine, lange Arme bis fast zum Boden, zwei schräge Schichtplatten als Überhang über Kopf und Rücken (Knochen `back_plates`).
+- **Körper:** breiter Steinkörper. Die Gesteinsschichten richten sich nach der Welthöhe und laufen über Torso, Arme und Beine auf gleicher Höhe durch. Farben: Schiefer `#3C3742`, Grau `#77707C`, Ocker `#B08A5A`, Calcit-Linie `#DCD6CF`. Dazu 1-px-Risse mit dunklen Goldadern (`#9A6812`), die nur während der Steinhaut hell leuchten (`texture_glow_veins.png`).
+- **Kopf:** weit vorgezogen ([−4, 24, −10] bis [4, 31, −3]), mit Stirnkante, glühenden Augenschlitzen (`#FFD86B`) und einem Ockerband auf Augenhöhe.
+- **Brust:** goldene Sanduhr als ein Würfel 5×7×1 mit gemalter Taille in einer dunklen Nische. Sie und die Augen glimmen und pulsieren (`texture_glow_core.png`).
+- **Rücken:** Ammonit-Relief (8×8) auf dem unteren Rücken, von Hand gezeichnete Spirale.
 - **Arme:** eigene Schulterblöcke, die bei Angriffen nur leicht mitgehen, und schwere Fäuste.
 - **Leuchten (im Spiel):** Augen und Sanduhr-Kern (pulsiert im Idle, leuchtet beim Erwachen auf).
 
@@ -314,35 +315,36 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 | Knochen | Eltern | Drehpunkt | Grundrotation |
 |---|---|---|---|
 | `root` | – | [0, 0, 0] | – |
-| `body` | `root` | [0, 12, 0] | – |
-| `head` | `body` | [0, 24, -1] | – |
-| `core` | `body` | [0, 18, -4] | – |
-| `shoulder_left` | `body` | [9, 23, 0] | – |
-| `shoulder_right` | `body` | [-9, 23, 0] | – |
-| `arm_left` | `body` | [9, 23, 0] | – |
-| `arm_right` | `body` | [-9, 23, 0] | – |
-| `leg_left` | `root` | [3, 12, 0] | – |
-| `leg_right` | `root` | [-3, 12, 0] | – |
+| `body` | `root` | [0, 10, 0] | – |
+| `head` | `body` | [0, 26, -5] | – |
+| `core` | `body` | [0, 18, -5.5] | – |
+| `back_plates` | `body` | [0, 26, 0] | – |
+| `shoulder_left` | `body` | [11, 24, 0] | – |
+| `shoulder_right` | `body` | [-11, 24, 0] | – |
+| `arm_left` | `body` | [11, 24, 0] | – |
+| `arm_right` | `body` | [-11, 24, 0] | – |
+| `leg_left` | `root` | [3.5, 10, 0] | – |
+| `leg_right` | `root` | [-3.5, 10, 0] | – |
 
 **Würfel:**
 
 | Würfel | Knochen | von | bis | UV | Material | Rotation |
 |---|---|---|---|---|---|---|
-| `torso` | `body` | [-7, 12, -4] | [7, 25, 4] | [0, 0] | strata | – |
-| `ammonite` | `body` | [-4, 14, 4] | [4, 22, 5] | [42, 35] | strata_dark | – |
-| `skull` | `head` | [-4, 23, -5] | [4, 30, 2] | [0, 21] | strata | – |
-| `brow` | `head` | [-4, 27, -6] | [4, 28, -5] | [30, 45] | strata_dark | – |
-| `cap_top` | `core` | [-2.5, 20, -4.5] | [2.5, 21, -2.5] | [44, 17] | gold | – |
-| `cap_bottom` | `core` | [-2.5, 15, -4.5] | [2.5, 16, -2.5] | [44, 17] | gold | – |
-| `glass` | `core` | [-2, 16, -4.5] | [2, 20, -3.5] | [20, 45] | glass | – |
-| `shoulder_left` | `shoulder_left` | [7, 22, -4] | [13, 26, 4] | [30, 21] | strata_dark | – |
-| `shoulder_right` | `shoulder_right` | [-13, 22, -4] | [-7, 26, 4] | [30, 21] (gespiegelt) | strata_dark | – |
-| `arm_l` | `arm_left` | [7, 10, -2.5] | [12, 24, 2.5] | [0, 35] | strata | – |
-| `arm_r` | `arm_right` | [-12, 10, -2.5] | [-7, 24, 2.5] | [0, 35] (gespiegelt) | strata | – |
-| `fist_l` | `arm_left` | [7, 6, -3] | [12, 10, 3] | [20, 35] | strata_dark | – |
-| `fist_r` | `arm_right` | [-12, 6, -3] | [-7, 10, 3] | [20, 35] (gespiegelt) | strata_dark | – |
-| `leg_l` | `leg_left` | [0.5, 0, -2.5] | [5.5, 12, 2.5] | [44, 0] | strata | – |
-| `leg_r` | `leg_right` | [-5.5, 0, -2.5] | [-0.5, 12, 2.5] | [44, 0] (gespiegelt) | strata | – |
+| `torso` | `body` | [-8, 10, -5] | [8, 26, 5] | [0, 0] | strata | – |
+| `ammonite` | `body` | [-4, 11, 5] | [4, 19, 6] | [42, 53] | strata_dark | – |
+| `skull` | `head` | [-4, 24, -10] | [4, 31, -3] | [0, 26] | strata | – |
+| `brow` | `head` | [-4, 28, -11] | [4, 29, -10] | [23, 26] | strata_dark | – |
+| `hourglass` | `core` | [-2.5, 14.5, -6] | [2.5, 21.5, -5] | [52, 10] | gold | – |
+| `plate_lower` | `back_plates` | [-7, 26, 0] | [7, 33, 2] | [20, 44] | strata | [15, 0, -8] |
+| `plate_upper` | `back_plates` | [-5, 31.5, 0] | [5, 39.5, 2] | [18, 53] | strata | [-62, 0, 10] |
+| `shoulder_left` | `shoulder_left` | [8, 23, -4] | [13, 27, 4] | [22, 32] | strata_dark | – |
+| `shoulder_right` | `shoulder_right` | [-13, 23, -4] | [-8, 27, 4] | [22, 32] (gespiegelt) | strata_dark | – |
+| `arm_l` | `arm_left` | [9, 6, -2] | [13, 24, 2] | [48, 22] | strata | – |
+| `arm_r` | `arm_right` | [-13, 6, -2] | [-9, 24, 2] | [48, 22] (gespiegelt) | strata | – |
+| `fist_l` | `arm_left` | [8.5, 1, -2.5] | [13.5, 6, 2.5] | [42, 0] | strata_dark | – |
+| `fist_r` | `arm_right` | [-13.5, 1, -2.5] | [-8.5, 6, 2.5] | [42, 0] (gespiegelt) | strata_dark | – |
+| `leg_l` | `leg_left` | [1, 0, -2.5] | [6, 10, 2.5] | [0, 40] | strata | – |
+| `leg_r` | `leg_right` | [-6, 0, -2.5] | [-1, 10, 2.5] | [0, 40] (gespiegelt) | strata | – |
 
 **Animationen:**
 

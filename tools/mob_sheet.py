@@ -59,26 +59,61 @@ def top_color(model, tex):
     return tuple(round(a / max(n, 1)) for a in acc)
 
 
+def cube_corners(cube):
+    """Die 8 Ecken eines Würfels in Blockbench-Koordinaten, mit seiner eigenen Drehung (Reihenfolge ZYX)."""
+    f, t = cube['from'], cube['to']
+    pts = [[x, y, z] for x in (f[0], t[0]) for y in (f[1], t[1]) for z in (f[2], t[2])]
+    rot = cube.get('rotation')
+    if not rot or not any(rot):
+        return pts
+    o = cube.get('origin', [0, 0, 0])
+    rx, ry, rz = (math.radians(a) for a in rot)
+
+    def rotate(p):
+        x, y, z = (p[i] - o[i] for i in range(3))
+        y, z = y * math.cos(rx) - z * math.sin(rx), y * math.sin(rx) + z * math.cos(rx)      # X zuerst
+        x, z = x * math.cos(ry) + z * math.sin(ry), -x * math.sin(ry) + z * math.cos(ry)     # dann Y
+        x, y = x * math.cos(rz) - y * math.sin(rz), x * math.sin(rz) + y * math.cos(rz)      # dann Z
+        return [x + o[0], y + o[1], z + o[2]]
+
+    return [rotate(p) for p in pts]
+
+
 def scale_panel(model):
-    """Seitenansicht (Blick von +x) der Würfel in Ruhepose neben einer Spieler-Silhouette."""
+    """Seitenansicht (Blick von +x) der Würfel in Ruhepose neben einer Spieler-Silhouette (gedrehte Würfel gedreht)."""
     img = Image.new('RGBA', (CELL, CELL), (235, 235, 238, 255))
     d = ImageDraw.Draw(img)
-    zs = [v for c in model['cubes'] for v in (c['from'][2], c['to'][2])]
-    ys = [c['to'][1] for c in model['cubes']]
+    corners = {c['name']: cube_corners(c) for c in model['cubes']}
+    zs = [p[2] for ps in corners.values() for p in ps]
+    ys = [p[1] for ps in corners.values() for p in ps]
+    top = max(ys)
     width = (max(zs) - min(zs)) + 6 + 9.6
-    height = max(max(ys), PLAYER_PX)
+    height = max(top, PLAYER_PX)
     s = min((CELL - 20) / width, (CELL - 30) / height)
     ground = CELL - 14
-
-    def box(z0, z1, y0, y1, fill):
-        d.rectangle([10 + z0 * s, ground - y1 * s, 10 + z1 * s, ground - y0 * s], fill=fill)
+    sx = lambda z: 10 + (z - min(zs)) * s
+    sy = lambda y: ground - y * s
 
     for c in model['cubes']:
-        box(c['from'][2] - min(zs), c['to'][2] - min(zs), c['from'][1], c['to'][1], (90, 84, 104, 255))
-    px = max(zs) - min(zs) + 6
-    box(px, px + 9.6, 0, PLAYER_PX, (60, 120, 200, 140))
+        ps = corners[c['name']]
+        if c.get('rotation') and any(c['rotation']):
+            # Umriss der gedrehten Seite: konvexe Hülle der projizierten Ecken (z, y)
+            pts = sorted({(round(p[2], 3), round(p[1], 3)) for p in ps})
+            def half(points):
+                h = []
+                for q in points:
+                    while len(h) >= 2 and (h[-1][0] - h[-2][0]) * (q[1] - h[-2][1]) - (h[-1][1] - h[-2][1]) * (q[0] - h[-2][0]) <= 0:
+                        h.pop()
+                    h.append(q)
+                return h
+            hull = half(pts)[:-1] + half(pts[::-1])[:-1]
+            d.polygon([(sx(z), sy(y)) for z, y in hull], fill=(90, 84, 104, 255))
+        else:
+            d.rectangle([sx(c['from'][2]), sy(c['to'][1]), sx(c['to'][2]), sy(c['from'][1])], fill=(90, 84, 104, 255))
+    px = max(zs) + 6
+    d.rectangle([sx(px), sy(PLAYER_PX), sx(px + 9.6), sy(0)], fill=(60, 120, 200, 140))
     d.line([0, ground, CELL, ground], fill=(30, 30, 30, 255))
-    d.text((4, 4), f'Hoehe {max(ys):g} px / Spieler {PLAYER_PX} px', fill=(30, 30, 30, 255))
+    d.text((4, 4), f'Hoehe {top:.1f} px / Spieler {PLAYER_PX} px', fill=(30, 30, 30, 255))
     return img
 
 

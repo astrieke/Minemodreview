@@ -14,6 +14,7 @@
 # und schlägt es nach 7 s einmal. Das Skript nimmt dann eine Bildserie (alle 0,5 s, 14 s lang) als
 # <ausgabe>_act_NN.png auf, um Laufen, Fähigkeiten und Animationen im Spiel zu prüfen.
 # SHOT_SURVIVAL=1 schaltet den Spieler dafür in den Überlebensmodus (für feindliche Mobs).
+# SHOT_PITCH=<Grad> ändert den Blickwinkel nach unten (Standard 28, für große Mobs kleiner).
 set -uo pipefail
 cd "$(dirname "$0")/.."
 v="$1"; epoch="$2"; out="$(realpath -m "$3")"
@@ -56,7 +57,7 @@ if [ -n "${SHOT_MOB:-}" ]; then
     # (sonst läuft Wasser hinein), Boden wie in der Epoche.
     floor=minecraft:calcite
     [ "$epoch" = spore_age ] && floor=minecraft:mycelium
-    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run tp @s $x.5 $((y + 1)) $((z + 3)).5 0 28\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:stage 60t|" \
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run tp @s $x.5 $((y + 1)) $((z + 3)).5 0 ${SHOT_PITCH:-28}\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:stage 60t|" \
         "$dp/data/strata_shot/function/tick.mcfunction"
     cat > "$dp/data/strata_shot/function/stage.mcfunction" <<MC
 execute in strata_epochs:$epoch run fill $((x - 6)) $((y - 2)) $((z + 2)) $((x + 6)) $((y + 6)) $((z + 14)) strata_epochs:chronostone hollow

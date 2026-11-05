@@ -63,8 +63,11 @@ try {
         const dir = path.join(mobsDir, id);
         const model = JSON.parse(fs.readFileSync(path.join(dir, 'model.json'), 'utf8'));
         const shots = path.join(dir, 'shots');
-        fs.rmSync(shots, { recursive: true, force: true });
+        // Alte Blockbench-Bilder löschen, Aufnahmen aus dem Spiel (ingame_*.png) aber behalten.
         fs.mkdirSync(shots, { recursive: true });
+        for (const f of fs.readdirSync(shots)) {
+            if (!f.startsWith('ingame_')) fs.rmSync(path.join(shots, f), { force: true });
+        }
 
         await call('new_project', { format: 'modded_entity', name: id, texture_width: model.texture_size[0], texture_height: model.texture_size[1] });
         const strip = ({ material, face, back, ...rest }) => rest;   // Malhinweise nicht an Blockbench schicken

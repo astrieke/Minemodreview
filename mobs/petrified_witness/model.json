@@ -54,8 +54,8 @@
       "name": "shoulder_left",
       "parent": "body",
       "origin": [
-        10,
-        25,
+        11,
+        24,
         0
       ]
     },
@@ -63,8 +63,8 @@
       "name": "shoulder_right",
       "parent": "body",
       "origin": [
-        -10,
-        25,
+        -11,
+        24,
         0
       ]
     },
@@ -226,9 +226,9 @@
       "material": "strata",
       "veins": true,
       "rotation": [
-        60,
+        15,
         0,
-        0
+        -8
       ],
       "origin": [
         0,
@@ -241,13 +241,13 @@
       "bone": "back_plates",
       "from": [
         -5,
-        31,
-        -1
+        31.5,
+        0
       ],
       "to": [
         5,
-        39,
-        1
+        39.5,
+        2
       ],
       "uv_offset": [
         18,
@@ -258,12 +258,12 @@
       "rotation": [
         -62,
         0,
-        0
+        10
       ],
       "origin": [
         0,
-        31,
-        0
+        31.5,
+        1
       ]
     },
     {
@@ -866,9 +866,9 @@
         {
           "bone": "arm_left",
           "channel": "rotation",
-          "time": 0.55,
+          "time": 0.5,
           "value": [
-            55,
+            160,
             0,
             0
           ],
@@ -877,9 +877,20 @@
         {
           "bone": "arm_left",
           "channel": "rotation",
-          "time": 0.75,
+          "time": 0.62,
           "value": [
-            55,
+            45,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "arm_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            45,
             0,
             0
           ],
@@ -921,9 +932,9 @@
         {
           "bone": "arm_right",
           "channel": "rotation",
-          "time": 0.55,
+          "time": 0.5,
           "value": [
-            55,
+            160,
             0,
             0
           ],
@@ -932,9 +943,20 @@
         {
           "bone": "arm_right",
           "channel": "rotation",
-          "time": 0.75,
+          "time": 0.62,
           "value": [
-            55,
+            45,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "arm_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            45,
             0,
             0
           ],
@@ -967,7 +989,7 @@
           "channel": "rotation",
           "time": 0.35,
           "value": [
-            20,
+            120,
             0,
             0
           ],
@@ -976,9 +998,9 @@
         {
           "bone": "shoulder_left",
           "channel": "rotation",
-          "time": 0.55,
+          "time": 0.5,
           "value": [
-            8,
+            120,
             0,
             0
           ],
@@ -987,9 +1009,20 @@
         {
           "bone": "shoulder_left",
           "channel": "rotation",
-          "time": 0.75,
+          "time": 0.62,
           "value": [
-            8,
+            40,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shoulder_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            40,
             0,
             0
           ],
@@ -1022,7 +1055,7 @@
           "channel": "rotation",
           "time": 0.35,
           "value": [
-            20,
+            120,
             0,
             0
           ],
@@ -1031,9 +1064,9 @@
         {
           "bone": "shoulder_right",
           "channel": "rotation",
-          "time": 0.55,
+          "time": 0.5,
           "value": [
-            8,
+            120,
             0,
             0
           ],
@@ -1042,9 +1075,20 @@
         {
           "bone": "shoulder_right",
           "channel": "rotation",
-          "time": 0.75,
+          "time": 0.62,
           "value": [
-            8,
+            40,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shoulder_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            40,
             0,
             0
           ],
@@ -1086,9 +1130,9 @@
         {
           "bone": "body",
           "channel": "rotation",
-          "time": 0.55,
+          "time": 0.5,
           "value": [
-            -16,
+            8,
             0,
             0
           ],
@@ -1097,9 +1141,20 @@
         {
           "bone": "body",
           "channel": "rotation",
-          "time": 0.75,
+          "time": 0.62,
           "value": [
-            -16,
+            -25,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -25,
             0,
             0
           ],
@@ -1141,9 +1196,9 @@
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 0.55,
+          "time": 0.5,
           "value": [
-            -6,
+            6,
             0,
             0
           ],
@@ -1152,9 +1207,20 @@
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 0.75,
+          "time": 0.62,
           "value": [
-            -6,
+            -8,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -8,
             0,
             0
           ],
@@ -1284,7 +1350,7 @@
           "value": [
             25,
             0,
-            -10
+            5
           ],
           "interpolation": "linear"
         },
@@ -1317,7 +1383,7 @@
           "value": [
             25,
             0,
-            10
+            -5
           ],
           "interpolation": "linear"
         },
@@ -1648,9 +1714,9 @@
           "channel": "rotation",
           "time": 0.3,
           "value": [
-            85,
-            0,
-            -30
+            60,
+            12,
+            0
           ],
           "interpolation": "linear"
         },
@@ -1659,9 +1725,9 @@
           "channel": "rotation",
           "time": 3.7,
           "value": [
-            85,
-            0,
-            -30
+            60,
+            12,
+            0
           ],
           "interpolation": "linear"
         },
@@ -1692,9 +1758,9 @@
           "channel": "rotation",
           "time": 0.3,
           "value": [
-            85,
-            0,
-            30
+            60,
+            -12,
+            0
           ],
           "interpolation": "linear"
         },
@@ -1703,9 +1769,9 @@
           "channel": "rotation",
           "time": 3.7,
           "value": [
-            85,
-            0,
-            30
+            60,
+            -12,
+            0
           ],
           "interpolation": "linear"
         },
