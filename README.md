@@ -161,7 +161,8 @@ data/<namespace>/strata_core/codex_node/<name>.json
 
 ## Noch offen
 
-- Automatisch getestet ist der Server in allen Versionen. Der Client wurde in 1.21.1 gestartet (Modelle, Texturen, beide Dimensionen, JEI- und Jade-Plugin laden, siehe Screenshots). Für 26.x fehlt der Client-Test, weil der virtuelle Bildschirm der Testumgebung kein passendes OpenGL-Fenster bietet. Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
+- Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 haben denselben Renderer-Code wie 1.21.11, ihr Client wurde nicht einzeln gestartet. Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
+- Die Mob-Sounds sind eigene Ereignisse mit Untertiteln, klingen aber nach Vanilla (Gürteltier, Schleim, Schleifstein). Eigene Aufnahmen fehlen.
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Kernanalyse-Tisch, Fossilien, Transplantator und weitere Biome pro Epoche (siehe Konzept, Phase 3).

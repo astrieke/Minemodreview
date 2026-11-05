@@ -123,6 +123,17 @@ renderDistance:6
 gamma:1.0
 OPT
 
+# 26.x: Das Ladefenster von NeoForge braucht ein GLX-Format, das Xvfb nicht hat -> abschalten.
+# Minecraft selbst weicht dann auf Vulkan aus; ohne Grafikkarte geht das mit Mesa lavapipe
+# (Paket mesa-vulkan-drivers). Unter 1.21.x läuft OpenGL direkt über Xvfb.
+mkdir -p "$client_dir/config"
+if [ -f "$client_dir/config/fml.toml" ]; then
+    sed -i 's/^earlyWindowControl = true/earlyWindowControl = false/' "$client_dir/config/fml.toml"
+else
+    echo 'earlyWindowControl = false' > "$client_dir/config/fml.toml"
+fi
+[ -f /usr/share/vulkan/icd.d/lvp_icd.json ] && export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json
+
 display=":97"
 Xvfb "$display" -screen 0 "${XVFB_SCREEN:-1280x720x24}" +extension GLX +render >/dev/null 2>&1 &
 xpid=$!

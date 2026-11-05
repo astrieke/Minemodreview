@@ -56,12 +56,10 @@ Alles liegt in Strata Epochs (`epochs/src/`). Der Mob-Code ist bis auf wenige Ad
 
 **Im Spiel geprüft (1.21.1, Bildserien mit `SHOT_ACT=1`):**
 - Geodenkriecher: Spur zum Erz, Hinlaufen, Kratzen mit Partikeln, Kristallquarz fällt, nach einem Treffer Einrollen und Aufstehen (`mobs/geode_crawler/shots/ingame_actions_1.21.1.png`).
-- Steinzeuge: läuft heran, Sanduhr-Puls als goldener Ring, Hammerschlag mit Ausholen über dem Kopf (`mobs/petrified_witness/shots/ingame_attack_1.21.1.png`). Das Erwachen aus Stein ist nur im Server-Code geprüft, nicht im Bild (man muss dafür erst lange verfestigen).
+- Steinzeuge: läuft heran, Sanduhr-Puls als goldener Ring, Hammerschlag mit Ausholen über dem Kopf (`mobs/petrified_witness/shots/ingame_attack_1.21.1.png`). Erwachen aus Stein mit `SHOT_AWAKEN`: Nach 20 s Verfestigung versteinert der Boden, ein Steinzeuge erwacht (Advancement kommt) und greift an.
 - Sporenbalg: hüpft auf den Spieler zu, Sporenwolke mit grüner Statusmeldung, Advancement „Begegnung“ (`mobs/spore_bellows/shots/ingame_cloud_1.21.1.png`).
 
 **Geodenkriecher, offen für die Definition of Done:**
-- Jade zeigt Name, aber noch nicht die Epoche.
-- Client-Screenshot für 26.x fehlt (siehe „Bekannte Lücke“).
 - Sounds sind eigene Ereignisse mit Untertiteln, klingen aber wie das Gürteltier aus Vanilla.
 - Die Calcitschuppe wird schon gebraucht: Zweitrezept für den Zeitanker. Den Bohrkopf Stufe 2 gibt es noch nicht.
 
@@ -272,4 +270,4 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
 - **Gate B, in M0 nach dem Renderer:** Der Geodenkriecher sieht im Client-Screenshot unter 1.21.1 genauso aus wie in Blockbench, und das Leuchten ist sichtbar. Dafür sind höchstens 5 Personentage eingeplant. Sonst wird die Pipeline überprüft, als Rückfall dient der Blockbench-Java-Export als Codegenerator.
 - **Gate C, nach M1:** Braucht der Geodenkriecher mehr als 2 Personenwochen, wird zuerst die Pipeline verbessert, bevor ein weiterer Mob dazukommt.
 
-**Bekannte Lücke:** Der Client lässt sich in der Cloud-Testumgebung nur für 1.21.1 starten. Für 26.x braucht der Screenshot-Test entweder eine bessere OpenGL-Umgebung oder einen Test auf einem echten PC, etwa bei dir mit der Claude-App und `scripts/client-screenshot.sh`.
+**Client-Tests:** In der Cloud läuft der Client für 1.21.1 und 1.21.11 über OpenGL (Xvfb), für 26.x über Vulkan mit Mesa lavapipe (Paket `mesa-vulkan-drivers`, das Ladefenster von NeoForge wird dafür abgeschaltet). Alle drei Mobs und die Rüstung sind in 26.3 im Bild bestätigt (`docs/screenshots/clients/`). Das Skript kann auch Bildserien mit KI-Mob (`SHOT_ACT`), in Rüstung (`SHOT_GEAR`) und das Erwachen des Steinzeugen (`SHOT_AWAKEN`, Verfestigung nach 20 s) aufnehmen.
