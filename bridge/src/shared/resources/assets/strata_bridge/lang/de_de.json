@@ -21,5 +21,7 @@
   "jade.strata_bridge.petrified": "Erstarrte Zeit",
   "config.jade.plugin_strata_bridge.blocks": "Strata-Hinweise",
   "advancements.strata_epochs.met_geode_crawler.title": "Geodenkriecher",
-  "advancements.strata_epochs.met_geode_crawler.description": "Begegne einem Geodenkriecher. Wer ihm folgt, findet Erz."
+  "advancements.strata_epochs.met_geode_crawler.description": "Begegne einem Geodenkriecher. Wer ihm folgt, findet Erz.",
+  "advancements.strata_epochs.met_spore_bellows.title": "Sporenbalg",
+  "advancements.strata_epochs.met_spore_bellows.description": "Begegne einem Sporenbalg. Seine Wolken lassen die Zeit schneller laufen."
 }

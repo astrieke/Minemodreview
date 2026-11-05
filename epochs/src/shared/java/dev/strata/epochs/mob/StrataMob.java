@@ -102,6 +102,12 @@ public abstract class StrataMob extends PathfinderMob {
                 ? tickCount + Math.round(anim.length() * 20) : -1;
     }
 
+    /** Startet eine Aktion für eine feste Zeit (z. B. einen Sprung aus einer Schleifen-Animation). */
+    public void playActionFor(String name, int ticks) {
+        playAction(name);
+        serverActionEnd = tickCount + ticks;
+    }
+
     /** Hält eine Aktion so lange, bis {@link #stopAction} kommt (für Haltephasen wie das Einrollen). */
     public void holdAction(String name) {
         playAction(name);

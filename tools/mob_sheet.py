@@ -20,6 +20,8 @@ from make_mob_textures import faces  # noqa: E402
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'mobs')
 BACKGROUNDS = [('Kristallzeit dunkel', '#2a1f4d'), ('Kristallzeit Nebel', '#6e56b8'),
                ('Sporenzeit dunkel', '#1f3318'), ('Sporenzeit Nebel', '#4f7a3a')]
+# Gegen welche Hintergründe die Oberseiten bestehen müssen (dunkel und Nebel der eigenen Epoche).
+EPOCH_BG = {'geode_crawler': ['#2a1f4d', '#6e56b8'], 'spore_bellows': ['#1f3318', '#4f7a3a']}
 PLAYER_PX = 28.8
 CELL = 256
 
@@ -111,12 +113,22 @@ def sheet(mob):
     row += 1
     place(scale_panel(model), row * cols, 'Massstab (blau = Spieler)')
     top = top_color(model, tex)
-    ratio = contrast(top, hex_rgb('#2a1f4d'))
+    bgs = EPOCH_BG.get(mob, ['#2a1f4d'])
+    ratios = [contrast(top, hex_rgb(b)) for b in bgs]
+    ratio = min(ratios)
     x, y = CELL, row * (CELL + lh)
     texscale = max(1, min(2 * CELL // tex.width, CELL // tex.height))
     out.alpha_composite(tex.resize((tex.width * texscale, tex.height * texscale), Image.NEAREST), (x, y))
     d.text((x + 4, y + CELL + 2), f'texture   Oberseiten #{top[0]:02x}{top[1]:02x}{top[2]:02x}, '
-                                  f'Kontrast zu #2a1f4d {ratio:.1f}:1', fill=(30, 30, 30, 255))
+                                  'Kontrast ' + ', '.join(f'{b} {r:.1f}:1' for b, r in zip(bgs, ratios)),
+           fill=(30, 30, 30, 255))
+    # Aus Spielerhöhe im Spiel (Client-Screenshot im Dunkeln), falls vorhanden.
+    ingame = os.path.join(shots, 'ingame_dark_1.21.1.png')
+    if os.path.isfile(ingame):
+        im = Image.open(ingame).convert('RGBA')
+        side = min(im.width, im.height)
+        im = im.crop(((im.width - side) // 2, 0, (im.width + side) // 2, side))
+        place(im, row * cols + 3, 'im Spiel, dunkel (1.21.1)')
     path = os.path.join(ROOT, mob, 'review_sheet.png')
     out.save(path)
     return path, ratio

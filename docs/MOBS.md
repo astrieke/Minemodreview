@@ -6,7 +6,9 @@ Ergebnis einer Runde mit Game Designer, 3D-Modellierer/Animator, Programmierer u
 
 Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früheren Noten aus einer einzelnen Designer-Prüfung (8 / 7 / 7,5) sind überholt. Es gilt die Nachprüfung durch drei Prüfer unten. Danach ist nur der Geodenkriecher freigegeben. Die genauen Maße stehen in [`docs/BRIEFING.md`](BRIEFING.md), Abschnitt 8.
 
-**Im Code (05.11.2026):** M0 steht, der Geodenkriecher läuft in allen 5 Versionen (M1 zum größten Teil, siehe unten). **Gate B ist erreicht:** Im Client-Screenshot unter 1.21.1 sieht er aus wie in Blockbench, und die Kristalle leuchten auch im Dunkeln (`mobs/geode_crawler/shots/ingame_1.21.1.png`, `ingame_dark_1.21.1.png`).
+**Sporenbalg freigegeben (05.11.2026, 2. Runde):** Design 8, Game Design 7, Technik 8. Behoben wurden die Lücke zwischen Hut und Sack beim Pumpen (Sack-Drehpunkt unten, neuer Stiel), die gekreuzten Wurzeln beim Hüpfen und der schwache Rand vor dem Nebel. Optional für später: oberste Randzeile auf `#f6b98a`, Stauchung beim Hüpfen erst ab 0,5 s, Ventilrand auch seitlich auf der Leucht-Ebene.
+
+**Im Code (05.11.2026):** M0 steht. Geodenkriecher (M1) und Sporenbalg (M2) laufen in allen 5 Versionen, Reste siehe unten. **Gate B ist erreicht:** Im Client-Screenshot unter 1.21.1 sieht er aus wie in Blockbench, und die Kristalle leuchten auch im Dunkeln (`mobs/geode_crawler/shots/ingame_1.21.1.png`, `ingame_dark_1.21.1.png`).
 
 **Nachprüfung am 02.11.2026** (nach der Anpassung an die Stilregeln: höchstens 15 Würfel, 64×64, feste Paletten), drei Prüfer:
 
@@ -38,6 +40,7 @@ Alles liegt in Strata Epochs (`epochs/src/`). Der Mob-Code ist bis auf wenige Ad
 | Mob-Basis | `shared/…/mob/StrataMob`, `StrataMobDef` | Aktion und Leuchtstärke als synchronisierte Zahl, Datapack-Werte, Advancement „Begegnung“ |
 | Fähigkeiten | `shared/…/mob/StrataAbility` | Vorwarnung → Wirkung → Abklingzeit, Werte aus dem Datapack |
 | Geodenkriecher | `shared/…/mob/GeodeCrawler` | Erzwitterung, Kratzfund, Kristallpanzer, anlockbar mit Kristallquarz |
+| Sporenbalg | `shared/…/mob/SporeBellows`, `SporeClouds` | hüpft, Sporenstoß (Wolke: Verfestigung ×2,5), Wurzelgriff, Letzter Atemzug; Drop Sporenbeutel → Keimfrische (`GermTonic`, dreht die Uhr 60 s zurück) |
 | Modell-Builder, Pose | `shared/…/client/MobModelBuilder`, `MobPoser` | Blockbench → `LayerDefinition`; Idle + Laufen + Aktion + Kopfdrehung |
 | Renderer | `client_1_21_1`, `client_states` + `glow_crumbling`/`glow_uvmap` | 1.21.1 ohne Render States; ab 1.21.11 mit Render States, Leucht-Ebene je nach Version |
 | Registrierung | `reg_*/…/MobReg`, `MobCompat` | Entity-Typ, Spawn-Ei, Sounds, Schaden, Partikel, Grundattribute |
@@ -48,8 +51,11 @@ Alles liegt in Strata Epochs (`epochs/src/`). Der Mob-Code ist bis auf wenige Ad
 
 **Neuen Mob anlegen:** Dateien in `mobs/<id>/`, den Namen in `epochs.json` → `mobs` eintragen (Kopie ins Jar und Spawns), eine Entity-Klasse mit `StrataMobDef`, Registrierung in `EpochsMobs`, Renderer in beiden `MobClient`-Klassen, Datapack-Werte, Loot, Sprache, Sounds und einen Eintrag im Selbsttest.
 
+**Im Spiel geprüft (1.21.1, Bildserien mit `SHOT_ACT=1`):**
+- Geodenkriecher: Spur zum Erz, Hinlaufen, Kratzen mit Partikeln, Kristallquarz fällt, nach einem Treffer Einrollen und Aufstehen (`mobs/geode_crawler/shots/ingame_actions_1.21.1.png`).
+- Sporenbalg: hüpft auf den Spieler zu, Sporenwolke mit grüner Statusmeldung, Advancement „Begegnung“ (`mobs/spore_bellows/shots/ingame_cloud_1.21.1.png`).
+
 **Geodenkriecher, offen für die Definition of Done:**
-- Laufen und Aktionen sind im Spiel noch nicht im Bild geprüft (der Screenshot zeigt stehende Tiere ohne KI).
 - Jade zeigt Name, aber noch nicht die Epoche.
 - Client-Screenshot für 26.x fehlt (siehe „Bekannte Lücke“).
 - Sounds sind eigene Ereignisse mit Untertiteln, klingen aber wie das Gürteltier aus Vanilla.

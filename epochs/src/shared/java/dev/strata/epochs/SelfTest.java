@@ -5,6 +5,7 @@ import dev.strata.core.api.StrataAPI;
 import dev.strata.core.mc.Mc;
 import dev.strata.core.MobTuning;
 import dev.strata.epochs.mob.GeodeCrawler;
+import dev.strata.epochs.mob.SporeBellows;
 import dev.strata.epochs.mob.MobAnimation;
 import dev.strata.epochs.mob.MobModelData;
 import dev.strata.epochs.mob.StrataMob;
@@ -64,6 +65,7 @@ final class SelfTest {
                     entry.getKey(), base, ores, arrival.toShortString(), gate, ok ? "OK" : "FEHLER");
         }
         failures += testMob(server, GeodeCrawler.DEF, l -> new GeodeCrawler(EpochsMobs.GEODE_CRAWLER.get(), l), "crystal_age");
+        failures += testMob(server, SporeBellows.DEF, l -> new SporeBellows(EpochsMobs.SPORE_BELLOWS.get(), l), "spore_age");
         StrataEpochs.LOG.info("[Strata-Test] Fertig, {} Fehler", failures);
     }
 
@@ -100,8 +102,11 @@ final class SelfTest {
         MobAnimation idle = def.idle() == null ? null : model.animation(def.idle());
         if (idle != null && !idle.tracks().isEmpty()) {
             String bone = idle.tracks().keySet().iterator().next();
-            if (idle.sample(bone, MobAnimation.Channel.ROTATION, idle.length() / 4) == null
-                    && idle.sample(bone, MobAnimation.Channel.POSITION, idle.length() / 4) == null) {
+            boolean any = false;
+            for (MobAnimation.Channel ch : MobAnimation.Channel.values()) {
+                any |= idle.sample(bone, ch, idle.length() / 4) != null;
+            }
+            if (!any) {
                 problems.add("Idle-Animation liefert keine Werte");
             }
         }

@@ -25,5 +25,35 @@
       }
     ],
     "subtitle": "subtitles.strata_epochs.geode_crawler.death"
+  },
+  "entity.spore_bellows.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.slime.squish_small",
+        "type": "event",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.spore_bellows.ambient"
+  },
+  "entity.spore_bellows.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.slime.hurt_small",
+        "type": "event",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.spore_bellows.hurt"
+  },
+  "entity.spore_bellows.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.slime.death_small",
+        "type": "event",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.spore_bellows.death"
   }
 }

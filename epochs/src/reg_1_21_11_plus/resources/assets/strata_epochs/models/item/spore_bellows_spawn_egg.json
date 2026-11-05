@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "strata_epochs:item/spore_bellows_spawn_egg"
+  }
+}

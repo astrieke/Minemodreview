@@ -425,6 +425,81 @@ def calcite_scale():
     return outline(from_grid(rows, pal), '#4a4054')
 
 
+def spore_sac():
+    # Drop des Sporenbalgs: praller Membranbeutel mit Adern, oben zugebunden, grüne Sporen schimmern durch.
+    pal = {'w': '#efe7c8', 'l': '#e1d8b5', 'm': '#cfc39a', 'd': '#a99e7c', 'v': '#8c8162',
+           'g': '#7fb069', 'G': '#4f7a3a', 'k': '#5b4a2e', 'o': '#c0502a'}
+    rows = [
+        '................',
+        '.......kk.......',
+        '......kook......',
+        '.......kk.......',
+        '.....lmmmmd.....',
+        '....lwlmmmmd....',
+        '...lwlmgmvmmd...',
+        '...llmgGgmvmd...',
+        '..lllmmgmmmvmd..',
+        '..llmvmmmmgmmd..',
+        '..lmmmvmmgGgmd..',
+        '..dmmmmvmmgmdd..',
+        '...dmmmmmmmdd...',
+        '....ddmmmddd....',
+        '......dddd......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#3a2f1c')
+
+
+def germ_tonic():
+    # Keimfrische: kleine Flasche mit hellgrüner, klarer Flüssigkeit und Bernsteinkorken.
+    pal = {'a': '#e0a030', 'A': '#8a5a10', 'c': '#d7eef6', 'C': '#a8c8d8',
+           'g': '#b8f0a0', 'G': '#7fd66a', 'h': '#4f9a3a', 'w': '#ffffff'}
+    rows = [
+        '................',
+        '......aaaa......',
+        '......aAAa......',
+        '.......cC.......',
+        '.......cC.......',
+        '......cccC......',
+        '.....cwggGC.....',
+        '....cwgggGGC....',
+        '....cgggGGGC....',
+        '....cggGGGhC....',
+        '....cgGGGGhC....',
+        '....cGGGGhhC....',
+        '.....cGGhhC.....',
+        '......CCCC......',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#24402a')
+
+
+def spore_bellows_spawn_egg():
+    # Spawn-Ei: Membran mit Umbra-Kappe, orange-rotem Rand und Bernsteinpunkten.
+    pal = {'u': '#5b4a2e', 'U': '#3a2f1c', 'o': '#c0502a', 'O': '#8f3a1d', 'a': '#e0a030', 'y': '#ffd27a',
+           'm': '#cfc39a', 'l': '#e1d8b5', 'd': '#a99e7c'}
+    rows = [
+        '................',
+        '......uuuu......',
+        '.....uuyauU.....',
+        '....uuaUuuuU....',
+        '....uuuuuyaU....',
+        '...oooooooooO...',
+        '...lmmmmmmmmd...',
+        '..lmmmmmmmmmmd..',
+        '..lmmdmmmmdmmd..',
+        '..lmmmmmmmmmmd..',
+        '..lmmmmmmmmmdd..',
+        '..dmmmmmmmmmdd..',
+        '...dmmmmmmmdd...',
+        '....ddmmmddd....',
+        '......dddd......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#2a2116')
+
+
 def geode_crawler_spawn_egg():
     # Spawn-Ei (ab 1.21.5 eigene Textur): Echsenhaut mit Calcitband und Kristallflecken.
     pal = {'d': '#4a4054', 'm': '#6d6078', 'l': '#918190', 'c': '#e6e0d6', 'C': '#bfb6a8',
@@ -466,9 +541,12 @@ ITEMS = {
     'amber_shard': amber_shard,
     'time_anchor': time_anchor,
     'calcite_scale': calcite_scale,
+    'spore_sac': spore_sac,
+    'germ_tonic': germ_tonic,
 }
 SPAWN_EGGS = {
     'geode_crawler_spawn_egg': geode_crawler_spawn_egg,
+    'spore_bellows_spawn_egg': spore_bellows_spawn_egg,
 }
 
 

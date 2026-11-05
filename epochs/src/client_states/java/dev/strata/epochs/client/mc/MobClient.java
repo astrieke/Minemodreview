@@ -3,6 +3,8 @@ package dev.strata.epochs.client.mc;
 import dev.strata.epochs.EpochsMobs;
 import dev.strata.epochs.client.MobModelBuilder;
 import dev.strata.epochs.mob.GeodeCrawler;
+import dev.strata.epochs.mob.SporeBellows;
+import java.util.List;
 import dev.strata.epochs.mob.StrataMobDef;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.Identifier;
@@ -23,9 +25,14 @@ public final class MobClient {
     }
 
     public static void register(IEventBus modBus) {
-        modBus.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) ->
-                event.registerLayerDefinition(layer(GeodeCrawler.DEF), () -> MobModelBuilder.build(GeodeCrawler.DEF.model())));
-        modBus.addListener((EntityRenderersEvent.RegisterRenderers event) ->
-                event.registerEntityRenderer(EpochsMobs.GEODE_CRAWLER.get(), ctx -> new StrataMobRenderer<>(ctx, GeodeCrawler.DEF)));
+        modBus.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> {
+            for (StrataMobDef def : List.of(GeodeCrawler.DEF, SporeBellows.DEF)) {
+                event.registerLayerDefinition(layer(def), () -> MobModelBuilder.build(def.model()));
+            }
+        });
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
+            event.registerEntityRenderer(EpochsMobs.GEODE_CRAWLER.get(), ctx -> new StrataMobRenderer<>(ctx, GeodeCrawler.DEF));
+            event.registerEntityRenderer(EpochsMobs.SPORE_BELLOWS.get(), ctx -> new StrataMobRenderer<>(ctx, SporeBellows.DEF));
+        });
     }
 }

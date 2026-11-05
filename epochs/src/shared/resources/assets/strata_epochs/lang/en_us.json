@@ -24,5 +24,14 @@
   "item.strata_epochs.calcite_scale": "Calcite Scale",
   "subtitles.strata_epochs.geode_crawler.ambient": "Geode Crawler snorts",
   "subtitles.strata_epochs.geode_crawler.hurt": "Geode Crawler hurts",
-  "subtitles.strata_epochs.geode_crawler.death": "Geode Crawler dies"
+  "subtitles.strata_epochs.geode_crawler.death": "Geode Crawler dies",
+  "entity.strata_epochs.spore_bellows": "Spore Bellows",
+  "item.strata_epochs.spore_bellows_spawn_egg": "Spore Bellows Spawn Egg",
+  "item.strata_epochs.spore_sac": "Spore Sac",
+  "item.strata_epochs.germ_tonic": "Germ Tonic",
+  "subtitles.strata_epochs.spore_bellows.ambient": "Spore Bellows burbles",
+  "subtitles.strata_epochs.spore_bellows.hurt": "Spore Bellows hurts",
+  "subtitles.strata_epochs.spore_bellows.death": "Spore Bellows bursts",
+  "message.strata_epochs.spores": "Spores! Solidification runs ×%s",
+  "message.strata_epochs.germ_tonic": "Germ Tonic: solidification rewound by %s s"
 }

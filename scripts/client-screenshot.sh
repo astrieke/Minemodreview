@@ -10,6 +10,10 @@
 # Optional: SHOT_MOB=<entity-id>, z. B. strata_epochs:geode_crawler. Dann baut das Skript neben
 # dem Ankunftsplatz eine kleine Bühne (Calcit-Boden, ein Kristallquarz-Erz) und stellt zwei
 # Exemplare darauf: links von der Seite, rechts von vorn. Der Spieler schaut von oben darauf.
+# Optional mit SHOT_MOB: SHOT_ACT=1 stellt statt der starren Exemplare ein Tier mit KI neben ein Erz
+# und schlägt es nach 7 s einmal. Das Skript nimmt dann eine Bildserie (alle 0,5 s, 14 s lang) als
+# <ausgabe>_act_NN.png auf, um Laufen, Fähigkeiten und Animationen im Spiel zu prüfen.
+# SHOT_SURVIVAL=1 schaltet den Spieler dafür in den Überlebensmodus (für feindliche Mobs).
 set -uo pipefail
 cd "$(dirname "$0")/.."
 v="$1"; epoch="$2"; out="$(realpath -m "$3")"
@@ -48,16 +52,36 @@ item replace entity @a[tag=!strata_shot] hotbar.8 with strata_epochs:chronostone
 tag @a add strata_shot
 MC
 if [ -n "${SHOT_MOB:-}" ]; then
-    # Bühne erst nach 3 s bauen, wenn die Chunks am Ankunftsplatz geladen sind.
+    # Bühne erst nach 3 s bauen, wenn die Chunks am Ankunftsplatz geladen sind. Geschlossener Kasten
+    # (sonst läuft Wasser hinein), Boden wie in der Epoche.
+    floor=minecraft:calcite
+    [ "$epoch" = spore_age ] && floor=minecraft:mycelium
     sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run tp @s $x.5 $((y + 1)) $((z + 3)).5 0 28\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:stage 60t|" \
         "$dp/data/strata_shot/function/tick.mcfunction"
     cat > "$dp/data/strata_shot/function/stage.mcfunction" <<MC
-execute in strata_epochs:$epoch run fill $((x - 5)) $((y - 1)) $((z + 3)) $((x + 5)) $((y - 1)) $((z + 13)) minecraft:calcite
-execute in strata_epochs:$epoch run fill $((x - 5)) $y $((z + 3)) $((x + 5)) $((y + 5)) $((z + 13)) minecraft:air
+execute in strata_epochs:$epoch run fill $((x - 6)) $((y - 2)) $((z + 2)) $((x + 6)) $((y + 6)) $((z + 14)) strata_epochs:chronostone hollow
+execute in strata_epochs:$epoch run fill $((x - 5)) $((y - 1)) $((z + 3)) $((x + 5)) $((y - 1)) $((z + 13)) $floor
 execute in strata_epochs:$epoch run setblock $((x + 3)) $y $((z + 10)) strata_epochs:crystal_quartz_ore
+MC
+    if [ -n "${SHOT_ACT:-}" ]; then
+        # Start, sobald der Spieler Hotbar-Platz 9 wählt (das Skript drückt dazu die Taste 9).
+        sed -i "1i execute as @a[tag=strata_shot,tag=!strata_act] if items entity @s weapon.mainhand strata_epochs:chronostone run function strata_shot:act" \
+            "$dp/data/strata_shot/function/tick.mcfunction"
+        cat > "$dp/data/strata_shot/function/act.mcfunction" <<MC
+tag @s add strata_act
+execute in strata_epochs:$epoch run setblock $((x + 3)) $y $((z + 8)) strata_epochs:crystal_quartz_ore
+execute in strata_epochs:$epoch run summon $SHOT_MOB $((x - 2)).5 $y $((z + 8)).5 {PersistenceRequired:1b,Rotation:[-90f,0f]}
+schedule function strata_shot:hit 140t
+MC
+        # SHOT_SURVIVAL=1: Spieler im Überlebensmodus, damit feindliche Mobs ihn angreifen.
+        [ -z "${SHOT_SURVIVAL:-}" ] || echo 'gamemode survival @s' >> "$dp/data/strata_shot/function/act.mcfunction"
+        echo "damage @e[type=$SHOT_MOB,limit=1,sort=nearest] 1 minecraft:player_attack by @p" > "$dp/data/strata_shot/function/hit.mcfunction"
+    else
+        cat >> "$dp/data/strata_shot/function/stage.mcfunction" <<MC
 execute in strata_epochs:$epoch run summon $SHOT_MOB $((x - 1)).5 $y $((z + 8)).5 {NoAI:1b,PersistenceRequired:1b,Rotation:[90f,0f]}
 execute in strata_epochs:$epoch run summon $SHOT_MOB $((x + 2)).5 $y $((z + 8)).5 {NoAI:1b,PersistenceRequired:1b,Rotation:[180f,0f]}
 MC
+    fi
     # SHOT_DARK=1: ohne Nachtsicht, so wie man den Mob in der dunklen Epoche sieht.
     [ -n "${SHOT_DARK:-}" ] || echo 'effect give @a minecraft:night_vision infinite 0 true' >> "$dp/data/strata_shot/function/stage.mcfunction"
 fi
@@ -100,7 +124,14 @@ if [ $ok -eq 1 ]; then
     sleep 25
     DISPLAY="$display" import -window root "$out"
     echo "Screenshot: $out"
-    if [ -n "${PYTHON:-}" ]; then
+    if [ -n "${SHOT_ACT:-}" ] && [ -n "${PYTHON:-}" ]; then
+        DISPLAY="$display" "$PYTHON" tools/xclick.py key 9
+        for i in $(seq -w 0 27); do
+            DISPLAY="$display" import -window root "${out%.png}_act_$i.png"
+            sleep 0.5
+        done
+        echo "Bildserie: ${out%.png}_act_*.png"
+    elif [ -n "${PYTHON:-}" ]; then
         # Zweites Bild mit geöffnetem Inventar (zeigt z. B. die JEI-Itemliste).
         DISPLAY="$display" "$PYTHON" tools/xclick.py key e
         sleep 4

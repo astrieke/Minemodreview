@@ -1,0 +1,36 @@
+{
+  "entity": "strata_epochs:spore_bellows",
+  "attributes": {
+    "max_health": 14,
+    "movement_speed": 0.25
+  },
+  "spawn": {
+    "enabled": true,
+    "max_light": 7,
+    "max_nearby": 6
+  },
+  "abilities": {
+    "spore_blast": {
+      "enabled": true,
+      "trigger_range": 3,
+      "warning": 12,
+      "cooldown": 160,
+      "radius": 2.5,
+      "cloud_duration": 100,
+      "factor": 2.5
+    },
+    "root_grip": {
+      "enabled": true,
+      "range": 2,
+      "effect_duration": 40,
+      "amplifier": 1,
+      "cooldown": 160
+    },
+    "last_breath": {
+      "enabled": true,
+      "radius": 2,
+      "cloud_duration": 40,
+      "factor": 1.5
+    }
+  }
+}

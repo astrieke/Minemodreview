@@ -92,11 +92,14 @@ public final class Solidification {
         return f.factor;
     }
 
-    /** Zieht erlaubte Zeit ab: Die Uhr springt um {@code ticks} vor. Nur in einer Epoche wirksam. */
+    /**
+     * Zieht erlaubte Zeit ab: Die Uhr springt um {@code ticks} vor. Negative Werte drehen sie zurück
+     * (nie unter 0), z. B. für die Keimfrische. Nur in einer Epoche wirksam.
+     */
     public static void advance(ServerPlayer player, long ticks) {
         if (EpochTravel.epochOf((ServerLevel) player.level()).isEmpty()) return;
         EpochVisit visit = player.getData(EpochsContent.VISIT.get());
-        player.setData(EpochsContent.VISIT.get(), visit.withTicks(visit.ticks() + ticks));
+        player.setData(EpochsContent.VISIT.get(), visit.withTicks(Math.max(0, visit.ticks() + ticks)));
     }
 
     /** Verwandelt einen zufälligen festen Block in der Nähe in versteinerten Stein. */

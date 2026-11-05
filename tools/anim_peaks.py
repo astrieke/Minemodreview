@@ -1,6 +1,6 @@
 """Findet pro Animation den Zeitpunkt mit dem größten Ausschlag (für die Bilder im Prüfblatt).
 
-Aufruf: python3 tools/anim_peaks.py [mob-id ...]
+Aufruf: python3 tools/anim_peaks.py [mob-id ...]   oder   --json <mob-id>
 
 Ausschlag = Summe über alle Knochen: Rotation in Grad + Position × 5 + |Skalierung − 1| × 100.
 Abgetastet wird alle 0,05 s, linear interpoliert. Für die Wahl des Zeitpunkts reicht das.
@@ -48,6 +48,9 @@ def peaks(mob_id):
 
 
 if __name__ == '__main__':
+    if sys.argv[1:2] == ['--json']:                   # für build_mobs.js: nur die Zeiten eines Mobs als JSON
+        print(json.dumps(peaks(sys.argv[2])))
+        sys.exit()
     ids = sys.argv[1:] or sorted(d for d in os.listdir(ROOT) if os.path.isfile(os.path.join(ROOT, d, 'model.json')))
     for mob in ids:
         print(mob, json.dumps(peaks(mob)))

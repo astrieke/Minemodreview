@@ -38,7 +38,8 @@ public final class StrataBridge {
             "strata_epochs:strata_codex/first_core",
             "strata_epochs:strata_codex/visited_crystal_age",
             "strata_epochs:strata_codex/visited_spore_age",
-            "strata_epochs:strata_codex/met_geode_crawler");
+            "strata_epochs:strata_codex/met_geode_crawler",
+            "strata_epochs:strata_codex/met_spore_bellows");
 
     public StrataBridge(IEventBus modBus) {
         NeoForge.EVENT_BUS.addListener(StrataBridge::onNodeUnlocked);

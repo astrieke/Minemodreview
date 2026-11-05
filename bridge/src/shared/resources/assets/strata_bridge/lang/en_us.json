@@ -21,5 +21,7 @@
   "jade.strata_bridge.petrified": "Solidified time",
   "config.jade.plugin_strata_bridge.blocks": "Strata hints",
   "advancements.strata_epochs.met_geode_crawler.title": "Geode Crawler",
-  "advancements.strata_epochs.met_geode_crawler.description": "Meet a Geode Crawler. Follow it to find ore."
+  "advancements.strata_epochs.met_geode_crawler.description": "Meet a Geode Crawler. Follow it to find ore.",
+  "advancements.strata_epochs.met_spore_bellows.title": "Spore Bellows",
+  "advancements.strata_epochs.met_spore_bellows.description": "Meet a Spore Bellows. Its clouds make time run faster."
 }

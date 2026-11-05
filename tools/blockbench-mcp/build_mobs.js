@@ -7,6 +7,7 @@
  * Aufruf: node build_mobs.js [mob-id ...]     (Blockbench läuft dabei headless)
  * Vorher die Texturen malen: python3 tools/make_mob_textures.py
  */
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -52,6 +53,8 @@ function views(model) {
         side: { position: [t[0] + dist, t[1] + 2, t[2]], target: t },
         back: { position: [t[0], t[1] + 4, t[2] + dist], target: t },
         iso: { position: [t[0] - dist * 0.65, t[1] + dist * 0.45, t[2] - dist * 0.65], target: t },
+        // Animationsposen etwas weiter weg und höher gezielt: Sprünge und Aufblähen bleiben im Bild.
+        anim: { position: [t[0] - dist * 0.85, t[1] + 3 + dist * 0.55, t[2] - dist * 0.85], target: [t[0], t[1] + 3, t[2]] },
     };
 }
 
@@ -70,15 +73,20 @@ try {
         for (const a of model.animations || []) await call('add_animation', a);
 
         const v = views(model);
-        for (const [name, view] of Object.entries(v)) {
+        for (const [name, view] of Object.entries(v).filter(([n]) => n !== 'anim')) {
             await call('screenshot', { view, width: 512, height: 512, save_to: path.join(shots, `${name}.png`) });
         }
-        // Animationsposen: je Animation ein Bild bei 25 % und 50 % der Länge, schräg von vorne
+        // Animationsposen fürs Prüfblatt, schräg von vorne: je Animation die Pose am größten Ausschlag
+        // (tools/anim_peaks.py), bei Schleifen zusätzlich der Anfang (z. B. die Landung beim Hüpfen).
+        const peaks = JSON.parse(execFileSync('python3', [path.join(here, '..', 'anim_peaks.py'), '--json', id],
+            { encoding: 'utf8' }));
         for (const a of model.animations || []) {
             const short = a.name.split('.').pop();
-            for (const f of [0.25, 0.5]) {
-                await call('screenshot', { view: v.iso, width: 384, height: 384, animation: a.name, time: a.length * f,
-                    save_to: path.join(shots, `anim_${short}_${Math.round(f * 100)}.png`) });
+            const poses = [[`anim_${short}`, peaks[short] ?? a.length / 2]];
+            if (a.loop === 'loop') poses.push([`anim_${short}_start`, 0]);
+            for (const [file, time] of poses) {
+                await call('screenshot', { view: v.anim, width: 384, height: 384, animation: a.name, time,
+                    save_to: path.join(shots, `${file}.png`) });
             }
         }
         await call('export', { format: 'bbmodel', save_to: path.join(dir, `${id}.bbmodel`) });

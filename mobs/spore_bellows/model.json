@@ -19,7 +19,7 @@
       "parent": "body",
       "origin": [
         0,
-        8.5,
+        5,
         0
       ]
     },
@@ -116,6 +116,25 @@
       "uv_offset": [
         0,
         42
+      ],
+      "material": "gill"
+    },
+    {
+      "name": "stem",
+      "bone": "cap",
+      "from": [
+        -3,
+        9,
+        -3
+      ],
+      "to": [
+        3,
+        11,
+        3
+      ],
+      "uv_offset": [
+        32,
+        21
       ],
       "material": "gill"
     },
@@ -440,7 +459,7 @@
           "channel": "rotation",
           "time": 0.3,
           "value": [
-            -20,
+            0,
             0,
             10
           ],
@@ -473,7 +492,7 @@
           "channel": "rotation",
           "time": 0.3,
           "value": [
-            -20,
+            0,
             0,
             -10
           ],
@@ -506,7 +525,7 @@
           "channel": "rotation",
           "time": 0.3,
           "value": [
-            20,
+            -10,
             0,
             0
           ],

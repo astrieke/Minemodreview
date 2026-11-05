@@ -37,10 +37,13 @@ PAL = {
     'calcite_light': ['#b3ad9f', '#cbc5b6', '#dcd6c8', '#ebe6da', '#f8f5ec'],
     'quartz':        ['#2c2670', '#4a43b8', '#6f6cf0', '#a9a8ff', '#e6e6ff'],
     'membrane':      ['#8c8162', '#a99e7c', '#c0b591', '#cfc39a', '#e1d8b5'],
-    'gill':          ['#2a2116', '#3a2d1d', '#4a3a26', '#5a4730', '#6b5639'],
+    # Lamellen fast schwarz: dunkle Unterkante unter dem Warnrand (hebt ihn auch ohne Farbton ab, 3,3:1 zum Nebel)
+    'gill':          ['#1a1008', '#2a1a10', '#3a2a1a', '#4a3a26', '#5a4730'],
     'cap':           ['#3a2f1c', '#4a3c24', '#5b4a2e', '#6e5a38', '#837046'],
-    # Warnfarbe am Hutrand: Gegenfarbe zum Grün der Sporenzeit
-    'rim':           ['#6e2a14', '#8f3a1d', '#c0502a', '#d8703f', '#e8915a'],
+    # Hut-Oberseiten heller, damit sie sich vom Sporennebel abheben (Prüfung 05.11.)
+    'cap_top':       ['#6e5a38', '#857048', '#98804f', '#a8905e', '#b8a06c'],
+    # Warnfarbe am Hutrand: Gegenfarbe zum Grün der Sporenzeit, hell genug für 2:1 zum Nebel
+    'rim':           ['#8f3a1d', '#c0502a', '#e8915a', '#f4b07c', '#ffc89a'],
     'root':          ['#3e2a18', '#563b22', '#6f4e2e', '#8a663e', '#a5804f'],
     'gold':          ['#6a4708', '#9c6a12', '#d9a43a', '#f2c45a', '#ffe08a'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
@@ -113,7 +116,7 @@ def paint_cube(img, cube, rnd):
                     world_y = (top_layer_y if face == 'up' else cube['from'][1]) if not side else top_y - 1 - y
                     img.putpixel((x0 + x, y0 + y), strata_color(world_y, step))
                     continue
-                pal = PAL[mat]
+                pal = PAL['cap_top'] if mat == 'cap' and face == 'up' else PAL[mat]
                 v = 2 + noise * 0.8 + FACE_STEP[face]
                 if side and h > 2:
                     v += 0.6 * (1 - y / (h - 1)) - 0.3
@@ -260,26 +263,30 @@ DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_sp
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass}
 
 
-# Leucht-Ebenen: Name -> Materialien, deren Pixel im Dunkeln leuchten (texture_glow_<name>.png).
-# Die Stärke je Zustand (0..1) legt der Mob im Code fest.
+# Leucht-Ebenen: Name -> Materialien (ganze Würfel) oder Farben (einzelne Pixel, z. B. Augen),
+# die im Dunkeln leuchten (texture_glow_<name>.png). Die Stärke je Zustand (0..1) legt der Mob im Code fest.
 GLOW = {
-    'geode_crawler': {'crystals': {'quartz'}},
+    'geode_crawler': {'crystals': {'materials': {'quartz'}}},
+    # Augen, Ventilrand und Bernsteinpunkte: schwach immer, voll beim Aufpumpen
+    'spore_bellows': {'spores': {'colors': {'#ffb847', '#c07a1a', '#e0a030', '#ffd27a'}}},
 }
 
 
 def paint_glow(model, img, mob_id):
     """Schreibt pro Leucht-Ebene eine Maske: nur die Pixel der leuchtenden Würfel, etwas aufgehellt."""
     outs = []
-    for layer, materials in GLOW.get(mob_id, {}).items():
+    for layer, spec in GLOW.get(mob_id, {}).items():
         glow = Image.new('RGBA', img.size, (0, 0, 0, 0))
+        materials = spec.get('materials', set())
+        colors = {rgb(c)[:3] for c in spec.get('colors', set())}
         for cube in model['cubes']:
-            if cube['material'] not in materials:
+            if materials and cube['material'] not in materials:
                 continue
             for x0, y0, w, h in faces(cube).values():
                 for y in range(y0, y0 + h):
                     for x in range(x0, x0 + w):
                         r, g, b, a = img.getpixel((x, y))
-                        if a:
+                        if a and (not colors or (r, g, b) in colors):
                             glow.putpixel((x, y), (min(255, int(r * 1.15)), min(255, int(g * 1.15)), min(255, int(b * 1.15)), 255))
         out = os.path.join(ROOT, mob_id, f'texture_glow_{layer}.png')
         glow.save(out)

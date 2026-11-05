@@ -24,5 +24,14 @@
   "item.strata_epochs.calcite_scale": "Calcitschuppe",
   "subtitles.strata_epochs.geode_crawler.ambient": "Geodenkriecher schnaubt",
   "subtitles.strata_epochs.geode_crawler.hurt": "Geodenkriecher wird verletzt",
-  "subtitles.strata_epochs.geode_crawler.death": "Geodenkriecher stirbt"
+  "subtitles.strata_epochs.geode_crawler.death": "Geodenkriecher stirbt",
+  "entity.strata_epochs.spore_bellows": "Sporenbalg",
+  "item.strata_epochs.spore_bellows_spawn_egg": "Sporenbalg-Spawn-Ei",
+  "item.strata_epochs.spore_sac": "Sporenbeutel",
+  "item.strata_epochs.germ_tonic": "Keimfrische",
+  "subtitles.strata_epochs.spore_bellows.ambient": "Sporenbalg blubbert",
+  "subtitles.strata_epochs.spore_bellows.hurt": "Sporenbalg wird verletzt",
+  "subtitles.strata_epochs.spore_bellows.death": "Sporenbalg platzt",
+  "message.strata_epochs.spores": "Sporen! Die Verfestigung läuft ×%s",
+  "message.strata_epochs.germ_tonic": "Keimfrische: Verfestigung um %s s zurückgedreht"
 }

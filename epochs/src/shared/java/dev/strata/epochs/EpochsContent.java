@@ -40,6 +40,10 @@ public final class EpochsContent {
     public static final Supplier<Item> TIME_ANCHOR = REG.item("time_anchor", p -> p.stacksTo(1));
     /** Drop des Geodenkriechers. */
     public static final Supplier<Item> CALCITE_SCALE = REG.item("calcite_scale", p -> p);
+    /** Drop des Sporenbalgs, Zutat für die Keimfrische. */
+    public static final Supplier<Item> SPORE_SAC = REG.item("spore_sac", p -> p);
+    /** Keimfrische: dreht die Verfestigungs-Uhr ein Stück zurück (siehe {@link GermTonic}). */
+    public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
 
     static {
         REG.blockItem(CHRONOSTONE, "chronostone");

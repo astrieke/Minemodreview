@@ -220,13 +220,13 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 |---|---|
 | Epoche | Sporenzeit |
 | Rolle | Gegner |
-| Größe | ca. 0,75 Block breit, 0,9 Block hoch |
+| Größe | ca. 0,75 Block breit, 1,0 Block hoch |
 | Hitbox | 0,75 × 1,0 (nach Verlängerung der Wurzeln) |
 | Drop | Sporenbeutel (Zutat für „Keimfrische“, die die Verfestigung zurücksetzt) |
 | Spawn | Sporenzeit, auf Myzel, Gruppen von 1–3 |
 | Textur | 64×64, Box-UV |
-| Umfang | 6 Knochen, 9 Würfel, 3 Animationen |
-| Prüfung | Design 7 · Game Design 6 · Technik 7 → noch nicht freigegeben |
+| Umfang | 6 Knochen, 10 Würfel, 3 Animationen |
+| Prüfung | Design 8 · Game Design 7 · Technik 8 (2. Runde, 05.11.) → freigegeben |
 
 **Verhalten:** Ein pilziger Sack auf drei Wurzelbeinen. Er hüpft auf Spieler zu, pumpt sich auf und stößt eine grüne Sporenwolke aus. Die Wolke macht keinen Schaden, sondern **beschleunigt die Verfestigung** (×2,5 für 5 Sekunden). So setzt er den Spieler unter Zeitdruck.
 
@@ -238,20 +238,21 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 **Gestaltung:**
 - **Sack:** helle Membran (`#CFC39A`) mit Adern (`#9C8F6A`) und einem breiteren Bauchwulst.
 - **Gesicht** (auf dem Bauch): schmale, schräge Bernsteinaugen und ein Sporenventil (3×2 dunkel mit Bernsteinrand). Dort tritt die Wolke aus.
-- **Hut:** gewölbt in drei Stufen (12×2×12, 10×1×10, 6×1×6) in Umbra (`#5B4A2E`), darunter dunkle Lamellen. Ein gelbgrüner Rand nur ganz unten, Bernsteinpunkte (`#E0A030`, Glanz `#FFD27A`) oben und an allen Seiten.
+- **Hut:** gewölbt in drei Stufen (12×2×12, 10×1×10, 6×1×6) in Umbra (`#5B4A2E`), darunter dunkle Lamellen. Orange-roter Warnrand (`#E8915A`/`#F4B07C`) über fast schwarzen Lamellen, Bernsteinpunkte (`#E0A030`, Glanz `#FFD27A`) nur auf den Oberseiten (hell, bis `#A8905E`). Grün ist für Wolke und Partikel reserviert.
 - **Wurzeln:** drei Wurzelbeine, nach außen gespreizt (A-Stand).
-- **Leuchten (im Spiel):** Augen und Bernsteinpunkte.
+- **Leuchten (im Spiel):** Augen, Ventilrand und Bernsteinpunkte (`texture_glow_spores.png`), schwach immer, voll beim Aufpumpen.
+- **Stiel:** ein innerer Würfel 6×2×6 unter dem Hut. In Ruhe verdeckt, schließt er beim Pumpen die Lücke zwischen Sack und Hut.
 
 **Knochen:**
 
 | Knochen | Eltern | Drehpunkt | Grundrotation |
 |---|---|---|---|
 | `body` | – | [0, 0, 0] | – |
-| `sack` | `body` | [0, 6.5, 0] | – |
-| `cap` | `body` | [0, 10, 0] | – |
-| `leg_left` | `body` | [3, 3, 0] | – |
-| `leg_right` | `body` | [-3, 3, 0] | – |
-| `leg_back` | `body` | [0, 3, 3] | – |
+| `sack` | `body` | [0, 5, 0] | – |
+| `cap` | `body` | [0, 12, 0] | – |
+| `leg_left` | `body` | [3, 5, 0] | – |
+| `leg_right` | `body` | [-3, 5, 0] | – |
+| `leg_back` | `body` | [0, 5, 3] | – |
 
 **Würfel:**
 
@@ -260,6 +261,7 @@ Alle drei Mobs wurden mit dem Blockbench-MCP gebaut und von drei Prüf-Agenten a
 | `sack_core` | `sack` | [-4, 5, -4] | [4, 11, 4] | [0, 14] | membrane | – |
 | `belly` | `sack` | [-5, 6, -5] | [5, 10, 5] | [0, 28] | membrane | – |
 | `gills` | `cap` | [-5, 11, -5] | [5, 12, 5] | [0, 42] | gill | – |
+| `stem` | `cap` | [-3, 9, -3] | [3, 11, 3] | [32, 21] | gill | – |
 | `cap_main` | `cap` | [-6, 12, -6] | [6, 14, 6] | [0, 0] | cap | – |
 | `cap_mid` | `cap` | [-5, 14, -5] | [5, 15, 5] | [0, 53] | cap | – |
 | `cap_top` | `cap` | [-3, 15, -3] | [3, 16, 3] | [32, 14] | cap | – |

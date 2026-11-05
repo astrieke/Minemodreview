@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "strata_epochs:spore_sac",
+    "strata_epochs:amber_shard",
+    "minecraft:glass_bottle"
+  ],
+  "result": {
+    "id": "strata_epochs:germ_tonic",
+    "count": 1
+  }
+}
