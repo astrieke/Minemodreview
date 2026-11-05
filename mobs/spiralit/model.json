@@ -3,8 +3,9 @@
   "name": "Spiralit",
   "texture_size": [
     64,
-    32
+    64
   ],
+  "hover": 16,
   "bones": [
     {
       "name": "root",
@@ -25,6 +26,15 @@
     },
     {
       "name": "shell",
+      "parent": "body",
+      "origin": [
+        0,
+        8,
+        -1
+      ]
+    },
+    {
+      "name": "fossil",
       "parent": "body",
       "origin": [
         0,
@@ -65,12 +75,12 @@
       "name": "shell_core",
       "bone": "shell",
       "from": [
-        -2,
+        -3,
         3,
         -1
       ],
       "to": [
-        2,
+        3,
         13,
         9
       ],
@@ -85,37 +95,18 @@
       "name": "rim_top",
       "bone": "shell",
       "from": [
-        -1.5,
+        -2.5,
         13,
         0
       ],
       "to": [
-        1.5,
+        2.5,
         14,
         8
       ],
       "uv_offset": [
-        42,
+        32,
         0
-      ],
-      "material": "shell"
-    },
-    {
-      "name": "rim_back",
-      "bone": "shell",
-      "from": [
-        -1.5,
-        4,
-        9
-      ],
-      "to": [
-        1.5,
-        12,
-        10
-      ],
-      "uv_offset": [
-        48,
-        9
       ],
       "material": "shell"
     },
@@ -123,39 +114,59 @@
       "name": "rim_bottom",
       "bone": "shell",
       "from": [
-        -1.5,
+        -2.5,
         2,
         0
       ],
       "to": [
-        1.5,
+        2.5,
         3,
         7
       ],
       "uv_offset": [
-        28,
+        32,
         9
       ],
       "material": "shell"
     },
     {
-      "name": "hood_cap",
+      "name": "rim_back",
       "bone": "shell",
       "from": [
+        -2.5,
+        4,
+        9
+      ],
+      "to": [
+        2.5,
+        12,
+        10
+      ],
+      "uv_offset": [
+        46,
+        21
+      ],
+      "material": "shell",
+      "back": "ribs"
+    },
+    {
+      "name": "fossil_shell",
+      "bone": "fossil",
+      "from": [
         -2,
-        8,
-        -3
+        4,
+        0
       ],
       "to": [
         2,
-        10,
-        -1
+        12,
+        8
       ],
       "uv_offset": [
-        28,
-        17
+        0,
+        32
       ],
-      "material": "shell"
+      "material": "slate"
     },
     {
       "name": "hood",
@@ -171,27 +182,46 @@
         -1
       ],
       "uv_offset": [
-        28,
-        0
+        32,
+        17
       ],
       "material": "hood",
       "face": "hood"
     },
     {
-      "name": "eye_left",
+      "name": "hood_cap",
       "bone": "hood",
       "from": [
-        2.5,
-        6,
+        -2.5,
+        8,
         -3
       ],
       "to": [
-        3.5,
-        7,
-        -2
+        2.5,
+        10,
+        -1
       ],
       "uv_offset": [
-        12,
+        46,
+        17
+      ],
+      "material": "shell"
+    },
+    {
+      "name": "eye_left",
+      "bone": "hood",
+      "from": [
+        1,
+        6,
+        -3.5
+      ],
+      "to": [
+        2,
+        7,
+        -3
+      ],
+      "uv_offset": [
+        24,
         20
       ],
       "material": "eye"
@@ -200,17 +230,17 @@
       "name": "eye_right",
       "bone": "hood",
       "from": [
-        -3.5,
+        -2,
         6,
-        -3
+        -3.5
       ],
       "to": [
-        -2.5,
+        -1,
         7,
-        -2
+        -3
       ],
       "uv_offset": [
-        12,
+        24,
         20
       ],
       "material": "eye"
@@ -221,7 +251,7 @@
       "from": [
         1,
         4,
-        -8
+        -9
       ],
       "to": [
         2,
@@ -233,6 +263,7 @@
         20
       ],
       "material": "hood",
+      "tip": true,
       "rotation": [
         -25,
         -8,
@@ -258,10 +289,11 @@
         -3
       ],
       "uv_offset": [
-        0,
-        26
+        14,
+        20
       ],
       "material": "hood",
+      "tip": true,
       "rotation": [
         -40,
         -4,
@@ -279,7 +311,7 @@
       "from": [
         -2,
         4,
-        -8
+        -9
       ],
       "to": [
         -1,
@@ -291,6 +323,7 @@
         20
       ],
       "material": "hood",
+      "tip": true,
       "rotation": [
         -25,
         8,
@@ -316,10 +349,11 @@
         -3
       ],
       "uv_offset": [
-        0,
-        26
+        14,
+        20
       ],
       "material": "hood",
+      "tip": true,
       "rotation": [
         -40,
         4,
@@ -352,10 +386,32 @@
         {
           "bone": "body",
           "channel": "position",
+          "time": 0.75,
+          "value": [
+            0,
+            0.5,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
           "time": 1.5,
           "value": [
             0,
             1,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 2.25,
+          "value": [
+            0,
+            0.5,
             0
           ],
           "interpolation": "catmullrom"
@@ -387,9 +443,9 @@
           "channel": "rotation",
           "time": 1.5,
           "value": [
-            3,
+            2,
             0,
-            2
+            1.5
           ],
           "interpolation": "catmullrom"
         },
@@ -493,7 +549,18 @@
           "channel": "rotation",
           "time": 0.4,
           "value": [
-            8,
+            6,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            2,
             0,
             0
           ],
@@ -535,6 +602,17 @@
         {
           "bone": "tentacles_left",
           "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            10,
+            0,
+            -2
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tentacles_left",
+          "channel": "rotation",
           "time": 1.2,
           "value": [
             0,
@@ -562,6 +640,17 @@
             28,
             0,
             6
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tentacles_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            10,
+            0,
+            2
           ],
           "interpolation": "catmullrom"
         },
@@ -632,7 +721,7 @@
           "channel": "rotation",
           "time": 0.25,
           "value": [
-            -14,
+            -10,
             0,
             0
           ],
@@ -643,7 +732,7 @@
           "channel": "rotation",
           "time": 0.55,
           "value": [
-            10,
+            8,
             0,
             0
           ],
@@ -654,7 +743,7 @@
           "channel": "rotation",
           "time": 0.85,
           "value": [
-            -6,
+            -4,
             0,
             0
           ],
@@ -786,29 +875,29 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
           "channel": "rotation",
           "time": 0.4,
           "value": [
-            22,
+            -20,
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
           "channel": "rotation",
           "time": 1.6,
           "value": [
-            22,
+            -20,
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
@@ -819,7 +908,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_left",
@@ -830,27 +919,49 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_left",
           "channel": "rotation",
           "time": 0.4,
           "value": [
-            -22,
+            35,
             0,
-            4
+            2
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_left",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            35,
+            0,
+            2
+          ],
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_left",
           "channel": "rotation",
           "time": 0.8,
           "value": [
-            -14,
+            41,
             0,
-            4
+            2
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tentacles_left",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            29,
+            0,
+            2
           ],
           "interpolation": "catmullrom"
         },
@@ -859,11 +970,33 @@
           "channel": "rotation",
           "time": 1.2,
           "value": [
-            -22,
+            41,
             0,
-            4
+            2
           ],
           "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tentacles_left",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            35,
+            0,
+            2
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            35,
+            0,
+            2
+          ],
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_left",
@@ -874,7 +1007,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_right",
@@ -885,27 +1018,49 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_right",
           "channel": "rotation",
           "time": 0.4,
           "value": [
-            -22,
+            35,
             0,
-            -4
+            -2
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_right",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            35,
+            0,
+            -2
+          ],
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_right",
           "channel": "rotation",
           "time": 0.8,
           "value": [
-            -14,
+            41,
             0,
-            -4
+            -2
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tentacles_right",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            29,
+            0,
+            -2
           ],
           "interpolation": "catmullrom"
         },
@@ -914,11 +1069,33 @@
           "channel": "rotation",
           "time": 1.2,
           "value": [
-            -22,
+            41,
             0,
-            -4
+            -2
           ],
           "interpolation": "catmullrom"
+        },
+        {
+          "bone": "tentacles_right",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            35,
+            0,
+            -2
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            35,
+            0,
+            -2
+          ],
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_right",
@@ -929,7 +1106,7 @@
             0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         }
       ]
     },
@@ -939,108 +1116,141 @@
       "loop": "once",
       "keyframes": [
         {
-          "bone": "body",
+          "bone": "fossil",
           "channel": "scale",
           "time": 0,
           "value": [
-            0.2,
-            0.2,
-            0.2
+            1.55,
+            1.4,
+            1.45
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
-          "bone": "body",
+          "bone": "fossil",
           "channel": "scale",
-          "time": 0.8,
+          "time": 0.45,
           "value": [
-            1.1,
-            1.1,
-            1.1
+            1.55,
+            1.4,
+            1.45
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
-          "bone": "body",
+          "bone": "fossil",
           "channel": "scale",
-          "time": 1.1,
+          "time": 0.6,
           "value": [
-            0.95,
-            0.95,
-            0.95
+            1.6,
+            1.5,
+            1.5
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
-          "bone": "body",
+          "bone": "fossil",
           "channel": "scale",
-          "time": 1.4,
+          "time": 0.75,
           "value": [
             1,
             1,
             1
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
-          "channel": "rotation",
+          "channel": "position",
           "time": 0,
           "value": [
             0,
             0,
-            0
-          ],
-          "interpolation": "catmullrom"
-        },
-        {
-          "bone": "body",
-          "channel": "rotation",
-          "time": 1.0,
-          "value": [
-            0,
-            360,
             0
           ],
           "interpolation": "linear"
         },
         {
           "bone": "body",
-          "channel": "rotation",
-          "time": 1.4,
+          "channel": "position",
+          "time": 0.45,
           "value": [
             0,
-            360,
+            0,
             0
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
           "bone": "body",
+          "channel": "position",
+          "time": 0.55,
+          "value": [
+            0,
+            -0.6,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.7,
+          "value": [
+            0,
+            0.4,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.85,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "hood",
           "channel": "position",
           "time": 0,
           "value": [
             0,
-            -4,
-            0
+            0,
+            3
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
         },
         {
-          "bone": "body",
+          "bone": "hood",
+          "channel": "position",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            3
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "hood",
           "channel": "position",
           "time": 1.0,
           "value": [
             0,
-            1,
+            0,
             0
           ],
           "interpolation": "catmullrom"
         },
         {
-          "bone": "body",
+          "bone": "hood",
           "channel": "position",
-          "time": 1.4,
+          "time": 1.6,
           "value": [
             0,
             0,
@@ -1050,34 +1260,89 @@
         },
         {
           "bone": "tentacles_left",
-          "channel": "rotation",
-          "time": 1.0,
+          "channel": "scale",
+          "time": 0,
           "value": [
-            0,
-            0,
-            0
+            1,
+            1,
+            0.2
           ],
-          "interpolation": "catmullrom"
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_left",
+          "channel": "scale",
+          "time": 0.7,
+          "value": [
+            1,
+            1,
+            0.2
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_left",
+          "channel": "scale",
+          "time": 1.2,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_right",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            1,
+            0.2
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_right",
+          "channel": "scale",
+          "time": 0.7,
+          "value": [
+            1,
+            1,
+            0.2
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "tentacles_right",
+          "channel": "scale",
+          "time": 1.2,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
         },
         {
           "bone": "tentacles_left",
           "channel": "rotation",
           "time": 1.2,
           "value": [
-            20,
             0,
-            -10
+            0,
+            0
           ],
           "interpolation": "catmullrom"
         },
         {
           "bone": "tentacles_left",
           "channel": "rotation",
-          "time": 1.4,
+          "time": 1.35,
           "value": [
-            -10,
+            15,
             0,
-            6
+            -8
           ],
           "interpolation": "catmullrom"
         },
@@ -1095,7 +1360,7 @@
         {
           "bone": "tentacles_right",
           "channel": "rotation",
-          "time": 1.0,
+          "time": 1.2,
           "value": [
             0,
             0,
@@ -1106,22 +1371,11 @@
         {
           "bone": "tentacles_right",
           "channel": "rotation",
-          "time": 1.2,
+          "time": 1.35,
           "value": [
-            20,
+            15,
             0,
-            10
-          ],
-          "interpolation": "catmullrom"
-        },
-        {
-          "bone": "tentacles_right",
-          "channel": "rotation",
-          "time": 1.4,
-          "value": [
-            -10,
-            0,
-            -6
+            8
           ],
           "interpolation": "catmullrom"
         },

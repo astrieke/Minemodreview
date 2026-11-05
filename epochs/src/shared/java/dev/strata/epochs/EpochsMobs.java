@@ -46,7 +46,7 @@ public final class EpochsMobs {
 
     /** Begleiter aus dem Ammonit-Fossil, spawnt nicht natürlich. */
     public static final Supplier<EntityType<Spiralit>> SPIRALIT =
-            REG.entity("spiralit", Spiralit::new, MobCategory.CREATURE, 0.5f, 0.6f, 8);
+            REG.entity("spiralit", Spiralit::new, MobCategory.CREATURE, 0.6f, 0.9f, 8);
 
     public static final Supplier<SoundEvent> GEODE_CRAWLER_AMBIENT = REG.sound("entity.geode_crawler.ambient");
     public static final Supplier<SoundEvent> GEODE_CRAWLER_HURT = REG.sound("entity.geode_crawler.hurt");
@@ -89,6 +89,7 @@ public final class EpochsMobs {
         NeoForge.EVENT_BUS.addListener(WitnessAwakening::onLevelTick);
         NeoForge.EVENT_BUS.addListener(Spiralit::onInteract);
         NeoForge.EVENT_BUS.addListener(Spiralit::onChangedDimension);
+        NeoForge.EVENT_BUS.addListener(Spiralit::onServerStopped);
     }
 
     /** Höchstzahl aller Strata-Mobs pro Dimension (Config {@code mobs.max_per_epoch}). */

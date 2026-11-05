@@ -87,13 +87,15 @@ def scale_panel(model):
     corners = {c['name']: cube_corners(c) for c in model['cubes']}
     zs = [p[2] for ps in corners.values() for p in ps]
     ys = [p[1] for ps in corners.values() for p in ps]
-    top = max(ys)
+    hover = model.get('hover', 0)                     # Schwebehöhe in px (Begleiter schweben neben dem Spieler)
+    top = max(ys) + hover
     width = (max(zs) - min(zs)) + 6 + 9.6
     height = max(top, PLAYER_PX)
     s = min((CELL - 20) / width, (CELL - 30) / height)
     ground = CELL - 14
     sx = lambda z: 10 + (z - min(zs)) * s
-    sy = lambda y: ground - y * s
+    sy_ground = lambda y: ground - y * s
+    sy = lambda y: ground - (y + hover) * s
 
     for c in model['cubes']:
         ps = corners[c['name']]
@@ -112,9 +114,10 @@ def scale_panel(model):
         else:
             d.rectangle([sx(c['from'][2]), sy(c['to'][1]), sx(c['to'][2]), sy(c['from'][1])], fill=(90, 84, 104, 255))
     px = max(zs) + 6
-    d.rectangle([sx(px), sy(PLAYER_PX), sx(px + 9.6), sy(0)], fill=(60, 120, 200, 140))
+    d.rectangle([sx(px), sy_ground(PLAYER_PX), sx(px + 9.6), sy_ground(0)], fill=(60, 120, 200, 140))
     d.line([0, ground, CELL, ground], fill=(30, 30, 30, 255))
-    d.text((4, 4), f'Hoehe {top:.1f} px / Spieler {PLAYER_PX} px', fill=(30, 30, 30, 255))
+    label = f'Hoehe {top:.1f} px / Spieler {PLAYER_PX} px' + (f' (schwebt {hover} px)' if hover else '')
+    d.text((4, 4), label, fill=(30, 30, 30, 255))
     return img
 
 

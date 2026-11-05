@@ -1,0 +1,8 @@
+{
+  "_hinweis": "Erze, die der Spiralit spürt (nur in Epochen). Packs können eigene Epochen-Erze ergänzen.",
+  "values": [
+    "strata_epochs:crystal_quartz_ore",
+    "strata_epochs:amber_ore",
+    "strata_epochs:ember_ore"
+  ]
+}

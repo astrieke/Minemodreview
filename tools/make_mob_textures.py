@@ -50,7 +50,7 @@ PAL = {
     'slate':         ['#2e2a35', '#3c3742', '#4a4552', '#5e5868', '#77707c'],
     'shell':         ['#8a7458', '#b39c78', '#d6c29a', '#e9dbb8', '#f7efd8'],
     'hood':          ['#5a3438', '#7a4a4a', '#9a6560', '#b8837a', '#d4a596'],
-    'eye':           ['#1a3a3a', '#2a6a68', '#4fb0a8', '#8fe8dc', '#d8fff8'],
+    'eye':           ['#6a4708', '#9c6a12', '#d9a43a', '#f2c45a', '#ffe08a'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
 }
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
@@ -140,6 +140,11 @@ def paint_cube(img, cube, rnd):
                     v = 1.0 if x % 2 == 0 else 2.2
                 if mat == 'quartz':
                     v = 4 if face == 'up' else (3 if x == 0 else 2 if x < w - 1 else 1)
+                if mat == 'shell':
+                    if (side and y % 2 == 1) or (face in ('up', 'down') and y % 2 == 1):
+                        v -= 0.9                             # Anwachsstreifen quer über die Schale
+                    if (x * 7 + y * 3) % 11 == 0:
+                        v -= 0.6                             # Körnung
                 if mat == 'calcite' and (x * 5 + y * 7) % 9 == 0:
                     v -= 1.2                                 # Calcit-Sprenkel
                 img.putpixel((x0 + x, y0 + y), rgb(pal[max(0, min(4, int(round(v))))]))
@@ -287,17 +292,19 @@ def d_ammonite(img, f, rnd):
             put(img, r, x, y, pal[ch])
 
 
-SPIRAL = {'S': '#8a5a34', 'V': '#7a52d8', 'v': '#b48cff', 'k': '#3a2a6a'}
+# Spiralrille in 4 Segmenten (außen -> innen), je eine Leucht-Ebene: Die Uhr erlischt von außen nach innen.
+SPIRAL_SEGMENTS = ['#7a52d8', '#8862e4', '#9c74f0', '#b48cff']
+SPIRAL_CENTER = '#3a2a6a'
+SPIRAL_STRIPE = '#8a5a34'
 
 
 def spiral_cells(w, h, margin=1):
     """Eckige Spirale vom Zentrum nach außen, mit einer Zeile Schale zwischen den Windungen
-    und einem freien Schalenrand von {margin} Pixeln.
-    Liefert {(x, y): Zeichen}: k = Zentrum, v = innere Windung (hell), V = äußere Windungen."""
+    und einem freien Schalenrand von {margin} Pixeln. Liefert die Zellen in Reihenfolge (innen zuerst)."""
     x, y = w // 2 - 1, h // 2 - 1
-    cells = {(x, y): 'k'}
+    cells = [(x, y)]
     dirs = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-    length, d, n = 2, 0, 0
+    length, d = 2, 0
     while True:
         for _ in range(2):
             dx, dy = dirs[d % 4]
@@ -305,27 +312,53 @@ def spiral_cells(w, h, margin=1):
                 x, y = x + dx, y + dy
                 if not (margin <= x < w - margin and margin <= y < h - margin):
                     return cells
-                cells[(x, y)] = 'v' if n < 4 else 'V'
-                n += 1
+                cells.append((x, y))
             d += 1
         length += 2
 
 
+def spiral_colors(w, h):
+    """Zelle -> Farbe: Zentrum dunkel, danach 4 gleich lange Segmente von innen (hell) nach außen (dunkel)."""
+    cells = spiral_cells(w, h)
+    n = len(cells) - 1
+    out = {cells[0]: SPIRAL_CENTER}
+    for i, c in enumerate(cells[1:]):
+        out[c] = SPIRAL_SEGMENTS[3 - min(3, i * 4 // n)]
+    return out
+
+
 def d_spiral(img, f, rnd):
     # Eckige Spirale auf beiden Seiten der Schale (auf wenigen Pixeln liest sich das besser als rund).
-    # Braune Streifen wie beim Nautilus quer über die Schale, die Rille leuchtet violett als Uhr.
+    # Der äußere Arm endet vorn unten an der Mündung beim Mantel.
     r = f['east']
     w, h = r[2], r[3]
-    cells = spiral_cells(w, h)
+    cells = spiral_colors(w, h)
     for side in ('east', 'west'):
         r = f[side]
         for y in range(h):
             for x in range(w):
-                ch = cells.get((x, y))
-                if ch is None and (x + 2 * y) % 4 == 0 and (x in (0, w - 1) or y in (0, h - 1)):
-                    ch = 'S'                                  # Streifen am Rand der Schale
-                if ch:
-                    put(img, r, x if side == 'east' else w - 1 - x, y, SPIRAL[ch])
+                c = cells.get((x, y))
+                if c is None and (x + 2 * y) % 4 == 0 and (x in (0, w - 1) or y in (0, h - 1)):
+                    c = SPIRAL_STRIPE                         # Streifen am Rand der Schale
+                if c:
+                    # Ost-Seite: u = 0 liegt hinten, West-Seite: vorn. Gespiegelt, damit der Arm vorn endet.
+                    put(img, r, w - 1 - x if side == 'east' else x, y, c)
+
+
+def d_ribs(img, f, rnd):
+    # Rückseite der Schale: senkrechte Rippen statt Flecken.
+    r = f['south']
+    for y in range(r[3]):
+        for x in range(r[2]):
+            if x % 2 == 1:
+                put(img, r, x, y, PAL['shell'][1])
+
+
+def d_tip(img, f, rnd):
+    # Hellere Fangarm-Spitze (vorn, -z).
+    put(img, f['north'], 0, 0, PAL['hood'][4])
+    put(img, f['east'], f['east'][2] - 1, 0, PAL['hood'][4])
+    put(img, f['west'], 0, 0, PAL['hood'][4])
 
 
 def d_hood(img, f, rnd):
@@ -354,9 +387,12 @@ GLOW = {
     # Kern (Sanduhr) und Augen pulsieren; die Goldadern leuchten nur während der Steinhaut
     'petrified_witness': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a', '#ffd86b', '#f2b43a'}},
                           'veins': {'colors': {'#9a6812', '#6b4a10'}, 'glow_color': '#ffe08a'}},
-    # Die Spiralrille ist die Uhr (Helligkeit = verbleibende Zeit), die Augen glimmen immer
-    'spiralit': {'spiral': {'colors': {'#7a52d8', '#b48cff', '#3a2a6a'}, 'glow_color': '#c9a8ff'},
-                 'eyes': {'materials': {'eye'}}},
+    # Die Spiralrille ist die Uhr: 4 Segmente (außen 1 -> innen 4), die von außen nach innen erlöschen.
+    # Die Augen leuchten mit dem innersten Segment.
+    'spiralit': {'spiral_1': {'colors': {'#7a52d8'}, 'glow_color': '#a98aff'},
+                 'spiral_2': {'colors': {'#8862e4'}, 'glow_color': '#b89cff'},
+                 'spiral_3': {'colors': {'#9c74f0'}, 'glow_color': '#c8afff'},
+                 'spiral_4': {'colors': {'#b48cff', '#3a2a6a', '#ffe08a', '#f2c45a'}}},
 }
 
 
@@ -399,6 +435,10 @@ def paint(mob_id):
             paint_cube(img, cube, rnd)
         if cube.get('face') in DETAILS:
             DETAILS[cube['face']](img, f, rnd)
+        if cube.get('back') == 'ribs':
+            d_ribs(img, f, rnd)
+        if cube.get('tip'):
+            d_tip(img, f, rnd)
         if cube.get('back') == 'ammonite':
             d_ammonite(img, f, rnd)
         if cube.get('veins'):
@@ -427,7 +467,7 @@ def check_light(model, img, mob_id):
     """Licht von oben: Keine Oberseite darf im Mittel dunkler sein als die Vorderseite desselben Würfels."""
     bad = []
     for cube in model['cubes']:
-        if cube['material'] == 'glass':                     # leuchtendes Glas vorn ist gewollt
+        if cube['material'] == 'glass' or cube.get('tip'):  # leuchtendes Glas / helle Fangarmspitze vorn ist gewollt
             continue
         if max(abs(r) for r in cube.get('rotation') or [0]) > 45:
             continue                                        # stark gekippt: „oben“ ist dann eine andere Seite

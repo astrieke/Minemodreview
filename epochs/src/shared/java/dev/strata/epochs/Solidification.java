@@ -104,7 +104,8 @@ public final class Solidification {
     /** Aktueller Zeitfaktor des Spielers (1 = normal): Sporenwolken beschleunigen, Geodenrüstung und Spiralit bremsen. */
     public static double factor(ServerPlayer player) {
         double armor = EpochsGear.hasFullGeodeSet(player) ? EpochsGear.GEODE_SET_FACTOR : 1.0;
-        armor *= dev.strata.epochs.mob.Spiralit.factorFor(player);
+        // Rüstung und Spiralit stapeln sich nicht: Es gilt die stärkere Bremse.
+        armor = Math.min(armor, dev.strata.epochs.mob.Spiralit.factorFor(player));
         Factor f = FACTORS.get(player.getUUID());
         if (f == null) return armor;
         if (f.until <= player.level().getGameTime()) {

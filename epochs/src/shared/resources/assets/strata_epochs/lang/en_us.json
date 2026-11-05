@@ -84,5 +84,6 @@
   "message.strata_epochs.spiralit.hatched": "A Spiralit hatched and follows you.",
   "message.strata_epochs.spiralit.bonded": "The Spiralit joins you.",
   "message.strata_epochs.spiralit.stay": "Spiralit waits here.",
-  "message.strata_epochs.spiralit.follow": "Spiralit follows you."
+  "message.strata_epochs.spiralit.follow": "Spiralit follows you.",
+  "message.strata_epochs.spiralit.only_one": "You already have a Spiralit."
 }

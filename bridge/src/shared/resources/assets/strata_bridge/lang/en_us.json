@@ -56,7 +56,7 @@
   "advancements.strata_epochs.mastered_ash_age.description": "The Ash Age is complete in the codex. The Transplanter can bring it to the Overworld",
   "jei.strata_bridge.info.fossil_chunk": "Fossil chunks drop in epochs from Chronostone (2%) and Petrified Stone (15%). To prepare one: chisel in main hand, chunk in off hand, right-click the Preparation Table. Five strokes uncover the fossil. Striking too fast risks up to 30% breakage per stroke; with about a second's pause it is only 3%.",
   "jei.strata_bridge.info.fossil": "A prepared fossil. The first one of an epoch completes it in the codex; the Transplanter uses one per run.",
-  "jei.strata_bridge.info.ammonite_fossil": "A prepared fossil from the Crystal Age. The first one completes the epoch in the codex. Revived with Germ Tonic on the Preparation Table, it hatches a Spiralit.",
+  "jei.strata_bridge.info.ammonite_fossil": "A prepared fossil from the Crystal Age; the first one completes the epoch in the codex. Ammonite in main hand, Germ Tonic in off hand, right-click the Preparation Table: a Spiralit hatches (one per player). It floats at your right, its spiral shows the time left in the epoch (four segments, one per quarter), solidification runs 20% slower near it (does not stack with Geode armor), and every 15 s it points at a nearby epoch ore. Sneak + right-click: stay/follow; Crystal Quartz heals it.",
   "advancements.strata_epochs.met_spiralit.title": "Spiralit",
   "advancements.strata_epochs.met_spiralit.description": "Revive an Ammonite with Germ Tonic",
   "jade.strata_bridge.mob.spiralit": "Companion · slows solidification, senses ores"

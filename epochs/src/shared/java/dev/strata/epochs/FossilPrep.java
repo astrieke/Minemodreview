@@ -175,6 +175,10 @@ public final class FossilPrep {
             Mc.actionbar(player, Component.translatable("message.strata_epochs.spiralit.how").withStyle(ChatFormatting.GRAY));
             return;
         }
+        if (dev.strata.epochs.mob.Spiralit.hasSpiralit(player)) {
+            Mc.actionbar(player, Component.translatable("message.strata_epochs.spiralit.only_one").withStyle(ChatFormatting.GRAY));
+            return;
+        }
         ServerLevel level = (ServerLevel) player.level();
         double x = table.getX() + 0.5, y = table.getY() + 1.1, z = table.getZ() + 0.5;
         if (!player.isCreative()) {
