@@ -38,6 +38,8 @@ public final class EpochsContent {
     public static final Supplier<Item> CRYSTAL_QUARTZ = REG.item("crystal_quartz", p -> p);
     public static final Supplier<Item> AMBER_SHARD = REG.item("amber_shard", p -> p);
     public static final Supplier<Item> TIME_ANCHOR = REG.item("time_anchor", p -> p.stacksTo(1));
+    /** Drop des Geodenkriechers. */
+    public static final Supplier<Item> CALCITE_SCALE = REG.item("calcite_scale", p -> p);
 
     static {
         REG.blockItem(CHRONOSTONE, "chronostone");

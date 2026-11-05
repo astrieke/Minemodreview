@@ -17,8 +17,16 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 /**
  * Wer zu lange in einer Epoche bleibt, verfestigt: erst Warnung, dann Verlangsamung
  * und versteinernde Blöcke in der Nähe. Ein Zeitanker im Inventar verdoppelt die Zeit.
+ *
+ * <p>Mobs greifen über {@link #speedUp} (Zeitfaktor, z. B. Sporenwolke) und {@link #advance}
+ * (Zeit abziehen, z. B. Sanduhr-Puls) in die Uhr ein.
  */
-final class Solidification {
+public final class Solidification {
+
+    /** Zeitfaktor pro Spieler: Faktor und Spielzeit, bis zu der er gilt. Nur im Speicher, nicht gespeichert. */
+    private record Factor(double factor, long until) {}
+
+    private static final java.util.Map<java.util.UUID, Factor> FACTORS = new java.util.concurrent.ConcurrentHashMap<>();
 
     private static final int CHECK_INTERVAL = 20;
     private static final int PETRIFY_INTERVAL = 100;
@@ -38,7 +46,7 @@ final class Solidification {
             return;
         }
 
-        long ticks = visit.ticks() + CHECK_INTERVAL;
+        long ticks = visit.ticks() + Math.round(CHECK_INTERVAL * factor(player));
         player.setData(EpochsContent.VISIT.get(), visit.withTicks(ticks));
 
         Epoch epoch = StrataAPI.epochs(level.getServer()).get(epochId.get());
@@ -57,6 +65,38 @@ final class Solidification {
                 if (ticks % PETRIFY_INTERVAL == 0) petrifyNear(level, player.blockPosition());
             }
         }
+    }
+
+    /**
+     * Die Uhr läuft für {@code durationTicks} um {@code factor} schneller (2,5 = zweieinhalbfach).
+     * Ein stärkerer Faktor ersetzt einen schwächeren, ein gleich starker verlängert nur die Dauer.
+     */
+    public static void speedUp(ServerPlayer player, double factor, int durationTicks) {
+        long now = player.level().getGameTime();
+        Factor neu = new Factor(factor, now + durationTicks);
+        FACTORS.merge(player.getUUID(), neu, (old, n) -> {
+            if (old.until <= now || old.factor < n.factor) return n;
+            if (old.factor > n.factor) return old;
+            return new Factor(n.factor, Math.max(old.until, n.until));
+        });
+    }
+
+    /** Aktueller Zeitfaktor des Spielers (1 = normal). */
+    public static double factor(ServerPlayer player) {
+        Factor f = FACTORS.get(player.getUUID());
+        if (f == null) return 1.0;
+        if (f.until <= player.level().getGameTime()) {
+            FACTORS.remove(player.getUUID());
+            return 1.0;
+        }
+        return f.factor;
+    }
+
+    /** Zieht erlaubte Zeit ab: Die Uhr springt um {@code ticks} vor. Nur in einer Epoche wirksam. */
+    public static void advance(ServerPlayer player, long ticks) {
+        if (EpochTravel.epochOf((ServerLevel) player.level()).isEmpty()) return;
+        EpochVisit visit = player.getData(EpochsContent.VISIT.get());
+        player.setData(EpochsContent.VISIT.get(), visit.withTicks(visit.ticks() + ticks));
     }
 
     /** Verwandelt einen zufälligen festen Block in der Nähe in versteinerten Stein. */

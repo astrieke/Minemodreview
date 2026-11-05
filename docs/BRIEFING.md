@@ -63,7 +63,7 @@ tools/make_mob_textures.py Mob-Texturen aus den Bauplänen
 tools/mob_sheet.py         Prüfblatt aus den Mob-Screenshots
 tools/blockbench-mcp/      MCP-Server + Blockbench-Plugin (Claude baut Modelle in Blockbench)
 scripts/smoke-test.sh      Server + Selbsttest in allen Versionen
-scripts/client-screenshot.sh  Client-Screenshot in einer Epoche
+scripts/client-screenshot.sh  Client-Screenshot in einer Epoche (mit SHOT_MOB=<id> auf einer Mob-Bühne)
 ```
 
 **Prinzip:** Versionsunterschiede stecken nur in kleinen Anbindungsklassen. Alles, was Mojang zwischen Versionen umformatiert (Worldgen, Loot, Rezepte, Advancements), wird beim Bauen aus den Vanilla-Dateien genau dieser Version abgeleitet.
@@ -374,7 +374,7 @@ Arbeitsplan des Projektmanagers vom 03.11.2026. Details stehen in [`MOBS.md`](MO
 7. **Gate A:** alle drei Prüfer mindestens 7, oder der Steinzeuge ist geparkt.
 
 **Danach im Code:**
-- M0: Mob-Basis, Modell-Builder, Abspieler, Renderer mit Leucht-Ebenen, Fähigkeiten-Gerüst, Verfestigungs-API, Tuning
-- **Gate B:** Client-Screenshot unter 1.21.1
-- M1: Geodenkriecher
+- M0: Mob-Basis, Modell-Builder, Abspieler, Renderer mit Leucht-Ebenen, Fähigkeiten-Gerüst, Verfestigungs-API, Tuning (**erledigt**)
+- **Gate B:** Client-Screenshot unter 1.21.1 (**erreicht**)
+- M1: Geodenkriecher (**im Spiel**, Reste siehe [`MOBS.md`](MOBS.md#umsetzung-im-code))
 - **Gate C**

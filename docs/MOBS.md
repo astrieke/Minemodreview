@@ -4,7 +4,9 @@ Ergebnis einer Runde mit Game Designer, 3D-Modellierer/Animator, Programmierer u
 
 ## Stand
 
-Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früheren Noten aus einer einzelnen Designer-Prüfung (8 / 7 / 7,5) sind überholt. Es gilt die Nachprüfung durch drei Prüfer unten. Danach ist nur der Geodenkriecher freigegeben. Die genauen Maße stehen in [`docs/BRIEFING.md`](BRIEFING.md), Abschnitt 8. Als Nächstes folgt die Grundlage im Code (M0).
+Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früheren Noten aus einer einzelnen Designer-Prüfung (8 / 7 / 7,5) sind überholt. Es gilt die Nachprüfung durch drei Prüfer unten. Danach ist nur der Geodenkriecher freigegeben. Die genauen Maße stehen in [`docs/BRIEFING.md`](BRIEFING.md), Abschnitt 8.
+
+**Im Code (05.11.2026):** M0 steht, der Geodenkriecher läuft in allen 5 Versionen (M1 zum größten Teil, siehe unten). **Gate B ist erreicht:** Im Client-Screenshot unter 1.21.1 sieht er aus wie in Blockbench, und die Kristalle leuchten auch im Dunkeln (`mobs/geode_crawler/shots/ingame_1.21.1.png`, `ingame_dark_1.21.1.png`).
 
 **Nachprüfung am 02.11.2026** (nach der Anpassung an die Stilregeln: höchstens 15 Würfel, 64×64, feste Paletten), drei Prüfer:
 
@@ -24,6 +26,34 @@ Offen sind vor allem:
   - Der Kern des Steinzeugen wird beim Erwachen nicht mehr negativ skaliert, und der Steinzeuge lehnt sich danach nicht mehr zurück.
   - Das Aufpumpen des Sporenbalgs ist auf 1,2 begrenzt.
   - Haltephasen sind linear.
+
+## Umsetzung im Code
+
+Alles liegt in Strata Epochs (`epochs/src/`). Der Mob-Code ist bis auf wenige Adapter für alle Versionen gleich.
+
+| Teil | Wo | Was |
+|---|---|---|
+| Modell-Daten | `shared/…/mob/MobModelData` | liest `mobs/<id>/model.json` (wird beim Bauen ins Jar kopiert) |
+| Abspieler | `shared/…/mob/MobAnimation` | Blockbench-Regeln: additiv, Catmull-Rom/linear/step, Euler komponentenweise |
+| Mob-Basis | `shared/…/mob/StrataMob`, `StrataMobDef` | Aktion und Leuchtstärke als synchronisierte Zahl, Datapack-Werte, Advancement „Begegnung“ |
+| Fähigkeiten | `shared/…/mob/StrataAbility` | Vorwarnung → Wirkung → Abklingzeit, Werte aus dem Datapack |
+| Geodenkriecher | `shared/…/mob/GeodeCrawler` | Erzwitterung, Kratzfund, Kristallpanzer, anlockbar mit Kristallquarz |
+| Modell-Builder, Pose | `shared/…/client/MobModelBuilder`, `MobPoser` | Blockbench → `LayerDefinition`; Idle + Laufen + Aktion + Kopfdrehung |
+| Renderer | `client_1_21_1`, `client_states` + `glow_crumbling`/`glow_uvmap` | 1.21.1 ohne Render States; ab 1.21.11 mit Render States, Leucht-Ebene je nach Version |
+| Registrierung | `reg_*/…/MobReg`, `MobCompat` | Entity-Typ, Spawn-Ei, Sounds, Schaden, Partikel, Grundattribute |
+| Datapack-Werte | `data/strata_epochs/strata_core/mob_tuning/geode_crawler.json` | Registry `strata_core:mob_tuning` (in Strata Core) |
+| Spawns | `epochs/worldgen/epochs.json` → `mobs` | Biome-Modifier `neoforge:add_spawns`, beim Bauen im Format der Version erzeugt |
+| Config | `EpochsConfig` | Mob an/aus, Höchstzahl pro Epoche |
+| Verfestigungs-API | `Solidification.speedUp`, `advance` | Zeitfaktor pro Spieler, Zeit abziehen (für Sporenbalg und Steinzeuge) |
+
+**Neuen Mob anlegen:** Dateien in `mobs/<id>/`, den Namen in `epochs.json` → `mobs` eintragen (Kopie ins Jar und Spawns), eine Entity-Klasse mit `StrataMobDef`, Registrierung in `EpochsMobs`, Renderer in beiden `MobClient`-Klassen, Datapack-Werte, Loot, Sprache, Sounds und einen Eintrag im Selbsttest.
+
+**Geodenkriecher, offen für die Definition of Done:**
+- Laufen und Aktionen sind im Spiel noch nicht im Bild geprüft (der Screenshot zeigt stehende Tiere ohne KI).
+- Jade zeigt Name, aber noch nicht die Epoche.
+- Client-Screenshot für 26.x fehlt (siehe „Bekannte Lücke“).
+- Sounds sind eigene Ereignisse mit Untertiteln, klingen aber wie das Gürteltier aus Vanilla.
+- Die Calcitschuppe wird schon gebraucht: Zweitrezept für den Zeitanker. Den Bohrkopf Stufe 2 gibt es noch nicht.
 
 ## Entscheidung in Kürze
 

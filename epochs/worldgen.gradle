@@ -14,10 +14,12 @@ sourceSets.main.resources.srcDir(outDir)
 def generate = tasks.register('generateEpochData') {
     def specFile = rootProject.file('epochs/worldgen/epochs.json')
     def recipeDir = rootProject.file('epochs/worldgen/recipes')
+    def mobsDir = rootProject.file('mobs')
     // 1.21.x: Vanilla-Daten liegen in einem Laufzeit-Jar; 26.x: im kompilierten Minecraft-Jar.
     def classpath = configurations.compileClasspath + configurations.runtimeClasspath
     inputs.file(specFile)
     inputs.dir(recipeDir)
+    inputs.dir(mobsDir)
     inputs.files(classpath)
     outputs.dir(outDir)
 
@@ -139,6 +141,29 @@ def generate = tasks.register('generateEpochData') {
             biome.features[UNDERGROUND_ORES].addAll(placedOres)
             write("data/${ns}/worldgen/biome/${e.biome}.json", biome)
 
+            // Mob-Spawns als NeoForge-Biome-Modifier, im Eintragsformat genau dieser Version:
+            // bis 26.2 {weight, minCount, maxCount}, ab 26.3 {weight, count}.
+            def spawnLists = biome.spawners instanceof Map ? biome.spawners
+                    : biome.attributes?.get('minecraft:gameplay/natural_mob_spawns')?.argument?.spawns_by_category
+            def sample = spawnLists?.values()?.flatten()?.find { it instanceof Map }
+            if (sample == null) throw new GradleException("Kein Spawn-Eintrag in ${e.biome_base} gefunden")
+            def countFormat = sample.containsKey('count')
+            (e.mobs ?: []).each { m ->
+                def entry = [type: m.entity, weight: m.weight]
+                if (countFormat) {
+                    entry.count = m.min == m.max ? m.min : [type: 'minecraft:uniform', min_inclusive: m.min, max_inclusive: m.max]
+                } else {
+                    entry.minCount = m.min
+                    entry.maxCount = m.max
+                }
+                def name = m.entity.split(':')[1]
+                write("data/${ns}/neoforge/biome_modifier/${name}_spawns.json", [
+                        type    : 'neoforge:add_spawns',
+                        biomes  : "${ns}:${e.biome}".toString(),
+                        spawners: [entry]
+                ])
+            }
+
             // Dimension: Noise-Generator mit einem festen Biom.
             write("data/${ns}/dimension/${e.id}.json", [
                     type     : "${ns}:${e.id}".toString(),
@@ -148,6 +173,22 @@ def generate = tasks.register('generateEpochData') {
                             biome_source: [type: 'minecraft:fixed', biome: "${ns}:${e.biome}".toString()]
                     ]
             ])
+        }
+
+        // Mobs: Modell, Textur und Leucht-Ebenen aus mobs/<name>/ ins Jar.
+        (spec.mobs ?: []).each { String mob ->
+            def dir = new File(mobsDir, mob)
+            def copyFile = { File from, String to ->
+                if (!from.isFile()) throw new GradleException("Mob-Datei fehlt: ${from}")
+                def target = new File(root, to)
+                target.parentFile.mkdirs()
+                target.bytes = from.bytes
+            }
+            copyFile(new File(dir, 'model.json'), "assets/${ns}/strata_mobs/${mob}.json")
+            copyFile(new File(dir, 'texture.png'), "assets/${ns}/textures/entity/${mob}.png")
+            dir.eachFileMatch(~/texture_glow_.*\.png/) { f ->
+                copyFile(f, "assets/${ns}/textures/entity/${mob}_glow_${f.name - 'texture_glow_'}")
+            }
         }
 
         // Loot-Tabellen: Vanilla-Tabelle kopieren und die IDs austauschen (Silk Touch, Fortune usw. bleiben erhalten).

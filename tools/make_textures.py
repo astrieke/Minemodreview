@@ -17,6 +17,8 @@ from PIL import Image, ImageDraw
 
 OUT = os.path.join(os.path.dirname(__file__), '..', 'epochs', 'src', 'shared', 'resources',
                    'assets', 'strata_epochs', 'textures')
+OUT_EGGS = os.path.join(os.path.dirname(__file__), '..', 'epochs', 'src', 'reg_1_21_11_plus', 'resources',
+                        'assets', 'strata_epochs', 'textures', 'item')
 
 
 # ---------------------------------------------------------------- Hilfen
@@ -399,6 +401,55 @@ def time_anchor():
     return outline(from_grid(rows, pal), '#3a2606')
 
 
+def calcite_scale():
+    # Drop des Geodenkriechers: gewölbte Calcitschuppe mit Wachstumsringen und violettem Schimmer am Rand.
+    pal = {'w': '#fbf8f2', 'l': '#e6e0d6', 'm': '#cfc6b8', 'd': '#a89c8c', 'v': '#b48cff', 'V': '#7b55d6'}
+    rows = [
+        '................',
+        '................',
+        '.....wwwww......',
+        '....wllllllv....',
+        '...wllmmmmlll...',
+        '...wlmlllllmld..',
+        '..wllmlwwllmlv..',
+        '..wlmlwllllmld..',
+        '..wlmllmmmlmld..',
+        '..vlmllllllmlV..',
+        '...lllmmmmllld..',
+        '...vlllllllldV..',
+        '....dlllllldd...',
+        '.....Vddddd.....',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#4a4054')
+
+
+def geode_crawler_spawn_egg():
+    # Spawn-Ei (ab 1.21.5 eigene Textur): Echsenhaut mit Calcitband und Kristallflecken.
+    pal = {'d': '#4a4054', 'm': '#6d6078', 'l': '#918190', 'c': '#e6e0d6', 'C': '#bfb6a8',
+           'v': '#b48cff', 'V': '#7b55d6', 'w': '#f2ecff'}
+    rows = [
+        '................',
+        '......llll......',
+        '.....lmmmmm.....',
+        '....lmmvwmmd....',
+        '....lmmVvmmd....',
+        '...lmmmmmmmmd...',
+        '...ccccccccCC...',
+        '..lmmmmmmvwmmd..',
+        '..lmvwmmmVvmmd..',
+        '..lmVvmmmmmmmd..',
+        '..lmmmmmmmmmdd..',
+        '..dmmmmvwmmmdd..',
+        '...dmmmVvmmdd...',
+        '....ddmmmddd....',
+        '......dddd......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#231c2a')
+
+
 # ---------------------------------------------------------------- Ausgabe
 
 BLOCKS = {
@@ -414,6 +465,10 @@ ITEMS = {
     'crystal_quartz': crystal_quartz,
     'amber_shard': amber_shard,
     'time_anchor': time_anchor,
+    'calcite_scale': calcite_scale,
+}
+SPAWN_EGGS = {
+    'geode_crawler_spawn_egg': geode_crawler_spawn_egg,
 }
 
 
@@ -426,6 +481,13 @@ def save_all():
             os.makedirs(os.path.dirname(path), exist_ok=True)
             img.save(path)
             images[(kind, name)] = img
+    # Spawn-Eier haben erst ab 1.21.5 eigene Texturen (1.21.1 färbt eine Vorlage ein).
+    for name, fn in SPAWN_EGGS.items():
+        img = fn()
+        path = os.path.join(OUT_EGGS, name + '.png')
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        img.save(path)
+        images[('item', name)] = img
     return images
 
 

@@ -18,5 +18,11 @@
   "message.strata_epochs.gate.unreachable": "%s ist noch nicht erreichbar.",
   "message.strata_epochs.gate.entered": "Die Zeit wird hier schwer. Bleib nicht zu lange.",
   "message.strata_epochs.solidify.warning": "Die Zeit verfestigt sich um dich … noch %s s",
-  "message.strata_epochs.solidify.active": "Du versteinerst! Kehr durch das Tor zurück!"
+  "message.strata_epochs.solidify.active": "Du versteinerst! Kehr durch das Tor zurück!",
+  "entity.strata_epochs.geode_crawler": "Geodenkriecher",
+  "item.strata_epochs.geode_crawler_spawn_egg": "Geodenkriecher-Spawn-Ei",
+  "item.strata_epochs.calcite_scale": "Calcitschuppe",
+  "subtitles.strata_epochs.geode_crawler.ambient": "Geodenkriecher schnaubt",
+  "subtitles.strata_epochs.geode_crawler.hurt": "Geodenkriecher wird verletzt",
+  "subtitles.strata_epochs.geode_crawler.death": "Geodenkriecher stirbt"
 }

@@ -7,6 +7,9 @@
 # Voraussetzung: scripts/smoke-test.sh <version> lief vorher (Welt und Ankunftsplatz existieren).
 # Optional: PYTHON=<python mit python-xlib>, um die Warnung „experimentelle Einstellungen“
 # automatisch zu bestätigen (Vanilla zeigt sie einmal pro Welt mit Datapack-Dimensionen).
+# Optional: SHOT_MOB=<entity-id>, z. B. strata_epochs:geode_crawler. Dann baut das Skript neben
+# dem Ankunftsplatz eine kleine Bühne (Calcit-Boden, ein Kristallquarz-Erz) und stellt zwei
+# Exemplare darauf: links von der Seite, rechts von vorn. Der Spieler schaut von oben darauf.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 v="$1"; epoch="$2"; out="$(realpath -m "$3")"
@@ -44,6 +47,20 @@ item replace entity @a[tag=!strata_shot] hotbar.7 with strata_epochs:amber_ore
 item replace entity @a[tag=!strata_shot] hotbar.8 with strata_epochs:chronostone
 tag @a add strata_shot
 MC
+if [ -n "${SHOT_MOB:-}" ]; then
+    # Bühne erst nach 3 s bauen, wenn die Chunks am Ankunftsplatz geladen sind.
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run tp @s $x.5 $((y + 1)) $((z + 3)).5 0 28\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:stage 60t|" \
+        "$dp/data/strata_shot/function/tick.mcfunction"
+    cat > "$dp/data/strata_shot/function/stage.mcfunction" <<MC
+execute in strata_epochs:$epoch run fill $((x - 5)) $((y - 1)) $((z + 3)) $((x + 5)) $((y - 1)) $((z + 13)) minecraft:calcite
+execute in strata_epochs:$epoch run fill $((x - 5)) $y $((z + 3)) $((x + 5)) $((y + 5)) $((z + 13)) minecraft:air
+execute in strata_epochs:$epoch run setblock $((x + 3)) $y $((z + 10)) strata_epochs:crystal_quartz_ore
+execute in strata_epochs:$epoch run summon $SHOT_MOB $((x - 1)).5 $y $((z + 8)).5 {NoAI:1b,PersistenceRequired:1b,Rotation:[90f,0f]}
+execute in strata_epochs:$epoch run summon $SHOT_MOB $((x + 2)).5 $y $((z + 8)).5 {NoAI:1b,PersistenceRequired:1b,Rotation:[180f,0f]}
+MC
+    # SHOT_DARK=1: ohne Nachtsicht, so wie man den Mob in der dunklen Epoche sieht.
+    [ -n "${SHOT_DARK:-}" ] || echo 'effect give @a minecraft:night_vision infinite 0 true' >> "$dp/data/strata_shot/function/stage.mcfunction"
+fi
 echo '{"values":["strata_shot:tick"]}' > "$dp/data/minecraft/tags/function/tick.json"
 
 cat > "$client_dir/options.txt" <<OPT

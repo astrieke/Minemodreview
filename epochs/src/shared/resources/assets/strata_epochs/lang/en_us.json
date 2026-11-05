@@ -18,5 +18,11 @@
   "message.strata_epochs.gate.unreachable": "%s cannot be reached yet.",
   "message.strata_epochs.gate.entered": "Time grows heavy here. Do not stay too long.",
   "message.strata_epochs.solidify.warning": "Time is solidifying around you… %s s left",
-  "message.strata_epochs.solidify.active": "You are solidifying! Return through the gate!"
+  "message.strata_epochs.solidify.active": "You are solidifying! Return through the gate!",
+  "entity.strata_epochs.geode_crawler": "Geode Crawler",
+  "item.strata_epochs.geode_crawler_spawn_egg": "Geode Crawler Spawn Egg",
+  "item.strata_epochs.calcite_scale": "Calcite Scale",
+  "subtitles.strata_epochs.geode_crawler.ambient": "Geode Crawler snorts",
+  "subtitles.strata_epochs.geode_crawler.hurt": "Geode Crawler hurts",
+  "subtitles.strata_epochs.geode_crawler.death": "Geode Crawler dies"
 }

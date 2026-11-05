@@ -260,6 +260,33 @@ DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_sp
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass}
 
 
+# Leucht-Ebenen: Name -> Materialien, deren Pixel im Dunkeln leuchten (texture_glow_<name>.png).
+# Die Stärke je Zustand (0..1) legt der Mob im Code fest.
+GLOW = {
+    'geode_crawler': {'crystals': {'quartz'}},
+}
+
+
+def paint_glow(model, img, mob_id):
+    """Schreibt pro Leucht-Ebene eine Maske: nur die Pixel der leuchtenden Würfel, etwas aufgehellt."""
+    outs = []
+    for layer, materials in GLOW.get(mob_id, {}).items():
+        glow = Image.new('RGBA', img.size, (0, 0, 0, 0))
+        for cube in model['cubes']:
+            if cube['material'] not in materials:
+                continue
+            for x0, y0, w, h in faces(cube).values():
+                for y in range(y0, y0 + h):
+                    for x in range(x0, x0 + w):
+                        r, g, b, a = img.getpixel((x, y))
+                        if a:
+                            glow.putpixel((x, y), (min(255, int(r * 1.15)), min(255, int(g * 1.15)), min(255, int(b * 1.15)), 255))
+        out = os.path.join(ROOT, mob_id, f'texture_glow_{layer}.png')
+        glow.save(out)
+        outs.append(out)
+    return outs
+
+
 def paint(mob_id):
     model = json.load(open(os.path.join(ROOT, mob_id, 'model.json'), encoding='utf-8'))
     w, h = model['texture_size']
@@ -279,6 +306,8 @@ def paint(mob_id):
     check_light(model, img, mob_id)
     out = os.path.join(ROOT, mob_id, 'texture.png')
     img.save(out)
+    for g in paint_glow(model, img, mob_id):
+        print('Leucht-Ebene:', os.path.normpath(g))
     return out
 
 

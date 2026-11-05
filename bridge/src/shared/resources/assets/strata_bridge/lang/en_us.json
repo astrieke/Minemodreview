@@ -19,5 +19,7 @@
   "jade.strata_bridge.found_in.crystal_age": "Found in the Crystal Age",
   "jade.strata_bridge.found_in.spore_age": "Found in the Spore Age",
   "jade.strata_bridge.petrified": "Solidified time",
-  "config.jade.plugin_strata_bridge.blocks": "Strata hints"
+  "config.jade.plugin_strata_bridge.blocks": "Strata hints",
+  "advancements.strata_epochs.met_geode_crawler.title": "Geode Crawler",
+  "advancements.strata_epochs.met_geode_crawler.description": "Meet a Geode Crawler. Follow it to find ore."
 }

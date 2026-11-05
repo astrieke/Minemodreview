@@ -19,5 +19,7 @@
   "jade.strata_bridge.found_in.crystal_age": "Kommt in der Kristallzeit vor",
   "jade.strata_bridge.found_in.spore_age": "Kommt in der Sporenzeit vor",
   "jade.strata_bridge.petrified": "Erstarrte Zeit",
-  "config.jade.plugin_strata_bridge.blocks": "Strata-Hinweise"
+  "config.jade.plugin_strata_bridge.blocks": "Strata-Hinweise",
+  "advancements.strata_epochs.met_geode_crawler.title": "Geodenkriecher",
+  "advancements.strata_epochs.met_geode_crawler.description": "Begegne einem Geodenkriecher. Wer ihm folgt, findet Erz."
 }

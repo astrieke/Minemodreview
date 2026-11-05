@@ -44,6 +44,11 @@ public final class StrataAPI {
         return StrataRegistries.epochs(server);
     }
 
+    /** Datapack-Werte eines Mobs (Leben, Schaden, Fähigkeiten); leer, wenn keine gesetzt sind. */
+    public static dev.strata.core.MobTuning mobTuning(MinecraftServer server, String entityId) {
+        return StrataRegistries.mobTuning(server, entityId);
+    }
+
     /** Welche Epoche liegt unter diesem Chunk? */
     public static Optional<String> epochAt(MinecraftServer server, long seed, int chunkX, int chunkZ) {
         EpochSelector selector = StrataRegistries.epochSelector(server);

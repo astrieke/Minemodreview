@@ -1,0 +1,36 @@
+{
+  "entity": "strata_epochs:geode_crawler",
+  "attributes": {
+    "max_health": 20,
+    "attack_damage": 3,
+    "armor": 4,
+    "movement_speed": 0.18
+  },
+  "spawn": {
+    "enabled": true,
+    "max_light": 7,
+    "max_nearby": 4
+  },
+  "abilities": {
+    "ore_sense": {
+      "enabled": true,
+      "radius": 12,
+      "interval_min": 400,
+      "interval_max": 800
+    },
+    "ore_scratch": {
+      "enabled": true,
+      "duration": 60,
+      "cooldown": 2400,
+      "cooldown_lured": 1200
+    },
+    "crystal_shell": {
+      "enabled": true,
+      "warning": 8,
+      "duration": 60,
+      "cooldown": 400,
+      "damage_factor": 0.4,
+      "thorns": 2
+    }
+  }
+}

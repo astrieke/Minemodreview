@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " Q ",
+    "ASA",
+    " Q "
+  ],
+  "key": {
+    "Q": "strata_epochs:crystal_quartz",
+    "A": "strata_epochs:amber_shard",
+    "S": "strata_epochs:calcite_scale"
+  },
+  "result": {
+    "id": "strata_epochs:time_anchor",
+    "count": 1
+  }
+}

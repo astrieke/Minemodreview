@@ -1,0 +1,29 @@
+{
+  "entity.geode_crawler.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.armadillo.ambient",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.geode_crawler.ambient"
+  },
+  "entity.geode_crawler.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.armadillo.hurt",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.geode_crawler.hurt"
+  },
+  "entity.geode_crawler.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.armadillo.death",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.geode_crawler.death"
+  }
+}
