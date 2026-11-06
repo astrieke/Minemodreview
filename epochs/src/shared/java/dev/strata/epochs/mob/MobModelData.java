@@ -67,6 +67,7 @@ public record MobModelData(String id, int textureWidth, int textureHeight,
         List<Cube> cubes = new ArrayList<>();
         for (JsonElement e : json.getAsJsonArray("cubes")) {
             JsonObject c = e.getAsJsonObject();
+            if (c.has("preview") && c.get("preview").getAsBoolean()) continue;   // nur für die Prüfbilder (z. B. Boden)
             JsonArray uv = c.getAsJsonArray("uv_offset");
             cubes.add(new Cube(c.get("name").getAsString(), c.get("bone").getAsString(),
                     vec(c, "from", 0), vec(c, "to", 0), uv.get(0).getAsInt(), uv.get(1).getAsInt(),

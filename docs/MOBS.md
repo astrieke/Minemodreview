@@ -149,6 +149,15 @@ Ein breiter, blockiger Steinkörper in Schichtoptik. Auf der Brust leuchtet ein 
 - **Technik:** 64×64, ca. 14 Würfel, Leucht-Ebene für den Sanduhr-Kern. Er ist die Vorlage für einen späteren Mini-Boss.
 - **Warum erst als Dritter:** Er hängt an der Verfestigungs-Mechanik und braucht eine Leucht-Ebene und eine Aufwach-Animation. Das ist mehr Neues als bei 1 und 2.
 
+### 4. Glutwühler (`ember_burrower`): Aschezeit, Gegner (Phase 3)
+
+Ein gedrungener Grab-Salamander mit breiten Schaufelklauen, einer Nasenplatte aus Basalt und einem Kamm aus glühenden Glutplatten auf dem Rücken. Unter der aschegrauen Haut glimmen Risse.
+
+- **Verhalten:** Er taucht in Vulkanasche und andere lockere Böden ab. Dann ragt nur noch der glühende Kamm heraus und zieht wie eine Haifischflosse auf den Spieler zu. Neben ihm bricht er nach kurzer Vorwarnung hervor und schleudert ihn hoch. An der Oberfläche ist er für einige Sekunden verwundbar und kämpft mit den Klauen.
+- **Drop:** Glutsplitter; beim Abtauchen wühlt er gelegentlich einen **Fossilbrocken** der Aschezeit frei (Bezug zur Fossil-Präparation).
+- **Thema:** Er macht die eigene Mechanik der Aschezeit spürbar: Der Boden selbst ist gefährlich, man achtet auf die Asche um sich herum.
+- **Technik:** 64×64, ca. 14 Würfel, Leucht-Ebenen `crest` (Kamm und Augen) und `veins` (Risse, nur vor dem Hervorbrechen). Abtauchen ist eine gehaltene Animation (`burrowed`, Körper 10 px unter dem Boden, nur der Kamm ragt heraus); der Server braucht dafür keine Unsichtbarkeit.
+
 ## Spezialfähigkeiten
 
 Jeder Mob hat 3–4 Fähigkeiten, die zu seiner Rolle im Spielablauf passen. Für alle gelten drei Regeln:
@@ -183,6 +192,15 @@ Effekte nutzen nur Vanilla-Partikel und -Sounds. Das spart Assets und funktionie
 | **Hammerschlag** | Nahkampf | Schlägt mit beiden Fäusten auf den Boden: 9 Schaden, hebt das Ziel leicht an. Im Umkreis von 2 Blöcken Langsamkeit I für 2 s. | Langes Ausholen (Animation `attack`, Arme über dem Kopf, 0,35 s). Partikel `block` vom Boden und `explosion` (klein). Sound `entity.iron_golem.attack`, dann `block.anvil.land`, leise. | Beim Ausholen zur Seite gehen. Schilde blocken den Schlag, aber nicht die Bodenwelle. | Schaden 9, Rückstoß 0,4 nach oben, Abklingzeit 2,5 s |
 | **Sanduhr-Puls** | Spieler 3–8 Blöcke entfernt, alle 12 s | Der Kern sendet eine goldene Welle aus. Getroffene Spieler **verlieren 10 s erlaubte Zeit** (Verfestigung springt vor) und bekommen Abbaulähmung I für 4 s. | 1 s Vorwarnung: Der Kern leuchtet auf und vergrößert sich (Animation `pulse`). Partikel: Ring aus `dust` #ffe08a, der sich ausbreitet, dazu `end_rod` am Kern. Sound `block.bell.resonate`, Tonhöhe 0,5. | Nah bei ihm bleiben (innerhalb von 3 Blöcken wirkt der Puls nicht) oder hinter einen Block treten (die Welle braucht Sichtlinie). | Radius 8, −200 Ticks, Abbaulähmung I 4 s |
 | **Steinhaut** | einmal, wenn er unter 50 % Leben fällt | Er verhärtet sich 4 s: 80 % weniger Schaden, regeneriert 4 Leben. Ein Treffer mit einer **Spitzhacke** auf den Kern bricht die Steinhaut sofort und betäubt ihn 1 s. | Risse in der Haut leuchten golden (Leucht-Ebene). Animation `harden` (Arme vor der Brust, Kopf eingezogen). Partikel `wax_on` und `block` Stein. Sound `block.deepslate.place` und `block.grindstone.use`. | Spitzhacke ziehen und den Kern treffen. Das ist der Kniff für den späteren Mini-Boss. | Dauer 4 s, Schaden −80 %, Heilung 4, einmal pro Leben |
+
+### Glutwühler: 4 Fähigkeiten (Gegner, Aschezeit)
+
+| Fähigkeit | Auslöser | Wirkung | Signal und Effekte | Gegenzug | Startwerte |
+|---|---|---|---|---|---|
+| **Abtauchen** | Ziel in 4–16 Blöcken, Boden unter ihm aus `strata_epochs:burrowable` | Gräbt sich ein (1 s) und zieht mit nur dem Kamm über der Asche auf das Ziel zu: schneller, Schaden −75 %. Hat er Glück, bleibt ein Fossilbrocken der Aschezeit liegen. | Animation `burrow`, dann gehalten `burrowed` (Kamm wackelt). Partikel `block` Vulkanasche als Spur hinter dem Kamm. Sound `block.sand.break`, leise, im Takt. | Auf festen Boden ausweichen (Basalt, Zeitgestein, Bauten): Dort kann er nicht abtauchen. | Tempo ×1,6, Schaden −75 %, Fossil 8 %, Abklingzeit 8 s |
+| **Hervorbrechen** | abgetaucht und ≤ 2,5 Blöcke vom Ziel | Nach 0,8 s Vorwarnung bricht er hervor: 6 Schaden, schleudert das Ziel 0,7 hoch. | Vorwarnung: Animation `tremor`, die Risse leuchten auf (Ebene `veins`), Partikel `lava` und Asche aus dem Boden, Sound `block.basalt.break`, tief. Dann Animation `emerge`, Sound `entity.ravager.roar`, leise. | Bei der Vorwarnung zur Seite gehen. Schilde blocken den Schaden, nicht das Hochschleudern. | Schaden 6, Wurf 0,7, Vorwarnung 0,8 s |
+| **Glutkamm** | aufgetaucht | 4 s lang verwundbar. Treffer **von hinten** auf den glühenden Kamm machen 50 % mehr Schaden. | Kamm leuchtet voll, Partikel `small_flame` am Kamm. | Hinter ihn gehen und auf den Rücken schlagen. | Dauer 4 s, Bonus +50 % |
+| **Klauenhieb** | Nahkampf, aufgetaucht | 4 Schaden, kurzer Rückstoß. | Animation `attack` (Klauen hoch, dann nach unten). Sound `entity.ravager.attack`, hoch. | Abstand halten, Schild. | Schaden 4, Abklingzeit 1,5 s |
 
 ### Was das für Modelle und Code bedeutet
 

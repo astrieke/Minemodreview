@@ -51,6 +51,9 @@ PAL = {
     'shell':         ['#8a7458', '#b39c78', '#d6c29a', '#e9dbb8', '#f7efd8'],
     'hood':          ['#5a3438', '#7a4a4a', '#9a6560', '#b8837a', '#d4a596'],
     'eye':           ['#6a4708', '#9c6a12', '#d9a43a', '#f2c45a', '#ffe08a'],
+    'ash_hide':      ['#3a3533', '#4f4844', '#655c56', '#7d726a', '#948880'],
+    'basalt':        ['#1f1d22', '#2c2a30', '#3b3840', '#4c4852', '#5e5a64'],
+    'ember':         ['#5a1205', '#9e2a0c', '#e0531c', '#ff9a3c', '#ffd27a'],
     'fossil':        ['#6e5f44', '#9c8a64', '#cbb98f', '#e6d8b4', '#f2e8cc'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
 }
@@ -387,9 +390,36 @@ def d_hood(img, f, rnd):
         put(img, r, x, 0, PAL['hood'][4])
 
 
+EMBER_VEIN = '#a8381a'
+EMBER_VEIN_END = '#6e2412'
+
+
+def d_ember_veins(img, f, rnd):
+    # Glutrisse in der Aschehaut: dunkelrot gemalt, hell nur auf der Leucht-Ebene (vor dem Hervorbrechen).
+    for face in ('east', 'west', 'up'):
+        x0, y0, w, h = f[face]
+        for _ in range(2 + (w * h) // 60):
+            x, y = rnd.randrange(1, w - 1), rnd.randrange(0, h)
+            length = rnd.randrange(3, 7)
+            for i in range(length):
+                if 0 <= x < w and 0 <= y < h:
+                    img.putpixel((x0 + x, y0 + y), rgb(EMBER_VEIN_END if i == length - 1 else EMBER_VEIN))
+                if rnd.random() < 0.5:
+                    y += 1
+                x += rnd.choice((-1, 1, 0))
+
+
+def d_eyes(img, f, rnd):
+    # Kleine glühende Augen vorn am Schädel, mit dunkler Augenhöhle darüber.
+    r = f['north']
+    for x in (1, r[2] - 2):
+        put(img, r, x, 1, '#1a1210')
+        put(img, r, x, 2, '#ffd27a')
+
+
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
            'amber_top': d_amber_top,
-           'spiral': d_spiral, 'hood': d_hood, 'fossil': d_fossil,
+           'spiral': d_spiral, 'hood': d_hood, 'fossil': d_fossil, 'eyes': d_eyes,
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass}
 
 
@@ -402,6 +432,9 @@ GLOW = {
     # Kern (Sanduhr) und Augen pulsieren; die Goldadern leuchten nur während der Steinhaut
     'petrified_witness': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a', '#ffd86b', '#f2b43a'}},
                           'veins': {'colors': {'#9a6812', '#6b4a10'}, 'glow_color': '#ffe08a'}},
+    # Kamm und Augen glühen immer (voll, wenn er auftaucht); die Risse nur vor dem Hervorbrechen
+    'ember_burrower': {'crest': {'colors': {'#5a1205', '#9e2a0c', '#e0531c', '#ff9a3c', '#ffd27a'}},
+                       'veins': {'colors': {'#a8381a', '#6e2412'}, 'glow_color': '#ff8a3c'}},
     # Die Spiralrille ist die Uhr: 4 Segmente (außen 1 -> innen 4), die von außen nach innen erlöschen.
     # Die Augen leuchten mit dem innersten Segment.
     'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
@@ -448,6 +481,8 @@ def paint(mob_id):
     rnd = random.Random(mob_id)
     done = set()
     for cube in model['cubes']:
+        if cube.get('preview'):
+            continue                                        # Vorschau-Würfel (Boden) nutzt fremde UV
         key = tuple(cube['uv_offset'])
         f = faces(cube)
         if key not in done:                                 # gespiegelte Teile teilen sich die UV
@@ -455,15 +490,17 @@ def paint(mob_id):
             paint_cube(img, cube, rnd)
         if cube.get('face') in DETAILS:
             DETAILS[cube['face']](img, f, rnd)
+        if cube.get('veins') and cube['material'] == 'ash_hide':
+            d_ember_veins(img, f, rnd)
+        elif cube.get('veins'):
+            d_veins(img, f, rnd, ('south', 'east', 'west', 'north') if cube['bone'] == 'back_plates' else
+                    ('south', 'east', 'west'))
         if cube.get('back') == 'ribs':
             d_ribs(img, f, rnd)
         if cube.get('tip'):
             d_tip(img, f, rnd)
         if cube.get('back') == 'ammonite':
             d_ammonite(img, f, rnd)
-        if cube.get('veins'):
-            d_veins(img, f, rnd, ('south', 'east', 'west', 'north') if cube['bone'] == 'back_plates' else
-                    ('south', 'east', 'west'))
     check_light(model, img, mob_id)
     out = os.path.join(ROOT, mob_id, 'texture.png')
     img.save(out)
@@ -487,7 +524,7 @@ def check_light(model, img, mob_id):
     """Licht von oben: Keine Oberseite darf im Mittel dunkler sein als die Vorderseite desselben Würfels."""
     bad = []
     for cube in model['cubes']:
-        if cube['material'] == 'glass' or cube.get('tip'):  # leuchtendes Glas / helle Fangarmspitze vorn ist gewollt
+        if cube.get('preview') or cube['material'] == 'glass' or cube.get('tip'):  # leuchtendes Glas / helle Fangarmspitze vorn ist gewollt
             continue
         if max(abs(r) for r in cube.get('rotation') or [0]) > 45:
             continue                                        # stark gekippt: „oben“ ist dann eine andere Seite

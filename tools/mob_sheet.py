@@ -24,7 +24,8 @@ BACKGROUNDS = [('Kristallzeit dunkel', '#2a1f4d'), ('Kristallzeit Nebel', '#6e56
 # Gegen welche Hintergründe die Oberseiten bestehen müssen (dunkel und Nebel der eigenen Epoche).
 EPOCH_BG = {'geode_crawler': ['#2a1f4d', '#6e56b8'], 'spore_bellows': ['#1f3318', '#4f7a3a'],
             'petrified_witness': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a'],
-            'spiralit': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a', '#1d110d', '#5b3a2e']}
+            'spiralit': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a', '#1d110d', '#5b3a2e'],
+            'ember_burrower': ['#1d110d', '#5b3a2e']}
 PLAYER_PX = 28.8
 CELL = 256
 
@@ -50,7 +51,7 @@ def contrast(a, b):
 def top_color(model, tex):
     """Mittlere Farbe der Oberseiten, gewichtet nach Fläche (das, was man von oben sieht)."""
     acc, n = [0, 0, 0], 0
-    for c in model['cubes']:
+    for c in (c for c in model['cubes'] if not c.get('preview')):
         x0, y0, w, h = faces(c)['up']
         for y in range(y0, y0 + h):
             for x in range(x0, x0 + w):
@@ -81,13 +82,44 @@ def cube_corners(cube):
     return [rotate(p) for p in pts]
 
 
-def scale_panel(model):
-    """Seitenansicht (Blick von +x) der Würfel in Ruhepose neben einer Spieler-Silhouette (gedrehte Würfel gedreht)."""
+def burrowed_model(model):
+    """Modell in der Haltepose „burrowed“: Alle Würfel unter dem Knochen body um dessen Position verschoben."""
+    anim = next((a for a in model['animations'] if a['name'].endswith('.burrowed')), None)
+    if anim is None:
+        return None
+    keys = [k for k in anim['keyframes'] if k['bone'] == 'body' and k['channel'] == 'position']
+    if not keys:
+        return None
+    dx, dy, dz = keys[0]['value']
+    parents = {b['name']: b.get('parent') for b in model['bones']}
+
+    def under_body(bone):
+        while bone:
+            if bone == 'body':
+                return True
+            bone = parents.get(bone)
+        return False
+
+    cubes = []
+    for c in model['cubes']:
+        if under_body(c['bone']):
+            c = dict(c, **{'from': [c['from'][0] - dx, c['from'][1] + dy, c['from'][2] + dz],
+                           'to': [c['to'][0] - dx, c['to'][1] + dy, c['to'][2] + dz]})
+            if 'origin' in c:
+                c['origin'] = [c['origin'][0] - dx, c['origin'][1] + dy, c['origin'][2] + dz]
+        cubes.append(c)
+    return dict(model, cubes=cubes)
+
+
+def scale_panel(model, ground_fill=False):
+    """Seitenansicht (Blick von +x) der Würfel in Ruhepose neben einer Spieler-Silhouette (gedrehte Würfel gedreht).
+    Mit ground_fill wird der Boden unter y = 0 als Asche gefüllt (für Mobs, die abtauchen)."""
     img = Image.new('RGBA', (CELL, CELL), (235, 235, 238, 255))
     d = ImageDraw.Draw(img)
+    model = dict(model, cubes=[c for c in model['cubes'] if not c.get('preview')])
     corners = {c['name']: cube_corners(c) for c in model['cubes']}
     zs = [p[2] for ps in corners.values() for p in ps]
-    ys = [p[1] for ps in corners.values() for p in ps]
+    ys = [p[1] for ps in corners.values() for p in ps] + [0]
     hover = model.get('hover', 0)                     # Schwebehöhe in px (Begleiter schweben neben dem Spieler)
     top = max(ys) + hover
     width = (max(zs) - min(zs)) + 6 + 9.6
@@ -116,6 +148,10 @@ def scale_panel(model):
             d.rectangle([sx(c['from'][2]), sy(c['to'][1]), sx(c['to'][2]), sy(c['from'][1])], fill=(90, 84, 104, 255))
     px = max(zs) + 6
     d.rectangle([sx(px), sy_ground(PLAYER_PX), sx(px + 9.6), sy_ground(0)], fill=(60, 120, 200, 140))
+    if ground_fill:
+        layer = Image.new('RGBA', (CELL, CELL), (0, 0, 0, 0))
+        ImageDraw.Draw(layer).rectangle([0, ground, CELL, CELL], fill=(91, 58, 46, 235))
+        img.alpha_composite(layer)
     d.line([0, ground, CELL, ground], fill=(30, 30, 30, 255))
     label = f'Hoehe {top:.1f} px / Spieler {PLAYER_PX} px' + (f' (schwebt {hover} px)' if hover else '')
     d.text((4, 4), label, fill=(30, 30, 30, 255))
@@ -155,6 +191,9 @@ def sheet(mob):
         place(iso, row * cols + k, label, bg)
     row += bg_rows
     place(scale_panel(model), row * cols, 'Massstab (blau = Spieler)')
+    buried = burrowed_model(model)
+    if buried:
+        place(scale_panel(buried, ground_fill=True), row * cols + 3, 'abgetaucht: Bodenschnitt (Asche braun)')
     top = top_color(model, tex)
     bgs = EPOCH_BG.get(mob, ['#2a1f4d'])
     ratios = [contrast(top, hex_rgb(b)) for b in bgs]

@@ -41,7 +41,7 @@ for (let i = 0; i < 30; i++) {
 // Kamera aus der Modellgröße ableiten: Mob schaut nach -z (Norden).
 function views(model) {
     let min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity];
-    for (const c of model.cubes) for (let i = 0; i < 3; i++) {
+    for (const c of model.cubes.filter(c => !c.preview)) for (let i = 0; i < 3; i++) {
         min[i] = Math.min(min[i], c.from[i]); max[i] = Math.max(max[i], c.to[i]);
     }
     const center = min.map((m, i) => (m + max[i]) / 2);
@@ -70,7 +70,7 @@ try {
         }
 
         await call('new_project', { format: 'modded_entity', name: id, texture_width: model.texture_size[0], texture_height: model.texture_size[1] });
-        const strip = ({ material, face, back, ...rest }) => rest;   // Malhinweise nicht an Blockbench schicken
+        const strip = ({ material, face, back, preview, veins, tip, ...rest }) => rest;   // Malhinweise nicht an Blockbench schicken
         await call('build_model', { bones: model.bones, cubes: model.cubes.map(strip) });
         await call('set_texture', { name: id, png_path: path.join(dir, 'texture.png') });
         for (const a of model.animations || []) await call('add_animation', a);
