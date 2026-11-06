@@ -69,5 +69,6 @@
   "tag.item.curios.charm": "Charm",
   "advancements.strata_epochs.met_ember_burrower.title": "Ember Burrower",
   "advancements.strata_epochs.met_ember_burrower.description": "Encounter the Ember Burrower in the Ash Age",
-  "jade.strata_bridge.mob.ember_burrower": "Ash Age · burrows in ash, solid ground protects"
+  "jade.strata_bridge.mob.ember_burrower": "Ash Age · burrows in ash, solid ground protects",
+  "config.jade.plugin_strata_bridge.mobs": "Strata mobs"
 }

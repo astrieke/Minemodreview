@@ -165,9 +165,12 @@ Gradle braucht zum Starten Java 17 oder neuer. Fehlende JDKs (21 für 1.21.x, 25
 ./gradlew :common:test                 # Spiellogik testen
 ./gradlew build                        # alle Mods für alle Versionen
 ./gradlew :bridge:1.21.1:runClient     # Spiel mit dem ganzen Set + JEI + Jade starten
+./gradlew runClient -Pmc=26.3          # dasselbe kurz; ohne -Pmc startet 1.21.1
 scripts/smoke-test.sh                  # Server + Selbsttest in allen Versionen
 scripts/smoke-test.sh 1.21.1 26.3      # nur bestimmte Versionen
 ```
+
+Ein bloßes `runClient` bzw. `runServer` im Hauptordner (auch per Doppelklick in IntelliJ) startet nur **einen** Client bzw. Server mit allen drei Mods, nicht alle 15 Unterprojekte gleichzeitig.
 
 ## Eigene Epoche hinzufügen (Pack-Autoren)
 
