@@ -112,5 +112,32 @@
       }
     ],
     "subtitle": "subtitles.strata_epochs.spiralit.death"
+  },
+  "entity.ember_burrower.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:block.lava.pop",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.ember_burrower.ambient"
+  },
+  "entity.ember_burrower.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.strider.hurt",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.ember_burrower.hurt"
+  },
+  "entity.ember_burrower.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.strider.death",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.strata_epochs.ember_burrower.death"
   }
 }

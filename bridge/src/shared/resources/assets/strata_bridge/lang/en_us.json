@@ -66,5 +66,8 @@
   "advancements.strata_epochs.first_analysis.title": "Under the Lens",
   "advancements.strata_epochs.first_analysis.description": "Analyze a core sample at the Core Analysis Table",
   "jei.strata_bridge.info.analysis_table": "Right-click with core samples to analyze the stack. The note on the core shows depth, time limit, finds and whether the epoch is explored for the Transplanter. Entering an epoch with an analyzed core gives 25% more time before solidification.",
-  "tag.item.curios.charm": "Charm"
+  "tag.item.curios.charm": "Charm",
+  "advancements.strata_epochs.met_ember_burrower.title": "Ember Burrower",
+  "advancements.strata_epochs.met_ember_burrower.description": "Encounter the Ember Burrower in the Ash Age",
+  "jade.strata_bridge.mob.ember_burrower": "Ash Age · burrows in ash, solid ground protects"
 }

@@ -1,6 +1,7 @@
 package dev.strata.epochs;
 
 import dev.strata.epochs.mc.MobReg;
+import dev.strata.epochs.mob.EmberBurrower;
 import dev.strata.epochs.mob.GeodeCrawler;
 import dev.strata.epochs.mob.PetrifiedWitness;
 import dev.strata.epochs.mob.WitnessAwakening;
@@ -44,6 +45,11 @@ public final class EpochsMobs {
     public static final Supplier<Item> PETRIFIED_WITNESS_SPAWN_EGG =
             REG.spawnEgg("petrified_witness_spawn_egg", PETRIFIED_WITNESS, 0x3c3742, 0xffd86b);
 
+    public static final Supplier<EntityType<EmberBurrower>> EMBER_BURROWER =
+            REG.entity("ember_burrower", EmberBurrower::new, MobCategory.MONSTER, 1.0f, 0.8f, 8);
+    public static final Supplier<Item> EMBER_BURROWER_SPAWN_EGG =
+            REG.spawnEgg("ember_burrower_spawn_egg", EMBER_BURROWER, 0x4f4844, 0xe0531c);
+
     /** Begleiter aus dem Ammonit-Fossil, spawnt nicht natürlich. */
     public static final Supplier<EntityType<Spiralit>> SPIRALIT =
             REG.entity("spiralit", Spiralit::new, MobCategory.CREATURE, 0.6f, 0.9f, 8);
@@ -57,6 +63,9 @@ public final class EpochsMobs {
     public static final Supplier<SoundEvent> PETRIFIED_WITNESS_AMBIENT = REG.sound("entity.petrified_witness.ambient");
     public static final Supplier<SoundEvent> PETRIFIED_WITNESS_HURT = REG.sound("entity.petrified_witness.hurt");
     public static final Supplier<SoundEvent> PETRIFIED_WITNESS_DEATH = REG.sound("entity.petrified_witness.death");
+    public static final Supplier<SoundEvent> EMBER_BURROWER_AMBIENT = REG.sound("entity.ember_burrower.ambient");
+    public static final Supplier<SoundEvent> EMBER_BURROWER_HURT = REG.sound("entity.ember_burrower.hurt");
+    public static final Supplier<SoundEvent> EMBER_BURROWER_DEATH = REG.sound("entity.ember_burrower.death");
     public static final Supplier<SoundEvent> SPIRALIT_AMBIENT = REG.sound("entity.spiralit.ambient");
     public static final Supplier<SoundEvent> SPIRALIT_HURT = REG.sound("entity.spiralit.hurt");
     public static final Supplier<SoundEvent> SPIRALIT_DEATH = REG.sound("entity.spiralit.death");
@@ -70,6 +79,7 @@ public final class EpochsMobs {
             event.put(SPORE_BELLOWS.get(), SporeBellows.createAttributes().build());
             event.put(PETRIFIED_WITNESS.get(), PetrifiedWitness.createAttributes().build());
             event.put(SPIRALIT.get(), Spiralit.createAttributes().build());
+            event.put(EMBER_BURROWER.get(), EmberBurrower.createAttributes().build());
         });
         modBus.addListener((RegisterSpawnPlacementsEvent event) -> {
             event.register(GEODE_CRAWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -81,6 +91,11 @@ public final class EpochsMobs {
                     (type, level, reason, pos, random) -> EpochsConfig.SPORE_BELLOWS.get()
                             && Mob.checkMobSpawnRules(type, level, reason, pos, random)
                             && belowEpochLimit(level) && SporeBellows.canSpawnHere(level, pos),
+                    RegisterSpawnPlacementsEvent.Operation.REPLACE);
+            event.register(EMBER_BURROWER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    (type, level, reason, pos, random) -> EpochsConfig.EMBER_BURROWER.get()
+                            && Mob.checkMobSpawnRules(type, level, reason, pos, random)
+                            && belowEpochLimit(level) && EmberBurrower.canSpawnHere(level, pos),
                     RegisterSpawnPlacementsEvent.Operation.REPLACE);
         });
         NeoForge.EVENT_BUS.addListener(StrataMob::handleIncomingDamage);

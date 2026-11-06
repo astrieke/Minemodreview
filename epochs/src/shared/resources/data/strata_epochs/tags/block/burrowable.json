@@ -1,0 +1,16 @@
+{
+  "_hinweis": "Böden, in die sich der Glutwühler eingraben kann. Fester Boden (Basalt, Zeitgestein, Bauten) ist der Gegenzug.",
+  "values": [
+    "strata_epochs:volcanic_ash",
+    "#minecraft:sand",
+    "#minecraft:dirt",
+    "minecraft:grass_block",
+    "minecraft:mycelium",
+    "minecraft:podzol",
+    "minecraft:gravel",
+    "minecraft:soul_sand",
+    "minecraft:soul_soil",
+    "minecraft:clay",
+    "minecraft:snow_block"
+  ]
+}

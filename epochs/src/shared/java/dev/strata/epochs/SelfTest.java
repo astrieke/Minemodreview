@@ -49,6 +49,7 @@ final class SelfTest {
         failures += testAnalysis(server);
         failures += testPreparation(server);
         failures += testTransplant(server);
+        failures += testBurrower(server);
         for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) failures += testGrowth(server, epoch);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
@@ -75,6 +76,8 @@ final class SelfTest {
         failures += testMob(server, GeodeCrawler.DEF, l -> new GeodeCrawler(EpochsMobs.GEODE_CRAWLER.get(), l), "crystal_age");
         failures += testMob(server, SporeBellows.DEF, l -> new SporeBellows(EpochsMobs.SPORE_BELLOWS.get(), l), "spore_age");
         failures += testMob(server, PetrifiedWitness.DEF, l -> new PetrifiedWitness(EpochsMobs.PETRIFIED_WITNESS.get(), l), "crystal_age");
+        failures += testMob(server, dev.strata.epochs.mob.EmberBurrower.DEF,
+                l -> new dev.strata.epochs.mob.EmberBurrower(EpochsMobs.EMBER_BURROWER.get(), l), "ash_age");
         failures += testMob(server, dev.strata.epochs.mob.Spiralit.DEF,
                 l -> new dev.strata.epochs.mob.Spiralit(EpochsMobs.SPIRALIT.get(), l), "ash_age");
         StrataEpochs.LOG.info("[Strata-Test] Fertig, {} Fehler", failures);
@@ -298,6 +301,44 @@ final class SelfTest {
         boolean ok = CoreSamples.isAnalyzed(sample) && lore != null && lore.lines().size() == 5;
         StrataEpochs.LOG.info("[Strata-Test] Kernanalyse: analysiert={}, Zeilen={} -> {}", CoreSamples.isAnalyzed(sample),
                 lore == null ? 0 : lore.lines().size(), ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /** Glutwühler: taucht bei Ziel in 6 Blöcken ab, grollt nah am Ziel, bricht hervor (Schaden + Wurf). */
+    private static int testBurrower(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        int cx = 7000, cz = 7000;
+        for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++) level.getChunk((cx >> 4) + x, (cz >> 4) + z);
+        int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, cx, cz);
+        var mob = new dev.strata.epochs.mob.EmberBurrower(EpochsMobs.EMBER_BURROWER.get(), level);
+        mob.setPos(cx + 0.5, y, cz + 0.5);
+        level.addFreshEntity(mob);
+        var pig = new dev.strata.epochs.mob.GeodeCrawler(EpochsMobs.GEODE_CRAWLER.get(), level);   // Ziel, in allen Versionen gleich
+        pig.setPos(cx + 6.5, y, cz + 0.5);
+        level.addFreshEntity(pig);
+        float health = pig.getHealth();
+        java.util.Set<dev.strata.epochs.mob.EmberBurrower.State> seen = new java.util.LinkedHashSet<>();
+        boolean moved = false;
+        for (int t = 0; t < 400 && !seen.contains(dev.strata.epochs.mob.EmberBurrower.State.EXPOSED); t++) {
+            mob.setTarget(pig);
+            if (!moved) pig.setPos(mob.getX() + 6, mob.getY(), mob.getZ());   // bis zum Abtauchen auf Abstand
+            mob.tick();
+            seen.add(mob.state());
+            if (!moved && mob.state() == dev.strata.epochs.mob.EmberBurrower.State.BURROWED) {
+                pig.setPos(mob.getX() + 1.5, mob.getY(), mob.getZ());       // Ziel kommt in Reichweite
+                moved = true;
+            }
+        }
+        boolean launched = pig.getDeltaMovement().y > 0.3 || pig.getHealth() < health;
+        boolean hurt = pig.getHealth() < health;
+        mob.discard();
+        pig.discard();
+        boolean ok = seen.containsAll(java.util.List.of(dev.strata.epochs.mob.EmberBurrower.State.DIGGING,
+                dev.strata.epochs.mob.EmberBurrower.State.BURROWED, dev.strata.epochs.mob.EmberBurrower.State.TREMOR,
+                dev.strata.epochs.mob.EmberBurrower.State.EMERGING, dev.strata.epochs.mob.EmberBurrower.State.EXPOSED))
+                && hurt && launched;
+        StrataEpochs.LOG.info("[Strata-Test] Glutwühler: Zustände={}, Schaden={}, Wurf={} -> {}", seen, hurt, launched,
+                ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

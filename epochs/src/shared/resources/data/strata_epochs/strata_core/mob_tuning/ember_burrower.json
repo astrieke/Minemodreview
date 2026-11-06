@@ -1,0 +1,37 @@
+{
+  "entity": "strata_epochs:ember_burrower",
+  "attributes": {
+    "max_health": 30,
+    "attack_damage": 4,
+    "armor": 4,
+    "movement_speed": 0.23
+  },
+  "spawn": {
+    "enabled": true
+  },
+  "abilities": {
+    "burrow": {
+      "enabled": true,
+      "min_range": 4,
+      "max_range": 16,
+      "speed": 1.6,
+      "damage_factor": 0.25,
+      "fossil_chance": 0.08,
+      "cooldown": 160
+    },
+    "emerge": {
+      "warning": 16,
+      "damage": 6,
+      "launch": 0.7,
+      "range": 1.8
+    },
+    "crest": {
+      "duration": 80,
+      "back_bonus": 1.5
+    },
+    "claw": {
+      "damage": 4,
+      "cooldown": 30
+    }
+  }
+}

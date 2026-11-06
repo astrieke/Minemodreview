@@ -110,5 +110,10 @@
   "tag.item.strata_epochs.amber_tool_materials": "Amber Tool Materials",
   "tag.item.strata_epochs.crystal_quartz_tool_materials": "Crystal Quartz Tool Materials",
   "tag.item.strata_epochs.deep_drill_tips": "Deep Drill Tips",
-  "tag.item.strata_epochs.repairs_geode_armor": "Repairs Geode Armor"
+  "tag.item.strata_epochs.repairs_geode_armor": "Repairs Geode Armor",
+  "entity.strata_epochs.ember_burrower": "Ember Burrower",
+  "item.strata_epochs.ember_burrower_spawn_egg": "Ember Burrower Spawn Egg",
+  "subtitles.strata_epochs.ember_burrower.ambient": "Ember Burrower bubbles",
+  "subtitles.strata_epochs.ember_burrower.hurt": "Ember Burrower hurts",
+  "subtitles.strata_epochs.ember_burrower.death": "Ember Burrower dies out"
 }

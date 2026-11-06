@@ -576,6 +576,31 @@ def spore_bellows_spawn_egg():
     return outline(from_grid(rows, pal), '#2a2116')
 
 
+def ember_burrower_spawn_egg():
+    # Spawn-Ei: aschegraue Schale mit glühenden Rissen und einem Glutkamm oben.
+    pal = {'e': '#ffd27a', 'E': '#e0531c', 'r': '#9e2a0c', 'g': '#7d726a', 'G': '#948880', 'm': '#655c56',
+           'd': '#4f4844', 'v': '#a8381a'}
+    rows = [
+        '................',
+        '.......e........',
+        '......eE.e......',
+        '.....rEEeE......',
+        '.....GGrrrg.....',
+        '....GgggggggG...',
+        '...GggvgggggmG..',
+        '...ggggvggggmm..',
+        '..Gggggvvgggmmd.',
+        '..gggggggvggmmd.',
+        '..gggvgggggmmmd.',
+        '..ggggvvggmmmdd.',
+        '...gggggvmmmdd..',
+        '....mmmmmmmdd...',
+        '......dddd......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1f1a18')
+
+
 def codex_fragment():
     # Drop des Steinzeugen: abgebrochene Steintafel mit Gesteinsschichten und goldener Sanduhr-Rune.
     pal = {'s': '#3c3742', 'S': '#5e5868', 'g': '#77707c', 'o': '#b08a5a', 'c': '#dcd6cf',
@@ -1253,6 +1278,7 @@ SPAWN_EGGS = {
     'geode_crawler_spawn_egg': geode_crawler_spawn_egg,
     'spore_bellows_spawn_egg': spore_bellows_spawn_egg,
     'petrified_witness_spawn_egg': petrified_witness_spawn_egg,
+    'ember_burrower_spawn_egg': ember_burrower_spawn_egg,
 }
 
 

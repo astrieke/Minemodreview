@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/visited_ash_age",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:ember_shard"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.met_ember_burrower.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.met_ember_burrower.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

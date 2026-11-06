@@ -3,6 +3,7 @@ package dev.strata.epochs.client.mc;
 import dev.strata.epochs.EpochsMobs;
 import dev.strata.epochs.client.MobModelBuilder;
 import dev.strata.epochs.mob.GeodeCrawler;
+import dev.strata.epochs.mob.EmberBurrower;
 import dev.strata.epochs.mob.PetrifiedWitness;
 import dev.strata.epochs.mob.Spiralit;
 import dev.strata.epochs.mob.SporeBellows;
@@ -28,7 +29,7 @@ public final class MobClient {
 
     public static void register(IEventBus modBus) {
         modBus.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> {
-            for (StrataMobDef def : List.of(GeodeCrawler.DEF, SporeBellows.DEF, PetrifiedWitness.DEF, Spiralit.DEF)) {
+            for (StrataMobDef def : List.of(GeodeCrawler.DEF, SporeBellows.DEF, PetrifiedWitness.DEF, Spiralit.DEF, EmberBurrower.DEF)) {
                 event.registerLayerDefinition(layer(def), () -> MobModelBuilder.build(def.model()));
             }
         });
@@ -37,6 +38,7 @@ public final class MobClient {
             event.registerEntityRenderer(EpochsMobs.SPORE_BELLOWS.get(), ctx -> new StrataMobRenderer<>(ctx, SporeBellows.DEF));
             event.registerEntityRenderer(EpochsMobs.PETRIFIED_WITNESS.get(), ctx -> new StrataMobRenderer<>(ctx, PetrifiedWitness.DEF));
             event.registerEntityRenderer(EpochsMobs.SPIRALIT.get(), ctx -> new StrataMobRenderer<>(ctx, Spiralit.DEF));
+            event.registerEntityRenderer(EpochsMobs.EMBER_BURROWER.get(), ctx -> new StrataMobRenderer<>(ctx, EmberBurrower.DEF));
         });
     }
 }

@@ -6,6 +6,7 @@
     "geode_crawler",
     "spore_bellows",
     "petrified_witness",
+    "ember_burrower",
     "spiralit"
   ],
   "ore_replaceables_tag": "strata_epochs:epoch_ore_replaceables",
@@ -112,7 +113,14 @@
         "top": "strata_epochs:volcanic_ash",
         "under": "minecraft:basalt"
       },
-      "mobs": [],
+      "mobs": [
+        {
+          "entity": "strata_epochs:ember_burrower",
+          "weight": 60,
+          "min": 1,
+          "max": 2
+        }
+      ],
       "ambient_light": 0.15
     }
   ],
