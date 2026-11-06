@@ -83,7 +83,11 @@ Nur natürliche Blöcke (Tag `strata_epochs:transplantable`) werden verändert, 
 |---|---|
 | ![Transplantation](docs/screenshots/phase3/transplant_crystal_26.3.png) | ![Spiralit](docs/screenshots/phase3/spiralit_follow_1.21.1.png) |
 
-**Mobs:** Geodenkriecher (Kristallzeit, neutral, findet Erz), Sporenbalg (Sporenzeit, Wolken beschleunigen die Verfestigung) und Steinzeuge (erwacht aus versteinertem Stein bei Spielern, die zu lange bleiben). Details in [docs/MOBS.md](docs/MOBS.md).
+**Mobs:**
+- Geodenkriecher (Kristallzeit, neutral, findet Erz)
+- Sporenbalg (Sporenzeit, Wolken beschleunigen die Verfestigung)
+- **Glutwühler** (Aschezeit): taucht in Vulkanasche ab, nähert sich als glühende Flosse und bricht neben dir hervor. Fester Boden schützt, von hinten ist sein Glutkamm verwundbar.
+- Steinzeuge (erwacht aus versteinertem Stein bei Spielern, die zu lange bleiben) Details in [docs/MOBS.md](docs/MOBS.md).
 
 **Ausrüstung:**
 
@@ -220,4 +224,4 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator (übersteht Neustarts), dazu der Kernanalyse-Tisch aus Phase 1. Im Client gesehen: Spiralit (1.21.1 und 26.1), Transplantation (1.21.1, 26.2 und 26.3), siehe `docs/screenshots/phase3/`.
 - Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.
-- Weitere Biome pro Epoche und ein eigener Mob für die Aschezeit (bisher Vanilla-Magmawürfel und Schreiter).
+- Weitere Biome pro Epoche.

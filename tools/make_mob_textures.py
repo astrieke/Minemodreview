@@ -183,7 +183,9 @@ def d_snout(img, f, rnd):
 
 def d_claws(img, f, rnd):
     r = f['north']
-    xs = range(0, r[2], 2) if r[2] < 4 else (0, r[2] // 2, r[2] - 1)   # breite Schaufelklauen: 3 Krallen
+    # Beine: jede zweite Spalte. Flache Schaufelklauen (1 px hoch): bis 4 px zwei Krallen außen, ab 5 px drei.
+    flat = r[3] == 1
+    xs = range(0, r[2], 2) if not flat else (0, r[2] - 1) if r[2] <= 4 else (0, r[2] // 2, r[2] - 1)
     for x in xs:
         put(img, r, x, r[3] - 1, '#d8d2c4')                 # Krallen an der Unterkante des Beins
 

@@ -10,6 +10,15 @@ Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früh
 
 **Steinzeuge freigegeben (05.11.2026, nach Umbau zum „wandelnden Felsvorsprung“):** Runde 1 6/6/6, Runde 2 7/7/7. Geändert in Runde 2: Schichtplatten verankert (Überhang statt Hut), Hammerschlag mit 0,5 s Ausholen und Bodenkontakt, dunkle Adern, die nur bei der Steinhaut leuchten, Geräusche aus Stein statt Eisengolem. Optional für später: Oberseite der oberen Platte im Schieferton statt Ocker (wirkt sonst wie Holz), Hitbox 1,5 × 2,3 statt 1,3 × 2,4.
 
+**Glutwühler freigegeben (06.11.2026, Gegner der Aschezeit, `strata_epochs:ember_burrower`):**
+- Ergebnisse: Runde 1 5/6/6, Runde 2 7/6/6, Runde 3 8/7/8.
+- Umfang: 10 Knochen, 14 Würfel, 7 Animationen. Hitbox 0,9 × 0,8, abgetaucht 0,9 × 0,55, beim Grollen 0,9 × 0,75.
+- Die Flosse ragt abgetaucht 8 px aus der Asche, beim Grollen 11 px. Der Kamm flackert, ein Partikelring zeigt den echten Wirkradius (2 Blöcke).
+- Fester Boden schützt (die Bodensäule unter dem Ziel zählt, Springen hilft nicht). Er bleibt höchstens 10 s abgetaucht.
+- Er bricht mit dem Rücken zum Spieler hervor und steckt 1,5 s fest; Treffer auf den Glutkamm von hinten +50 %.
+- Zustand und Aktion werden nicht gespeichert: Nach dem Neuladen steht er an der Oberfläche (harmlos, bewusst so).
+- Im Client gesehen in 1.21.1 und 26.3. Im Spiel beobachten: ob zwei Glutwühler zusammen zu hart sind (Wurf auf Wurf).
+
 **Spiralit freigegeben (05.11.2026, Begleiter aus Phase 3, `strata_epochs:spiralit`):**
 - Ergebnisse: Runde 1 6/5/6, Runde 2 7/6/6, Runde 3 8/7/7.
 - Die Uhr hat jetzt 4 Leucht-Segmente, die von außen nach innen erlöschen; die Spirale ist dunkel und leuchtet hell, damit man sie auch bei Tag liest.

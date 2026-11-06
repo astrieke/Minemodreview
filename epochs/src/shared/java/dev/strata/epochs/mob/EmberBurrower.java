@@ -156,11 +156,11 @@ public class EmberBurrower extends StrataMob {
 
     /** Steht (oder springt) das Ziel über lockerem Boden? Sucht bis 3 Blöcke unter den Füßen den ersten festen Block. */
     private boolean burrowableAt(LivingEntity e) {
-        BlockPos.MutableBlockPos pos = e.blockPosition().mutable();
+        BlockPos.MutableBlockPos pos = e.getOnPos().mutable();      // auch bei Böden unter voller Blockhöhe richtig
         for (int i = 0; i < 3; i++) {
-            pos.move(0, -1, 0);
             BlockState state = level().getBlockState(pos);
             if (!state.isAir()) return state.is(BURROWABLE_TAG);
+            pos.move(0, -1, 0);
         }
         return false;
     }
