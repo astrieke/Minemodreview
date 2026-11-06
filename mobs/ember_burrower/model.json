@@ -91,8 +91,8 @@
       "parent": "tail",
       "origin": [
         0,
-        4.75,
-        11
+        5,
+        10
       ]
     }
   ],
@@ -122,7 +122,7 @@
       "bone": "crest",
       "from": [
         -0.5,
-        9,
+        6,
         -4
       ],
       "to": [
@@ -150,20 +150,21 @@
       "name": "plate_mid",
       "bone": "crest",
       "from": [
-        -0.5,
-        9,
+        -1,
+        6,
         -1
       ],
       "to": [
-        0.5,
-        14,
+        1,
+        15,
         3
       ],
       "uv_offset": [
-        44,
-        6
+        52,
+        0
       ],
       "material": "ember",
+      "face": "fin_tip",
       "rotation": [
         18,
         0,
@@ -180,7 +181,7 @@
       "bone": "crest",
       "from": [
         -0.5,
-        9,
+        6,
         3
       ],
       "to": [
@@ -189,8 +190,8 @@
         6
       ],
       "uv_offset": [
-        54,
-        0
+        44,
+        9
       ],
       "material": "ember",
       "rotation": [
@@ -202,64 +203,6 @@
         0,
         9,
         4.5
-      ]
-    },
-    {
-      "name": "plate_left",
-      "bone": "crest",
-      "from": [
-        1,
-        9,
-        -2
-      ],
-      "to": [
-        2,
-        11,
-        1
-      ],
-      "uv_offset": [
-        54,
-        11
-      ],
-      "material": "ember",
-      "rotation": [
-        10,
-        0,
-        -25
-      ],
-      "origin": [
-        1.5,
-        9,
-        -0.5
-      ]
-    },
-    {
-      "name": "plate_right",
-      "bone": "crest",
-      "from": [
-        -2,
-        9,
-        -2
-      ],
-      "to": [
-        -1,
-        11,
-        1
-      ],
-      "uv_offset": [
-        54,
-        11
-      ],
-      "material": "ember",
-      "rotation": [
-        10,
-        0,
-        25
-      ],
-      "origin": [
-        -1.5,
-        9,
-        -0.5
       ]
     },
     {
@@ -280,43 +223,25 @@
         18
       ],
       "material": "ash_hide",
-      "face": "eyes"
+      "face": "eyes",
+      "veins": true
     },
     {
       "name": "snout",
       "bone": "head",
       "from": [
-        -3,
+        -3.5,
         3,
         -14
       ],
       "to": [
-        3,
-        5,
-        -11
-      ],
-      "uv_offset": [
-        24,
-        18
-      ],
-      "material": "basalt"
-    },
-    {
-      "name": "snout_plate",
-      "bone": "head",
-      "from": [
-        -2,
-        5,
-        -13
-      ],
-      "to": [
-        2,
+        3.5,
         6,
         -10
       ],
       "uv_offset": [
-        42,
-        18
+        24,
+        20
       ],
       "material": "basalt"
     },
@@ -337,26 +262,28 @@
         0,
         28
       ],
-      "material": "ash_hide"
+      "material": "ash_hide",
+      "veins": true
     },
     {
       "name": "claw_fl",
       "bone": "leg_front_left",
       "from": [
-        4.5,
+        4,
         0,
-        -7
+        -8
       ],
       "to": [
-        7.5,
-        2,
+        8,
+        1,
         -5
       ],
       "uv_offset": [
         14,
         28
       ],
-      "material": "basalt"
+      "material": "basalt",
+      "face": "claws"
     },
     {
       "name": "leg_fr",
@@ -375,26 +302,29 @@
         0,
         28
       ],
-      "material": "ash_hide"
+      "material": "ash_hide",
+      "mirror_uv": true
     },
     {
       "name": "claw_fr",
       "bone": "leg_front_right",
       "from": [
-        -7.5,
+        -8,
         0,
-        -7
+        -8
       ],
       "to": [
-        -4.5,
-        2,
+        -4,
+        1,
         -5
       ],
       "uv_offset": [
         14,
         28
       ],
-      "material": "basalt"
+      "material": "basalt",
+      "mirror_uv": true,
+      "face": "claws"
     },
     {
       "name": "leg_bl",
@@ -410,7 +340,7 @@
         6
       ],
       "uv_offset": [
-        24,
+        28,
         28
       ],
       "material": "ash_hide"
@@ -429,23 +359,24 @@
         6
       ],
       "uv_offset": [
-        24,
+        28,
         28
       ],
-      "material": "ash_hide"
+      "material": "ash_hide",
+      "mirror_uv": true
     },
     {
       "name": "tail_base",
       "bone": "tail",
       "from": [
-        -1.5,
+        -2,
         3.5,
         6
       ],
       "to": [
-        1.5,
+        2,
         6.5,
-        11
+        10
       ],
       "uv_offset": [
         0,
@@ -459,12 +390,12 @@
       "from": [
         -1,
         4,
-        11
+        10
       ],
       "to": [
         1,
         6,
-        15
+        13
       ],
       "uv_offset": [
         16,
@@ -634,7 +565,7 @@
           "channel": "rotation",
           "time": 0.25,
           "value": [
-            25,
+            18,
             0,
             0
           ],
@@ -656,7 +587,7 @@
           "channel": "rotation",
           "time": 0.75,
           "value": [
-            -25,
+            -18,
             0,
             0
           ],
@@ -689,7 +620,7 @@
           "channel": "rotation",
           "time": 0.25,
           "value": [
-            25,
+            22,
             0,
             0
           ],
@@ -711,7 +642,7 @@
           "channel": "rotation",
           "time": 0.75,
           "value": [
-            -25,
+            -22,
             0,
             0
           ],
@@ -744,7 +675,7 @@
           "channel": "rotation",
           "time": 0.25,
           "value": [
-            -25,
+            -18,
             0,
             0
           ],
@@ -766,7 +697,7 @@
           "channel": "rotation",
           "time": 0.75,
           "value": [
-            25,
+            18,
             0,
             0
           ],
@@ -799,7 +730,7 @@
           "channel": "rotation",
           "time": 0.25,
           "value": [
-            -25,
+            -22,
             0,
             0
           ],
@@ -821,7 +752,7 @@
           "channel": "rotation",
           "time": 0.75,
           "value": [
-            25,
+            22,
             0,
             0
           ],
@@ -989,6 +920,39 @@
           "interpolation": "linear"
         },
         {
+          "bone": "crest",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 1.0,
+          "value": [
+            0,
+            3,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
           "bone": "body",
           "channel": "rotation",
           "time": 0,
@@ -1070,7 +1034,7 @@
           "channel": "rotation",
           "time": 0.15,
           "value": [
-            -60,
+            -40,
             0,
             0
           ],
@@ -1092,7 +1056,7 @@
           "channel": "rotation",
           "time": 0.45,
           "value": [
-            -60,
+            -40,
             0,
             0
           ],
@@ -1136,7 +1100,7 @@
           "channel": "rotation",
           "time": 0.25,
           "value": [
-            -60,
+            -40,
             0,
             0
           ],
@@ -1158,7 +1122,7 @@
           "channel": "rotation",
           "time": 0.55,
           "value": [
-            -60,
+            -40,
             0,
             0
           ],
@@ -1211,6 +1175,28 @@
           "value": [
             0,
             -10,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            3,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 1.2,
+          "value": [
+            0,
+            3,
             0
           ],
           "interpolation": "linear"
@@ -1349,7 +1335,40 @@
           "time": 0.8,
           "value": [
             0,
-            -7.5,
+            -8,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            3,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 0.2,
+          "value": [
+            0,
+            4,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 0.8,
+          "value": [
+            0,
+            4,
             0
           ],
           "interpolation": "linear"
@@ -1449,7 +1468,7 @@
           "value": [
             0,
             0,
-            -10
+            0
           ],
           "interpolation": "linear"
         }
@@ -1497,6 +1516,28 @@
           "bone": "body",
           "channel": "position",
           "time": 0.8,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            4,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "crest",
+          "channel": "position",
+          "time": 0.2,
           "value": [
             0,
             0,
@@ -1635,12 +1676,78 @@
             0
           ],
           "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            15,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_left",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            15,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "leg_back_right",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
         }
       ]
     },
     {
       "name": "animation.ember_burrower.attack",
-      "length": 0.8,
+      "length": 0.9,
       "loop": "once",
       "keyframes": [
         {
@@ -1657,7 +1764,7 @@
         {
           "bone": "body",
           "channel": "rotation",
-          "time": 0.3,
+          "time": 0.45,
           "value": [
             10,
             0,
@@ -1668,9 +1775,9 @@
         {
           "bone": "body",
           "channel": "rotation",
-          "time": 0.45,
+          "time": 0.55,
           "value": [
-            -8,
+            -4,
             0,
             0
           ],
@@ -1679,7 +1786,7 @@
         {
           "bone": "body",
           "channel": "rotation",
-          "time": 0.8,
+          "time": 0.9,
           "value": [
             0,
             0,
@@ -1701,7 +1808,7 @@
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 0.3,
+          "time": 0.45,
           "value": [
             15,
             0,
@@ -1712,9 +1819,9 @@
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 0.45,
+          "time": 0.55,
           "value": [
-            -10,
+            -8,
             0,
             0
           ],
@@ -1723,7 +1830,7 @@
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 0.8,
+          "time": 0.9,
           "value": [
             0,
             0,
@@ -1737,17 +1844,6 @@
           "time": 0,
           "value": [
             0,
-            0,
-            0
-          ],
-          "interpolation": "catmullrom"
-        },
-        {
-          "bone": "leg_front_left",
-          "channel": "rotation",
-          "time": 0.3,
-          "value": [
-            80,
             0,
             0
           ],
@@ -1758,7 +1854,7 @@
           "channel": "rotation",
           "time": 0.45,
           "value": [
-            -30,
+            80,
             0,
             0
           ],
@@ -1767,7 +1863,18 @@
         {
           "bone": "leg_front_left",
           "channel": "rotation",
-          "time": 0.8,
+          "time": 0.55,
+          "value": [
+            -10,
+            0,
+            0
+          ],
+          "interpolation": "catmullrom"
+        },
+        {
+          "bone": "leg_front_left",
+          "channel": "rotation",
+          "time": 0.9,
           "value": [
             0,
             0,
@@ -1789,7 +1896,7 @@
         {
           "bone": "leg_front_right",
           "channel": "rotation",
-          "time": 0.35,
+          "time": 0.48,
           "value": [
             80,
             0,
@@ -1800,9 +1907,9 @@
         {
           "bone": "leg_front_right",
           "channel": "rotation",
-          "time": 0.5,
+          "time": 0.5800000000000001,
           "value": [
-            -30,
+            -10,
             0,
             0
           ],
@@ -1811,7 +1918,7 @@
         {
           "bone": "leg_front_right",
           "channel": "rotation",
-          "time": 0.8,
+          "time": 0.9,
           "value": [
             0,
             0,

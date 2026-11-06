@@ -107,6 +107,7 @@ if [ -n "${SHOT_MOB:-}" ]; then
     # (sonst läuft Wasser hinein), Boden wie in der Epoche.
     floor=minecraft:calcite
     [ "$epoch" = spore_age ] && floor=minecraft:mycelium
+    [ "$epoch" = ash_age ] && floor=strata_epochs:volcanic_ash
     sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run tp @s $x.5 $((y + 1)) $((z + 3)).5 0 ${SHOT_PITCH:-28}\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:stage 60t|" \
         "$dp/data/strata_shot/function/tick.mcfunction"
     cat > "$dp/data/strata_shot/function/stage.mcfunction" <<MC

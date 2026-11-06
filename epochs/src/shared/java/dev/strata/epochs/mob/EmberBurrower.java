@@ -59,8 +59,13 @@ public class EmberBurrower extends StrataMob {
     public static final StrataMobDef DEF = new StrataMobDef(StrataEpochs.MOD_ID, "ember_burrower",
             List.of("burrow", "burrowed", "tremor", "emerge", "attack"), "idle", "walk", List.of("crest", "veins"), 0.6f);
 
-    /** Kamm glimmt an der Oberfläche schwach, aufgetaucht nach dem Hervorbrechen voll. */
+    /** Kamm glimmt an der Oberfläche schwach, abgetaucht deutlich, aufgetaucht nach dem Hervorbrechen voll. */
     public static final float BASE_GLOW = 0.45f;
+    private static final float BURROWED_GLOW = 0.8f;
+    /** Die Glutrisse glimmen immer schwach (Konzept), vor dem Hervorbrechen voll. */
+    private static final float VEIN_GLOW = 0.25f;
+    private static final int MAX_BURROWED = 200;
+    private static final int STUCK_TICKS = 30;
     public static final String BURROWABLE = StrataEpochs.id("burrowable");
     private static final TagKey<Block> BURROWABLE_TAG = MobCompat.blockTag(BURROWABLE);
     private static final int DIG_TICKS = 20;
@@ -72,10 +77,26 @@ public class EmberBurrower extends StrataMob {
     private int stateTicks;
     private int cooldown = 60;
     private int lostTarget;
+    private float lockedYaw;
 
     public EmberBurrower(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
         setGlow(0, BASE_GLOW);
+        setGlow(1, VEIN_GLOW);
+    }
+
+    /** Abgetaucht ist die Hitbox flach (nur der Kamm ragt heraus); die Größe folgt der laufenden Aktion. */
+    @Override
+    protected net.minecraft.world.entity.EntityDimensions getDefaultDimensions(net.minecraft.world.entity.Pose pose) {
+        String action = currentAction();
+        boolean low = "burrowed".equals(action) || "tremor".equals(action);
+        return low ? net.minecraft.world.entity.EntityDimensions.scalable(0.9f, 0.3f) : super.getDefaultDimensions(pose);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(net.minecraft.network.syncher.EntityDataAccessor<?> accessor) {
+        super.onSyncedDataUpdated(accessor);
+        refreshDimensions();
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -112,9 +133,22 @@ public class EmberBurrower extends StrataMob {
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
-    /** Steht er auf Boden, in den er sich eingraben kann? */
+    /** Steht er mit der ganzen Grundfläche auf Boden, in den er sich eingraben kann (alle 4 Ecken)? */
     public boolean onBurrowableGround() {
-        return level().getBlockState(blockPosition().below()).is(BURROWABLE_TAG);
+        var box = getBoundingBox();
+        int y = net.minecraft.util.Mth.floor(box.minY - 0.01);
+        for (double x : new double[] {box.minX + 0.05, box.maxX - 0.05}) {
+            for (double z : new double[] {box.minZ + 0.05, box.maxZ - 0.05}) {
+                BlockPos pos = new BlockPos(net.minecraft.util.Mth.floor(x), y, net.minecraft.util.Mth.floor(z));
+                if (!level().getBlockState(pos).is(BURROWABLE_TAG)) return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean burrowableAt(LivingEntity e) {
+        return level().getBlockState(e.blockPosition().below()).is(BURROWABLE_TAG)
+                || level().getBlockState(e.getOnPos()).is(BURROWABLE_TAG);
     }
 
     public static boolean canSpawnHere(ServerLevelAccessor level, BlockPos pos) {
@@ -153,25 +187,30 @@ public class EmberBurrower extends StrataMob {
                 if (stateTicks >= DIG_TICKS) {
                     enter(State.BURROWED);
                     holdAction("burrowed");
+                    setGlow(0, BURROWED_GLOW);
                     maybeDropFossil(level);
                 }
             }
             case BURROWED -> tickBurrowed(level, target);
             case TREMOR -> {
                 getNavigation().stop();
+                setGlow(0, (stateTicks / 2) % 2 == 0 ? 1.0f : 0.4f);      // Kamm flackert
                 if (stateTicks % 3 == 0) {
                     level.sendParticles(ParticleTypes.LAVA, getX(), getY() + 0.2, getZ(), 1, 0.4, 0.1, 0.4, 0);
                     groundParticles(level, 8);
                 }
-                if (stateTicks >= (int) tuning().ability("emerge", "warning", 16)) emerge(level);
+                if (stateTicks % 4 == 0) dangerRing(level);
+                if (stateTicks >= warningTicks()) emerge(level, target);
             }
             case EMERGING -> {
+                holdYaw();
                 if (stateTicks >= EMERGE_TICKS) {
                     enter(State.EXPOSED);
-                    setGlow(1, 0f);
+                    setGlow(1, VEIN_GLOW);
                 }
             }
             case EXPOSED -> {
+                if (stateTicks < STUCK_TICKS) holdYaw();          // steckt noch fest: Rücken bleibt zum Spieler
                 if (stateTicks % 6 == 0) {
                     level.sendParticles(ParticleTypes.SMALL_FLAME, getX(), getY() + 0.9, getZ(), 2, 0.15, 0.1, 0.25, 0.005);
                 }
@@ -188,7 +227,7 @@ public class EmberBurrower extends StrataMob {
         if (stateTicks % 4 == 0) groundParticles(level, 3);
         if (stateTicks % 10 == 0) sound(SoundEvents.SAND_BREAK, 0.5f, 0.6f);
         // Fester Boden: Er wird herausgedrückt (ohne Angriff).
-        if (!onBurrowableGround()) {
+        if (!onBurrowableGround() || stateTicks > MAX_BURROWED) {
             surface(level);
             return;
         }
@@ -199,7 +238,7 @@ public class EmberBurrower extends StrataMob {
         lostTarget = 0;
         if (distanceTo(target) <= 2.5) {
             enter(State.TREMOR);
-            playAction("tremor");
+            playActionFor("tremor", warningTicks());
             setGlow(1, 1f);
             sound(SoundEvents.BASALT_BREAK, 1.5f, 0.5f);
             return;
@@ -207,17 +246,50 @@ public class EmberBurrower extends StrataMob {
         if (stateTicks % 5 == 0) getNavigation().moveTo(target, tuning().ability("burrow", "speed", 1.6));
     }
 
-    private void emerge(ServerLevel level) {
+    private int warningTicks() {
+        return (int) tuning().ability("emerge", "warning", 16);
+    }
+
+    /** Partikelring auf dem echten Wirkradius: So groß ist die Gefahrenzone. */
+    private void dangerRing(ServerLevel level) {
+        BlockState ground = level.getBlockState(blockPosition().below());
+        if (ground.isAir()) return;
+        double range = tuning().ability("emerge", "range", 2.0);
+        BlockParticleOption dust = new BlockParticleOption(ParticleTypes.BLOCK, ground);
+        for (int i = 0; i < 16; i++) {
+            double a = i * Math.PI / 8;
+            level.sendParticles(dust, getX() + Math.cos(a) * range, getY() + 0.1, getZ() + Math.sin(a) * range,
+                    1, 0.05, 0.02, 0.05, 0.02);
+        }
+    }
+
+    /** Blickrichtung festhalten (nach dem Auftauchen steckt er kurz fest). */
+    private void holdYaw() {
+        getNavigation().stop();
+        setYRot(lockedYaw);
+        yBodyRot = lockedYaw;
+        yHeadRot = lockedYaw;
+    }
+
+    private void emerge(ServerLevel level, LivingEntity target) {
         enter(State.EMERGING);
         playAction("emerge");
         setGlow(0, 1f);
+        // Er bricht mit dem Rücken zum Ziel hervor: Der Glutkamm ist sofort erreichbar.
+        lockedYaw = target == null ? getYRot()
+                : (float) (Math.atan2(-(getX() - target.getX()), getZ() - target.getZ()) * 180 / Math.PI) + 180f;
+        holdYaw();
         sound(SoundEvents.RAVAGER_ROAR, 0.6f, 1.4f);
-        double range = tuning().ability("emerge", "range", 1.8);
+        double range = tuning().ability("emerge", "range", 2.0);
         float damage = (float) tuning().ability("emerge", "damage", 6);
         double launch = tuning().ability("emerge", "launch", 0.7);
         for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(range, 0.5, range),
                 e -> e != this && !(e instanceof EmberBurrower))) {
             if (e instanceof Player p && (p.isCreative() || p.isSpectator())) continue;
+            double dx = e.getX() - getX(), dz = e.getZ() - getZ();
+            double horizontal = Math.sqrt(dx * dx + dz * dz);
+            if (horizontal > range) continue;                                   // Kreis statt Quadrat
+            if (horizontal > 1.0 && !burrowableAt(e)) continue;                 // fester Boden schützt
             MobCompat.hurt(e, damageSources().mobAttack(this), damage);
             Vec3 v = e.getDeltaMovement();
             e.setDeltaMovement(v.x, Math.max(v.y, launch), v.z);
@@ -227,12 +299,13 @@ public class EmberBurrower extends StrataMob {
         level.sendParticles(ParticleTypes.LAVA, getX(), getY() + 0.4, getZ(), 6, 0.5, 0.2, 0.5, 0);
     }
 
-    /** Aus dem Boden, ohne anzugreifen (fester Boden oder Ziel verloren). */
+    /** Aus dem Boden, ohne anzugreifen (fester Boden, Ziel verloren oder zu lange abgetaucht). */
     private void surface(ServerLevel level) {
-        stopAction();
-        enter(State.EXPOSED);
+        enter(State.EMERGING);
+        playAction("emerge");
+        lockedYaw = getYRot();
         setGlow(0, 1f);
-        setGlow(1, 0f);
+        setGlow(1, VEIN_GLOW);
         groundParticles(level, 12);
     }
 
@@ -334,7 +407,8 @@ public class EmberBurrower extends StrataMob {
 
     /** Aufgetaucht: zum Ziel laufen und mit den Klauen zuschlagen (Treffer 0,3 s nach dem Ausholen). */
     private final class ClawGoal extends Goal {
-        private static final int IMPACT = 6;
+        /** Treffer beim Abwärtsschlag (0,55 s), nach 0,45 s Ausholen. */
+        private static final int IMPACT = 11;
         private int swing = -1;
         private int cooldownTicks;
 
@@ -344,7 +418,8 @@ public class EmberBurrower extends StrataMob {
 
         @Override
         public boolean canUse() {
-            return (state == State.SURFACE || state == State.EXPOSED) && getTarget() != null && getTarget().isAlive();
+            boolean free = state == State.SURFACE || (state == State.EXPOSED && stateTicks >= STUCK_TICKS);
+            return free && getTarget() != null && getTarget().isAlive();
         }
 
         @Override
@@ -374,7 +449,7 @@ public class EmberBurrower extends StrataMob {
                     syncMotion(target);
                     sound(SoundEvents.RAVAGER_ATTACK, 0.7f, 1.6f);
                 }
-                if (swing > 16) swing = -1;
+                if (swing > 18) swing = -1;
                 return;
             }
             if (distance > 2.0) {

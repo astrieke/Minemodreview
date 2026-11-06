@@ -46,7 +46,7 @@ public final class EpochsMobs {
             REG.spawnEgg("petrified_witness_spawn_egg", PETRIFIED_WITNESS, 0x3c3742, 0xffd86b);
 
     public static final Supplier<EntityType<EmberBurrower>> EMBER_BURROWER =
-            REG.entity("ember_burrower", EmberBurrower::new, MobCategory.MONSTER, 1.0f, 0.8f, 8);
+            REG.entity("ember_burrower", EmberBurrower::new, MobCategory.MONSTER, 0.9f, 0.8f, 8);
     public static final Supplier<Item> EMBER_BURROWER_SPAWN_EGG =
             REG.spawnEgg("ember_burrower_spawn_egg", EMBER_BURROWER, 0x4f4844, 0xe0531c);
 

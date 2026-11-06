@@ -82,41 +82,48 @@ def cube_corners(cube):
     return [rotate(p) for p in pts]
 
 
-def burrowed_model(model):
-    """Modell in der Haltepose „burrowed“: Alle Würfel unter dem Knochen body um dessen Position verschoben."""
-    anim = next((a for a in model['animations'] if a['name'].endswith('.burrowed')), None)
+MATERIAL_COLORS = {'ember': (224, 83, 28), 'basalt': (59, 56, 64), 'ash_hide': (125, 114, 106)}
+
+
+def posed_model(model, suffix, at_end=False):
+    """Modell in einer Pose: Positions-Spuren der Animation (Anfang oder Ende) auf alle Würfel darunter angewendet.
+    Drehungen bleiben unberücksichtigt; für den Bodenschnitt genügt die Höhe."""
+    anim = next((a for a in model['animations'] if a['name'].endswith('.' + suffix)), None)
     if anim is None:
         return None
-    keys = [k for k in anim['keyframes'] if k['bone'] == 'body' and k['channel'] == 'position']
-    if not keys:
-        return None
-    dx, dy, dz = keys[0]['value']
+    from anim_peaks import value_at
+    t = anim['length'] if at_end else 0.0
+    offset = {}
+    for bone in {k['bone'] for k in anim['keyframes'] if k['channel'] == 'position'}:
+        offset[bone] = value_at([k for k in anim['keyframes'] if k['bone'] == bone and k['channel'] == 'position'], t)
     parents = {b['name']: b.get('parent') for b in model['bones']}
 
-    def under_body(bone):
+    def total(bone):
+        o = [0.0, 0.0, 0.0]
         while bone:
-            if bone == 'body':
-                return True
+            for i, v in enumerate(offset.get(bone, (0, 0, 0))):
+                o[i] += v
             bone = parents.get(bone)
-        return False
+        return o
 
     cubes = []
     for c in model['cubes']:
-        if under_body(c['bone']):
-            c = dict(c, **{'from': [c['from'][0] - dx, c['from'][1] + dy, c['from'][2] + dz],
-                           'to': [c['to'][0] - dx, c['to'][1] + dy, c['to'][2] + dz]})
-            if 'origin' in c:
-                c['origin'] = [c['origin'][0] - dx, c['origin'][1] + dy, c['origin'][2] + dz]
+        o = total(c['bone'])
+        c = dict(c, **{'from': [c['from'][i] + o[i] for i in range(3)], 'to': [c['to'][i] + o[i] for i in range(3)]})
+        if 'origin' in c:
+            c['origin'] = [c['origin'][i] + o[i] for i in range(3)]
         cubes.append(c)
     return dict(model, cubes=cubes)
 
 
-def scale_panel(model, ground_fill=False):
+def scale_panel(model, ground_fill=False, label=None):
     """Seitenansicht (Blick von +x) der Würfel in Ruhepose neben einer Spieler-Silhouette (gedrehte Würfel gedreht).
     Mit ground_fill wird der Boden unter y = 0 als Asche gefüllt (für Mobs, die abtauchen)."""
     img = Image.new('RGBA', (CELL, CELL), (235, 235, 238, 255))
     d = ImageDraw.Draw(img)
     model = dict(model, cubes=[c for c in model['cubes'] if not c.get('preview')])
+    fill_for = (lambda c: MATERIAL_COLORS.get(c['material'], (90, 84, 104)) + (255,)) if ground_fill \
+        else (lambda c: (90, 84, 104, 255))
     corners = {c['name']: cube_corners(c) for c in model['cubes']}
     zs = [p[2] for ps in corners.values() for p in ps]
     ys = [p[1] for ps in corners.values() for p in ps] + [0]
@@ -143,17 +150,19 @@ def scale_panel(model, ground_fill=False):
                     h.append(q)
                 return h
             hull = half(pts)[:-1] + half(pts[::-1])[:-1]
-            d.polygon([(sx(z), sy(y)) for z, y in hull], fill=(90, 84, 104, 255))
+            d.polygon([(sx(z), sy(y)) for z, y in hull], fill=fill_for(c))
         else:
-            d.rectangle([sx(c['from'][2]), sy(c['to'][1]), sx(c['to'][2]), sy(c['from'][1])], fill=(90, 84, 104, 255))
+            d.rectangle([sx(c['from'][2]), sy(c['to'][1]), sx(c['to'][2]), sy(c['from'][1])], fill=fill_for(c))
     px = max(zs) + 6
     d.rectangle([sx(px), sy_ground(PLAYER_PX), sx(px + 9.6), sy_ground(0)], fill=(60, 120, 200, 140))
     if ground_fill:
         layer = Image.new('RGBA', (CELL, CELL), (0, 0, 0, 0))
-        ImageDraw.Draw(layer).rectangle([0, ground, CELL, CELL], fill=(91, 58, 46, 235))
+        ImageDraw.Draw(layer).rectangle([0, ground, CELL, CELL], fill=(79, 70, 69, 240))      # Vulkanasche
         img.alpha_composite(layer)
+        above = max(p[1] for ps in corners.values() for p in ps)
+        label = f'ragt {above:.1f} px aus der Asche'
     d.line([0, ground, CELL, ground], fill=(30, 30, 30, 255))
-    label = f'Hoehe {top:.1f} px / Spieler {PLAYER_PX} px' + (f' (schwebt {hover} px)' if hover else '')
+    label = label or (f'Hoehe {top:.1f} px / Spieler {PLAYER_PX} px' + (f' (schwebt {hover} px)' if hover else ''))
     d.text((4, 4), label, fill=(30, 30, 30, 255))
     return img
 
@@ -167,8 +176,9 @@ def sheet(mob):
     cols = 4
     anim_rows = (len(anims) + cols - 1) // cols
     clock = os.path.isfile(os.path.join(ROOT, mob, 'texture_glow_spiral_1.png'))
+    buried = posed_model(model, 'burrowed')
     bg_rows = (len(BACKGROUNDS) + cols - 1) // cols
-    rows = 1 + anim_rows + bg_rows + 1 + (1 if clock else 0)
+    rows = 1 + anim_rows + bg_rows + 1 + (1 if clock else 0) + (1 if buried else 0)
     lh = 18
     out = Image.new('RGBA', (cols * CELL, rows * (CELL + lh)), (235, 235, 238, 255))
     d = ImageDraw.Draw(out)
@@ -191,9 +201,7 @@ def sheet(mob):
         place(iso, row * cols + k, label, bg)
     row += bg_rows
     place(scale_panel(model), row * cols, 'Massstab (blau = Spieler)')
-    buried = burrowed_model(model)
-    if buried:
-        place(scale_panel(buried, ground_fill=True), row * cols + 3, 'abgetaucht: Bodenschnitt (Asche braun)')
+
     top = top_color(model, tex)
     bgs = EPOCH_BG.get(mob, ['#2a1f4d'])
     ratios = [contrast(top, hex_rgb(b)) for b in bgs]
@@ -225,6 +233,16 @@ def sheet(mob):
             panel = Image.new('RGBA', (fw + 2, fh + 2), (138, 180, 248, 255))
             panel.alpha_composite(face, (1, 1))
             place(panel.resize((CELL, CELL), Image.NEAREST), row * cols + k, label)
+    if buried:
+        # Abtauchen: Bodenschnitt von der Seite, farbig nach Material, Asche grau gefüllt.
+        row += 1
+        place(scale_panel(buried, ground_fill=True), row * cols, 'abgetaucht (burrowed): Bodenschnitt')
+        tremor = posed_model(model, 'tremor', at_end=True)
+        if tremor:
+            place(scale_panel(tremor, ground_fill=True), row * cols + 1, 'Ende der Vorwarnung (tremor)')
+        emerge = posed_model(model, 'emerge')
+        if emerge:
+            place(scale_panel(emerge, ground_fill=True), row * cols + 2, 'Beginn emerge')
     path = os.path.join(ROOT, mob, 'review_sheet.png')
     out.save(path)
     return path, ratio
