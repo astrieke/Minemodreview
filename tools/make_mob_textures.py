@@ -183,7 +183,8 @@ def d_snout(img, f, rnd):
 
 def d_claws(img, f, rnd):
     r = f['north']
-    for x in range(0, r[2], 2):
+    xs = range(0, r[2], 2) if r[2] < 4 else (0, r[2] // 2, r[2] - 1)   # breite Schaufelklauen: 3 Krallen
+    for x in xs:
         put(img, r, x, r[3] - 1, '#d8d2c4')                 # Krallen an der Unterkante des Beins
 
 
@@ -396,20 +397,24 @@ EMBER_VEIN_EDGE = '#5a1206'
 
 
 def d_ember_veins(img, f, rnd, faces_=('east', 'west', 'up')):
+    # Treppenlinien: Jeder Schritt geht erst zur Seite, dann nach unten, so berühren sich die Pixel an den Kanten.
     for face in faces_:
         x0, y0, w, h = f[face]
         if w < 3 or h < 3:
             continue
         for _ in range(1 + (w * h) // 50):
             x, y = rnd.randrange(1, w - 1), rnd.randrange(0, max(1, h - 2))
-            for i in range(rnd.randrange(3, 6)):
+            step = rnd.choice((-1, 1))
+            for i in range(rnd.randrange(4, 7)):
                 if not (0 <= x < w and 0 <= y < h):
                     break
                 img.putpixel((x0 + x, y0 + y), rgb(EMBER_VEIN))
-                if 0 <= x + 1 < w:
-                    img.putpixel((x0 + x + 1, y0 + y), rgb(EMBER_VEIN_EDGE))   # dunkler Rand rechts
-                y += 1
-                x += rnd.choice((-1, 0, 1))
+                if i % 2 == 0:
+                    x += step
+                else:
+                    y += 1
+            if 0 <= x < w and 0 <= y < h:
+                img.putpixel((x0 + x, y0 + y), rgb(EMBER_VEIN_EDGE))   # dunkles Rissende
 
 
 def d_eyes(img, f, rnd):

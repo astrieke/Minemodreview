@@ -318,27 +318,36 @@ final class SelfTest {
         level.addFreshEntity(pig);
         float health = pig.getHealth();
         java.util.Set<dev.strata.epochs.mob.EmberBurrower.State> seen = new java.util.LinkedHashSet<>();
+        double maxLift = 0;
         boolean moved = false;
+        boolean backTurned = false;
         for (int t = 0; t < 400 && !seen.contains(dev.strata.epochs.mob.EmberBurrower.State.EXPOSED); t++) {
             mob.setTarget(pig);
             if (!moved) pig.setPos(mob.getX() + 6, mob.getY(), mob.getZ());   // bis zum Abtauchen auf Abstand
             mob.tick();
+            maxLift = Math.max(maxLift, pig.getDeltaMovement().y);
             seen.add(mob.state());
+            if (mob.state() == dev.strata.epochs.mob.EmberBurrower.State.EMERGING && !backTurned) {
+                double yaw = Math.toRadians(mob.getYRot());
+                double fx = -Math.sin(yaw), fz = Math.cos(yaw);
+                double tx = pig.getX() - mob.getX(), tz = pig.getZ() - mob.getZ(), len = Math.sqrt(tx * tx + tz * tz);
+                backTurned = len > 0 && (fx * tx + fz * tz) / len < -0.35;     // Ziel liegt hinter ihm
+            }
             if (!moved && mob.state() == dev.strata.epochs.mob.EmberBurrower.State.BURROWED) {
                 pig.setPos(mob.getX() + 1.5, mob.getY(), mob.getZ());       // Ziel kommt in Reichweite
                 moved = true;
             }
         }
-        boolean launched = pig.getDeltaMovement().y > 0.3 || pig.getHealth() < health;
+        boolean launched = maxLift > 0.3;
         boolean hurt = pig.getHealth() < health;
         mob.discard();
         pig.discard();
         boolean ok = seen.containsAll(java.util.List.of(dev.strata.epochs.mob.EmberBurrower.State.DIGGING,
                 dev.strata.epochs.mob.EmberBurrower.State.BURROWED, dev.strata.epochs.mob.EmberBurrower.State.TREMOR,
                 dev.strata.epochs.mob.EmberBurrower.State.EMERGING, dev.strata.epochs.mob.EmberBurrower.State.EXPOSED))
-                && hurt && launched;
-        StrataEpochs.LOG.info("[Strata-Test] Glutwühler: Zustände={}, Schaden={}, Wurf={} -> {}", seen, hurt, launched,
-                ok ? "OK" : "FEHLER");
+                && hurt && launched && backTurned;
+        StrataEpochs.LOG.info("[Strata-Test] Glutwühler: Zustände={}, Schaden={}, Wurf={}, Rücken zum Ziel={} -> {}",
+                seen, hurt, launched, backTurned, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

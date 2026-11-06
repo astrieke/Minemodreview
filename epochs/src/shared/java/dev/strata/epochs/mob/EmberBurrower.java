@@ -75,7 +75,7 @@ public class EmberBurrower extends StrataMob {
 
     private State state = State.SURFACE;
     private int stateTicks;
-    private int cooldown = 60;
+    private int cooldown;          // erster Kontakt: sofort abtauchen und als Flosse anrücken
     private int lostTarget;
     private float lockedYaw;
 
@@ -89,14 +89,22 @@ public class EmberBurrower extends StrataMob {
     @Override
     protected net.minecraft.world.entity.EntityDimensions getDefaultDimensions(net.minecraft.world.entity.Pose pose) {
         String action = currentAction();
-        boolean low = "burrowed".equals(action) || "tremor".equals(action);
-        return low ? net.minecraft.world.entity.EntityDimensions.scalable(0.9f, 0.3f) : super.getDefaultDimensions(pose);
+        if ("burrowed".equals(action)) return net.minecraft.world.entity.EntityDimensions.scalable(0.9f, 0.55f);
+        if ("tremor".equals(action)) return net.minecraft.world.entity.EntityDimensions.scalable(0.9f, 0.75f);
+        return super.getDefaultDimensions(pose);
     }
 
+    private String sizedFor = "";
+
+    /** Hitbox nur anpassen, wenn sich die Aktion ändert (nicht bei jedem Leucht-Wechsel). */
     @Override
     public void onSyncedDataUpdated(net.minecraft.network.syncher.EntityDataAccessor<?> accessor) {
         super.onSyncedDataUpdated(accessor);
-        refreshDimensions();
+        String action = String.valueOf(currentAction());
+        if (!action.equals(sizedFor)) {
+            sizedFor = action;
+            refreshDimensions();
+        }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -146,9 +154,15 @@ public class EmberBurrower extends StrataMob {
         return true;
     }
 
+    /** Steht (oder springt) das Ziel über lockerem Boden? Sucht bis 3 Blöcke unter den Füßen den ersten festen Block. */
     private boolean burrowableAt(LivingEntity e) {
-        return level().getBlockState(e.blockPosition().below()).is(BURROWABLE_TAG)
-                || level().getBlockState(e.getOnPos()).is(BURROWABLE_TAG);
+        BlockPos.MutableBlockPos pos = e.blockPosition().mutable();
+        for (int i = 0; i < 3; i++) {
+            pos.move(0, -1, 0);
+            BlockState state = level().getBlockState(pos);
+            if (!state.isAir()) return state.is(BURROWABLE_TAG);
+        }
+        return false;
     }
 
     public static boolean canSpawnHere(ServerLevelAccessor level, BlockPos pos) {
@@ -276,8 +290,9 @@ public class EmberBurrower extends StrataMob {
         playAction("emerge");
         setGlow(0, 1f);
         // Er bricht mit dem Rücken zum Ziel hervor: Der Glutkamm ist sofort erreichbar.
+        // Blickrichtung (-sin, cos) vom Ziel weg: Vektor Ziel -> Mob.
         lockedYaw = target == null ? getYRot()
-                : (float) (Math.atan2(-(getX() - target.getX()), getZ() - target.getZ()) * 180 / Math.PI) + 180f;
+                : (float) (Math.atan2(-(getX() - target.getX()), getZ() - target.getZ()) * 180 / Math.PI);
         holdYaw();
         sound(SoundEvents.RAVAGER_ROAR, 0.6f, 1.4f);
         double range = tuning().ability("emerge", "range", 2.0);
