@@ -85,7 +85,7 @@
   "message.strata_epochs.spiralit.bonded": "The Spiralit joins you.",
   "message.strata_epochs.spiralit.stay": "Spiralit waits here.",
   "message.strata_epochs.spiralit.follow": "Spiralit follows you.",
-  "message.strata_epochs.spiralit.only_one": "You already have a Spiralit.",
+  "message.strata_epochs.spiralit.only_one": "You already have a Spiralit (only one can be bonded).",
   "block.strata_epochs.transplanter": "Epoch Transplanter",
   "message.strata_epochs.transplanter.need_sample": "The Transplanter needs a core sample of the epoch.",
   "message.strata_epochs.transplanter.disabled": "The Transplanter is disabled on this server.",
@@ -148,5 +148,7 @@
   "message.strata_epochs.bearing.side.behind_left": "behind you to the left",
   "message.strata_epochs.bearing.side.left": "to your left",
   "message.strata_epochs.bearing.side.ahead_left": "ahead to your left",
-  "message.strata_epochs.gate.confirm_leave": "Right-click again to return home · Sneak + right-click: take a biome bearing"
+  "message.strata_epochs.gate.confirm_leave": "Right-click again to return home · Sneak + right-click: take a biome bearing",
+  "message.strata_epochs.spiralit.released": "Your former Spiralit has let go. Anyone can bond with it now.",
+  "message.strata_epochs.spiralit.replaced": "Your former Spiralit is not nearby. It will let go once its area loads again: only one can be bonded."
 }

@@ -185,7 +185,11 @@ public final class FossilPrep {
             fossil.shrink(1);
             tonic.shrink(1);
         }
+        boolean replaces = dev.strata.epochs.mob.Spiralit.replacesUnloaded(player);
         dev.strata.epochs.mob.Spiralit.hatch(level, new net.minecraft.world.phys.Vec3(x, y, z), player);
+        if (replaces) {
+            player.sendSystemMessage(Component.translatable("message.strata_epochs.spiralit.replaced").withStyle(ChatFormatting.GRAY));
+        }
         level.playSound(null, x, y, z, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.2f, 0.8f);
         level.playSound(null, x, y, z, SoundEvents.BOTTLE_EMPTY, SoundSource.PLAYERS, 1.0f, 1.0f);
         level.sendParticles(ParticleTypes.END_ROD, x, y + 0.3, z, 16, 0.3, 0.3, 0.3, 0.03);

@@ -85,7 +85,7 @@
   "message.strata_epochs.spiralit.bonded": "Der Spiralit schließt sich dir an.",
   "message.strata_epochs.spiralit.stay": "Spiralit wartet hier.",
   "message.strata_epochs.spiralit.follow": "Spiralit folgt dir.",
-  "message.strata_epochs.spiralit.only_one": "Du hast schon einen Spiralit.",
+  "message.strata_epochs.spiralit.only_one": "Du hast schon einen Spiralit (gebunden ist immer nur einer).",
   "block.strata_epochs.transplanter": "Epochen-Transplantator",
   "message.strata_epochs.transplanter.need_sample": "Der Transplantator braucht einen Bohrkern der Epoche.",
   "message.strata_epochs.transplanter.disabled": "Der Transplantator ist auf diesem Server abgeschaltet.",
@@ -148,5 +148,7 @@
   "message.strata_epochs.bearing.side.behind_left": "links hinter dir",
   "message.strata_epochs.bearing.side.left": "links von dir",
   "message.strata_epochs.bearing.side.ahead_left": "links vor dir",
-  "message.strata_epochs.gate.confirm_leave": "Nochmal Rechtsklick: Rückweg nach Hause · Schleichen + Rechtsklick: Biome peilen"
+  "message.strata_epochs.gate.confirm_leave": "Nochmal Rechtsklick: Rückweg nach Hause · Schleichen + Rechtsklick: Biome peilen",
+  "message.strata_epochs.spiralit.released": "Dein früherer Spiralit hat sich gelöst. Jeder kann ihn jetzt an sich binden.",
+  "message.strata_epochs.spiralit.replaced": "Dein früherer Spiralit ist gerade nicht in der Nähe. Er löst sich, sobald seine Gegend wieder geladen wird: Gebunden ist immer nur einer."
 }

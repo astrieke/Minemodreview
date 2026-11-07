@@ -26,7 +26,7 @@ Die drei Start-Mobs sind als Blockbench-Modelle fertig (`mobs/<id>/`). Die früh
 - Schlüpfen: Er bricht aus einer Steinhülle in den Farben des Ammonit-Items und bleibt dabei über dem Tisch.
 - Beim Zeigen schwebt er neben statt auf der Sichtlinie zum Erz.
 - Erzsuche nur mit Epochen-Erzen (eigener Tag), nur in Epochen, alle 15 s.
-- Die Bremse stapelt nicht mit der Geodenrüstung. Es gibt höchstens einen Spiralit pro Spieler.
+- Die Bremse stapelt nicht mit der Geodenrüstung. Es gibt höchstens einen gebundenen Spiralit pro Spieler: Der Spieler merkt sich die UUID seines aktuellen Spiralits (Attachment `spiralit_id`, übersteht Tod und Neustart); ein anderer Spiralit mit seinem Namen löst sich beim nächsten Laden und wird herrenlos.
 - Optional für später: Rippen auf der Oberseite quer zur Windung, Aschezeit-Hintergrund im Prüfblatt.
 
 **Im Code (05.11.2026):** M0 steht. Geodenkriecher (M1), Sporenbalg (M2) und Steinzeuge (M3) laufen in allen 5 Versionen, Reste siehe unten. **Gate B ist erreicht:** Im Client-Screenshot unter 1.21.1 sieht er aus wie in Blockbench, und die Kristalle leuchten auch im Dunkeln (`mobs/geode_crawler/shots/ingame_1.21.1.png`, `ingame_dark_1.21.1.png`).

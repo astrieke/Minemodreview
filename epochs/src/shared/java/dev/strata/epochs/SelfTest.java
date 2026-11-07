@@ -51,6 +51,7 @@ final class SelfTest {
         failures += testTransplant(server);
         failures += testBurrower(server);
         failures += testBiomes(server);
+        failures += testSpiralitBond(server);
         for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) failures += testGrowth(server, epoch);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
@@ -299,6 +300,41 @@ final class SelfTest {
                 probe.toShortString(), level.getBlockState(probe), level.getBlockState(probe.below()));
         StrataEpochs.LOG.info("[Strata-Test] Transplantation: Blöcke={}, Oberfläche={}, Unterschicht={}, Bau erhalten={}, Biom={}, "
                 + "Display={} -> {}", job.changed(), top, under, kept, biome, display, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /**
+     * Ein gebundener Spiralit pro Spieler, auch wenn der alte gerade nicht geladen ist: Der Spieler merkt sich die
+     * UUID seines aktuellen Spiralits; ein anderer mit seinem Namen löst sich beim nächsten Laden.
+     */
+    private static int testSpiralitBond(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
+        player.setData(EpochsContent.SPIRALIT_ID.get(), "");
+        var at = new net.minecraft.world.phys.Vec3(7000.5, 120, 7000.5);
+        level.getChunk(7000 >> 4, 7000 >> 4);
+        var first = dev.strata.epochs.mob.Spiralit.hatch(level, at, player);
+        boolean remembered = player.getData(EpochsContent.SPIRALIT_ID.get()).equals(first.getStringUUID());
+        boolean blocks = dev.strata.epochs.mob.Spiralit.hasSpiralit(player);
+        // Der erste „wandert in eine entladene Gegend“: Er ist nicht mehr da, ein neuer darf schlüpfen.
+        var bondOfFirst = first.bond();
+        first.discard();
+        boolean freeAgain = !dev.strata.epochs.mob.Spiralit.hasSpiralit(player) && dev.strata.epochs.mob.Spiralit.replacesUnloaded(player);
+        var second = dev.strata.epochs.mob.Spiralit.hatch(level, at, player);
+        // Der alte wird wieder geladen (neue Instanz mit seiner Bindung): Er muss sich lösen, der neue bleibt.
+        var returned = new dev.strata.epochs.mob.Spiralit(EpochsMobs.SPIRALIT.get(), level);
+        returned.setData(EpochsContent.BOND.get(), bondOfFirst);
+        boolean oldReleased = !dev.strata.epochs.mob.Spiralit.checkBond(returned, player) && returned.bond().owner().isEmpty();
+        boolean newKept = dev.strata.epochs.mob.Spiralit.checkBond(second, player);
+        // Spiralit von vor dem Merker: Der Spieler hat noch keine ID, der Spiralit wird übernommen.
+        player.setData(EpochsContent.SPIRALIT_ID.get(), "");
+        boolean adopted = dev.strata.epochs.mob.Spiralit.checkBond(second, player)
+                && player.getData(EpochsContent.SPIRALIT_ID.get()).equals(second.getStringUUID());
+        second.discard();
+        player.setData(EpochsContent.SPIRALIT_ID.get(), "");
+        boolean ok = remembered && blocks && freeAgain && oldReleased && newKept && adopted;
+        StrataEpochs.LOG.info("[Strata-Test] Spiralit-Bindung: gemerkt={}, blockiert={}, frei nach Entladen={}, alter gelöst={}, "
+                + "neuer bleibt={}, alter Stand übernommen={} -> {}", remembered, blocks, freeAgain, oldReleased, newKept, adopted, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

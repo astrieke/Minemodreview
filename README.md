@@ -73,6 +73,7 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 - **Ruhe:** In seiner Nähe läuft die Verfestigung 20 % langsamer. Das stapelt nicht mit der Geodenrüstung.
 - **Erzsuche:** Alle 15 s zeigt er auf ein nahes Epochen-Erz.
 - Er reist durch Epochentore mit. Schleichen + Rechtsklick: warten oder folgen; Kristallquarz heilt ihn.
+- Gebunden ist immer nur ein Spiralit pro Spieler. Wartet dein Spiralit in einer entladenen Gegend, darfst du einen neuen erwecken; der alte löst sich dann, sobald seine Gegend wieder geladen wird, und jeder kann ihn mit Rechtsklick an sich binden.
 
 **Epochen-Transplantator** (Kristallquarz, Bernstein, Glutsplitter, Zeitanker, Zeitgestein): Rechtsklick mit einem Bohrkern einer erforschten Epoche verwandelt die Umgebung (Radius 12) dauerhaft in diese Epoche. Er verbraucht den Kern und ein Fossil der Epoche. Der Ablauf:
 1. Eine Welle läuft nach außen, die Bodenschichten wölben sich sichtbar auf.
@@ -230,4 +231,3 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator (übersteht Neustarts), dazu der Kernanalyse-Tisch aus Phase 1. Im Client gesehen: Spiralit (1.21.1 und 26.1), Transplantation (1.21.1, 26.2 und 26.3), siehe `docs/screenshots/phase3/`.
-- Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.

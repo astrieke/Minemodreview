@@ -142,6 +142,7 @@ public class Spiralit extends StrataMob {
     }
 
     private void serverTick(ServerLevel level) {
+        if (tickCount % 20 == 0) owner().ifPresent(p -> checkBond(this, p));
         ServerPlayer owner = owner().filter(p -> p.level() == level && p.isAlive()).orElse(null);
         if (owner != null) {
             Spiralit known = BY_OWNER.get(owner.getUUID());
@@ -338,7 +339,36 @@ public class Spiralit extends StrataMob {
         spiralit.hatchTicks = 0;
         level.addFreshEntity(spiralit);
         BY_OWNER.put(owner.getUUID(), spiralit);
+        owner.setData(EpochsContent.SPIRALIT_ID.get(), spiralit.getStringUUID());
         return spiralit;
+    }
+
+    /**
+     * Ist dieser Spiralit noch der gebundene seines (online) Besitzers? Wenn der Spieler inzwischen einen anderen
+     * hat, löst sich dieser hier und wird herrenlos (jeder kann ihn dann mit Rechtsklick an sich binden).
+     * Spiralits von vor diesem Merker (Spieler hat noch keine ID) werden übernommen.
+     *
+     * @return true, wenn er gebunden bleibt
+     */
+    public static boolean checkBond(Spiralit spiralit, ServerPlayer owner) {
+        if (!spiralit.isOwner(owner)) return false;
+        String current = owner.getData(EpochsContent.SPIRALIT_ID.get());
+        if (current.isEmpty()) {
+            owner.setData(EpochsContent.SPIRALIT_ID.get(), spiralit.getStringUUID());
+            return true;
+        }
+        if (current.equals(spiralit.getStringUUID())) return true;
+        spiralit.setData(EpochsContent.BOND.get(), SpiralitBond.NONE);
+        BY_OWNER.remove(owner.getUUID(), spiralit);
+        if (spiralit.level() instanceof ServerLevel level) {
+            level.sendParticles(ParticleTypes.END_ROD, spiralit.getX(), spiralit.getY() + 0.4, spiralit.getZ(), 10, 0.3, 0.3, 0.3, 0.02);
+            level.playSound(null, spiralit.getX(), spiralit.getY(), spiralit.getZ(), net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME,
+                    net.minecraft.sounds.SoundSource.NEUTRAL, 0.8f, 0.6f);
+        }
+        if (owner.level() == spiralit.level() && owner.distanceTo(spiralit) < 32) {
+            Mc.actionbar(owner, Component.translatable("message.strata_epochs.spiralit.released").withStyle(ChatFormatting.GRAY));
+        }
+        return false;
     }
 
     /** Rechtsklick: Schleichen schaltet warten/folgen um, Kristallquarz heilt, Herrenlose schließen sich an. */
@@ -351,6 +381,8 @@ public class Spiralit extends StrataMob {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         if (spiralit.bond().owner().isEmpty()) {
             spiralit.setOwner(player);
+            serverPlayer.setData(EpochsContent.SPIRALIT_ID.get(), spiralit.getStringUUID());   // ein früherer löst sich
+            BY_OWNER.put(serverPlayer.getUUID(), spiralit);
             Mc.actionbar(serverPlayer, Component.translatable("message.strata_epochs.spiralit.bonded").withStyle(ChatFormatting.LIGHT_PURPLE));
             return;
         }
@@ -387,12 +419,34 @@ public class Spiralit extends StrataMob {
         level.addFreshEntity(copy);
         old.discard();
         BY_OWNER.put(player.getUUID(), copy);
+        player.setData(EpochsContent.SPIRALIT_ID.get(), copy.getStringUUID());
     }
 
-    /** Hat der Spieler schon einen lebenden Spiralit (in einer geladenen Gegend)? */
+    /**
+     * Hat der Spieler schon einen lebenden, gebundenen Spiralit in einer geladenen Gegend (irgendeiner Dimension)?
+     * Ist sein Spiralit gerade nicht geladen, darf ein neuer schlüpfen; der alte löst sich dann beim nächsten Laden
+     * ({@link #checkBond}). So bleibt es bei einem gebundenen Spiralit pro Spieler, auch über Neustarts.
+     */
     public static boolean hasSpiralit(ServerPlayer player) {
         Spiralit known = BY_OWNER.get(player.getUUID());
-        return known != null && known.isAlive();
+        if (known != null && known.isAlive() && known.isOwner(player)) return true;
+        String id = player.getData(EpochsContent.SPIRALIT_ID.get());
+        if (id.isEmpty() || !(player.level() instanceof ServerLevel here)) return false;
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        for (ServerLevel level : here.getServer().getAllLevels()) {
+            if (level.getEntity(uuid) instanceof Spiralit s && s.isAlive() && s.isOwner(player)) return true;
+        }
+        return false;
+    }
+
+    /** Hatte der Spieler schon einmal einen Spiralit (der jetzt nicht geladen ist)? Dann löst sich der alte. */
+    public static boolean replacesUnloaded(ServerPlayer player) {
+        return !player.getData(EpochsContent.SPIRALIT_ID.get()).isEmpty() && !hasSpiralit(player);
     }
 
     /** Beim Herunterfahren (oder Weltwechsel im Einzelspieler) alles vergessen. */

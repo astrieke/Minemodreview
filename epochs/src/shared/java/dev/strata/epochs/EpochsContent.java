@@ -110,6 +110,13 @@ public final class EpochsContent {
             Mc.attachment(ATTACHMENTS, "spiralit_bond", () -> dev.strata.epochs.mob.SpiralitBond.NONE,
                     dev.strata.epochs.mob.SpiralitBond.CODEC, false);
 
+    /**
+     * Am Spieler: die UUID seines aktuellen Spiralits. Nur dieser ist an ihn gebunden; ein anderer Spiralit mit
+     * seinem Namen (z. B. aus einer entladenen Gegend) löst die Bindung, sobald er geladen wird.
+     */
+    public static final Supplier<AttachmentType<String>> SPIRALIT_ID =
+            Mc.attachment(ATTACHMENTS, "spiralit_id", () -> "", com.mojang.serialization.Codec.STRING, true);
+
     /** An der Dimension: laufende Transplantationen (überstehen so einen Neustart). */
     public static final Supplier<AttachmentType<java.util.List<TransplantRecord>>> TRANSPLANTS =
             Mc.attachment(ATTACHMENTS, "transplants", java.util.List::of, TransplantRecord.LIST_CODEC, false);
