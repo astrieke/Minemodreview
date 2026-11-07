@@ -98,11 +98,11 @@ public final class BiomeBearing {
     }
 
     /**
-     * Nächste Stelle JEDES Bioms (Hinweis: Ferne Biome werden vom Feldmittelpunkt aus gesucht und können dadurch
-     * bis etwa 11 Blöcke versetzt angezeigt werden; für die Richtung reicht das, nahe Grenzen sucht tell() fein nach).
-     *  (auch des eigenen) vom Mittelpunkt des 16er-Feldes aus, zwischengespeichert pro
-     * Dimension und Feld (das Ergebnis ändert sich nie). Das eigene Biom des Spielers filtert {@link #tell} heraus,
-     * denn an Biomgrenzen kann der Feldmittelpunkt in einem anderen Biom liegen als der Spieler.
+     * Nächste Stelle JEDES Bioms (auch des eigenen) vom Mittelpunkt des 16er-Feldes aus, zwischengespeichert pro
+     * Seed, Dimension und Feld (das Ergebnis ändert sich nie). Das eigene Biom des Spielers filtert {@link #tell}
+     * heraus, denn an Biomgrenzen kann der Feldmittelpunkt in einem anderen Biom liegen als der Spieler.
+     * Ferne Biome können dadurch bis etwa 11 Blöcke versetzt angezeigt werden; für die Richtung reicht das,
+     * nahe Grenzen sucht {@link #tell} fein nach.
      */
     public static List<Target> scanCached(ServerLevel level, BlockPos from) {
         BlockPos cell = new BlockPos(from.getX() & ~15 | 8, from.getY(), from.getZ() & ~15 | 8);
