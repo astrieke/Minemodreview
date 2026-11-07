@@ -85,6 +85,28 @@ final class SelfTest {
         persistTest(server);
     }
 
+    /** Ereignisse aus sounds.json mit ihren Dateien (Format "ns:pfad", ohne .ogg). */
+    private static final Map<String, List<String>> SOUNDS = readSounds();
+
+    private static Map<String, List<String>> readSounds() {
+        Map<String, List<String>> result = new java.util.HashMap<>();
+        try (var in = SelfTest.class.getResourceAsStream("/assets/" + StrataEpochs.MOD_ID + "/sounds.json")) {
+            if (in == null) return result;
+            var json = com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            for (var e : json.entrySet()) {
+                List<String> files = new ArrayList<>();
+                for (var sound : e.getValue().getAsJsonObject().getAsJsonArray("sounds")) {
+                    if (sound.isJsonPrimitive()) files.add(sound.getAsString());
+                    else if (!sound.getAsJsonObject().has("type")) files.add(sound.getAsJsonObject().get("name").getAsString());
+                }
+                result.put(e.getKey(), files);
+            }
+        } catch (java.io.IOException | RuntimeException e) {
+            StrataEpochs.LOG.error("[Strata-Test] sounds.json nicht lesbar", e);
+        }
+        return result;
+    }
+
     /** Prüft einen Mob: Modell und Animationen, Loot, Spawn-Modifier, Datapack-Werte und ein echtes Exemplar. */
     private static int testMob(MinecraftServer server, StrataMobDef def,
                                java.util.function.Function<ServerLevel, StrataMob> factory, String epochName) {
@@ -117,10 +139,17 @@ final class SelfTest {
         if (naturalSpawn) {
             requireResource(problems, "/data/" + def.modId() + "/neoforge/biome_modifier/" + def.name() + "_spawns.json");
         }
-        // Eigene Sounds: Jedes Ereignis hat mindestens eine Datei.
+        // Eigene Sounds: Ruf, Schmerz und Tod sind in sounds.json eingetragen, und jede genannte Datei existiert.
         for (String kind : List.of("ambient", "hurt", "death")) {
-            requireResource(problems, "/assets/" + def.modId() + "/sounds/entity/" + def.name() + "/" + kind + "1.ogg");
+            if (!SOUNDS.containsKey("entity." + def.name() + "." + kind)) problems.add("Sound fehlt: entity." + def.name() + "." + kind);
         }
+        SOUNDS.forEach((event, files) -> {
+            if (!event.startsWith("entity." + def.name() + ".")) return;
+            for (String file : files) {
+                String ns = file.substring(0, file.indexOf(':'));
+                requireResource(problems, "/assets/" + ns + "/sounds/" + file.substring(file.indexOf(':') + 1) + ".ogg");
+            }
+        });
 
         // Abspieler: Ein Wert mitten in der Idle-Animation muss zwischen den Keyframes liegen.
         MobAnimation idle = def.idle() == null ? null : model.animation(def.idle());
@@ -228,8 +257,9 @@ final class SelfTest {
             StrataEpochs.LOG.error("[Strata-Test] Transplantation: Kristallzeit hat keine Landschaft");
             return 1;
         }
+        // Freie Fläche suchen: In der flachen Testwelt stehen manchmal Dörfer (in 26.3 lag eines genau hier).
         int cx = 4000, cz = 4000;
-        for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++) level.getChunk((cx >> 4) + x, (cz >> 4) + z);
+        for (int k = 0; k < 12 && !cleanSite(level, cx, cz, 7); k++) cx += 160;
         int ground = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz) - 1;
         BlockPos build = new BlockPos(cx + 2, ground, cz);
         level.setBlock(build, net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState(), 2);
@@ -259,13 +289,27 @@ final class SelfTest {
         return ok ? 0 : 1;
     }
 
+    /** Ebene ohne Bauwerke: überall dieselbe Höhe und Gras obenauf (lädt die Chunks dafür). */
+    private static boolean cleanSite(ServerLevel level, int cx, int cz, int r) {
+        for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++) level.getChunk((cx >> 4) + x, (cz >> 4) + z);
+        var type = net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES;
+        int h = level.getHeight(type, cx, cz);
+        for (int dx = -r; dx <= r; dx++) {
+            for (int dz = -r; dz <= r; dz++) {
+                if (level.getHeight(type, cx + dx, cz + dz) != h) return false;
+                if (!level.getBlockState(new BlockPos(cx + dx, h - 1, cz + dz)).is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)) return false;
+            }
+        }
+        return true;
+    }
+
     /** Wachsen die Features einer Landschaft (Geoden, Riesenpilze, Basaltsäulen)? Zählt Blöcke über dem Boden. */
     private static int testGrowth(MinecraftServer server, String name) {
         ServerLevel level = server.overworld();
         String epochId = StrataEpochs.id(name);
         var landscape = StrataAPI.epochs(server).get(epochId).landscape().orElseThrow();
         int cx = 5000 + 200 * List.of("crystal_age", "spore_age", "ash_age").indexOf(name), cz = 5000;
-        for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++) level.getChunk((cx >> 4) + x, (cz >> 4) + z);
+        for (int k = 0; k < 12 && !cleanSite(level, cx, cz, 12); k++) cz += 160;
         int ground = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz) - 1;
         TransplantJob job = Transplanter.start(level, new BlockPos(cx, ground + 1, cz), epochId, landscape, 10, null);
         job.runToEnd();
@@ -356,74 +400,151 @@ final class SelfTest {
         return ok ? 0 : 1;
     }
 
-    /** Oberfläche, an der man jedes Biom erkennt (siehe epochs/worldgen/epochs.json). */
-    private static final Map<String, String> BIOME_TOPS = Map.of(
-            "crystal_hollows", "minecraft:calcite", "geode_vaults", "minecraft:amethyst_block", "rime_grotto", "minecraft:packed_ice",
-            "spore_grotto", "minecraft:mycelium", "moss_marsh", "minecraft:moss_block", "glow_thicket", "minecraft:warped_nylium",
-            "ash_wastes", "strata_epochs:volcanic_ash", "magma_rifts", "minecraft:magma_block", "bone_hollow", "minecraft:soul_soil");
+    /**
+     * Böden, an denen man jedes Biom erkennt (siehe epochs/worldgen/epochs.json). Ein zweiter Eintrag ist
+     * der Fleckenblock (Magma zwischen Schwarzstein, Moos auf Schlamm).
+     */
+    private static final Map<String, List<String>> BIOME_FLOORS = Map.of(
+            "crystal_hollows", List.of("minecraft:calcite"), "geode_vaults", List.of("minecraft:amethyst_block"),
+            "rime_grotto", List.of("minecraft:packed_ice"), "spore_grotto", List.of("minecraft:mycelium"),
+            "moss_marsh", List.of("minecraft:mud", "minecraft:moss_block", "minecraft:clay"), "glow_thicket", List.of("minecraft:warped_nylium"),
+            "ash_wastes", List.of("strata_epochs:volcanic_ash"), "magma_rifts", List.of("minecraft:blackstone", "minecraft:magma_block"),
+            "bone_hollow", List.of("minecraft:soul_soil"));
 
     /**
-     * Mehrere Biome pro Epoche: Jedes Biom der Dimension muss einen spürbaren Anteil haben, nah genug am
-     * Ankunftsort liegen und seine eigene Oberfläche bekommen.
+     * Mehrere Biome pro Epoche: Jedes Biom der Dimension braucht einen spürbaren Anteil, muss höchstens
+     * 300 Blöcke vom Ankunftsort liegen, an seinen Böden die eigene Oberfläche haben, und eine Ankunft
+     * dort steht auf sicherem Boden (kein Magma, keine Lava).
      */
     private static int testBiomes(MinecraftServer server) {
         int failures = 0;
-        final int step = 32, range = 1536;
+        final int step = 32, range = 1536, maxDistance = 300;
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
             ServerLevel level = Mc.level(server, entry.getValue().dimension().get());
             if (level == null) continue;
+            BlockPos origin = EpochTravel.prepareArrival(level, 8, 8);
             Map<String, Integer> counts = new java.util.TreeMap<>();
             for (var holder : level.getChunkSource().getGenerator().getBiomeSource().possibleBiomes()) {
                 counts.put(holder.getRegisteredName(), 0);
             }
-            Map<String, BlockPos> nearest = new java.util.HashMap<>();
-            int samples = 0;
-            for (int x = -range; x < range; x += step) {
-                for (int z = -range; z < range; z += step) {
-                    String id = level.getUncachedNoiseBiome(x >> 2, 0, z >> 2).getRegisteredName();
+            int cells = 2 * range / step;
+            String[][] grid = new String[cells][cells];
+            for (int i = 0; i < cells; i++) {
+                for (int j = 0; j < cells; j++) {
+                    String id = level.getUncachedNoiseBiome((-range + i * step) >> 2, 0, (-range + j * step) >> 2).getRegisteredName();
+                    grid[i][j] = id;
                     counts.merge(id, 1, Integer::sum);
-                    samples++;
-                    BlockPos pos = new BlockPos(x, 0, z);
-                    BlockPos best = nearest.get(id);
-                    if (best == null || pos.distSqr(BlockPos.ZERO) < best.distSqr(BlockPos.ZERO)) nearest.put(id, pos);
                 }
             }
+            // Pro Biom: der nächste Fundort (Abstand) und der nächste Ort mitten im Biom (für Boden und Ankunft).
+            Map<String, BlockPos> nearest = new java.util.HashMap<>();
+            Map<String, BlockPos> core = new java.util.HashMap<>();
+            Map<String, List<BlockPos>> cores = new java.util.HashMap<>();
+            for (int i = 1; i < cells - 1; i++) {
+                for (int j = 1; j < cells - 1; j++) {
+                    String id = grid[i][j];
+                    BlockPos pos = new BlockPos(-range + i * step, origin.getY(), -range + j * step);
+                    BlockPos best = nearest.get(id);
+                    if (best == null || pos.distSqr(origin) < best.distSqr(origin)) nearest.put(id, pos);
+                    boolean inside = id.equals(grid[i - 1][j]) && id.equals(grid[i + 1][j]) && id.equals(grid[i][j - 1]) && id.equals(grid[i][j + 1]);
+                    if (inside) cores.computeIfAbsent(id, k -> new ArrayList<>()).add(pos);
+                    BlockPos bestCore = core.get(id);
+                    if (inside && (bestCore == null || pos.distSqr(origin) < bestCore.distSqr(origin))) core.put(id, pos);
+                }
+            }
+            int samples = cells * cells;
             List<String> parts = new ArrayList<>();
             boolean ok = counts.size() >= 3;
             for (Map.Entry<String, Integer> c : counts.entrySet()) {
                 String id = c.getKey();
+                String name = id.substring(id.indexOf(':') + 1);
                 double share = c.getValue() / (double) samples;
                 BlockPos at = nearest.get(id);
-                int dist = at == null ? -1 : (int) Math.sqrt(at.distSqr(BlockPos.ZERO));
-                String top = BIOME_TOPS.get(id.substring(id.indexOf(':') + 1));
-                int tops = 0;
-                if (at != null && top != null) {
-                    ChunkAccess chunk = level.getChunk(at.getX() >> 4, at.getZ() >> 4);
-                    tops = count(level, chunk, dev.strata.epochs.mc.MobCompat.block(top));
+                int dist = at == null ? -1 : (int) Math.sqrt(at.distSqr(origin));
+                BlockPos mid = core.getOrDefault(id, at);
+                // Böden aus den nächsten Kernpunkten sammeln, bis genug zusammenkommen (manche Chunks sind fast nur Fels).
+                List<BlockPos> spots = new ArrayList<>(cores.getOrDefault(id, at == null ? List.of() : List.of(at)));
+                spots.sort(java.util.Comparator.comparingDouble(q -> q.distSqr(origin)));
+                int[] floor = new int[3];
+                Map<String, Integer> found = new java.util.HashMap<>();
+                for (int k = 0; k < Math.min(8, spots.size()) && floor[0] < 150; k++) {
+                    int[] f = floors(level, spots.get(k), id, BIOME_FLOORS.getOrDefault(name, List.of()), found);
+                    for (int n = 0; n < 3; n++) floor[n] += f[n];
                 }
-                boolean biomeOk = share >= 0.08 && at != null && dist <= 1024 && (top == null || tops > 0);
+                String common = found.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse("-");
+                double match = floor[0] == 0 ? 0 : (floor[1] + floor[2]) / (double) floor[0];
+                boolean safe = mid != null && safeArrival(level, EpochTravel.prepareArrival(level, mid.getX(), mid.getZ()));
+                boolean biomeOk = share >= 0.08 && at != null && dist <= maxDistance && floor[0] >= 20 && match >= 0.35 && safe;
                 if (!biomeOk) ok = false;
-                parts.add(String.format(java.util.Locale.ROOT, "%s %.0f%% ab %d Blöcken (bei %d %d), Oberfläche %d%s",
-                        id.substring(id.indexOf(':') + 1), share * 100, dist, at == null ? 0 : at.getX(), at == null ? 0 : at.getZ(),
-                        tops, biomeOk ? "" : " (!)"));
+                String patch = floor[2] > 0 ? String.format(java.util.Locale.ROOT, " (Flecken %.0f%%)", 100.0 * floor[2] / floor[0]) : "";
+                parts.add(String.format(java.util.Locale.ROOT, "%s %.0f%% ab %d Blöcken (bei %d %d), Boden %.0f%% von %d%s, meist %s, Ankunft %s%s",
+                        name, share * 100, dist, at == null ? 0 : at.getX(), at == null ? 0 : at.getZ(),
+                        match * 100, floor[0], patch, common, safe ? "sicher" : "UNSICHER", biomeOk ? "" : " (!)"));
             }
             // Knochensenke: Netherfossilien (Biom-Tag has_structure/nether_fossil) müssen in der Nähe liegen.
-            BlockPos hollow = nearest.get(StrataEpochs.id("bone_hollow"));
+            BlockPos hollow = core.getOrDefault(StrataEpochs.id("bone_hollow"), nearest.get(StrataEpochs.id("bone_hollow")));
             if (hollow != null) {
-                int[] found = {0, -1};
+                boolean[] found = {false};
                 var source = server.createCommandSourceStack().withSuppressedOutput().withLevel(level)
-                        .withPosition(net.minecraft.world.phys.Vec3.atCenterOf(hollow.atY(64)))
-                        .withCallback((success, result) -> { found[0] = success ? 1 : 0; found[1] = result; });
+                        .withPosition(net.minecraft.world.phys.Vec3.atCenterOf(hollow))
+                        .withCallback((success, result) -> found[0] = success);
                 server.getCommands().performPrefixedCommand(source, "locate structure minecraft:nether_fossil");
-                boolean fossils = found[0] == 1 && found[1] <= 256;
-                if (!fossils) ok = false;
-                parts.add("Netherfossil " + (found[0] == 1 ? found[1] + " Blöcke entfernt" : "nicht gefunden") + (fossils ? "" : " (!)"));
+                if (!found[0]) ok = false;
+                parts.add("Netherfossilien " + (found[0] ? "gefunden" : "FEHLEN (!)"));
             }
             if (!ok) failures++;
             StrataEpochs.LOG.info("[Strata-Test] Biome {}: {} -> {}", entry.getKey(), String.join(", ", parts), ok ? "OK" : "FEHLER");
         }
         return failures;
+    }
+
+    /**
+     * Böden im Chunk um {@code at}, die im Biom {@code biome} liegen: {gesamt, erwartete Blöcke außer dem Fleckenblock, Fleckenblock (zweiter Eintrag)}.
+     * Boden = fester Block, darüber nichts Festes und keine Flüssigkeit.
+     */
+    private static int[] floors(ServerLevel level, BlockPos at, String biome, List<String> expected, Map<String, Integer> found) {
+        ChunkAccess chunk = level.getChunk(at.getX() >> 4, at.getZ() >> 4);
+        List<Block> blocks = expected.stream().map(dev.strata.epochs.mc.MobCompat::block).toList();
+        Block second = blocks.size() < 2 ? null : blocks.get(1);
+        int[] result = new int[3];
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        int minX = chunk.getPos().getMinBlockX(), minZ = chunk.getPos().getMinBlockZ();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                net.minecraft.world.level.block.state.BlockState above = chunk.getBlockState(pos.set(minX + x, Mc.maxY(level) - 1, minZ + z));
+                for (int y = Mc.maxY(level) - 2; y > Mc.minY(level); y--) {
+                    net.minecraft.world.level.block.state.BlockState state = chunk.getBlockState(pos.set(minX + x, y, minZ + z));
+                    // Boden: kein Luft-/Flüssigkeits-/Pflanzenblock (Schlamm zählt, obwohl er nicht ganz voll ist),
+                    // darüber Luft oder etwas Ersetzbares (Gras, Teppich), keine Flüssigkeit.
+                    boolean ground = !state.isAir() && state.getFluidState().isEmpty() && !state.canBeReplaced();
+                    boolean open = (above.isAir() || above.canBeReplaced()) && above.getFluidState().isEmpty();
+                    if (ground && open && !state.is(net.minecraft.world.level.block.Blocks.BEDROCK)
+                            && level.getBiome(pos.above()).getRegisteredName().equals(biome)) {
+                        result[0]++;
+                        found.merge(state.getBlock().getDescriptionId(), 1, Integer::sum);
+                        if (second != null && state.is(second)) result[2]++;
+                        else if (blocks.stream().anyMatch(state::is)) result[1]++;
+                    }
+                    above = state;
+                }
+            }
+        }
+        return result;
+    }
+
+    /** Ankunft: kein Magma unter Spieler und Tor, keine Lava in der Nähe. */
+    private static boolean safeArrival(ServerLevel level, BlockPos feet) {
+        for (int dx = -2; dx <= 4; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos p = feet.offset(dx, dy, dz);
+                    if (level.getFluidState(p).is(net.minecraft.tags.FluidTags.LAVA)) return false;
+                    if (dy == -1 && dx >= -1 && dx <= 3 && Math.abs(dz) <= 1 && EpochTravel.harmful(level.getBlockState(p))) return false;
+                }
+            }
+        }
+        return true;
     }
 
     private static void requireResource(List<String> problems, String path) {

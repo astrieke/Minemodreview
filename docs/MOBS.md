@@ -310,14 +310,14 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
 
 ## Mob-Sounds
 
-Alle Ruf-, Schmerz- und Todeslaute sind eigene Klänge aus `tools/make_mob_sounds.py`: per Synthese, ohne Aufnahmen oder fremde Samples, mono (für Richtungshören), gleiche Lautheit (RMS −20 dB für Rufe, −17 dB für den Rest), feste Seeds. Neu erzeugen: `python tools/make_mob_sounds.py --sheet spektrogramme.png`.
+Alle Ruf-, Schmerz- und Todeslaute sind eigene Klänge aus `tools/make_mob_sounds.py`: per Synthese, ohne Aufnahmen oder fremde Samples, mono (für Richtungshören), feste Seeds. Die Lautheit wird wahrnehmungsnah angeglichen (vereinfachte K-Gewichtung wie bei LUFS: Rufe −22 dB, alles andere −18 dB), Spitzen werden weich begrenzt statt alles leiser zu machen. Jeder Klang hat Anteile über 300 Hz, damit er auch aus Laptop-Lautsprechern kommt. Varianten unterscheiden sich in der Tonhöhe. Neu erzeugen: `python tools/make_mob_sounds.py --sheet spektrogramme.png`.
 
 | Mob | Ruf | Schmerz | Tod |
 |---|---|---|---|
-| Geodenkriecher | helle Kristall-Klicks, leises Plattenschaben | Splitterknacks mit gedämpftem Klang | Zerspringen, Splitter rieseln aus |
+| Geodenkriecher | klappernde Panzerbeine, tiefere Kristalltöne als Amethyst | Knacks im Panzer, kurzes Quieken | Zerspringen, Splitter rieseln aus |
 | Sporenbalg | Ein- und Ausatmen eines Blasebalgs mit Pfeifen | Quietschen und Sporenstoß | Luft entweicht, Ton sinkt und flattert |
 | Steinzeuge | mahlender Stein, hohles Echo | dumpfer Schlag, Riss, Kies | Zerbröckeln, Echo verklingt nach unten |
-| Glutwühler | tiefes Knurren mit knisternden Funken | Zischen und gepresstes Aufjaulen | verzischende Glut, letztes Knurren, Brocken |
+| Glutwühler | Knurren mit Stimmfärbung und knisternden Funken | kurzes, hohes Aufjaulen | verzischende Glut, letztes Knurren, Brocken |
 | Spiralit | freundliches Zwitschern mit Luftblase | kurzes Quieken | absinkender Pfeifton, das Vibrato erlahmt |
 
-Der Glutwühler hat drei eigene Kampf-Signale: **Graben** (körnige Schaufelstöße, auch leise, solange er unter der Asche zieht), **Grollen** (schwillt in 0,9 s an, genau die Vorwarnzeit) und **Hervorbrechen** (Schlag, Erdstoß, Knurren). So hört man den Angriff kommen, auch ohne hinzusehen. Die übrigen Fähigkeits-Effekte (Kristallpanzer, Sporenstoß usw.) nutzen weiter Vanilla-Klänge.
+Der Glutwühler hat drei eigene Kampf-Signale: **Graben** (körnige Schaufelstöße, auch leise, solange er unter der Asche zieht), **Grollen** (ratterndes Geröll über tiefem Grollen, laut ab 0,35 s; die Datei dauert 0,8 s = 16 Ticks, und die Tonhöhe passt sie an die eingestellte Vorwarnzeit `emerge.warning` an, sodass es genau mit dem Ausbruch endet) und **Hervorbrechen** (Schlag, Erdstoß, Knurren). So hört man den Angriff kommen, auch ohne hinzusehen. Die übrigen Fähigkeits-Effekte (Kristallpanzer, Sporenstoß usw.) nutzen weiter Vanilla-Klänge.

@@ -58,11 +58,13 @@ public final class EpochTravel {
      * Gibt es keinen freien Platz, wird eine kleine Kammer ausgehoben.
      */
     public static BlockPos prepareArrival(ServerLevel level, int x, int z) {
-        BlockPos spot = findStandingSpot(level, x, z);
+        BlockPos spot = findStandingSpot(level, x, z, true);
+        if (spot == null) spot = findStandingSpot(level, x, z, false);
         if (spot == null) {
             spot = new BlockPos(x, Math.max(Mc.minY(level) + 16, 32), z);
             carveChamber(level, spot);
         }
+        paveSafe(level, spot);
         BlockPos gatePos = spot.east(2);
         if (!level.getBlockState(gatePos.below()).isSolid()) {
             level.setBlockAndUpdate(gatePos.below(), EpochsContent.CHRONOSTONE.get().defaultBlockState());
@@ -74,12 +76,18 @@ public final class EpochTravel {
 
     /** Fester Boden mit zwei Luftblöcken darüber, von oben nach unten gesucht (unter der Bedrock-Decke). */
     static BlockPos findStandingSpot(ServerLevel level, int x, int z) {
+        return findStandingSpot(level, x, z, false);
+    }
+
+    /** {@code safeOnly}: Magma als Boden überspringen (z. B. in den Magmaspalten der Aschezeit). */
+    static BlockPos findStandingSpot(ServerLevel level, int x, int z, boolean safeOnly) {
         int top = Math.min(Mc.maxY(level) - 8, Mc.minY(level) + 180);
         for (int dx = 0; dx <= 8; dx += 4) {
             for (int y = top; y > Mc.minY(level) + 4; y--) {
                 BlockPos feet = new BlockPos(x + dx, y, z);
                 BlockState floor = level.getBlockState(feet.below());
-                if (floor.isSolid() && !floor.is(Blocks.BEDROCK) && level.getBlockState(feet).isAir()
+                if (floor.isSolid() && !floor.is(Blocks.BEDROCK) && !(safeOnly && harmful(floor))
+                        && level.getBlockState(feet).isAir()
                         && level.getBlockState(feet.above()).isAir()
                         && level.getFluidState(feet).isEmpty()) {
                     return feet;
@@ -87,6 +95,38 @@ public final class EpochTravel {
             }
         }
         return null;
+    }
+
+    /** Böden, auf denen man Schaden nimmt. */
+    static boolean harmful(BlockState state) {
+        return state.is(Blocks.MAGMA_BLOCK) || !state.getFluidState().isEmpty();
+    }
+
+    /**
+     * Sicherer Ankunftsplatz: Unter Spieler und Tor (5 × 3) liegt kein Magma, und daneben fließt keine Lava.
+     * Ohne das landete man in den Magmaspalten auf Schadensboden.
+     */
+    static void paveSafe(ServerLevel level, BlockPos feet) {
+        BlockState stone = EpochsContent.CHRONOSTONE.get().defaultBlockState();
+        for (int dx = -1; dx <= 3; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                BlockPos floor = feet.offset(dx, -1, dz);
+                if (harmful(level.getBlockState(floor))) level.setBlockAndUpdate(floor, stone);
+                for (int dy = 0; dy <= 1; dy++) {
+                    BlockPos side = feet.offset(dx, dy, dz);
+                    if (!level.getFluidState(side).isEmpty()) level.setBlockAndUpdate(side, Blocks.AIR.defaultBlockState());
+                }
+            }
+        }
+        // Lava direkt neben dem Polster würde hineinfließen: am Rand durch Zeitgestein ersetzen.
+        for (int dx = -2; dx <= 4; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos p = feet.offset(dx, dy, dz);
+                    if (level.getFluidState(p).is(net.minecraft.tags.FluidTags.LAVA)) level.setBlockAndUpdate(p, stone);
+                }
+            }
+        }
     }
 
     private static void carveChamber(ServerLevel level, BlockPos feet) {

@@ -139,53 +139,85 @@ def thud(f0, f1, dur):
     return np.sin(ph) * env(dur, 0.002, dur / 3)
 
 
-def normalize(x, rms_db=-18.0, peak_db=-1.0):
-    """Gleiche Lautheit für alle Sounds (RMS), Spitzen höchstens peak_db; das Ende blendet 25 ms aus."""
+def loudness_db(x):
+    """Wahrnehmungsnahe Lautheit (vereinfachte K-Gewichtung wie bei LUFS): Bässe unter 100 Hz zählen kaum,
+    Höhen über 1,5 kHz etwas mehr. Stille Anteile zählen nicht mit (nur Blöcke über -60 dB)."""
+    k = high(x, 100, order=2)
+    k = k + 0.6 * high(k, 1500, order=1)
+    block = int(0.05 * SR)
+    levels = [np.mean(k[i:i + block] ** 2) for i in range(0, max(1, len(k) - block), block // 2)]
+    levels = [l for l in levels if l > 1e-6] or [1e-12]
+    return 10 * np.log10(np.mean(levels))
+
+
+def soft_limit(x, ceiling, knee=0.7):
+    """Unterhalb von knee * ceiling unverändert (keine Verzerrung leiser, tonaler Klänge), darüber weich
+    in die Obergrenze gebogen."""
+    k = knee * ceiling
+    a = np.abs(x)
+    over = a > k
+    y = x.copy()
+    y[over] = np.sign(x[over]) * (k + (ceiling - k) * np.tanh((a[over] - k) / (ceiling - k)))
+    return y
+
+
+def normalize(x, target_db=-20.0, peak_db=-1.0):
+    """Gleiche wahrgenommene Lautheit für alle Sounds. Spitzen über peak_db werden weich begrenzt
+    (tanh) statt alles leiser zu machen, damit der Zielwert auch bei Knacks-Spitzen erreicht wird."""
     # Hochpass statt Mittelwert abziehen: kein Gleichanteil, die Stille bleibt still.
     x = high(x, 30)
-    rms = np.sqrt(np.mean(x ** 2))
-    if rms < 1e-9:
-        return x
-    x = x * (10 ** (rms_db / 20) / rms)
-    peak = np.max(np.abs(x))
-    if peak > 10 ** (peak_db / 20):
-        x = x * (10 ** (peak_db / 20) / peak)
+    ceiling = 10 ** (peak_db / 20)
+    for _ in range(6):
+        x = x * 10 ** ((target_db - loudness_db(x)) / 20)
+        x = soft_limit(x, ceiling)
     x = fade(x, ms=6)
     n = int(0.025 * SR)
     x[-n:] *= np.linspace(1, 0, n) ** 2
     return x
 
 
+def variant(x, i):
+    """Varianten klingen verschieden hoch (Abspielgeschwindigkeit), damit Wiederholungen nicht auffallen."""
+    factor = [1.0, 0.93, 1.08][(i - 1) % 3]
+    if factor == 1.0:
+        return x
+    n = int(len(x) / factor)
+    return np.interp(np.arange(n) * factor, np.arange(len(x)), x)
+
+
 # ---------------------------------------------------------------- Mobs
 
 def geode_crawler(kind, i, rng):
     if kind == "ambient":
-        # Ein paar helle Kristall-Klicks und ein leises Schaben der Panzerplatten.
+        # Klappernde Panzerbeine und zwei, drei tiefere Kristalltöne (tiefer als Amethyst-Schritte).
         dur = 0.9
-        x = silence(dur)
-        at = 0.0
+        x = grains(rng, 0.5, 26, 1200, 3200, grain=0.006, amp=0.7)
+        x = np.concatenate([x, silence(dur - 0.5)])
+        at = rng.uniform(0.05, 0.2)
         for _ in range(rng.integers(2, 4)):
-            place(x, chime(rng, rng.uniform(1700, 2500), rng.uniform(0.18, 0.32)) * rng.uniform(0.5, 1.0), at)
-            at += rng.uniform(0.09, 0.22)
-        place(x, band(rng.normal(0, 1, int(0.08 * SR)), 2500, 6000) * env(0.08, 0.01, 0.03) * 0.25, rng.uniform(0.0, 0.3))
+            place(x, chime(rng, rng.uniform(1050, 1650), rng.uniform(0.16, 0.28)) * rng.uniform(0.5, 0.9), at)
+            at += rng.uniform(0.1, 0.2)
         return x
     if kind == "hurt":
-        # Knacks: kurzer Splitter-Burst plus tieferer, schnell gedämpfter Klang.
+        # Knacks im Panzer, ein kurzes Quieken, nur ein gedämpfter Kristallrest.
         dur = 0.45
         x = silence(dur)
-        place(x, high(rng.normal(0, 1, int(0.03 * SR)), 2500) * env(0.03, 0.0005, 0.008), 0)
-        place(x, chime(rng, rng.uniform(1100, 1400), 0.25, bright=1.3) * 0.9, 0.004)
-        place(x, grains(rng, 0.2, 60, 3000, 7000, amp=0.4), 0.01)
+        place(x, band(rng.normal(0, 1, int(0.03 * SR)), 1500, 7000) * env(0.03, 0.0005, 0.006) * 1.2, 0)
+        ph, _ = sweep(rng.uniform(1300, 1500), 700, 0.16)
+        squeak = (np.sin(ph) + 0.4 * np.sign(np.sin(ph)) * 0.3) * env(0.16, 0.004, 0.07)
+        place(x, low(squeak, 4000) * 0.8, 0.02)
+        place(x, chime(rng, rng.uniform(900, 1100), 0.12, bright=0.6) * 0.35, 0.01)
+        place(x, grains(rng, 0.2, 50, 2000, 6000, amp=0.4), 0.01)
         return x
     # death: Zerspringen, die Splitter rieseln aus.
     dur = 1.4
     x = silence(dur)
-    place(x, thud(160, 60, 0.25) * 0.8, 0)
-    place(x, high(rng.normal(0, 1, int(0.05 * SR)), 2000) * env(0.05, 0.0005, 0.015) * 0.8, 0)
+    place(x, thud(220, 90, 0.25) * 0.8, 0)
+    place(x, high(rng.normal(0, 1, int(0.05 * SR)), 1500) * env(0.05, 0.0005, 0.015) * 0.8, 0)
     for _ in range(28):
         at = rng.exponential(0.25)
         if at < dur - 0.3:
-            place(x, chime(rng, rng.uniform(2200, 5200), rng.uniform(0.08, 0.2)) * rng.uniform(0.15, 0.6), at)
+            place(x, chime(rng, rng.uniform(1800, 4800), rng.uniform(0.08, 0.2)) * rng.uniform(0.15, 0.6), at)
     return x
 
 
@@ -230,50 +262,57 @@ def petrified_witness(kind, i, rng):
         # Mahlender Stein und ein entfernter, hohler Ton (ein Echo).
         dur = 1.5
         t = t_axis(dur)
-        grind = low(rng.normal(0, 1, len(t)), 500) * (0.5 + 0.5 * np.sin(np.pi * t / dur)) * 0.6
-        x = grind + grains(rng, dur, 70, 300, 900, grain=0.02, amp=0.8)
-        f = rng.choice([98.0, 110.0, 87.3])
-        hum = (np.sin(2 * np.pi * f * t) + 0.6 * np.sin(2 * np.pi * f * 1.5 * 1.003 * t)) * np.sin(np.pi * t / dur) ** 2
-        return x + hum * 0.35
+        grind = band(rng.normal(0, 1, len(t)), 250, 2200) * (0.5 + 0.5 * np.sin(np.pi * t / dur)) * 0.5
+        x = grind + grains(rng, dur, 90, 400, 1800, grain=0.02, amp=0.9)
+        f = rng.choice([196.0, 220.0, 174.6])
+        hum = sum((0.7 ** k) * np.sin(2 * np.pi * f * r * t) for k, r in enumerate([1.0, 1.5 * 1.003, 2.0, 3.0]))
+        return x + hum * np.sin(np.pi * t / dur) ** 2 * 0.3
     if kind == "hurt":
         # Steinriss: dumpfer Schlag, Knacken, Kies.
         dur = 0.55
         x = silence(dur)
-        place(x, thud(120, 45, 0.3), 0)
-        place(x, band(rng.normal(0, 1, int(0.04 * SR)), 900, 4000) * env(0.04, 0.0005, 0.01) * 0.8, 0.002)
-        place(x, grains(rng, 0.35, 90, 400, 2500, amp=0.5, decay_rate=6), 0.02)
+        place(x, thud(180, 70, 0.3) * 0.35, 0)
+        place(x, band(rng.normal(0, 1, int(0.06 * SR)), 600, 4000) * env(0.06, 0.0005, 0.015) * 1.2, 0.002)
+        place(x, grains(rng, 0.35, 140, 400, 2500, grain=0.015, amp=0.9, decay_rate=6), 0.02)
         return x
     # death: Zerbröckeln, das Echo verklingt nach unten.
     dur = 2.0
     t = t_axis(dur)
-    x = grains(rng, dur, 220, 250, 2200, grain=0.018, decay_rate=1.8, amp=0.9)
-    place(x, thud(100, 35, 0.5) * 1.2, 0)
-    ph, _ = sweep(110, 55, dur)
-    x += np.sin(ph) * env(dur, 0.05, 0.7, hold=0.3) * 0.4
+    x = grains(rng, dur, 260, 300, 2200, grain=0.018, decay_rate=1.8, amp=1.2)
+    place(x, thud(160, 60, 0.5) * 0.4, 0)
+    ph, _ = sweep(220, 98, dur)
+    x += (np.sin(ph) + 0.5 * np.sin(2 * ph)) * env(dur, 0.05, 0.7, hold=0.3) * 0.35
     return x
+
+
+def growl_voiced(rng, f0, f1, dur, rough=28.0):
+    """Knurren mit Stimmfärbung: Sägezahn plus zwei Formanten (300–900 Hz), damit es auch aus kleinen
+    Lautsprechern kommt, nicht nur als Bass."""
+    g = growl(rng, f0, f1, dur, cutoff=2200, rough=rough)
+    return 0.5 * g + 0.9 * band(g, 280, 520) + 0.6 * band(g, 650, 1100)
 
 
 def ember_burrower(kind, i, rng):
     if kind == "ambient":
-        # Tiefes Knurren mit knisternden Glutfunken.
+        # Knurren mit knisternden Glutfunken.
         dur = 1.0
-        f = rng.uniform(62, 78)
-        x = growl(rng, f, f * rng.uniform(0.85, 1.05), dur) * env(dur, 0.08, 0.35, hold=0.35)
-        x += grains(rng, dur, 40, 2500, 7000, grain=0.004, amp=0.5)
+        f = rng.uniform(88, 104)
+        x = growl_voiced(rng, f, f * rng.uniform(0.85, 1.05), dur) * env(dur, 0.08, 0.35, hold=0.35)
+        x += grains(rng, dur, 45, 2500, 7000, grain=0.004, amp=0.4)
         return x
     if kind == "hurt":
-        # Zischen und ein gepresstes Aufjaulen.
-        dur = 0.55
+        # Kurzes, hohes Aufjaulen, nur ein Hauch Zischen (Tod: langes Zischen).
+        dur = 0.45
         x = silence(dur)
-        place(x, high(rng.normal(0, 1, int(0.4 * SR)), 3000) * env(0.4, 0.003, 0.12) * 0.5, 0)
-        place(x, growl(rng, 130, 85, 0.35, cutoff=1400, rough=40) * env(0.35, 0.005, 0.12), 0.01)
+        place(x, growl_voiced(rng, 190, 120, 0.3, rough=45) * env(0.3, 0.005, 0.1), 0)
+        place(x, high(rng.normal(0, 1, int(0.12 * SR)), 3500) * env(0.12, 0.002, 0.04) * 0.15, 0)
         return x
     if kind == "death":
-        # Lange verzischende Glut, ein letztes Knurren, Brocken fallen.
+        # Lange verzischende Glut, ein letztes, absinkendes Knurren, Brocken fallen.
         dur = 1.9
         t = t_axis(dur)
-        hiss = high(rng.normal(0, 1, len(t)), 2500) * env(dur, 0.01, 0.8, hold=0.2) * 0.35
-        x = hiss + growl(rng, 90, 40, dur, cutoff=600) * env(dur, 0.01, 0.4, hold=0.2)
+        hiss = high(rng.normal(0, 1, len(t)), 2500) * env(dur, 0.01, 0.8, hold=0.2) * 0.3
+        x = hiss + growl_voiced(rng, 120, 55, dur) * env(dur, 0.01, 0.45, hold=0.2)
         place(x, grains(rng, 0.8, 50, 300, 1500, grain=0.02, amp=0.6, decay_rate=3), 0.5)
         return x
     if kind == "dig":
@@ -288,21 +327,26 @@ def ember_burrower(kind, i, rng):
             at += rng.uniform(0.07, 0.11)
         return x
     if kind == "tremor":
-        # Grollen unter den Füßen, das anschwillt (die Warnung vor dem Hervorbrechen).
-        dur = 0.9
+        # Die Warnung vor dem Hervorbrechen: 0,8 s (= 16 Ticks; im Spiel an die Vorwarnzeit angepasst).
+        # Schnell anschwellendes, verzerrtes Grollen mit rieselndem Kies, laut ab etwa 0,35 s bis kurz vor Schluss.
+        dur = 0.8
         t = t_axis(dur)
-        swell = (t / dur) ** 1.5 * np.clip((dur - t) / 0.08, 0, 1)
-        rumble = low(rng.normal(0, 1, len(t)), 180, order=4) * 3.0
-        sub = np.sin(2 * np.pi * 55 * t) * (0.6 + 0.4 * np.sin(2 * np.pi * 9 * t))
-        x = (rumble + sub * 0.8) * swell
-        x += grains(rng, dur, 30, 600, 2000, amp=0.4) * swell
-        return x
+        swell = np.clip(t / 0.35, 0, 1) ** 1.3 * np.clip((dur - t) / 0.05, 0, 1)
+        rumble = low(rng.normal(0, 1, len(t)), 220, order=4) * 4.0
+        rumble = np.tanh(rumble * 2.5) * 0.6
+        ph, _ = sweep(55, 75, dur)
+        sub = np.tanh(2.0 * np.sin(ph)) * (0.6 + 0.4 * np.sin(2 * np.pi * 11 * t))
+        # Mitten: ratterndes Geröll (Rauschen 250–1200 Hz, 11 Hz moduliert) und rieselnder Kies, damit die
+        # Warnung auch aus Laptop-Lautsprechern kommt; der Bass gibt nur das Gewicht dazu.
+        rattle = band(rng.normal(0, 1, len(t)), 250, 1200) * (0.55 + 0.45 * np.sin(2 * np.pi * 11 * t)) * 1.4
+        gravel = grains(rng, dur, 260, 500, 2600, grain=0.008, amp=2.5)
+        return (0.35 * rumble + 0.3 * sub + rattle + gravel) * swell
     # emerge: Ausbruch aus dem Boden.
     dur = 1.0
     x = silence(dur)
-    place(x, thud(110, 38, 0.6) * 1.2, 0)
-    place(x, low(rng.normal(0, 1, int(0.6 * SR)), 2200) * env(0.6, 0.002, 0.15), 0)
-    place(x, growl(rng, 95, 120, 0.45, cutoff=1200) * env(0.45, 0.01, 0.2) * 0.8, 0.05)
+    place(x, thud(140, 50, 0.6) * 0.5, 0)
+    place(x, low(rng.normal(0, 1, int(0.6 * SR)), 2500) * env(0.6, 0.002, 0.15), 0)
+    place(x, growl_voiced(rng, 110, 140, 0.45) * env(0.45, 0.01, 0.2) * 0.8, 0.05)
     place(x, grains(rng, 0.8, 90, 400, 3000, amp=0.5, decay_rate=4), 0.05)
     return x
 
@@ -387,7 +431,7 @@ def main():
         for kind, count in kinds.items():
             for i in range(1, count + 1):
                 rng = np.random.default_rng(seed_for(mob, kind, i))
-                x = normalize(fn(kind, i, rng), -20.0 if kind == "ambient" else -17.0)
+                x = normalize(variant(fn(kind, i, rng), i) if kind != "tremor" else fn(kind, i, rng), -22.0 if kind == "ambient" else -18.0)
                 write_ogg(x, os.path.join(OUT, mob, f"{kind}{i}.ogg"))
                 if args.wav:
                     os.makedirs(args.wav, exist_ok=True)

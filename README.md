@@ -44,10 +44,10 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
    - Der **Kristall-Kernbohrer** (Stufe 2: Kernbohrer und 4 Kristallquarz) erreicht auch die Sporenzeit.
    - Der **Tiefenkernbohrer** (Stufe 3: Kristall-Kernbohrer, Bernstein und eine Spitze aus dem Tag `strata_epochs:deep_drill_tips`, Standard Diamant) erreicht auch die **Aschezeit**.
 2. **Epochentor** bauen (Obsidian, Amethyst, Kompass) und mit dem Bohrkern rechtsklicken. Der Kern wird verbraucht, und du landest in der Epoche. Neben dir steht ein Tor für den Rückweg.
-3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein** mit je **drei Biomen**. Das Hauptbiom liegt am Ankunftsort, die beiden anderen meist nur 70–160 Blöcke entfernt:
-   - **Kristallzeit** (Kristallquarz): *Kristallhöhlen* (Calcit), *Geodengewölbe* (Amethystboden, viele Geoden), *Raureifgrotte* (Packeis und Schnee, Eiswanderer).
-   - **Sporenzeit** (Bernstein): *Sporengrotte* (Myzel), *Moosmoor* (Moos auf Schlamm), *Leuchtdickicht* (Wirrnyzel mit Wirrpilzen und Zwirbelranken).
-   - **Aschezeit** (Glutsteinerz, liefert **Glutsplitter**, Brennstoff wie eine Lohenrute): *Aschewüste* (Vulkanasche über Basalt), *Magmaspalten* (Magmaboden: brennt, aber der Glutwühler kann nicht abtauchen), *Knochensenke* (Seelenerde mit Netherfossilien).
+3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein** mit je **drei Biomen**. Wo du ankommst, hängt von deinem Ort in der Oberwelt ab. Das Hauptbiom nimmt gut die Hälfte ein, die beiden anderen sind kleiner und lohnen sich mit mehr Epochen-Erz. Sie liegen höchstens 300 Blöcke vom Ankunftsort entfernt (Selbsttest), meist deutlich näher. Der Ankunftsplatz steht immer auf sicherem Boden, nie auf Magma:
+   - **Kristallzeit** (Kristallquarz): *Kristallhöhlen* (Calcit), *Geodengewölbe* (Amethystboden, viele Geoden, mehr Kristallquarz), *Raureifgrotte* (Packeis und Schnee, Eiswanderer).
+   - **Sporenzeit** (Bernstein): *Sporengrotte* (Myzel), *Moosmoor* (Schlamm mit Moosflecken, viele Lehmtümpel mit Tropfblatt), *Leuchtdickicht* (Wirrnyzel mit Wirrpilzen und Zwirbelranken).
+   - **Aschezeit** (Glutsteinerz, liefert **Glutsplitter**, Brennstoff wie eine Lohenrute): *Aschewüste* (Vulkanasche über Basalt), *Magmaspalten* (Schwarzstein mit Magma-Rissen, viel Glutsteinerz, der Glutwühler kann hier nicht abtauchen), *Knochensenke* (Seelenerde mit Netherfossilien).
 4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min, Aschezeit 5 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
 5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
 6. Rechtsklick auf das Tor bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.

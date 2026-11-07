@@ -254,7 +254,8 @@ public class EmberBurrower extends StrataMob {
             enter(State.TREMOR);
             playActionFor("tremor", warningTicks());
             setGlow(1, 1f);
-            sound(EpochsMobs.EMBER_BURROWER_TREMOR.get(), 1.5f, 1.0f);
+            // Die Datei dauert 0,8 s (16 Ticks): Über die Tonhöhe endet das Grollen genau mit der Vorwarnzeit.
+            sound(EpochsMobs.EMBER_BURROWER_TREMOR.get(), 1.5f, Math.max(0.5f, Math.min(2f, 16f / Math.max(1, warningTicks()))));
             return;
         }
         if (stateTicks % 5 == 0) getNavigation().moveTo(target, tuning().ability("burrow", "speed", 1.6));

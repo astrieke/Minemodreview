@@ -91,8 +91,20 @@ def generate = tasks.register('generateEpochData') {
                 }
             }
             // Pro Biom eine eigene Oberfläche (Bedingung "biome"); das Hauptbiom gilt zusätzlich als Rückfall.
+            // Oberste Schicht: Block "top", optional mit Flecken eines zweiten Blocks dort, wo ein Vanilla-Noise
+            // in einem Bereich liegt (z. B. Magma nur in Rissen zwischen Schwarzstein).
+            def topRule = { b ->
+                def p = b.surface.patches
+                if (p == null) return blockRule(b.surface.top)
+                [type: 'minecraft:sequence', sequence: [
+                        [type    : 'minecraft:condition',
+                         if_true : [type: 'minecraft:noise_threshold', noise: p.noise, min_threshold: p.min, max_threshold: p.max],
+                         then_run: blockRule(p.block)],
+                        blockRule(b.surface.top)
+                ]]
+            }
             def floorRules = { b -> [
-                    [type: 'minecraft:condition', if_true: floorCondition(false), then_run: blockRule(b.surface.top)],
+                    [type: 'minecraft:condition', if_true: floorCondition(false), then_run: topRule(b)],
                     [type: 'minecraft:condition', if_true: floorCondition(true), then_run: blockRule(b.surface.under)]
             ] }
             def perBiome = e.biomes.collect { b ->
@@ -103,9 +115,12 @@ def generate = tasks.register('generateEpochData') {
             def surface = [type: 'minecraft:sequence', sequence: bedrock + perBiome + floorRules(e.biomes[0])]
             // Klima: Die Vanilla-Höhlen haben überall Temperatur und Feuchte 0. Die Epochen nehmen die
             // Klima-Noises des Nethers (Format genau dieser Version), damit mehrere Biome nebeneinander liegen.
+            // Nur die Feuchte trennt die Biome (Punkte auf einer Achse); xz_scale verdoppelt: halb so große Biome
+            // als im Nether, damit die Nebenbiome in der knappen Zeit erreichbar sind.
             def netherRouter = vanilla('minecraft:nether', 'worldgen/noise_settings').noise_router
-            noise.noise_router.temperature = netherRouter.temperature
-            noise.noise_router.vegetation = netherRouter.vegetation
+            def vegetation = netherRouter.vegetation
+            if (vegetation instanceof Map && vegetation.xz_scale instanceof Number) vegetation.xz_scale = vegetation.xz_scale * (spec.biome_scale ?: 2.0)
+            noise.noise_router.vegetation = vegetation
             if (newRules) noise.material_rule = surface else noise.surface_rule = surface
             write("data/${ns}/worldgen/noise_settings/${e.id}.json", noise)
 
@@ -158,15 +173,55 @@ def generate = tasks.register('generateEpochData') {
                 spawnLists?.each { cat, entries ->
                     if (entries instanceof List) entries.removeAll { it instanceof Map && excluded.contains(it.type) }
                 }
+                // Gewichte von Vanilla-Spawns der Vorlage ändern (z. B. weniger Magmawürfel).
+                (b.mob_weights ?: [:]).each { type, w ->
+                    spawnLists?.each { cat, entries -> entries.findAll { it instanceof Map && it.type == type }.each { it.weight = w } }
+                }
+                // Musik aus einem anderen Vanilla-Biom (z. B. üppige Höhlen statt Nether-Musik).
+                if (b.music_from) {
+                    def src = vanilla(b.music_from, 'worldgen/biome')
+                    if (biome.effects instanceof Map) {
+                        if (src.effects?.music != null) biome.effects.music = src.effects.music else biome.effects.remove('music')
+                    }
+                    if (biome.attributes instanceof Map) {
+                        def m = src.attributes?.get('minecraft:audio/background_music')
+                        if (m != null) biome.attributes['minecraft:audio/background_music'] = m else biome.attributes.remove('minecraft:audio/background_music')
+                    }
+                }
                 def costs = biome.spawn_costs instanceof Map ? biome.spawn_costs
                         : biome.attributes?.get('minecraft:gameplay/natural_mob_spawns')?.argument?.spawn_costs
                 excluded.each { costs?.remove(it) }
                 // Features der Vorlage, die in einer Epoche nichts verloren haben (Feuer, Antiker Schutt, Nether-Gold).
                 def badFeatures = (b.exclude_features ?: []) as Set
+                badFeatures.each { id ->
+                    def (fns, fpath) = id.split(':')
+                    if (zip.getEntry("data/${fns}/worldgen/placed_feature/${fpath}.json") == null)
+                        throw new GradleException("exclude_features in ${b.id}: unbekanntes Feature ${id}")
+                }
                 biome.features.each { step -> if (step instanceof List) step.removeAll { badFeatures.contains(it) } }
+                // Keine Carver: Die Epochen sind schon Höhlenwelten, und Carver graben nach der Oberflächenregel,
+                // sodass ihre Böden rohes Zeitgestein blieben.
+                if (biome.carvers instanceof Map) biome.carvers = [:]
+                else if (biome.carvers instanceof List) biome.carvers = []
                 def UNDERGROUND_ORES = 6
                 while (biome.features.size() <= UNDERGROUND_ORES) biome.features << []
                 biome.features[UNDERGROUND_ORES].addAll(placedOres)
+                // Erz-Bonus: Nebenbiome lohnen sich (mehr vom Epochen-Erz).
+                if (b.ore_bonus) {
+                    def ore = e.ores.find { it.id == b.ore_bonus.ore }
+                    if (ore == null) throw new GradleException("ore_bonus in ${b.id}: Erz ${b.ore_bonus.ore} fehlt in ${e.id}")
+                    write("data/${ns}/worldgen/placed_feature/ore_${ore.id}_bonus_${b.id}.json", [
+                            feature  : "${ns}:ore_${ore.id}".toString(),
+                            placement: [
+                                    [type: 'minecraft:count', count: b.ore_bonus.count],
+                                    [type: 'minecraft:in_square'],
+                                    [type  : 'minecraft:height_range',
+                                     height: [type: 'minecraft:uniform', min_inclusive: [above_bottom: 0], max_inclusive: [absolute: ore.max_y]]],
+                                    [type: 'minecraft:biome']
+                            ]
+                    ])
+                    biome.features[UNDERGROUND_ORES] << "${ns}:ore_${ore.id}_bonus_${b.id}".toString()
+                }
                 (b.add_features ?: [:]).each { step, list ->
                     list.each { f ->
                         if (f instanceof String) {
@@ -178,6 +233,7 @@ def generate = tasks.register('generateEpochData') {
                         placed.placement.each { pl ->
                             if (pl.type == 'minecraft:rarity_filter' && f.rarity) pl.chance = f.rarity
                             if (pl.type == 'minecraft:height_range' && f.max_y) pl.height.max_inclusive = [absolute: f.max_y]
+                            if (pl.type == 'minecraft:count' && f.count) pl.count = f.count
                         }
                         write("data/${ns}/worldgen/placed_feature/${f.name}.json", placed)
                         biome.features[step as int] << "${ns}:${f.name}".toString()
@@ -215,7 +271,7 @@ def generate = tasks.register('generateEpochData') {
 
             // Dimension: Noise-Generator, die Biome als Punkte im Klima (Temperatur, Feuchte).
             // Die übrigen Klimawerte sind in den Epochen überall 0.
-            def climate = { b -> [temperature: b.climate[0], humidity: b.climate[1], continentalness: 0.0, erosion: 0.0,
+            def climate = { b -> [temperature: 0.0, humidity: b.climate, continentalness: 0.0, erosion: 0.0,
                                   depth: 0.0, weirdness: 0.0, offset: 0.0] }
             write("data/${ns}/dimension/${e.id}.json", [
                     type     : "${ns}:${e.id}".toString(),
