@@ -127,5 +127,16 @@
   "biome.strata_epochs.bone_hollow": "Knochensenke",
   "subtitles.strata_epochs.ember_burrower.dig": "Glutwühler gräbt",
   "subtitles.strata_epochs.ember_burrower.tremor": "Boden grollt",
-  "subtitles.strata_epochs.ember_burrower.emerge": "Glutwühler bricht hervor"
+  "subtitles.strata_epochs.ember_burrower.emerge": "Glutwühler bricht hervor",
+  "message.strata_epochs.bearing.here": "Das Tor peilt die Zeitschichten. Du stehst in: %s",
+  "message.strata_epochs.bearing.target": "  %1$s: %2$s Blöcke Richtung %3$s",
+  "message.strata_epochs.bearing.none": "  Keine andere Zeitschicht in der Nähe.",
+  "message.strata_epochs.bearing.wind.n": "Norden",
+  "message.strata_epochs.bearing.wind.ne": "Nordosten",
+  "message.strata_epochs.bearing.wind.e": "Osten",
+  "message.strata_epochs.bearing.wind.se": "Südosten",
+  "message.strata_epochs.bearing.wind.s": "Süden",
+  "message.strata_epochs.bearing.wind.sw": "Südwesten",
+  "message.strata_epochs.bearing.wind.w": "Westen",
+  "message.strata_epochs.bearing.wind.nw": "Nordwesten"
 }

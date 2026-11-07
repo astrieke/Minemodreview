@@ -127,5 +127,16 @@
   "biome.strata_epochs.bone_hollow": "Bone Hollow",
   "subtitles.strata_epochs.ember_burrower.dig": "Ember Burrower digs",
   "subtitles.strata_epochs.ember_burrower.tremor": "Ground rumbles",
-  "subtitles.strata_epochs.ember_burrower.emerge": "Ember Burrower bursts out"
+  "subtitles.strata_epochs.ember_burrower.emerge": "Ember Burrower bursts out",
+  "message.strata_epochs.bearing.here": "The gate takes a bearing on the time layers. You are in: %s",
+  "message.strata_epochs.bearing.target": "  %1$s: %2$s blocks to the %3$s",
+  "message.strata_epochs.bearing.none": "  No other time layer nearby.",
+  "message.strata_epochs.bearing.wind.n": "north",
+  "message.strata_epochs.bearing.wind.ne": "northeast",
+  "message.strata_epochs.bearing.wind.e": "east",
+  "message.strata_epochs.bearing.wind.se": "southeast",
+  "message.strata_epochs.bearing.wind.s": "south",
+  "message.strata_epochs.bearing.wind.sw": "southwest",
+  "message.strata_epochs.bearing.wind.w": "west",
+  "message.strata_epochs.bearing.wind.nw": "northwest"
 }

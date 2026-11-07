@@ -23,6 +23,7 @@
 # SHOT_SPIRALIT=1: in der Epoche schlüpft nach 29 s ein Spiralit für den Spieler; Bildserie 20 s lang.
 # SHOT_BIOME=<biom>, z. B. geode_vaults: Spieler landet auf dem Höhlenboden dieses Bioms der Epoche
 #   (Fundort aus dem Selbsttest-Log), mit Nachtsicht, damit man Oberfläche und Features sieht.
+# SHOT_BEARING=1: Kurz vor dem Bild peilt der Spieler die Biome (/strata_epochs bearing), die Zeilen stehen im Chat.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 v="$1"; epoch="$2"; out="$(realpath -m "$3")"
@@ -68,6 +69,12 @@ if [ -n "${SHOT_BIOME:-}" ]; then
     read -r bx bz <<< "$bpos"
     f="$dp/data/strata_shot/function/tick.mcfunction"
     sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run spreadplayers $bx $bz 0 12 under 100 false @s\nexecute as @a[tag=!strata_shot] at @s run tp @s ~ ~ ~ -90 ${SHOT_PITCH:-12}\neffect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true|" "$f"
+fi
+if [ -n "${SHOT_BEARING:-}" ]; then
+    # Peilung kurz vor dem Bild auslösen, damit die Chatzeilen noch zu sehen sind.
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i "s|^tag @a add strata_shot|execute if entity @a[tag=!strata_shot] run schedule function strata_shot:bearing 470t\ntag @a add strata_shot|" "$f"
+    echo 'execute as @a run strata_epochs bearing' > "$dp/data/strata_shot/function/bearing.mcfunction"
 fi
 if [ -n "${SHOT_TRANSPLANT:-}" ]; then
     f="$dp/data/strata_shot/function/tick.mcfunction"

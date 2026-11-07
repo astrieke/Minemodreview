@@ -46,7 +46,7 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 2. **Epochentor** bauen (Obsidian, Amethyst, Kompass) und mit dem Bohrkern rechtsklicken. Der Kern wird verbraucht, und du landest in der Epoche. Neben dir steht ein Tor für den Rückweg.
 ![Die neun Biome (Minecraft 1.21.1, mit Nachtsicht)](docs/screenshots/biomes/uebersicht_1.21.1.png)
 
-3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein** mit je **drei Biomen**. Wo du ankommst, hängt von deinem Ort in der Oberwelt ab. Das Hauptbiom nimmt gut die Hälfte ein, die beiden anderen sind kleiner und lohnen sich mit mehr Epochen-Erz. Sie liegen höchstens 300 Blöcke vom Ankunftsort entfernt (Selbsttest), meist deutlich näher. Der Ankunftsplatz steht immer auf sicherem Boden, nie auf Magma:
+3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein** mit je **drei Biomen**. Wo du ankommst, hängt von deinem Ort in der Oberwelt ab. Das Hauptbiom nimmt gut die Hälfte ein, die beiden anderen sind kleiner und lohnen sich mit mehr Epochen-Erz. Sie liegen höchstens 300 Blöcke vom Ankunftsort entfernt (Selbsttest), meist deutlich näher. Der Ankunftsplatz steht immer auf sicherem Boden, nie auf Magma. Bei der Ankunft **peilt das Tor die Biome**: Im Chat steht, in welchem Biom du bist und in welcher Richtung und Entfernung die anderen beiden liegen. Schleichen + Rechtsklick auf das Tor wiederholt die Peilung von deinem Standort aus:
    - **Kristallzeit** (Kristallquarz): *Kristallhöhlen* (Calcit), *Geodengewölbe* (Amethystboden, viele Geoden, mehr Kristallquarz), *Raureifgrotte* (Packeis und Schnee, Eiswanderer).
    - **Sporenzeit** (Bernstein): *Sporengrotte* (Myzel), *Moosmoor* (Schlamm, Moos und Lehmtümpel mit Tropfblatt), *Leuchtdickicht* (Wirrnyzel mit Wirrpilzen und Zwirbelranken).
    - **Aschezeit** (Glutsteinerz, liefert **Glutsplitter**, Brennstoff wie eine Lohenrute): *Aschewüste* (Vulkanasche über Basalt), *Magmaspalten* (Schwarzstein mit Magma-Rissen und Lavaseen, viel Glutsteinerz, der Glutwühler kann hier nicht abtauchen; die gefährlichste Zone), *Knochensenke* (Seelenerde mit Netherfossilien).
@@ -220,12 +220,13 @@ data/<namespace>/strata_core/codex_node/<name>.json
 | `/strata_epochs transplant <epoche> [radius]` | OP | Transplantation an der eigenen Position (ohne Voraussetzungen, zum Testen) |
 | `/strata_epochs spiralit` | OP | Lässt einen Spiralit für sich schlüpfen |
 | `/strata_epochs status` | OP | Zeigt, ob ein Zeitanker zählt (auch im Curios-Slot), und den Zeitbonus |
+| `/strata_epochs bearing` | OP | Peilung der Biome wie im Epochentor (zum Testen) |
 
 ## Noch offen
 
 - Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
 - Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 40 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
-- Biome: drei pro Epoche, freigegeben in Prüfrunde 3 (7/7/7), Bilder in `docs/screenshots/biomes/`. Offen: Spieler sehen nicht, in welcher Richtung die Nebenbiome liegen; im Leuchtdickicht liegt in 1.21.11 stellenweise die Schlammziegel-Unterschicht offen.
+- Biome: drei pro Epoche, freigegeben in Prüfrunde 3 (7/7/7), Bilder in `docs/screenshots/biomes/`. Offen: Im Leuchtdickicht liegt in 1.21.11 stellenweise die Schlammziegel-Unterschicht offen.
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator (übersteht Neustarts), dazu der Kernanalyse-Tisch aus Phase 1. Im Client gesehen: Spiralit (1.21.1 und 26.1), Transplantation (1.21.1, 26.2 und 26.3), siehe `docs/screenshots/phase3/`.

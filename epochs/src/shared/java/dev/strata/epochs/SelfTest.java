@@ -496,6 +496,19 @@ final class SelfTest {
                         name, share * 100, dist, at == null ? 0 : at.getX(), at == null ? 0 : at.getZ(),
                         match * 100, floor[0], patch, common, safe ? "sicher" : "UNSICHER", biomeOk ? "" : " (!)"));
             }
+            // Peilung im Tor: findet vom Ankunftsort aus jedes andere Biom, Entfernung passt zum Raster oben.
+            String here = BiomeBearing.biomeAt(level, origin);
+            var targets = BiomeBearing.scan(level, origin);
+            boolean winds = BiomeBearing.wind(0, -10).equals("n") && BiomeBearing.wind(10, 0).equals("e")
+                    && BiomeBearing.wind(-10, 10).equals("sw") && BiomeBearing.wind(7, -7).equals("ne");
+            boolean bearing = winds && targets.size() == counts.size() - 1;
+            for (var t : targets) {
+                BlockPos n = nearest.get(t.biome());
+                if (n == null || Math.abs(t.distance() - Math.sqrt(n.distSqr(origin))) > 48) bearing = false;
+            }
+            if (!bearing) ok = false;
+            parts.add("Peilung " + targets.stream().map(t -> t.biome().substring(t.biome().indexOf(':') + 1) + " " + t.distance() + " " + t.wind())
+                    .collect(java.util.stream.Collectors.joining("/")) + " (hier " + here.substring(here.indexOf(':') + 1) + ")" + (bearing ? "" : " (!)"));
             // Knochensenke: Netherfossilien (Biom-Tag has_structure/nether_fossil) müssen in der Nähe liegen.
             BlockPos hollow = core.getOrDefault(StrataEpochs.id("bone_hollow"), nearest.get(StrataEpochs.id("bone_hollow")));
             if (hollow != null) {

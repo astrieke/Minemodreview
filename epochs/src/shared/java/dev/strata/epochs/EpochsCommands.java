@@ -37,7 +37,8 @@ final class EpochsCommands {
                                 .then(Commands.argument("radius", IntegerArgumentType.integer(2, 32))
                                         .executes(ctx -> transplant(ctx, IntegerArgumentType.getInteger(ctx, "radius"))))))
                 .then(Commands.literal("spiralit").executes(EpochsCommands::spiralit))
-                .then(Commands.literal("status").executes(EpochsCommands::status)));
+                .then(Commands.literal("status").executes(EpochsCommands::status))
+                .then(Commands.literal("bearing").executes(EpochsCommands::bearing)));
     }
 
     private static int transplant(CommandContext<CommandSourceStack> ctx, int radius) {
@@ -63,6 +64,17 @@ final class EpochsCommands {
         StrataEpochs.LOG.info(text);
         ctx.getSource().sendSuccess(() -> Component.literal(text), false);
         return anchor ? 1 : 0;
+    }
+
+    /** Peilung wie im Epochentor (Schleichen + Rechtsklick), zum Testen ohne Tor. */
+    private static int bearing(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        if (EpochTravel.epochOf(player.level()).isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal("Nur in einer Epoche"));
+            return 0;
+        }
+        BiomeBearing.tell(player);
+        return 1;
     }
 
     private static int spiralit(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {

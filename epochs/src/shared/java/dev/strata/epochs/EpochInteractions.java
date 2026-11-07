@@ -87,7 +87,9 @@ final class EpochInteractions {
     private static void useGate(ServerPlayer player, ItemStack held) {
         ServerLevel level = (ServerLevel) player.level();
         if (EpochTravel.epochOf(level).isPresent()) {
-            EpochTravel.leave(player);
+            // Schleichen: Peilung der Biome statt Rückreise.
+            if (player.isShiftKeyDown()) BiomeBearing.tell(player);
+            else EpochTravel.leave(player);
             return;
         }
         Optional<String> epoch = CoreSamples.epochOf(held);

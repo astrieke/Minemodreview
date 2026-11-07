@@ -36,6 +36,7 @@ public final class EpochTravel {
         BlockPos arrival = prepareArrival(target, player.getBlockX(), player.getBlockZ());
         Mc.teleport(player, target, arrival.getX() + 0.5, arrival.getY(), arrival.getZ() + 0.5);
         Mc.actionbar(player, Component.translatable("message.strata_epochs.gate.entered"));
+        BiomeBearing.tell(player);
     }
 
     public static void leave(ServerPlayer player) {
