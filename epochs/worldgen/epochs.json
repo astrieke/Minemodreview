@@ -171,7 +171,8 @@
           "exclude_features": [
             "minecraft:lush_caves_vegetation",
             "minecraft:rooted_azalea_tree",
-            "minecraft:lush_caves_clay"
+            "minecraft:lush_caves_clay",
+            "minecraft:amethyst_geode"
           ],
           "add_features": {
             "9": [
@@ -213,7 +214,8 @@
             "minecraft:rooted_azalea_tree",
             "minecraft:patch_tall_grass_2",
             "minecraft:spore_blossom",
-            "minecraft:lush_caves_clay"
+            "minecraft:lush_caves_clay",
+            "minecraft:amethyst_geode"
           ],
           "ore_bonus": {
             "ore": "amber",

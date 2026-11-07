@@ -133,6 +133,27 @@ public class Spiralit extends StrataMob {
         return player.getUUID().toString().equals(bond().owner());
     }
 
+    /** Stirbt der gebundene Spiralit, vergisst ihn der Besitzer (sonst hieße es beim nächsten Schlüpfen, er löse sich). */
+    @Override
+    public void die(net.minecraft.world.damagesource.DamageSource source) {
+        owner().ifPresent(p -> forget(this, p));
+        super.die(source);
+    }
+
+    /** Merker des Besitzers leeren, wenn er auf diesen Spiralit zeigt. */
+    public static void forget(Spiralit spiralit, ServerPlayer owner) {
+        if (owner.getData(EpochsContent.SPIRALIT_ID.get()).equals(spiralit.getStringUUID())) {
+            owner.setData(EpochsContent.SPIRALIT_ID.get(), "");
+        }
+        BY_OWNER.remove(owner.getUUID(), spiralit);
+    }
+
+    /** Gebundene (und benannte) Spiralits bleiben; herrenlose verschwinden mit der Zeit, wenn niemand in der Nähe ist. */
+    @Override
+    public boolean isPersistenceRequired() {
+        return !bond().owner().isEmpty() || hasCustomName();
+    }
+
     // ---- Bewegung, Uhr und Erzspür (Server) ----
 
     @Override

@@ -150,5 +150,6 @@
   "message.strata_epochs.bearing.side.ahead_left": "ahead to your left",
   "message.strata_epochs.gate.confirm_leave": "Right-click again to return home · Sneak + right-click: take a biome bearing",
   "message.strata_epochs.spiralit.released": "Your former Spiralit has let go. Anyone can bond with it now.",
-  "message.strata_epochs.spiralit.replaced": "Your former Spiralit is not nearby. It will let go once its area loads again: only one can be bonded."
+  "message.strata_epochs.spiralit.replaced": "A new Spiralit is bonded to you. If your former one is still alive, it will let go once its area loads again.",
+  "message.strata_epochs.spiralit.confirm_replace": "Your former Spiralit is not nearby. Click again to awaken a new one anyway (the old one will let go)."
 }

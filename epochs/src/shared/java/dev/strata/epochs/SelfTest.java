@@ -330,11 +330,21 @@ final class SelfTest {
         player.setData(EpochsContent.SPIRALIT_ID.get(), "");
         boolean adopted = dev.strata.epochs.mob.Spiralit.checkBond(second, player)
                 && player.getData(EpochsContent.SPIRALIT_ID.get()).equals(second.getStringUUID());
+        // Tod: Der Merker wird geleert, beim nächsten Schlüpfen gibt es keinen „löst sich“-Hinweis.
+        dev.strata.epochs.mob.Spiralit.forget(second, player);
+        boolean forgotten = player.getData(EpochsContent.SPIRALIT_ID.get()).isEmpty()
+                && !dev.strata.epochs.mob.Spiralit.replacesUnloaded(player);
+        // Herrenlose verschwinden mit der Zeit, gebundene und benannte nicht.
+        boolean despawn = !returned.isPersistenceRequired() && second.isPersistenceRequired();
+        // Ersetzen eines nicht geladenen: erst der zweite Klick nach einer Pause bestätigt, gehalten zählt nicht.
+        boolean confirm = !FossilPrep.confirmed(player, 1000) && !FossilPrep.confirmed(player, 1004)
+                && FossilPrep.confirmed(player, 1030);
         second.discard();
         player.setData(EpochsContent.SPIRALIT_ID.get(), "");
-        boolean ok = remembered && blocks && freeAgain && oldReleased && newKept && adopted;
+        boolean ok = remembered && blocks && freeAgain && oldReleased && newKept && adopted && forgotten && despawn && confirm;
         StrataEpochs.LOG.info("[Strata-Test] Spiralit-Bindung: gemerkt={}, blockiert={}, frei nach Entladen={}, alter gelöst={}, "
-                + "neuer bleibt={}, alter Stand übernommen={} -> {}", remembered, blocks, freeAgain, oldReleased, newKept, adopted, ok ? "OK" : "FEHLER");
+                + "neuer bleibt={}, alter Stand übernommen={}, Tod vergessen={}, herrenlos verschwindet={}, Bestätigung={} -> {}",
+                remembered, blocks, freeAgain, oldReleased, newKept, adopted, forgotten, despawn, confirm, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 
@@ -528,6 +538,8 @@ final class SelfTest {
                     int[] f = floors(level, spots.get(k), id, BIOME_FLOORS.getOrDefault(name, List.of()), found);
                     for (int n = 0; n < 3; n++) floor[n] += f[n];
                 }
+                String foreign = found.keySet().stream().filter(k -> k.startsWith("@") && k.length() > 1).findFirst().orElse("");
+                found.keySet().removeIf(k -> k.startsWith("@"));
                 String common = found.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue().reversed()).limit(3)
                         .map(f -> f.getKey().substring(f.getKey().lastIndexOf('.') + 1) + " " + f.getValue()).collect(java.util.stream.Collectors.joining("/"));
                 double match = floor[0] == 0 ? 0 : (floor[1] + floor[2]) / (double) floor[0];
@@ -540,6 +552,7 @@ final class SelfTest {
                         : match >= 0.6 && patchShare >= patchRange[0] && patchShare <= patchRange[1];
                 boolean biomeOk = share >= 0.08 && at != null && dist <= maxDistance && floor[0] >= 20 && surfaceOk && safe;
                 if (!biomeOk) ok = false;
+                if (!biomeOk && !foreign.isEmpty()) StrataEpochs.LOG.info("[Strata-Test] {}: fremder Boden {}", name, foreign.substring(1));
                 String patch = floor[2] > 0 ? String.format(java.util.Locale.ROOT, " (Flecken %.0f%%)", 100.0 * floor[2] / floor[0]) : "";
                 parts.add(String.format(java.util.Locale.ROOT, "%s %.0f%% ab %d Blöcken (bei %d %d), Boden %.0f%% von %d%s, meist %s, Ankunft %s%s",
                         name, share * 100, dist, at == null ? 0 : at.getX(), at == null ? 0 : at.getZ(),
@@ -618,6 +631,13 @@ final class SelfTest {
                         found.merge(state.getBlock().getDescriptionId(), 1, Integer::sum);
                         if (second != null && state.is(second)) result[2]++;
                         else if (blocks.stream().anyMatch(state::is)) result[1]++;
+                        else if (!found.containsKey("@")) {
+                            // Erste fremde Bodenstelle merken (für die Fehlersuche): Block, darüber, zwei darüber.
+                            found.put("@" + pos.getX() + " " + pos.getY() + " " + pos.getZ() + " " + state.getBlock().getDescriptionId()
+                                    + " < " + above.getBlock().getDescriptionId() + " < "
+                                    + chunk.getBlockState(pos.above().above()).getBlock().getDescriptionId(), 0);
+                            found.put("@", 0);
+                        }
                     }
                     above = state;
                 }

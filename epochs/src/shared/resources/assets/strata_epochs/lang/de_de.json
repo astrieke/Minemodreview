@@ -150,5 +150,6 @@
   "message.strata_epochs.bearing.side.ahead_left": "links vor dir",
   "message.strata_epochs.gate.confirm_leave": "Nochmal Rechtsklick: Rückweg nach Hause · Schleichen + Rechtsklick: Biome peilen",
   "message.strata_epochs.spiralit.released": "Dein früherer Spiralit hat sich gelöst. Jeder kann ihn jetzt an sich binden.",
-  "message.strata_epochs.spiralit.replaced": "Dein früherer Spiralit ist gerade nicht in der Nähe. Er löst sich, sobald seine Gegend wieder geladen wird: Gebunden ist immer nur einer."
+  "message.strata_epochs.spiralit.replaced": "Ein neuer Spiralit ist an dich gebunden. Falls dein früherer noch lebt, löst er sich, sobald seine Gegend wieder geladen wird.",
+  "message.strata_epochs.spiralit.confirm_replace": "Dein früherer Spiralit ist nicht in der Nähe. Nochmal klicken, um trotzdem einen neuen zu erwecken (der alte löst sich dann)."
 }

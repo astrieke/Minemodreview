@@ -168,6 +168,25 @@ public final class FossilPrep {
         onPrepared(player, epoch);
     }
 
+    /** {scharf seit, letzter Klick} für die Bestätigung beim Ersetzen eines nicht geladenen Spiralits. */
+    private static final Map<UUID, long[]> REPLACE_ARMED = new ConcurrentHashMap<>();
+
+    /**
+     * Zweiter Klick innerhalb von 3 s nach einer Pause? Gehaltene Maustaste (Wiederholung alle 4 Ticks) zählt
+     * als ein Druck, wie beim Epochentor.
+     */
+    static boolean confirmed(ServerPlayer player, long now) {
+        long[] state = REPLACE_ARMED.get(player.getUUID());
+        boolean holding = state != null && now - state[1] <= 5;
+        if (state != null && !holding && now - state[0] <= 60) {
+            REPLACE_ARMED.remove(player.getUUID());
+            return true;
+        }
+        if (holding) state[1] = now;
+        else REPLACE_ARMED.put(player.getUUID(), new long[] {now, now});
+        return false;
+    }
+
     /** Ammonit in der Haupthand, Keimfrische in der zweiten: Ein Spiralit schlüpft über dem Tisch. */
     static void revive(ServerPlayer player, ItemStack fossil, BlockPos table) {
         ItemStack tonic = player.getOffhandItem();
@@ -180,12 +199,17 @@ public final class FossilPrep {
             return;
         }
         ServerLevel level = (ServerLevel) player.level();
+        boolean replaces = dev.strata.epochs.mob.Spiralit.replacesUnloaded(player);
+        if (replaces && !confirmed(player, level.getGameTime())) {
+            // Erst warnen, dann verbrauchen: Vielleicht will man lieber den alten Spiralit holen.
+            Mc.actionbar(player, Component.translatable("message.strata_epochs.spiralit.confirm_replace").withStyle(ChatFormatting.YELLOW));
+            return;
+        }
         double x = table.getX() + 0.5, y = table.getY() + 1.1, z = table.getZ() + 0.5;
         if (!player.isCreative()) {
             fossil.shrink(1);
             tonic.shrink(1);
         }
-        boolean replaces = dev.strata.epochs.mob.Spiralit.replacesUnloaded(player);
         dev.strata.epochs.mob.Spiralit.hatch(level, new net.minecraft.world.phys.Vec3(x, y, z), player);
         if (replaces) {
             player.sendSystemMessage(Component.translatable("message.strata_epochs.spiralit.replaced").withStyle(ChatFormatting.GRAY));

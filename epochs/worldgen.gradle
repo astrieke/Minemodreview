@@ -204,8 +204,9 @@ def generate = tasks.register('generateEpochData') {
                 biome.features.each { step -> if (step instanceof List) step.removeAll { badFeatures.contains(it) } }
                 // Keine Carver: Die Epochen sind schon Höhlenwelten, und Carver graben nach der Oberflächenregel,
                 // sodass ihre Böden rohes Zeitgestein blieben.
+                // Format: bis 1.21.x {"air": [...]}, ab 26.x eine Liste oder ein einzelner Eintrag als Text.
                 if (biome.carvers instanceof Map) biome.carvers = [:]
-                else if (biome.carvers instanceof List) biome.carvers = []
+                else if (biome.carvers != null) biome.carvers = []
                 def UNDERGROUND_ORES = 6
                 while (biome.features.size() <= UNDERGROUND_ORES) biome.features << []
                 biome.features[UNDERGROUND_ORES].addAll(placedOres)
