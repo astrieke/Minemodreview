@@ -520,8 +520,9 @@ final class SelfTest {
             // Gecachte Peilung: enthält alle Biome (auch das eigene des Feldes), damit tell() an Grenzen richtig filtert.
             winds &= BiomeBearing.scanCached(level, origin).size() == counts.size();
             long t0 = System.nanoTime();
-            BiomeBearing.scan(level, origin.offset(1000, 0, 1000));
-            long scanMs = (System.nanoTime() - t0) / 1_000_000;
+            for (int r = 0; r < 5; r++) BiomeBearing.scan(level, origin.offset(1000 + 512 * r, 0, 1000));
+            long scanUs = (System.nanoTime() - t0) / 5_000;   // Mittel über 5 volle Suchen, in Mikrosekunden
+            long scanMs = scanUs / 1000;
             List<String> missingKeys = new ArrayList<>();
             for (String key : BiomeBearing.translationKeys(new ArrayList<>(counts.keySet()))) {
                 for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missingKeys.add(lang + ":" + key);
@@ -534,7 +535,7 @@ final class SelfTest {
             }
             if (!bearing) ok = false;
             parts.add("Peilung " + targets.stream().map(t -> t.biome().substring(t.biome().indexOf(':') + 1) + " " + t.distance() + " " + t.wind())
-                    .collect(java.util.stream.Collectors.joining("/")) + " (hier " + here.substring(here.indexOf(':') + 1) + ", " + scanMs + " ms"
+                    .collect(java.util.stream.Collectors.joining("/")) + " (hier " + here.substring(here.indexOf(':') + 1) + ", " + scanUs + " µs je Suche"
                     + (missingKeys.isEmpty() ? "" : ", Texte fehlen " + missingKeys) + ")" + (bearing ? "" : " (!)"));
             // Knochensenke: Netherfossilien (Biom-Tag has_structure/nether_fossil) müssen in der Nähe liegen.
             BlockPos hollow = core.getOrDefault(StrataEpochs.id("bone_hollow"), nearest.get(StrataEpochs.id("bone_hollow")));

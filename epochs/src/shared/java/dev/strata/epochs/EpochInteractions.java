@@ -25,7 +25,16 @@ final class EpochInteractions {
 
     static final int DRILL_COOLDOWN_TICKS = 40;
     static final int LEAVE_CONFIRM_TICKS = 60;
-    private static final java.util.Map<java.util.UUID, Long> LEAVE_ARMED = new java.util.HashMap<>();
+    static final int HOLD_REPEAT_TICKS = 5;
+    private static final java.util.Map<java.util.UUID, long[]> LEAVE_ARMED = new java.util.HashMap<>();
+
+    static void onServerStopping(net.neoforged.neoforge.event.server.ServerStoppingEvent event) {
+        LEAVE_ARMED.clear();
+    }
+
+    static void onLoggedOut(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
+        LEAVE_ARMED.remove(event.getEntity().getUUID());
+    }
 
     private EpochInteractions() {}
 
@@ -95,13 +104,18 @@ final class EpochInteractions {
                 BiomeBearing.tell(player);
                 return;
             }
+            // Gehaltene Maustaste wiederholt den Klick alle 4 Ticks: Klicks mit höchstens 5 Ticks Abstand zählen als
+            // ein Druck. Erst ein neuer Druck nach einer Pause (innerhalb von 3 s) bestätigt.
             long now = level.getGameTime();
-            Long armed = LEAVE_ARMED.get(player.getUUID());
-            if (armed != null && now - armed <= LEAVE_CONFIRM_TICKS) {
+            long[] state = LEAVE_ARMED.get(player.getUUID());   // {scharf seit, letzter Klick}
+            boolean holding = state != null && now - state[1] <= HOLD_REPEAT_TICKS;
+            if (state != null && !holding && now - state[0] <= LEAVE_CONFIRM_TICKS) {
                 LEAVE_ARMED.remove(player.getUUID());
                 EpochTravel.leave(player);
+            } else if (holding) {
+                state[1] = now;
             } else {
-                LEAVE_ARMED.put(player.getUUID(), now);
+                LEAVE_ARMED.put(player.getUUID(), new long[] {now, now});
                 Mc.actionbar(player, Component.translatable("message.strata_epochs.gate.confirm_leave").withStyle(ChatFormatting.YELLOW));
             }
             return;

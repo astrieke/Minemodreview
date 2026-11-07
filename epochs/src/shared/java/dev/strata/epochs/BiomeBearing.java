@@ -98,13 +98,16 @@ public final class BiomeBearing {
     }
 
     /**
-     * Nächste Stelle JEDES Bioms (auch des eigenen) vom Mittelpunkt des 16er-Feldes aus, zwischengespeichert pro
+     * Nächste Stelle JEDES Bioms (Hinweis: Ferne Biome werden vom Feldmittelpunkt aus gesucht und können dadurch
+     * bis etwa 11 Blöcke versetzt angezeigt werden; für die Richtung reicht das, nahe Grenzen sucht tell() fein nach).
+     *  (auch des eigenen) vom Mittelpunkt des 16er-Feldes aus, zwischengespeichert pro
      * Dimension und Feld (das Ergebnis ändert sich nie). Das eigene Biom des Spielers filtert {@link #tell} heraus,
      * denn an Biomgrenzen kann der Feldmittelpunkt in einem anderen Biom liegen als der Spieler.
      */
     public static List<Target> scanCached(ServerLevel level, BlockPos from) {
         BlockPos cell = new BlockPos(from.getX() & ~15 | 8, from.getY(), from.getZ() & ~15 | 8);
-        String key = Mc.levelId(level) + "@" + cell.getX() + "," + cell.getZ();
+        // Seed im Schlüssel: Im Einzelspieler läuft dieselbe JVM weiter, wenn man eine andere Welt öffnet.
+        String key = Mc.seed(level) + "/" + Mc.levelId(level) + "@" + cell.getX() + "," + cell.getZ();
         synchronized (CACHE) {
             return CACHE.computeIfAbsent(key, k -> scan(level, cell, null));
         }
@@ -183,6 +186,21 @@ public final class BiomeBearing {
             }
         }
         return true;
+    }
+
+    /** Server stoppt: Cache, Spuren (halten sonst die alte Welt im Speicher) und Cooldowns leeren. */
+    static void onServerStopping(net.neoforged.neoforge.event.server.ServerStoppingEvent event) {
+        synchronized (CACHE) {
+            CACHE.clear();
+        }
+        synchronized (TRAILS) {
+            TRAILS.clear();
+        }
+        LAST_USE.clear();
+    }
+
+    static void onLoggedOut(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
+        LAST_USE.remove(event.getEntity().getUUID());
     }
 
     /** Partikelspuren: 8 Blöcke lang, wandernde Punkte vom Spieler weg in Richtung des Bioms. */
