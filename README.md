@@ -46,13 +46,13 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 2. **Epochentor** bauen (Obsidian, Amethyst, Kompass) und mit dem Bohrkern rechtsklicken. Der Kern wird verbraucht, und du landest in der Epoche. Neben dir steht ein Tor für den Rückweg.
 ![Die neun Biome (Minecraft 1.21.1, mit Nachtsicht)](docs/screenshots/biomes/uebersicht_1.21.1.png)
 
-3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein** mit je **drei Biomen**. Wo du ankommst, hängt von deinem Ort in der Oberwelt ab. Das Hauptbiom nimmt gut die Hälfte ein, die beiden anderen sind kleiner und lohnen sich mit mehr Epochen-Erz. Sie liegen höchstens 300 Blöcke vom Ankunftsort entfernt (Selbsttest), meist deutlich näher. Der Ankunftsplatz steht immer auf sicherem Boden, nie auf Magma. Bei der Ankunft **peilt das Tor die Biome**: Im Chat steht, in welchem Biom du bist und in welcher Richtung und Entfernung die anderen beiden liegen. Schleichen + Rechtsklick auf das Tor wiederholt die Peilung von deinem Standort aus:
+3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein** mit je **drei Biomen**. Wo du ankommst, hängt von deinem Ort in der Oberwelt ab. Das Hauptbiom nimmt gut die Hälfte ein, die beiden anderen sind kleiner und lohnen sich mit mehr Epochen-Erz. Sie liegen höchstens 300 Blöcke vom Ankunftsort entfernt (Selbsttest), meist deutlich näher. Der Ankunftsplatz steht immer auf sicherem Boden, nie auf Magma. Bei der Ankunft **peilt das Tor die Biome**: Im Chat steht, in welchem Biom du bist und wo die anderen beiden liegen, relativ zu deiner Blickrichtung („rechts vor dir, Rand in 40 Blöcken“). Eine farbige Partikelspur zeigt 5 s lang in die Richtung. Schleichen + Rechtsklick auf das Tor peilt erneut (höchstens alle 2 s). Für den Rückweg klickst du das Tor zweimal an:
    - **Kristallzeit** (Kristallquarz): *Kristallhöhlen* (Calcit), *Geodengewölbe* (Amethystboden, viele Geoden, mehr Kristallquarz), *Raureifgrotte* (Packeis und Schnee, Eiswanderer).
    - **Sporenzeit** (Bernstein): *Sporengrotte* (Myzel), *Moosmoor* (Schlamm, Moos und Lehmtümpel mit Tropfblatt), *Leuchtdickicht* (Wirrnyzel mit Wirrpilzen und Zwirbelranken).
    - **Aschezeit** (Glutsteinerz, liefert **Glutsplitter**, Brennstoff wie eine Lohenrute): *Aschewüste* (Vulkanasche über Basalt), *Magmaspalten* (Schwarzstein mit Magma-Rissen und Lavaseen, viel Glutsteinerz, der Glutwühler kann hier nicht abtauchen; die gefährlichste Zone), *Knochensenke* (Seelenerde mit Netherfossilien).
 4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min, Aschezeit 5 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
 5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
-6. Rechtsklick auf das Tor bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.
+6. Zweimal Rechtsklick auf das Tor (innerhalb von 3 s) bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.
 
 **Kernanalyse-Tisch** (Kupfer, Fernrohr, Holz, Steinstufe): Rechtsklick mit Bohrkernen analysiert den Stapel. Die Notiz am Kern zeigt:
 - Tiefe und Zeitlimit
@@ -115,7 +115,7 @@ Kodex-Knoten werden automatisch freigeschaltet:
 | Mod | Was Strata Bridge macht |
 |---|---|
 | **JEI** | Infoseiten für Kernbohrer, Bohrkern, Epochentor, Zeitanker, beide Erze und versteinerten Stein. Für **EMI** (nur 1.21.1) gibt es ein eigenes Plugin mit denselben Infoseiten; im Client mit EMI geladen (`GRADLE_ARGS=-PwithEmi`). |
-| **Jade** | Hinweis beim Anschauen: am Tor „Reise in die Epoche“ bzw. in der Epoche „Rückweg nach Hause“, an Erzen der Fundort. |
+| **Jade** | Hinweis beim Anschauen: am Tor „Reise in die Epoche“ bzw. in der Epoche „2× Rechtsklick: Rückweg, Schleichen: Biome peilen“, an Erzen der Fundort. |
 | **FTB Quests, Heracles & Co.** | Für jeden Kodex-Knoten `ns:pfad` vergibt Strata das Advancement `ns:strata_codex/pfad`, falls es existiert. Quests prüfen das als Advancement-Aufgabe. Für die Knoten von Strata Epochs sind die Advancements dabei. Als Quest-Belohnung schaltet `/strata codex grant @p <knoten>` Knoten frei. |
 | **Curios** | Der Zeitanker passt in den Talisman-Slot und wirkt dort wie im Inventar (Spieler bekommen den Slot per Datapack). Gebaut für alle Versionen. Geprüft in 1.21.1 (Server-Test mit simuliertem Spieler) und 26.3 (Client mit echtem Spieler, `SHOT_CURIOS=1`). Andere Mods können über `Solidification.ANCHOR_SOURCES` eigene Orte für den Zeitanker anmelden. |
 | **KubeJS** (1.21.1 und 26.1) | Plugin mit den Bindings `StrataAPI` (Kodex: `hasNode`, `unlock`, `epochs` …) und `Strata` (`coreSample`, `fossilChunk`, `epochOf`, `timeBonus`, `hasTimeAnchor`, `transplant`). Freischaltungen kommen als NeoForge-Event: `NativeEvents.onEvent('dev.strata.core.api.CodexNodeUnlockedEvent', e => …)`. Geprüft mit `scripts/kubejs-test.sh` in beiden Versionen. |

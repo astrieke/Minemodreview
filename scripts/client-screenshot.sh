@@ -73,8 +73,8 @@ fi
 if [ -n "${SHOT_BEARING:-}" ]; then
     # Peilung kurz vor dem Bild auslösen, damit die Chatzeilen noch zu sehen sind.
     f="$dp/data/strata_shot/function/tick.mcfunction"
-    sed -i "s|^tag @a add strata_shot|execute if entity @a[tag=!strata_shot] run schedule function strata_shot:bearing 470t\ntag @a add strata_shot|" "$f"
-    echo 'execute as @a run strata_epochs bearing' > "$dp/data/strata_shot/function/bearing.mcfunction"
+    sed -i "s|^tag @a add strata_shot|execute if entity @a[tag=!strata_shot] run schedule function strata_shot:bearing 485t\ntag @a add strata_shot|" "$f"
+    printf 'execute as @a run strata_epochs bearing\nschedule function strata_shot:bearing 60t\n' > "$dp/data/strata_shot/function/bearing.mcfunction"
 fi
 if [ -n "${SHOT_TRANSPLANT:-}" ]; then
     f="$dp/data/strata_shot/function/tick.mcfunction"

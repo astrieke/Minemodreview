@@ -24,6 +24,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 final class EpochInteractions {
 
     static final int DRILL_COOLDOWN_TICKS = 40;
+    static final int LEAVE_CONFIRM_TICKS = 60;
+    private static final java.util.Map<java.util.UUID, Long> LEAVE_ARMED = new java.util.HashMap<>();
 
     private EpochInteractions() {}
 
@@ -87,9 +89,21 @@ final class EpochInteractions {
     private static void useGate(ServerPlayer player, ItemStack held) {
         ServerLevel level = (ServerLevel) player.level();
         if (EpochTravel.epochOf(level).isPresent()) {
-            // Schleichen: Peilung der Biome statt Rückreise.
-            if (player.isShiftKeyDown()) BiomeBearing.tell(player);
-            else EpochTravel.leave(player);
+            // Schleichen: Peilung der Biome. Sonst Rückreise, aber erst beim zweiten Klick innerhalb von 3 s,
+            // damit niemand aus Versehen heimreist, der nur peilen wollte.
+            if (player.isShiftKeyDown()) {
+                BiomeBearing.tell(player);
+                return;
+            }
+            long now = level.getGameTime();
+            Long armed = LEAVE_ARMED.get(player.getUUID());
+            if (armed != null && now - armed <= LEAVE_CONFIRM_TICKS) {
+                LEAVE_ARMED.remove(player.getUUID());
+                EpochTravel.leave(player);
+            } else {
+                LEAVE_ARMED.put(player.getUUID(), now);
+                Mc.actionbar(player, Component.translatable("message.strata_epochs.gate.confirm_leave").withStyle(ChatFormatting.YELLOW));
+            }
             return;
         }
         Optional<String> epoch = CoreSamples.epochOf(held);

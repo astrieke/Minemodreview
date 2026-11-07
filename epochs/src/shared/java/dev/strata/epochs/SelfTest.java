@@ -85,6 +85,19 @@ final class SelfTest {
         persistTest(server);
     }
 
+    /** Sprachschlüssel von Strata Epochs (de_de, en_us). */
+    private static final Map<String, java.util.Set<String>> LANG = Map.of("de_de", langKeys("de_de"), "en_us", langKeys("en_us"));
+
+    private static java.util.Set<String> langKeys(String lang) {
+        try (var in = SelfTest.class.getResourceAsStream("/assets/" + StrataEpochs.MOD_ID + "/lang/" + lang + ".json")) {
+            if (in == null) return java.util.Set.of();
+            return com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8))
+                    .getAsJsonObject().keySet();
+        } catch (java.io.IOException | RuntimeException e) {
+            return java.util.Set.of();
+        }
+    }
+
     /** Ereignisse aus sounds.json mit ihren Dateien (Format "ns:pfad", ohne .ogg). */
     private static final Map<String, List<String>> SOUNDS = readSounds();
 
@@ -500,7 +513,20 @@ final class SelfTest {
             String here = BiomeBearing.biomeAt(level, origin);
             var targets = BiomeBearing.scan(level, origin);
             boolean winds = BiomeBearing.wind(0, -10).equals("n") && BiomeBearing.wind(10, 0).equals("e")
-                    && BiomeBearing.wind(-10, 10).equals("sw") && BiomeBearing.wind(7, -7).equals("ne");
+                    && BiomeBearing.wind(-10, 10).equals("sw") && BiomeBearing.wind(7, -7).equals("ne")
+                    // Relativ zur Blickrichtung: Yaw 180 = nach Norden, Yaw 0 = nach Süden.
+                    && BiomeBearing.side(0, -10, 180).equals("ahead") && BiomeBearing.side(10, 0, 180).equals("right")
+                    && BiomeBearing.side(10, 0, 0).equals("left") && BiomeBearing.side(-7, -7, 270).equals("behind_left");
+            // Gecachte Peilung: enthält alle Biome (auch das eigene des Feldes), damit tell() an Grenzen richtig filtert.
+            winds &= BiomeBearing.scanCached(level, origin).size() == counts.size();
+            long t0 = System.nanoTime();
+            BiomeBearing.scan(level, origin.offset(1000, 0, 1000));
+            long scanMs = (System.nanoTime() - t0) / 1_000_000;
+            List<String> missingKeys = new ArrayList<>();
+            for (String key : BiomeBearing.translationKeys(new ArrayList<>(counts.keySet()))) {
+                for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missingKeys.add(lang + ":" + key);
+            }
+            winds &= missingKeys.isEmpty() && scanMs < 200;
             boolean bearing = winds && targets.size() == counts.size() - 1;
             for (var t : targets) {
                 BlockPos n = nearest.get(t.biome());
@@ -508,7 +534,8 @@ final class SelfTest {
             }
             if (!bearing) ok = false;
             parts.add("Peilung " + targets.stream().map(t -> t.biome().substring(t.biome().indexOf(':') + 1) + " " + t.distance() + " " + t.wind())
-                    .collect(java.util.stream.Collectors.joining("/")) + " (hier " + here.substring(here.indexOf(':') + 1) + ")" + (bearing ? "" : " (!)"));
+                    .collect(java.util.stream.Collectors.joining("/")) + " (hier " + here.substring(here.indexOf(':') + 1) + ", " + scanMs + " ms"
+                    + (missingKeys.isEmpty() ? "" : ", Texte fehlen " + missingKeys) + ")" + (bearing ? "" : " (!)"));
             // Knochensenke: Netherfossilien (Biom-Tag has_structure/nether_fossil) müssen in der Nähe liegen.
             BlockPos hollow = core.getOrDefault(StrataEpochs.id("bone_hollow"), nearest.get(StrataEpochs.id("bone_hollow")));
             if (hollow != null) {
