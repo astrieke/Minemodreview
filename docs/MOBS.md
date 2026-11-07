@@ -320,4 +320,6 @@ Alle Ruf-, Schmerz- und Todeslaute sind eigene Klänge aus `tools/make_mob_sound
 | Glutwühler | Knurren mit Stimmfärbung und knisternden Funken | kurzes, hohes Aufjaulen | verzischende Glut, letztes Knurren, Brocken |
 | Spiralit | freundliches Zwitschern mit Luftblase | kurzes Quieken | absinkender Pfeifton, das Vibrato erlahmt |
 
+**Freigegeben (07.11.2026):** Runde 1 6/5/6, Runde 2 7/7/7 (Designer, Game Design, Technik). Geändert in Runde 2: Grollen mit hörbaren Mitten und an die Vorwarnzeit gekoppelt, Obertöne für Glutwühler und Steinzeuge, wahrnehmungsnahe Lautheit, Schmerz und Tod des Glutwühlers getrennt.
+
 Der Glutwühler hat drei eigene Kampf-Signale: **Graben** (körnige Schaufelstöße, auch leise, solange er unter der Asche zieht), **Grollen** (ratterndes Geröll über tiefem Grollen, laut ab 0,35 s; die Datei dauert 0,8 s = 16 Ticks, und die Tonhöhe passt sie an die eingestellte Vorwarnzeit `emerge.warning` an, sodass es genau mit dem Ausbruch endet) und **Hervorbrechen** (Schlag, Erdstoß, Knurren). So hört man den Angriff kommen, auch ohne hinzusehen. Die übrigen Fähigkeits-Effekte (Kristallpanzer, Sporenstoß usw.) nutzen weiter Vanilla-Klänge.
