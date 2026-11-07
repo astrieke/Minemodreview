@@ -115,5 +115,17 @@
   "item.strata_epochs.ember_burrower_spawn_egg": "Ember Burrower Spawn Egg",
   "subtitles.strata_epochs.ember_burrower.ambient": "Ember Burrower bubbles",
   "subtitles.strata_epochs.ember_burrower.hurt": "Ember Burrower hurts",
-  "subtitles.strata_epochs.ember_burrower.death": "Ember Burrower dies out"
+  "subtitles.strata_epochs.ember_burrower.death": "Ember Burrower dies out",
+  "biome.strata_epochs.crystal_hollows": "Crystal Hollows",
+  "biome.strata_epochs.geode_vaults": "Geode Vaults",
+  "biome.strata_epochs.rime_grotto": "Rime Grotto",
+  "biome.strata_epochs.spore_grotto": "Spore Grotto",
+  "biome.strata_epochs.moss_marsh": "Moss Marsh",
+  "biome.strata_epochs.glow_thicket": "Glow Thicket",
+  "biome.strata_epochs.ash_wastes": "Ash Wastes",
+  "biome.strata_epochs.magma_rifts": "Magma Rifts",
+  "biome.strata_epochs.bone_hollow": "Bone Hollow",
+  "subtitles.strata_epochs.ember_burrower.dig": "Ember Burrower digs",
+  "subtitles.strata_epochs.ember_burrower.tremor": "Ground rumbles",
+  "subtitles.strata_epochs.ember_burrower.emerge": "Ember Burrower bursts out"
 }

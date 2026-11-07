@@ -79,7 +79,7 @@ Alles liegt in Strata Epochs (`epochs/src/`). Der Mob-Code ist bis auf wenige Ad
 - Sporenbalg: hüpft auf den Spieler zu, Sporenwolke mit grüner Statusmeldung, Advancement „Begegnung“ (`mobs/spore_bellows/shots/ingame_cloud_1.21.1.png`).
 
 **Geodenkriecher, offen für die Definition of Done:**
-- Sounds sind eigene Ereignisse mit Untertiteln, klingen aber wie das Gürteltier aus Vanilla.
+- Sounds: eigene, synthetisch erzeugte Klänge (siehe „Mob-Sounds“ unten).
 - Die Calcitschuppe wird schon gebraucht: Zweitrezept für den Zeitanker. Den Bohrkopf Stufe 2 gibt es noch nicht.
 
 ## Entscheidung in Kürze
@@ -307,3 +307,17 @@ Damit der zweite und jeder weitere Mob billig werden, nach Vorschlag des Program
 - **Gate C, nach M1:** Braucht der Geodenkriecher mehr als 2 Personenwochen, wird zuerst die Pipeline verbessert, bevor ein weiterer Mob dazukommt.
 
 **Client-Tests:** In der Cloud läuft der Client für 1.21.1 und 1.21.11 über OpenGL (Xvfb), für 26.x über Vulkan mit Mesa lavapipe (Paket `mesa-vulkan-drivers`, das Ladefenster von NeoForge wird dafür abgeschaltet). Alle drei Mobs und die Rüstung sind in 26.3 im Bild bestätigt (`docs/screenshots/clients/`). Das Skript kann auch Bildserien mit KI-Mob (`SHOT_ACT`), in Rüstung (`SHOT_GEAR`) und das Erwachen des Steinzeugen (`SHOT_AWAKEN`, Verfestigung nach 20 s) aufnehmen.
+
+## Mob-Sounds
+
+Alle Ruf-, Schmerz- und Todeslaute sind eigene Klänge aus `tools/make_mob_sounds.py`: per Synthese, ohne Aufnahmen oder fremde Samples, mono (für Richtungshören), gleiche Lautheit (RMS −20 dB für Rufe, −17 dB für den Rest), feste Seeds. Neu erzeugen: `python tools/make_mob_sounds.py --sheet spektrogramme.png`.
+
+| Mob | Ruf | Schmerz | Tod |
+|---|---|---|---|
+| Geodenkriecher | helle Kristall-Klicks, leises Plattenschaben | Splitterknacks mit gedämpftem Klang | Zerspringen, Splitter rieseln aus |
+| Sporenbalg | Ein- und Ausatmen eines Blasebalgs mit Pfeifen | Quietschen und Sporenstoß | Luft entweicht, Ton sinkt und flattert |
+| Steinzeuge | mahlender Stein, hohles Echo | dumpfer Schlag, Riss, Kies | Zerbröckeln, Echo verklingt nach unten |
+| Glutwühler | tiefes Knurren mit knisternden Funken | Zischen und gepresstes Aufjaulen | verzischende Glut, letztes Knurren, Brocken |
+| Spiralit | freundliches Zwitschern mit Luftblase | kurzes Quieken | absinkender Pfeifton, das Vibrato erlahmt |
+
+Der Glutwühler hat drei eigene Kampf-Signale: **Graben** (körnige Schaufelstöße, auch leise, solange er unter der Asche zieht), **Grollen** (schwillt in 0,9 s an, genau die Vorwarnzeit) und **Hervorbrechen** (Schlag, Erdstoß, Knurren). So hört man den Angriff kommen, auch ohne hinzusehen. Die übrigen Fähigkeits-Effekte (Kristallpanzer, Sporenstoß usw.) nutzen weiter Vanilla-Klänge.

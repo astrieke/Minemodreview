@@ -1,143 +1,132 @@
 {
   "entity.geode_crawler.ambient": {
     "sounds": [
-      {
-        "name": "minecraft:entity.armadillo.ambient",
-        "type": "event"
-      }
+      "strata_epochs:entity/geode_crawler/ambient1",
+      "strata_epochs:entity/geode_crawler/ambient2",
+      "strata_epochs:entity/geode_crawler/ambient3"
     ],
     "subtitle": "subtitles.strata_epochs.geode_crawler.ambient"
   },
   "entity.geode_crawler.hurt": {
     "sounds": [
-      {
-        "name": "minecraft:entity.armadillo.hurt",
-        "type": "event"
-      }
+      "strata_epochs:entity/geode_crawler/hurt1",
+      "strata_epochs:entity/geode_crawler/hurt2"
     ],
     "subtitle": "subtitles.strata_epochs.geode_crawler.hurt"
   },
   "entity.geode_crawler.death": {
     "sounds": [
-      {
-        "name": "minecraft:entity.armadillo.death",
-        "type": "event"
-      }
+      "strata_epochs:entity/geode_crawler/death1",
+      "strata_epochs:entity/geode_crawler/death2"
     ],
     "subtitle": "subtitles.strata_epochs.geode_crawler.death"
   },
   "entity.spore_bellows.ambient": {
     "sounds": [
-      {
-        "name": "minecraft:entity.slime.squish_small",
-        "type": "event",
-        "pitch": 0.7
-      }
+      "strata_epochs:entity/spore_bellows/ambient1",
+      "strata_epochs:entity/spore_bellows/ambient2",
+      "strata_epochs:entity/spore_bellows/ambient3"
     ],
     "subtitle": "subtitles.strata_epochs.spore_bellows.ambient"
   },
   "entity.spore_bellows.hurt": {
     "sounds": [
-      {
-        "name": "minecraft:entity.slime.hurt_small",
-        "type": "event",
-        "pitch": 0.7
-      }
+      "strata_epochs:entity/spore_bellows/hurt1",
+      "strata_epochs:entity/spore_bellows/hurt2"
     ],
     "subtitle": "subtitles.strata_epochs.spore_bellows.hurt"
   },
   "entity.spore_bellows.death": {
     "sounds": [
-      {
-        "name": "minecraft:entity.slime.death_small",
-        "type": "event",
-        "pitch": 0.7
-      }
+      "strata_epochs:entity/spore_bellows/death1",
+      "strata_epochs:entity/spore_bellows/death2"
     ],
     "subtitle": "subtitles.strata_epochs.spore_bellows.death"
   },
   "entity.petrified_witness.ambient": {
     "sounds": [
-      {
-        "name": "minecraft:block.grindstone.use",
-        "type": "event",
-        "pitch": 0.4
-      }
+      "strata_epochs:entity/petrified_witness/ambient1",
+      "strata_epochs:entity/petrified_witness/ambient2",
+      "strata_epochs:entity/petrified_witness/ambient3"
     ],
     "subtitle": "subtitles.strata_epochs.petrified_witness.ambient"
   },
   "entity.petrified_witness.hurt": {
     "sounds": [
-      {
-        "name": "minecraft:block.deepslate.hit",
-        "type": "event",
-        "pitch": 0.6
-      }
+      "strata_epochs:entity/petrified_witness/hurt1",
+      "strata_epochs:entity/petrified_witness/hurt2"
     ],
     "subtitle": "subtitles.strata_epochs.petrified_witness.hurt"
   },
   "entity.petrified_witness.death": {
     "sounds": [
-      {
-        "name": "minecraft:block.deepslate.break",
-        "type": "event",
-        "pitch": 0.5
-      }
+      "strata_epochs:entity/petrified_witness/death1"
     ],
     "subtitle": "subtitles.strata_epochs.petrified_witness.death"
   },
-  "entity.spiralit.ambient": {
-    "sounds": [
-      {
-        "name": "minecraft:block.amethyst_block.chime",
-        "type": "event"
-      }
-    ],
-    "subtitle": "subtitles.strata_epochs.spiralit.ambient"
-  },
-  "entity.spiralit.hurt": {
-    "sounds": [
-      {
-        "name": "minecraft:block.amethyst_block.hit",
-        "type": "event"
-      }
-    ],
-    "subtitle": "subtitles.strata_epochs.spiralit.hurt"
-  },
-  "entity.spiralit.death": {
-    "sounds": [
-      {
-        "name": "minecraft:block.amethyst_block.break",
-        "type": "event"
-      }
-    ],
-    "subtitle": "subtitles.strata_epochs.spiralit.death"
-  },
   "entity.ember_burrower.ambient": {
     "sounds": [
-      {
-        "name": "minecraft:block.lava.pop",
-        "type": "event"
-      }
+      "strata_epochs:entity/ember_burrower/ambient1",
+      "strata_epochs:entity/ember_burrower/ambient2",
+      "strata_epochs:entity/ember_burrower/ambient3"
     ],
     "subtitle": "subtitles.strata_epochs.ember_burrower.ambient"
   },
   "entity.ember_burrower.hurt": {
     "sounds": [
-      {
-        "name": "minecraft:entity.strider.hurt",
-        "type": "event"
-      }
+      "strata_epochs:entity/ember_burrower/hurt1",
+      "strata_epochs:entity/ember_burrower/hurt2"
     ],
     "subtitle": "subtitles.strata_epochs.ember_burrower.hurt"
   },
   "entity.ember_burrower.death": {
     "sounds": [
-      {
-        "name": "minecraft:entity.strider.death",
-        "type": "event"
-      }
+      "strata_epochs:entity/ember_burrower/death1",
+      "strata_epochs:entity/ember_burrower/death2"
     ],
     "subtitle": "subtitles.strata_epochs.ember_burrower.death"
+  },
+  "entity.ember_burrower.dig": {
+    "sounds": [
+      "strata_epochs:entity/ember_burrower/dig1",
+      "strata_epochs:entity/ember_burrower/dig2",
+      "strata_epochs:entity/ember_burrower/dig3"
+    ],
+    "subtitle": "subtitles.strata_epochs.ember_burrower.dig"
+  },
+  "entity.ember_burrower.tremor": {
+    "sounds": [
+      "strata_epochs:entity/ember_burrower/tremor1",
+      "strata_epochs:entity/ember_burrower/tremor2"
+    ],
+    "subtitle": "subtitles.strata_epochs.ember_burrower.tremor"
+  },
+  "entity.ember_burrower.emerge": {
+    "sounds": [
+      "strata_epochs:entity/ember_burrower/emerge1",
+      "strata_epochs:entity/ember_burrower/emerge2"
+    ],
+    "subtitle": "subtitles.strata_epochs.ember_burrower.emerge"
+  },
+  "entity.spiralit.ambient": {
+    "sounds": [
+      "strata_epochs:entity/spiralit/ambient1",
+      "strata_epochs:entity/spiralit/ambient2",
+      "strata_epochs:entity/spiralit/ambient3"
+    ],
+    "subtitle": "subtitles.strata_epochs.spiralit.ambient"
+  },
+  "entity.spiralit.hurt": {
+    "sounds": [
+      "strata_epochs:entity/spiralit/hurt1",
+      "strata_epochs:entity/spiralit/hurt2"
+    ],
+    "subtitle": "subtitles.strata_epochs.spiralit.hurt"
+  },
+  "entity.spiralit.death": {
+    "sounds": [
+      "strata_epochs:entity/spiralit/death1"
+    ],
+    "subtitle": "subtitles.strata_epochs.spiralit.death"
   }
 }

@@ -66,6 +66,9 @@ public final class EpochsMobs {
     public static final Supplier<SoundEvent> EMBER_BURROWER_AMBIENT = REG.sound("entity.ember_burrower.ambient");
     public static final Supplier<SoundEvent> EMBER_BURROWER_HURT = REG.sound("entity.ember_burrower.hurt");
     public static final Supplier<SoundEvent> EMBER_BURROWER_DEATH = REG.sound("entity.ember_burrower.death");
+    public static final Supplier<SoundEvent> EMBER_BURROWER_DIG = REG.sound("entity.ember_burrower.dig");
+    public static final Supplier<SoundEvent> EMBER_BURROWER_TREMOR = REG.sound("entity.ember_burrower.tremor");
+    public static final Supplier<SoundEvent> EMBER_BURROWER_EMERGE = REG.sound("entity.ember_burrower.emerge");
     public static final Supplier<SoundEvent> SPIRALIT_AMBIENT = REG.sound("entity.spiralit.ambient");
     public static final Supplier<SoundEvent> SPIRALIT_HURT = REG.sound("entity.spiralit.hurt");
     public static final Supplier<SoundEvent> SPIRALIT_DEATH = REG.sound("entity.spiralit.death");

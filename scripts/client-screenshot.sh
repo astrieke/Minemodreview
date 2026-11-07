@@ -21,6 +21,8 @@
 #   (Radius 10) vor dem Spieler; Bildserie 40 s lang (alle 1 s), damit man Welle, Displays und Wachsen sieht.
 # SHOT_CURIOS=1: legt nach 3 s einen Zeitanker in den Curios-Talisman-Slot und schreibt /strata_epochs status ins Log.
 # SHOT_SPIRALIT=1: in der Epoche schlüpft nach 29 s ein Spiralit für den Spieler; Bildserie 20 s lang.
+# SHOT_BIOME=<biom>, z. B. geode_vaults: Spieler landet auf dem Höhlenboden dieses Bioms der Epoche
+#   (Fundort aus dem Selbsttest-Log), mit Nachtsicht, damit man Oberfläche und Features sieht.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 v="$1"; epoch="$2"; out="$(realpath -m "$3")"
@@ -35,7 +37,8 @@ pos=$(grep -oE "strata_epochs:$epoch: .*Ankunft=-?[0-9]+, -?[0-9]+, -?[0-9]+" "b
       | grep -oE 'Ankunft=.*' | sed 's/Ankunft=//; s/,//g' | tail -1)
 read -r x y z <<< "$pos"
 
-rm -rf "$client_dir/saves/strata_shot"
+# Der vorige Client speichert beim Beenden evtl. noch: Löschen notfalls wiederholen.
+for _ in 1 2 3 4 5 6 7 8 9 10; do rm -rf "$client_dir/saves/strata_shot" 2>/dev/null && break; sleep 3; done
 mkdir -p "$client_dir/saves"
 cp -r "$server_world" "$client_dir/saves/strata_shot"
 rm -rf "$client_dir/saves/strata_shot/playerdata"
@@ -58,6 +61,14 @@ item replace entity @a[tag=!strata_shot] hotbar.7 with strata_epochs:amber_ore
 item replace entity @a[tag=!strata_shot] hotbar.8 with strata_epochs:chronostone
 tag @a add strata_shot
 MC
+if [ -n "${SHOT_BIOME:-}" ]; then
+    bpos=$(grep -oE "Biome strata_epochs:$epoch: .*" "bridge/versions/$v/run/server/smoke.log" | tail -1 \
+           | grep -oE "$SHOT_BIOME [0-9]+% ab -?[0-9]+ Blöcken \(bei -?[0-9]+ -?[0-9]+\)" | grep -oE 'bei -?[0-9]+ -?[0-9]+' | sed 's/bei //')
+    [ -n "$bpos" ] || { echo "Biom $SHOT_BIOME nicht im Selbsttest-Log"; exit 1; }
+    read -r bx bz <<< "$bpos"
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run spreadplayers $bx $bz 0 1 under 100 false @s\nexecute as @a[tag=!strata_shot] at @s run tp @s ~ ~ ~ -90 ${SHOT_PITCH:-12}\neffect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true|" "$f"
+fi
 if [ -n "${SHOT_TRANSPLANT:-}" ]; then
     f="$dp/data/strata_shot/function/tick.mcfunction"
     sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in minecraft:overworld run tp @s 0.5 -55 -15.5 0 18\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:transplant 620t|" "$f"

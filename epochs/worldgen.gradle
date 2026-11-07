@@ -53,6 +53,8 @@ def generate = tasks.register('generateEpochData') {
         def spec = slurper.parse(specFile)
         def ns = spec.namespace
 
+        def spawnFiles = [] as Set
+        def biomeTags = [:]
         spec.epochs.each { e ->
             // Dimensionstyp: Höhlen-Overworld ohne Himmelslicht und ohne Raids.
             def dimType = vanilla(e.dimension_type, 'dimension_type')
@@ -61,8 +63,8 @@ def generate = tasks.register('generateEpochData') {
             if (dimType.containsKey('has_raids')) dimType.has_raids = false
             if (dimType.containsKey('bed_works')) dimType.bed_works = false
             if (dimType.attributes instanceof Map) {
-                dimType.attributes['minecraft:visual/fog_color'] = e.colors.fog
-                dimType.attributes['minecraft:visual/sky_color'] = e.colors.sky
+                dimType.attributes['minecraft:visual/fog_color'] = e.biomes[0].colors.fog
+                dimType.attributes['minecraft:visual/sky_color'] = e.biomes[0].colors.sky
             }
             write("data/${ns}/dimension_type/${e.id}.json", dimType)
 
@@ -88,10 +90,22 @@ def generate = tasks.register('generateEpochData') {
                     r instanceof Map && r.then_run instanceof Map && r.then_run.result_state?.toString()?.contains('minecraft:bedrock')
                 }
             }
-            def surface = [type: 'minecraft:sequence', sequence: bedrock + [
-                    [type: 'minecraft:condition', if_true: floorCondition(false), then_run: blockRule(e.surface.top)],
-                    [type: 'minecraft:condition', if_true: floorCondition(true), then_run: blockRule(e.surface.under)]
-            ]]
+            // Pro Biom eine eigene Oberfläche (Bedingung "biome"); das Hauptbiom gilt zusätzlich als Rückfall.
+            def floorRules = { b -> [
+                    [type: 'minecraft:condition', if_true: floorCondition(false), then_run: blockRule(b.surface.top)],
+                    [type: 'minecraft:condition', if_true: floorCondition(true), then_run: blockRule(b.surface.under)]
+            ] }
+            def perBiome = e.biomes.collect { b ->
+                [type    : 'minecraft:condition',
+                 if_true : [type: 'minecraft:biome', biome_is: ["${ns}:${b.id}".toString()]],
+                 then_run: [type: 'minecraft:sequence', sequence: floorRules(b)]]
+            }
+            def surface = [type: 'minecraft:sequence', sequence: bedrock + perBiome + floorRules(e.biomes[0])]
+            // Klima: Die Vanilla-Höhlen haben überall Temperatur und Feuchte 0. Die Epochen nehmen die
+            // Klima-Noises des Nethers (Format genau dieser Version), damit mehrere Biome nebeneinander liegen.
+            def netherRouter = vanilla('minecraft:nether', 'worldgen/noise_settings').noise_router
+            noise.noise_router.temperature = netherRouter.temperature
+            noise.noise_router.vegetation = netherRouter.vegetation
             if (newRules) noise.material_rule = surface else noise.surface_rule = surface
             write("data/${ns}/worldgen/noise_settings/${e.id}.json", noise)
 
@@ -126,62 +140,98 @@ def generate = tasks.register('generateEpochData') {
                 placedOres << "${ns}:ore_${o.id}".toString()
             }
 
-            // Biom: Vanilla-Höhlenbiom mit eigenen Farben und den Epochen-Erzen.
-            def biome = vanilla(e.biome_base, 'worldgen/biome')
-            def effects = biome.effects instanceof Map ? biome.effects : [:]
-            ['fog_color': e.colors.fog, 'sky_color': e.colors.sky, 'water_color': e.colors.water, 'water_fog_color': e.colors.water_fog].each { k, hex ->
-                if (effects.containsKey(k)) effects[k] = color(effects[k], hex)
-            }
-            if (biome.attributes instanceof Map) {
-                biome.attributes['minecraft:visual/fog_color'] = e.colors.fog
-                biome.attributes['minecraft:visual/sky_color'] = e.colors.sky
-            }
-            // Unpassende Vanilla-Spawns des Basisbioms entfernen (z. B. Ghasts aus den Basaltdeltas).
-            def excluded = (e.exclude_mobs ?: []) as Set
-            if (!excluded.isEmpty()) {
-                def lists = biome.spawners instanceof Map ? biome.spawners
+            // Biome: je ein Vanilla-Biom als Vorlage, mit eigenen Farben, den Epochen-Erzen und eigenen Spawns.
+            e.biomes.each { b ->
+                def biome = vanilla(b.base, 'worldgen/biome')
+                def effects = biome.effects instanceof Map ? biome.effects : [:]
+                ['fog_color': b.colors.fog, 'sky_color': b.colors.sky, 'water_color': b.colors.water, 'water_fog_color': b.colors.water_fog].each { k, hex ->
+                    if (effects.containsKey(k)) effects[k] = color(effects[k], hex)
+                }
+                if (biome.attributes instanceof Map) {
+                    biome.attributes['minecraft:visual/fog_color'] = b.colors.fog
+                    biome.attributes['minecraft:visual/sky_color'] = b.colors.sky
+                }
+                def spawnLists = biome.spawners instanceof Map ? biome.spawners
                         : biome.attributes?.get('minecraft:gameplay/natural_mob_spawns')?.argument?.spawns_by_category
-                lists?.each { cat, entries ->
+                // Unpassende Vanilla-Spawns der Vorlage entfernen (z. B. Ghasts, die offenen Himmel brauchen).
+                def excluded = (b.exclude_mobs ?: []) as Set
+                spawnLists?.each { cat, entries ->
                     if (entries instanceof List) entries.removeAll { it instanceof Map && excluded.contains(it.type) }
                 }
-            }
-            def UNDERGROUND_ORES = 6
-            while (biome.features.size() <= UNDERGROUND_ORES) biome.features << []
-            biome.features[UNDERGROUND_ORES].addAll(placedOres)
-            write("data/${ns}/worldgen/biome/${e.biome}.json", biome)
-
-            // Mob-Spawns als NeoForge-Biome-Modifier, im Eintragsformat genau dieser Version:
-            // bis 26.2 {weight, minCount, maxCount}, ab 26.3 {weight, count}.
-            def spawnLists = biome.spawners instanceof Map ? biome.spawners
-                    : biome.attributes?.get('minecraft:gameplay/natural_mob_spawns')?.argument?.spawns_by_category
-            def sample = spawnLists?.values()?.flatten()?.find { it instanceof Map }
-            if (sample == null) throw new GradleException("Kein Spawn-Eintrag in ${e.biome_base} gefunden")
-            def countFormat = sample.containsKey('count')
-            (e.mobs ?: []).each { m ->
-                def entry = [type: m.entity, weight: m.weight]
-                if (countFormat) {
-                    entry.count = m.min == m.max ? m.min : [type: 'minecraft:uniform', min_inclusive: m.min, max_inclusive: m.max]
-                } else {
-                    entry.minCount = m.min
-                    entry.maxCount = m.max
+                def costs = biome.spawn_costs instanceof Map ? biome.spawn_costs
+                        : biome.attributes?.get('minecraft:gameplay/natural_mob_spawns')?.argument?.spawn_costs
+                excluded.each { costs?.remove(it) }
+                // Features der Vorlage, die in einer Epoche nichts verloren haben (Feuer, Antiker Schutt, Nether-Gold).
+                def badFeatures = (b.exclude_features ?: []) as Set
+                biome.features.each { step -> if (step instanceof List) step.removeAll { badFeatures.contains(it) } }
+                def UNDERGROUND_ORES = 6
+                while (biome.features.size() <= UNDERGROUND_ORES) biome.features << []
+                biome.features[UNDERGROUND_ORES].addAll(placedOres)
+                (b.add_features ?: [:]).each { step, list ->
+                    list.each { f ->
+                        if (f instanceof String) {
+                            if (!biome.features[step as int].contains(f)) biome.features[step as int] << f
+                            return
+                        }
+                        // Häufigere Kopie eines Vanilla-Features (z. B. mehr Geoden): Seltenheit und Höhe anpassen.
+                        def placed = vanilla(f.copy, 'worldgen/placed_feature')
+                        placed.placement.each { pl ->
+                            if (pl.type == 'minecraft:rarity_filter' && f.rarity) pl.chance = f.rarity
+                            if (pl.type == 'minecraft:height_range' && f.max_y) pl.height.max_inclusive = [absolute: f.max_y]
+                        }
+                        write("data/${ns}/worldgen/placed_feature/${f.name}.json", placed)
+                        biome.features[step as int] << "${ns}:${f.name}".toString()
+                    }
                 }
-                def name = m.entity.split(':')[1]
-                write("data/${ns}/neoforge/biome_modifier/${name}_spawns.json", [
-                        type    : 'neoforge:add_spawns',
-                        biomes  : "${ns}:${e.biome}".toString(),
-                        spawners: [entry]
-                ])
+                write("data/${ns}/worldgen/biome/${b.id}.json", biome)
+
+                // Mob-Spawns als NeoForge-Biome-Modifier, im Eintragsformat genau dieser Version:
+                // bis 26.2 {weight, minCount, maxCount}, ab 26.3 {weight, count}.
+                // Der erste Modifier eines Mobs heißt <mob>_spawns, weitere <mob>_spawns_in_<biom>.
+                def sample = vanilla('minecraft:dripstone_caves', 'worldgen/biome').with { v ->
+                    (v.spawners instanceof Map ? v.spawners : v.attributes?.get('minecraft:gameplay/natural_mob_spawns')?.argument?.spawns_by_category)
+                }?.values()?.flatten()?.find { it instanceof Map }
+                if (sample == null) throw new GradleException("Kein Spawn-Eintrag als Formatvorlage gefunden")
+                def countFormat = sample.containsKey('count')
+                (b.mobs ?: []).each { m ->
+                    def entry = [type: m.entity, weight: m.weight]
+                    if (countFormat) {
+                        entry.count = m.min == m.max ? m.min : [type: 'minecraft:uniform', min_inclusive: m.min, max_inclusive: m.max]
+                    } else {
+                        entry.minCount = m.min
+                        entry.maxCount = m.max
+                    }
+                    def name = m.entity.split(':')[1]
+                    def file = "${name}_spawns"
+                    if (!spawnFiles.add(file)) file = "${name}_spawns_in_${b.id}"
+                    write("data/${ns}/neoforge/biome_modifier/${file}.json", [
+                            type    : 'neoforge:add_spawns',
+                            biomes  : "${ns}:${b.id}".toString(),
+                            spawners: [entry]
+                    ])
+                }
+                (b.structures ?: []).each { tag -> biomeTags.computeIfAbsent(tag) { [] } << "${ns}:${b.id}".toString() }
             }
 
-            // Dimension: Noise-Generator mit einem festen Biom.
+            // Dimension: Noise-Generator, die Biome als Punkte im Klima (Temperatur, Feuchte).
+            // Die übrigen Klimawerte sind in den Epochen überall 0.
+            def climate = { b -> [temperature: b.climate[0], humidity: b.climate[1], continentalness: 0.0, erosion: 0.0,
+                                  depth: 0.0, weirdness: 0.0, offset: 0.0] }
             write("data/${ns}/dimension/${e.id}.json", [
                     type     : "${ns}:${e.id}".toString(),
                     generator: [
                             type        : 'minecraft:noise',
                             settings    : "${ns}:${e.id}".toString(),
-                            biome_source: [type: 'minecraft:fixed', biome: "${ns}:${e.biome}".toString()]
+                            biome_source: [type  : 'minecraft:multi_noise',
+                                           biomes: e.biomes.collect { b -> [biome: "${ns}:${b.id}".toString(), parameters: climate(b)] }]
                     ]
             ])
+        }
+
+        // Biom-Tags (z. B. Nether-Fossilien in der Knochensenke), ohne die Vanilla-Einträge zu ersetzen.
+        biomeTags.each { String tag, List values ->
+            def (tns, tpath) = tag.split(':')
+            write("data/${tns}/tags/worldgen/biome/${tpath}.json", [replace: false, values: values])
         }
 
         // Mobs: Modell, Textur und Leucht-Ebenen aus mobs/<name>/ ins Jar.

@@ -50,6 +50,7 @@ final class SelfTest {
         failures += testPreparation(server);
         failures += testTransplant(server);
         failures += testBurrower(server);
+        failures += testBiomes(server);
         for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) failures += testGrowth(server, epoch);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
@@ -115,6 +116,10 @@ final class SelfTest {
         requireResource(problems, "/data/" + def.modId() + "/loot_table/entities/" + def.name() + ".json");
         if (naturalSpawn) {
             requireResource(problems, "/data/" + def.modId() + "/neoforge/biome_modifier/" + def.name() + "_spawns.json");
+        }
+        // Eigene Sounds: Jedes Ereignis hat mindestens eine Datei.
+        for (String kind : List.of("ambient", "hurt", "death")) {
+            requireResource(problems, "/assets/" + def.modId() + "/sounds/entity/" + def.name() + "/" + kind + "1.ogg");
         }
 
         // Abspieler: Ein Wert mitten in der Idle-Animation muss zwischen den Keyframes liegen.
@@ -349,6 +354,76 @@ final class SelfTest {
         StrataEpochs.LOG.info("[Strata-Test] Glutwühler: Zustände={}, Schaden={}, Wurf={}, Rücken zum Ziel={} -> {}",
                 seen, hurt, launched, backTurned, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
+    }
+
+    /** Oberfläche, an der man jedes Biom erkennt (siehe epochs/worldgen/epochs.json). */
+    private static final Map<String, String> BIOME_TOPS = Map.of(
+            "crystal_hollows", "minecraft:calcite", "geode_vaults", "minecraft:amethyst_block", "rime_grotto", "minecraft:packed_ice",
+            "spore_grotto", "minecraft:mycelium", "moss_marsh", "minecraft:moss_block", "glow_thicket", "minecraft:warped_nylium",
+            "ash_wastes", "strata_epochs:volcanic_ash", "magma_rifts", "minecraft:magma_block", "bone_hollow", "minecraft:soul_soil");
+
+    /**
+     * Mehrere Biome pro Epoche: Jedes Biom der Dimension muss einen spürbaren Anteil haben, nah genug am
+     * Ankunftsort liegen und seine eigene Oberfläche bekommen.
+     */
+    private static int testBiomes(MinecraftServer server) {
+        int failures = 0;
+        final int step = 32, range = 1536;
+        for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
+            if (entry.getValue().dimension().isEmpty()) continue;
+            ServerLevel level = Mc.level(server, entry.getValue().dimension().get());
+            if (level == null) continue;
+            Map<String, Integer> counts = new java.util.TreeMap<>();
+            for (var holder : level.getChunkSource().getGenerator().getBiomeSource().possibleBiomes()) {
+                counts.put(holder.getRegisteredName(), 0);
+            }
+            Map<String, BlockPos> nearest = new java.util.HashMap<>();
+            int samples = 0;
+            for (int x = -range; x < range; x += step) {
+                for (int z = -range; z < range; z += step) {
+                    String id = level.getUncachedNoiseBiome(x >> 2, 0, z >> 2).getRegisteredName();
+                    counts.merge(id, 1, Integer::sum);
+                    samples++;
+                    BlockPos pos = new BlockPos(x, 0, z);
+                    BlockPos best = nearest.get(id);
+                    if (best == null || pos.distSqr(BlockPos.ZERO) < best.distSqr(BlockPos.ZERO)) nearest.put(id, pos);
+                }
+            }
+            List<String> parts = new ArrayList<>();
+            boolean ok = counts.size() >= 3;
+            for (Map.Entry<String, Integer> c : counts.entrySet()) {
+                String id = c.getKey();
+                double share = c.getValue() / (double) samples;
+                BlockPos at = nearest.get(id);
+                int dist = at == null ? -1 : (int) Math.sqrt(at.distSqr(BlockPos.ZERO));
+                String top = BIOME_TOPS.get(id.substring(id.indexOf(':') + 1));
+                int tops = 0;
+                if (at != null && top != null) {
+                    ChunkAccess chunk = level.getChunk(at.getX() >> 4, at.getZ() >> 4);
+                    tops = count(level, chunk, dev.strata.epochs.mc.MobCompat.block(top));
+                }
+                boolean biomeOk = share >= 0.08 && at != null && dist <= 1024 && (top == null || tops > 0);
+                if (!biomeOk) ok = false;
+                parts.add(String.format(java.util.Locale.ROOT, "%s %.0f%% ab %d Blöcken (bei %d %d), Oberfläche %d%s",
+                        id.substring(id.indexOf(':') + 1), share * 100, dist, at == null ? 0 : at.getX(), at == null ? 0 : at.getZ(),
+                        tops, biomeOk ? "" : " (!)"));
+            }
+            // Knochensenke: Netherfossilien (Biom-Tag has_structure/nether_fossil) müssen in der Nähe liegen.
+            BlockPos hollow = nearest.get(StrataEpochs.id("bone_hollow"));
+            if (hollow != null) {
+                int[] found = {0, -1};
+                var source = server.createCommandSourceStack().withSuppressedOutput().withLevel(level)
+                        .withPosition(net.minecraft.world.phys.Vec3.atCenterOf(hollow.atY(64)))
+                        .withCallback((success, result) -> { found[0] = success ? 1 : 0; found[1] = result; });
+                server.getCommands().performPrefixedCommand(source, "locate structure minecraft:nether_fossil");
+                boolean fossils = found[0] == 1 && found[1] <= 256;
+                if (!fossils) ok = false;
+                parts.add("Netherfossil " + (found[0] == 1 ? found[1] + " Blöcke entfernt" : "nicht gefunden") + (fossils ? "" : " (!)"));
+            }
+            if (!ok) failures++;
+            StrataEpochs.LOG.info("[Strata-Test] Biome {}: {} -> {}", entry.getKey(), String.join(", ", parts), ok ? "OK" : "FEHLER");
+        }
+        return failures;
     }
 
     private static void requireResource(List<String> problems, String path) {

@@ -115,5 +115,17 @@
   "item.strata_epochs.ember_burrower_spawn_egg": "Glutwühler-Spawn-Ei",
   "subtitles.strata_epochs.ember_burrower.ambient": "Glutwühler brodelt",
   "subtitles.strata_epochs.ember_burrower.hurt": "Glutwühler wird verletzt",
-  "subtitles.strata_epochs.ember_burrower.death": "Glutwühler erlischt"
+  "subtitles.strata_epochs.ember_burrower.death": "Glutwühler erlischt",
+  "biome.strata_epochs.crystal_hollows": "Kristallhöhlen",
+  "biome.strata_epochs.geode_vaults": "Geodengewölbe",
+  "biome.strata_epochs.rime_grotto": "Raureifgrotte",
+  "biome.strata_epochs.spore_grotto": "Sporengrotte",
+  "biome.strata_epochs.moss_marsh": "Moosmoor",
+  "biome.strata_epochs.glow_thicket": "Leuchtdickicht",
+  "biome.strata_epochs.ash_wastes": "Aschewüste",
+  "biome.strata_epochs.magma_rifts": "Magmaspalten",
+  "biome.strata_epochs.bone_hollow": "Knochensenke",
+  "subtitles.strata_epochs.ember_burrower.dig": "Glutwühler gräbt",
+  "subtitles.strata_epochs.ember_burrower.tremor": "Boden grollt",
+  "subtitles.strata_epochs.ember_burrower.emerge": "Glutwühler bricht hervor"
 }

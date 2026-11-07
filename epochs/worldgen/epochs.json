@@ -1,5 +1,6 @@
 {
   "_hinweis": "Grundlage für das Worldgen der Epochen. Der Task generateEpochData baut daraus pro Minecraft-Version passendes JSON, abgeleitet von den Vanilla-Dateien genau dieser Version.",
+  "_biomes": "Biome pro Epoche. Das erste ist das Hauptbiom (Farben der Dimension, Mitte der Klimakarte). climate = [Temperatur, Feuchte] als Punkt im Nether-Klima-Noise. base = Vanilla-Biom als Vorlage (Features, Klang, Partikel). add_features fügt Features in einen Generierungsschritt ein (2 = lokale Veränderungen); {copy, name, rarity, max_y} legt eine häufigere Kopie eines Vanilla-Features an (dasselbe Feature zweimal in einem Biom ergibt einen Reihenfolge-Zyklus), exclude_features und exclude_mobs entfernen Unpassendes aus der Vorlage. structures: Biom-Tags, in die das Biom zusätzlich kommt (z. B. Nether-Fossilien).",
   "namespace": "strata_epochs",
   "_mobs": "Mobs im Spiel: Modell, Textur und Leucht-Ebenen werden aus mobs/<name>/ ins Jar kopiert.",
   "mobs": [
@@ -16,14 +17,6 @@
       "dimension_type": "minecraft:overworld_caves",
       "noise_settings": "minecraft:caves",
       "default_block": "strata_epochs:chronostone",
-      "biome": "crystal_hollows",
-      "biome_base": "minecraft:dripstone_caves",
-      "colors": {
-        "fog": "#6e56b8",
-        "sky": "#2a1f4d",
-        "water": "#9b7bff",
-        "water_fog": "#2a1f4d"
-      },
       "ores": [
         {
           "id": "crystal_quartz",
@@ -33,33 +26,109 @@
           "max_y": 160
         }
       ],
-      "surface": {
-        "top": "minecraft:calcite",
-        "under": "minecraft:smooth_basalt"
-      },
-      "mobs": [
+      "ambient_light": 0.1,
+      "biomes": [
         {
-          "entity": "strata_epochs:geode_crawler",
-          "weight": 40,
-          "min": 1,
-          "max": 2
+          "id": "crystal_hollows",
+          "base": "minecraft:dripstone_caves",
+          "climate": [
+            0.0,
+            0.0
+          ],
+          "colors": {
+            "fog": "#6e56b8",
+            "sky": "#2a1f4d",
+            "water": "#9b7bff",
+            "water_fog": "#2a1f4d"
+          },
+          "surface": {
+            "top": "minecraft:calcite",
+            "under": "minecraft:smooth_basalt"
+          },
+          "mobs": [
+            {
+              "entity": "strata_epochs:geode_crawler",
+              "weight": 40,
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        {
+          "id": "geode_vaults",
+          "base": "minecraft:dripstone_caves",
+          "climate": [
+            0.0,
+            -0.5
+          ],
+          "colors": {
+            "fog": "#7a4aa8",
+            "sky": "#341a4a",
+            "water": "#c78bff",
+            "water_fog": "#341a4a"
+          },
+          "surface": {
+            "top": "minecraft:amethyst_block",
+            "under": "minecraft:calcite"
+          },
+          "add_features": {
+            "2": [
+              {
+                "copy": "minecraft:amethyst_geode",
+                "name": "dense_amethyst_geode",
+                "rarity": 3,
+                "max_y": 100
+              }
+            ]
+          },
+          "mobs": [
+            {
+              "entity": "strata_epochs:geode_crawler",
+              "weight": 70,
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "id": "rime_grotto",
+          "base": "minecraft:dripstone_caves",
+          "climate": [
+            0.0,
+            0.5
+          ],
+          "colors": {
+            "fog": "#5f86c8",
+            "sky": "#1b2a4a",
+            "water": "#a8d0ff",
+            "water_fog": "#1b2a4a"
+          },
+          "surface": {
+            "top": "minecraft:packed_ice",
+            "under": "minecraft:snow_block"
+          },
+          "mobs": [
+            {
+              "entity": "strata_epochs:geode_crawler",
+              "weight": 20,
+              "min": 1,
+              "max": 1
+            },
+            {
+              "entity": "minecraft:stray",
+              "weight": 50,
+              "min": 1,
+              "max": 2
+            }
+          ]
         }
-      ],
-      "ambient_light": 0.1
+      ]
     },
     {
       "id": "spore_age",
       "dimension_type": "minecraft:overworld_caves",
       "noise_settings": "minecraft:caves",
       "default_block": "strata_epochs:chronostone",
-      "biome": "spore_grotto",
-      "biome_base": "minecraft:lush_caves",
-      "colors": {
-        "fog": "#4f7a3a",
-        "sky": "#1f3318",
-        "water": "#6fbf73",
-        "water_fog": "#1f3318"
-      },
       "ores": [
         {
           "id": "amber",
@@ -69,37 +138,111 @@
           "max_y": 120
         }
       ],
-      "surface": {
-        "top": "minecraft:mycelium",
-        "under": "minecraft:dirt"
-      },
-      "mobs": [
+      "ambient_light": 0.1,
+      "biomes": [
         {
-          "entity": "strata_epochs:spore_bellows",
-          "weight": 80,
-          "min": 1,
-          "max": 3
+          "id": "spore_grotto",
+          "base": "minecraft:lush_caves",
+          "climate": [
+            0.0,
+            0.0
+          ],
+          "colors": {
+            "fog": "#4f7a3a",
+            "sky": "#1f3318",
+            "water": "#6fbf73",
+            "water_fog": "#1f3318"
+          },
+          "surface": {
+            "top": "minecraft:mycelium",
+            "under": "minecraft:dirt"
+          },
+          "mobs": [
+            {
+              "entity": "strata_epochs:spore_bellows",
+              "weight": 80,
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "id": "moss_marsh",
+          "base": "minecraft:lush_caves",
+          "climate": [
+            0.0,
+            -0.5
+          ],
+          "colors": {
+            "fog": "#5e6e3a",
+            "sky": "#20280f",
+            "water": "#5d7a34",
+            "water_fog": "#232b10"
+          },
+          "surface": {
+            "top": "minecraft:moss_block",
+            "under": "minecraft:mud"
+          },
+          "mobs": [
+            {
+              "entity": "strata_epochs:spore_bellows",
+              "weight": 50,
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        {
+          "id": "glow_thicket",
+          "base": "minecraft:warped_forest",
+          "climate": [
+            0.0,
+            0.5
+          ],
+          "colors": {
+            "fog": "#2f6f6a",
+            "sky": "#0f2a28",
+            "water": "#3fbfb0",
+            "water_fog": "#0f2a28"
+          },
+          "surface": {
+            "top": "minecraft:warped_nylium",
+            "under": "minecraft:packed_mud"
+          },
+          "exclude_mobs": [
+            "minecraft:enderman",
+            "minecraft:strider"
+          ],
+          "exclude_features": [
+            "minecraft:patch_fire",
+            "minecraft:patch_soul_fire",
+            "minecraft:ore_ancient_debris_large",
+            "minecraft:ore_debris_small",
+            "minecraft:ore_gold_nether",
+            "minecraft:ore_quartz_nether",
+            "minecraft:ore_gold_deltas",
+            "minecraft:ore_quartz_deltas",
+            "minecraft:spring_lava",
+            "minecraft:spring_open",
+            "minecraft:spring_closed",
+            "minecraft:ore_magma"
+          ],
+          "mobs": [
+            {
+              "entity": "strata_epochs:spore_bellows",
+              "weight": 60,
+              "min": 1,
+              "max": 2
+            }
+          ]
         }
-      ],
-      "ambient_light": 0.1
+      ]
     },
     {
       "id": "ash_age",
       "dimension_type": "minecraft:overworld_caves",
       "noise_settings": "minecraft:caves",
       "default_block": "strata_epochs:chronostone",
-      "biome": "ash_wastes",
-      "biome_base": "minecraft:basalt_deltas",
-      "_exclude_mobs": "Vanilla-Spawns des Basisbioms, die in einer Höhlen-Epoche nicht passen (Ghasts brauchen offenen Himmel).",
-      "exclude_mobs": [
-        "minecraft:ghast"
-      ],
-      "colors": {
-        "fog": "#5b3a2e",
-        "sky": "#1d110d",
-        "water": "#b4612c",
-        "water_fog": "#2a140b"
-      },
       "ores": [
         {
           "id": "ember",
@@ -109,19 +252,130 @@
           "max_y": 100
         }
       ],
-      "surface": {
-        "top": "strata_epochs:volcanic_ash",
-        "under": "minecraft:basalt"
-      },
-      "mobs": [
+      "ambient_light": 0.15,
+      "biomes": [
         {
-          "entity": "strata_epochs:ember_burrower",
-          "weight": 60,
-          "min": 1,
-          "max": 2
+          "id": "ash_wastes",
+          "base": "minecraft:basalt_deltas",
+          "climate": [
+            0.0,
+            0.0
+          ],
+          "colors": {
+            "fog": "#5b3a2e",
+            "sky": "#1d110d",
+            "water": "#b4612c",
+            "water_fog": "#2a140b"
+          },
+          "surface": {
+            "top": "strata_epochs:volcanic_ash",
+            "under": "minecraft:basalt"
+          },
+          "exclude_mobs": [
+            "minecraft:ghast"
+          ],
+          "exclude_features": [
+            "minecraft:patch_fire",
+            "minecraft:patch_soul_fire",
+            "minecraft:ore_ancient_debris_large",
+            "minecraft:ore_debris_small",
+            "minecraft:ore_gold_nether",
+            "minecraft:ore_quartz_nether",
+            "minecraft:ore_gold_deltas",
+            "minecraft:ore_quartz_deltas"
+          ],
+          "mobs": [
+            {
+              "entity": "strata_epochs:ember_burrower",
+              "weight": 60,
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        {
+          "id": "magma_rifts",
+          "base": "minecraft:basalt_deltas",
+          "climate": [
+            0.0,
+            -0.5
+          ],
+          "colors": {
+            "fog": "#6a2410",
+            "sky": "#2a0c05",
+            "water": "#d0461c",
+            "water_fog": "#2a0c05"
+          },
+          "surface": {
+            "top": "minecraft:magma_block",
+            "under": "minecraft:blackstone"
+          },
+          "exclude_mobs": [
+            "minecraft:ghast"
+          ],
+          "exclude_features": [
+            "minecraft:patch_fire",
+            "minecraft:patch_soul_fire",
+            "minecraft:ore_ancient_debris_large",
+            "minecraft:ore_debris_small",
+            "minecraft:ore_gold_nether",
+            "minecraft:ore_quartz_nether",
+            "minecraft:ore_gold_deltas",
+            "minecraft:ore_quartz_deltas"
+          ],
+          "mobs": [
+            {
+              "entity": "strata_epochs:ember_burrower",
+              "weight": 20,
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "id": "bone_hollow",
+          "base": "minecraft:soul_sand_valley",
+          "climate": [
+            0.0,
+            0.5
+          ],
+          "colors": {
+            "fog": "#4a5560",
+            "sky": "#161b20",
+            "water": "#5f7f9a",
+            "water_fog": "#161b20"
+          },
+          "surface": {
+            "top": "minecraft:soul_soil",
+            "under": "minecraft:soul_sand"
+          },
+          "structures": [
+            "minecraft:has_structure/nether_fossil"
+          ],
+          "exclude_mobs": [
+            "minecraft:ghast",
+            "minecraft:enderman"
+          ],
+          "exclude_features": [
+            "minecraft:patch_fire",
+            "minecraft:patch_soul_fire",
+            "minecraft:ore_ancient_debris_large",
+            "minecraft:ore_debris_small",
+            "minecraft:ore_gold_nether",
+            "minecraft:ore_quartz_nether",
+            "minecraft:ore_gold_deltas",
+            "minecraft:ore_quartz_deltas"
+          ],
+          "mobs": [
+            {
+              "entity": "strata_epochs:ember_burrower",
+              "weight": 40,
+              "min": 1,
+              "max": 2
+            }
+          ]
         }
-      ],
-      "ambient_light": 0.15
+      ]
     }
   ],
   "loot_tables": [

@@ -191,7 +191,7 @@ public class EmberBurrower extends StrataMob {
                         enter(State.DIGGING);
                         getNavigation().stop();
                         playAction("burrow");
-                        sound(SoundEvents.SAND_BREAK, 1.0f, 0.7f);
+                        sound(EpochsMobs.EMBER_BURROWER_DIG.get(), 1.0f, 1.0f);
                     }
                 }
             }
@@ -239,7 +239,7 @@ public class EmberBurrower extends StrataMob {
 
     private void tickBurrowed(ServerLevel level, LivingEntity target) {
         if (stateTicks % 4 == 0) groundParticles(level, 3);
-        if (stateTicks % 10 == 0) sound(SoundEvents.SAND_BREAK, 0.5f, 0.6f);
+        if (stateTicks % 12 == 0) sound(EpochsMobs.EMBER_BURROWER_DIG.get(), 0.45f, 0.8f + getRandom().nextFloat() * 0.2f);
         // Fester Boden: Er wird herausgedrückt (ohne Angriff).
         if (!onBurrowableGround() || stateTicks > MAX_BURROWED) {
             surface(level);
@@ -254,7 +254,7 @@ public class EmberBurrower extends StrataMob {
             enter(State.TREMOR);
             playActionFor("tremor", warningTicks());
             setGlow(1, 1f);
-            sound(SoundEvents.BASALT_BREAK, 1.5f, 0.5f);
+            sound(EpochsMobs.EMBER_BURROWER_TREMOR.get(), 1.5f, 1.0f);
             return;
         }
         if (stateTicks % 5 == 0) getNavigation().moveTo(target, tuning().ability("burrow", "speed", 1.6));
@@ -294,7 +294,7 @@ public class EmberBurrower extends StrataMob {
         lockedYaw = target == null ? getYRot()
                 : (float) (Math.atan2(-(getX() - target.getX()), getZ() - target.getZ()) * 180 / Math.PI);
         holdYaw();
-        sound(SoundEvents.RAVAGER_ROAR, 0.6f, 1.4f);
+        sound(EpochsMobs.EMBER_BURROWER_EMERGE.get(), 1.2f, 1.0f);
         double range = tuning().ability("emerge", "range", 2.0);
         float damage = (float) tuning().ability("emerge", "damage", 6);
         double launch = tuning().ability("emerge", "launch", 0.7);

@@ -44,10 +44,10 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
    - Der **Kristall-Kernbohrer** (Stufe 2: Kernbohrer und 4 Kristallquarz) erreicht auch die Sporenzeit.
    - Der **Tiefenkernbohrer** (Stufe 3: Kristall-Kernbohrer, Bernstein und eine Spitze aus dem Tag `strata_epochs:deep_drill_tips`, Standard Diamant) erreicht auch die **Aschezeit**.
 2. **Epochentor** bauen (Obsidian, Amethyst, Kompass) und mit dem Bohrkern rechtsklicken. Der Kern wird verbraucht, und du landest in der Epoche. Neben dir steht ein Tor für den Rückweg.
-3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein**:
-   - In der **Kristallzeit** findest du Kristallquarz.
-   - In der **Sporenzeit** findest du Bernstein.
-   - In der **Aschezeit** liegen Basaltdeltas mit Vulkanasche. Dort findest du Glutsteinerz, das **Glutsplitter** liefert (Brennstoff wie eine Lohenrute).
+3. Alle drei Epochen sind Höhlenwelten aus **Zeitgestein** mit je **drei Biomen**. Das Hauptbiom liegt am Ankunftsort, die beiden anderen meist nur 70–160 Blöcke entfernt:
+   - **Kristallzeit** (Kristallquarz): *Kristallhöhlen* (Calcit), *Geodengewölbe* (Amethystboden, viele Geoden), *Raureifgrotte* (Packeis und Schnee, Eiswanderer).
+   - **Sporenzeit** (Bernstein): *Sporengrotte* (Myzel), *Moosmoor* (Moos auf Schlamm), *Leuchtdickicht* (Wirrnyzel mit Wirrpilzen und Zwirbelranken).
+   - **Aschezeit** (Glutsteinerz, liefert **Glutsplitter**, Brennstoff wie eine Lohenrute): *Aschewüste* (Vulkanasche über Basalt), *Magmaspalten* (Magmaboden: brennt, aber der Glutwühler kann nicht abtauchen), *Knochensenke* (Seelenerde mit Netherfossilien).
 4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min, Aschezeit 5 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
 5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
 6. Rechtsklick auf das Tor bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.
@@ -141,7 +141,7 @@ tools/make_textures.py           Erzeugt die Texturen (mit --preview <datei> ein
 tools/blockbench-mcp/            MCP-Server + Blockbench-Plugin, damit Claude Modelle in Blockbench bauen kann
 ```
 
-**Warum das Worldgen erzeugt wird:** Mojang ändert das Format von Dimensionen, Biomen, Erz-Features, Loot-Tabellen und Rezepten fast in jeder Version. In 1.21.11 kamen z. B. „attributes“ dazu, in 26.3 wurde `configured_feature` zu `feature`. Der Task `generateEpochData` nimmt deshalb die Vanilla-Dateien genau der gebauten Version als Vorlage (Höhlen-Dimension, Höhlen-Noise, Tropfstein- und Üppige-Höhlen-Biom, Vanilla-Loot) und ändert nur wenige Felder.
+**Warum das Worldgen erzeugt wird:** Mojang ändert das Format von Dimensionen, Biomen, Erz-Features, Loot-Tabellen und Rezepten fast in jeder Version. In 1.21.11 kamen z. B. „attributes“ dazu, in 26.3 wurde `configured_feature` zu `feature`. Der Task `generateEpochData` nimmt deshalb die Vanilla-Dateien genau der gebauten Version als Vorlage (Höhlen-Dimension, Höhlen-Noise, Vorlage-Biome, Vanilla-Loot) und ändert nur wenige Felder. Damit mehrere Biome nebeneinander liegen, übernimmt das Höhlen-Noise die Klima-Noises des Nethers; die Biome einer Epoche sind Punkte in diesem Klima (`multi_noise`).
 
 ## Bauen und testen
 
@@ -176,7 +176,7 @@ Ein bloßes `runClient` bzw. `runServer` im Hauptordner (auch per Doppelklick in
 
 Eine Epoche ohne eigene Dimension braucht nur ein Datapack, siehe `example-datapacks/strata-demo`. Bohrkerne zeigen sie dann an, das Tor meldet „noch nicht erreichbar“.
 
-Eine Epoche mit Dimension kommt in `epochs/worldgen/epochs.json` (Vorlage-Biom, Farben, Erze) plus einen Eintrag unter `epochs/src/shared/resources/data/strata_epochs/strata_core/epoch/`. Andere Mods können auch eigene Dimensionen per Datapack mitbringen und im Feld `dimension` darauf verweisen.
+Eine Epoche mit Dimension kommt in `epochs/worldgen/epochs.json` (Erze und eine Liste `biomes` mit Vorlage-Biom, Klimapunkt, Farben, Oberfläche und Mobs) plus einen Eintrag unter `epochs/src/shared/resources/data/strata_epochs/strata_core/epoch/`. Andere Mods können auch eigene Dimensionen per Datapack mitbringen und im Feld `dimension` darauf verweisen.
 
 ## Neue Minecraft-Version hinzufügen
 
@@ -222,9 +222,8 @@ data/<namespace>/strata_core/codex_node/<name>.json
 ## Noch offen
 
 - Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
-- Die Mob-Sounds sind eigene Ereignisse mit Untertiteln, klingen aber nach Vanilla (Gürteltier, Schleim, Schleifstein). Eigene Aufnahmen fehlen.
+- Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 40 Dateien, mono). Sie wurden nur technisch geprüft (Pegel, Knackser, Spektrogramme); ob sie im Spiel gut klingen, muss jemand anhören.
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
 - Phase 3 ist umgesetzt: Bohrer T3, Aschezeit, Fossilien, Spiralit, Transplantator (übersteht Neustarts), dazu der Kernanalyse-Tisch aus Phase 1. Im Client gesehen: Spiralit (1.21.1 und 26.1), Transplantation (1.21.1, 26.2 und 26.3), siehe `docs/screenshots/phase3/`.
 - Die Grenze „ein Spiralit pro Spieler“ zählt nur Spiralits in geladenen Gebieten.
-- Weitere Biome pro Epoche.
