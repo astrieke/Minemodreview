@@ -67,7 +67,7 @@ if [ -n "${SHOT_BIOME:-}" ]; then
     [ -n "$bpos" ] || { echo "Biom $SHOT_BIOME nicht im Selbsttest-Log"; exit 1; }
     read -r bx bz <<< "$bpos"
     f="$dp/data/strata_shot/function/tick.mcfunction"
-    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run spreadplayers $bx $bz 0 1 under 100 false @s\nexecute as @a[tag=!strata_shot] at @s run tp @s ~ ~ ~ -90 ${SHOT_PITCH:-12}\neffect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true|" "$f"
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run spreadplayers $bx $bz 0 12 under 100 false @s\nexecute as @a[tag=!strata_shot] at @s run tp @s ~ ~ ~ -90 ${SHOT_PITCH:-12}\neffect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true|" "$f"
 fi
 if [ -n "${SHOT_TRANSPLANT:-}" ]; then
     f="$dp/data/strata_shot/function/tick.mcfunction"
