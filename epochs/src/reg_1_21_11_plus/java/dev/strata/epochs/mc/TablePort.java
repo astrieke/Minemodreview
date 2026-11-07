@@ -52,15 +52,17 @@ public final class TablePort implements ResourceHandler<ItemResource> {
         }
     }
 
-    /** Für den Selbsttest: ein Cache wie in Rohren (Mekanism & Co.), mit Zähler für Invalidierungen. */
+    /** Nur für den Selbsttest: ein Cache wie in Rohren (Mekanism & Co.), mit Zähler für Invalidierungen. */
     public static Probe probe(ServerLevel level, BlockPos table) {
         int[] count = {0};
+        boolean[] alive = {true};
         var cache = net.neoforged.neoforge.capabilities.BlockCapabilityCache.create(Capabilities.Item.BLOCK, level, table,
-                Direction.UP, () -> true, () -> count[0]++);
-        return new Probe(() -> cache.getCapability() != null, count);
+                Direction.UP, () -> alive[0], () -> count[0]++);
+        return new Probe(() -> cache.getCapability() != null, count, () -> alive[0] = false);
     }
 
-    public record Probe(java.util.function.BooleanSupplier reachable, int[] invalidations) {}
+    /** {@code close} meldet den Cache am Level ab. */
+    public record Probe(java.util.function.BooleanSupplier reachable, int[] invalidations, Runnable close) {}
 
     /** Für den Selbsttest: bietet der Tisch von dieser Seite eine Schnittstelle an? */
     public static boolean offersFrom(ServerLevel level, BlockPos table, Direction side) {

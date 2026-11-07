@@ -460,6 +460,7 @@ final class SelfTest {
                 && probe.reachable().getAsBoolean();
         boolean sides = dev.strata.epochs.mc.TablePort.offersFrom(level, table, net.minecraft.core.Direction.NORTH)
                 && !dev.strata.epochs.mc.TablePort.offersFrom(level, table, net.minecraft.core.Direction.DOWN);
+        probe.close().run();
 
         hopperBe.clearContent();
         container.clearContent();
