@@ -195,8 +195,8 @@
             "under": "minecraft:mud",
             "patches": {
               "block": "minecraft:moss_block",
-              "noise": "minecraft:patch",
-              "min": -0.15,
+              "noise": "minecraft:nether_wart",
+              "min": -0.05,
               "max": 1000000000.0
             }
           },
@@ -319,7 +319,8 @@
             "minecraft:ore_quartz_nether",
             "minecraft:ore_gold_deltas",
             "minecraft:ore_quartz_deltas",
-            "minecraft:large_basalt_columns"
+            "minecraft:large_basalt_columns",
+            "minecraft:delta"
           ],
           "mobs": [
             {
@@ -345,9 +346,9 @@
             "under": "minecraft:blackstone",
             "patches": {
               "block": "minecraft:magma_block",
-              "noise": "minecraft:gravel",
-              "min": -0.1,
-              "max": 0.1
+              "noise": "minecraft:netherrack",
+              "min": 0.3,
+              "max": 1000000000.0
             }
           },
           "exclude_mobs": [

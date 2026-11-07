@@ -407,9 +407,13 @@ final class SelfTest {
     private static final Map<String, List<String>> BIOME_FLOORS = Map.of(
             "crystal_hollows", List.of("minecraft:calcite"), "geode_vaults", List.of("minecraft:amethyst_block"),
             "rime_grotto", List.of("minecraft:packed_ice"), "spore_grotto", List.of("minecraft:mycelium"),
-            "moss_marsh", List.of("minecraft:mud", "minecraft:moss_block", "minecraft:clay"), "glow_thicket", List.of("minecraft:warped_nylium"),
+            "moss_marsh", List.of("minecraft:mud", "minecraft:moss_block", "minecraft:clay"), "glow_thicket", List.of("minecraft:warped_nylium", "minecraft:warped_wart_block"),
             "ash_wastes", List.of("strata_epochs:volcanic_ash"), "magma_rifts", List.of("minecraft:blackstone", "minecraft:magma_block"),
             "bone_hollow", List.of("minecraft:soul_soil"));
+
+    /** Erlaubter Anteil des Fleckenblocks am Boden. */
+    private static final Map<String, double[]> PATCH_RANGE = Map.of(
+            "magma_rifts", new double[] {0.10, 0.40}, "moss_marsh", new double[] {0.25, 0.85});
 
     /**
      * Mehrere Biome pro Epoche: Jedes Biom der Dimension braucht einen spürbaren Anteil, muss höchstens
@@ -466,16 +470,26 @@ final class SelfTest {
                 // Böden aus den nächsten Kernpunkten sammeln, bis genug zusammenkommen (manche Chunks sind fast nur Fels).
                 List<BlockPos> spots = new ArrayList<>(cores.getOrDefault(id, at == null ? List.of() : List.of(at)));
                 spots.sort(java.util.Comparator.comparingDouble(q -> q.distSqr(origin)));
+                // Am Ursprung bauen andere Selbsttests Bühnen aus Zeitgestein: diese Chunks nicht als Boden werten.
+                List<BlockPos> away = spots.stream().filter(q -> Math.abs(q.getX()) > 48 || Math.abs(q.getZ()) > 48).toList();
+                if (!away.isEmpty()) spots = new ArrayList<>(away);
                 int[] floor = new int[3];
                 Map<String, Integer> found = new java.util.HashMap<>();
-                for (int k = 0; k < Math.min(8, spots.size()) && floor[0] < 150; k++) {
+                for (int k = 0; k < Math.min(16, spots.size()) && floor[0] < 600; k++) {
                     int[] f = floors(level, spots.get(k), id, BIOME_FLOORS.getOrDefault(name, List.of()), found);
                     for (int n = 0; n < 3; n++) floor[n] += f[n];
                 }
-                String common = found.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse("-");
+                String common = found.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue().reversed()).limit(3)
+                        .map(f -> f.getKey().substring(f.getKey().lastIndexOf('.') + 1) + " " + f.getValue()).collect(java.util.stream.Collectors.joining("/"));
                 double match = floor[0] == 0 ? 0 : (floor[1] + floor[2]) / (double) floor[0];
                 boolean safe = mid != null && safeArrival(level, EpochTravel.prepareArrival(level, mid.getX(), mid.getZ()));
-                boolean biomeOk = share >= 0.08 && at != null && dist <= maxDistance && floor[0] >= 20 && match >= 0.35 && safe;
+                // Ohne Flecken muss der Hauptboden die Hälfte ausmachen; mit Flecken zählt beides zusammen (≥ 60 %),
+                // und der Fleckenanteil liegt im vorgesehenen Bereich (Magma nur in Rissen, Moos gut sichtbar).
+                double patchShare = floor[0] == 0 ? 0 : floor[2] / (double) floor[0];
+                double[] patchRange = PATCH_RANGE.get(name);
+                boolean surfaceOk = patchRange == null ? match >= 0.5
+                        : match >= 0.6 && patchShare >= patchRange[0] && patchShare <= patchRange[1];
+                boolean biomeOk = share >= 0.08 && at != null && dist <= maxDistance && floor[0] >= 20 && surfaceOk && safe;
                 if (!biomeOk) ok = false;
                 String patch = floor[2] > 0 ? String.format(java.util.Locale.ROOT, " (Flecken %.0f%%)", 100.0 * floor[2] / floor[0]) : "";
                 parts.add(String.format(java.util.Locale.ROOT, "%s %.0f%% ab %d Blöcken (bei %d %d), Boden %.0f%% von %d%s, meist %s, Ankunft %s%s",
@@ -519,7 +533,9 @@ final class SelfTest {
                     // darüber Luft oder etwas Ersetzbares (Gras, Teppich), keine Flüssigkeit.
                     boolean ground = !state.isAir() && state.getFluidState().isEmpty() && !state.canBeReplaced();
                     boolean open = (above.isAir() || above.canBeReplaced()) && above.getFluidState().isEmpty();
+                    // Zeitgestein ist das Grundgestein der Epoche und liegt an einzelnen Stellen offen: neutral, zählt nicht mit.
                     if (ground && open && !state.is(net.minecraft.world.level.block.Blocks.BEDROCK)
+                            && !state.is(EpochsContent.CHRONOSTONE.get())
                             && level.getBiome(pos.above()).getRegisteredName().equals(biome)) {
                         result[0]++;
                         found.merge(state.getBlock().getDescriptionId(), 1, Integer::sum);

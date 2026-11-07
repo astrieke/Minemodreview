@@ -119,8 +119,11 @@ def generate = tasks.register('generateEpochData') {
             // als im Nether, damit die Nebenbiome in der knappen Zeit erreichbar sind.
             def netherRouter = vanilla('minecraft:nether', 'worldgen/noise_settings').noise_router
             def vegetation = netherRouter.vegetation
-            if (vegetation instanceof Map && vegetation.xz_scale instanceof Number) vegetation.xz_scale = vegetation.xz_scale * (spec.biome_scale ?: 2.0)
+            if (!(vegetation instanceof Map) || !(vegetation.xz_scale instanceof Number))
+                throw new GradleException("Nether-Feuchte-Noise hat kein xz_scale (Format geändert?): ${vegetation}")
+            vegetation.xz_scale = vegetation.xz_scale * (spec.biome_scale ?: 2.0)
             noise.noise_router.vegetation = vegetation
+            noise.noise_router.temperature = 0.0   // in 1.21.x ist sie im Höhlen-Noise sonst aktiv
             if (newRules) noise.material_rule = surface else noise.surface_rule = surface
             write("data/${ns}/worldgen/noise_settings/${e.id}.json", noise)
 

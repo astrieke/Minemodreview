@@ -178,11 +178,10 @@ def normalize(x, target_db=-20.0, peak_db=-1.0):
 
 def variant(x, i):
     """Varianten klingen verschieden hoch (Abspielgeschwindigkeit), damit Wiederholungen nicht auffallen."""
-    factor = [1.0, 0.93, 1.08][(i - 1) % 3]
-    if factor == 1.0:
-        return x
-    n = int(len(x) / factor)
-    return np.interp(np.arange(n) * factor, np.arange(len(x)), x)
+    # Faktor als Bruch: Abspielgeschwindigkeit 1, 0,93 (= 93/100) oder 1,08 (= 27/25). resample_poly filtert
+    # dabei gegen Aliasing (sonst Spiegelfrequenzen bei hohen Tönen).
+    up, down = [(1, 1), (100, 93), (25, 27)][(i - 1) % 3]
+    return x if up == down else signal.resample_poly(x, up, down)
 
 
 # ---------------------------------------------------------------- Mobs
