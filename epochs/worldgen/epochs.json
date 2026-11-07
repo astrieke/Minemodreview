@@ -349,7 +349,7 @@
             "patches": {
               "block": "minecraft:magma_block",
               "noise": "minecraft:netherrack",
-              "min": 0.3,
+              "min": 0.27,
               "max": 1000000000.0
             }
           },
