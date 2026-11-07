@@ -196,7 +196,7 @@
             "patches": {
               "block": "minecraft:moss_block",
               "noise": "minecraft:patch",
-              "min": 0.0,
+              "min": -0.15,
               "max": 1000000000.0
             }
           },
@@ -212,11 +212,21 @@
             "minecraft:lush_caves_vegetation",
             "minecraft:rooted_azalea_tree",
             "minecraft:patch_tall_grass_2",
-            "minecraft:spore_blossom"
+            "minecraft:spore_blossom",
+            "minecraft:lush_caves_clay"
           ],
           "ore_bonus": {
             "ore": "amber",
             "count": 10
+          },
+          "add_features": {
+            "9": [
+              {
+                "copy": "minecraft:lush_caves_clay",
+                "name": "marsh_clay_pools",
+                "count": 20
+              }
+            ]
           }
         },
         {
