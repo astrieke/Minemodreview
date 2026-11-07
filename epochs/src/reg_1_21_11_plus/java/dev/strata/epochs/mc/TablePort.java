@@ -23,17 +23,21 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
  */
 public final class TablePort implements ResourceHandler<ItemResource> {
 
+    private final Block block;
     private final ServerLevel level;
     private final BlockPos pos;
 
-    private TablePort(ServerLevel level, BlockPos pos) {
+    private TablePort(ServerLevel level, BlockPos pos, Block block) {
         this.level = level;
+        this.block = block;
         this.pos = pos.immutable();
     }
 
     public static void register(IEventBus modBus, Supplier<Block> table) {
         modBus.addListener((RegisterCapabilitiesEvent event) -> event.registerBlock(Capabilities.Item.BLOCK,
-                (level, pos, state, be, side) -> level instanceof ServerLevel server ? new TablePort(server, pos) : null,
+                // Nicht von unten: dort sitzt die Ausgabe, ein Rohr darunter bekäme seine Kerne sonst zurück.
+                (level, pos, state, be, side) -> level instanceof ServerLevel server && side != Direction.DOWN
+                        ? new TablePort(server, pos, state.getBlock()) : null,
                 table.get()));
     }
 
@@ -46,6 +50,21 @@ public final class TablePort implements ResourceHandler<ItemResource> {
             if (!simulate) tx.commit();
             return moved;
         }
+    }
+
+    /** Für den Selbsttest: ein Cache wie in Rohren (Mekanism & Co.), mit Zähler für Invalidierungen. */
+    public static Probe probe(ServerLevel level, BlockPos table) {
+        int[] count = {0};
+        var cache = net.neoforged.neoforge.capabilities.BlockCapabilityCache.create(Capabilities.Item.BLOCK, level, table,
+                Direction.UP, () -> true, () -> count[0]++);
+        return new Probe(() -> cache.getCapability() != null, count);
+    }
+
+    public record Probe(java.util.function.BooleanSupplier reachable, int[] invalidations) {}
+
+    /** Für den Selbsttest: bietet der Tisch von dieser Seite eine Schnittstelle an? */
+    public static boolean offersFrom(ServerLevel level, BlockPos table, Direction side) {
+        return level.getCapability(Capabilities.Item.BLOCK, table, side) != null;
     }
 
     @Override public int size() { return 1; }
@@ -62,6 +81,7 @@ public final class TablePort implements ResourceHandler<ItemResource> {
     @Override
     public int insert(int index, ItemResource resource, int amount, TransactionContext tx) {
         if (resource.isEmpty() || amount <= 0) return 0;
+        if (!level.getBlockState(pos).is(block)) return 0;   // abgebaut, nur noch im Cache eines Rohrs
         ItemStack analyzed = CoreSamples.analyzedByMachine(level.getServer(), resource.toStack(1));
         if (analyzed.isEmpty()) return 0;
         ResourceHandler<ItemResource> out = level.getCapability(Capabilities.Item.BLOCK, pos.below(), Direction.UP);

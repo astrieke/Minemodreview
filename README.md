@@ -61,7 +61,7 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 
 Wer mit einem analysierten Kern eine Epoche betritt, hat **25 % mehr Zeit** bis zur Verfestigung.
 
-**Automatisch analysieren:** Ein Trichter oder ein Rohr (Mekanism, Thermal, Create & Co.) schiebt Bohrkerne in den Tisch, und der Tisch legt sie analysiert in das Inventar **darunter** (Truhe, Trichter oder ein anderes Inventar). Ohne Inventar darunter oder wenn es voll ist, nimmt er nichts an; er speichert selbst nichts. Die Notiz hat dann keine Kodex-Zeile, weil kein Spieler dabei ist; die 25 % gelten genauso. Strom braucht der Tisch nicht, von Hand geht die Analyse ja auch sofort.
+**Automatisch analysieren:** Ein Trichter oder ein Rohr (Mekanism, Thermal, Create & Co.) schiebt Bohrkerne in den Tisch, und der Tisch legt sie analysiert in das Inventar **darunter** (Truhe, Trichter oder ein anderes Inventar). Ohne Inventar darunter oder wenn es voll ist, nimmt er nichts an; er speichert selbst nichts. Von unten nimmt er nichts an, dort sitzt ja die Ausgabe. Die Notiz hat dann keine Kodex-Zeile, weil kein Spieler dabei ist; die 25 % gelten genauso. Deshalb stapeln sich so analysierte Kerne nicht mit von Hand analysierten, im Lager sind das zwei Sorten. Strom braucht der Tisch nicht, von Hand geht die Analyse ja auch sofort.
 
 **Fossilien:** Zeitgestein (2 %) und versteinerter Stein (15 %) lassen in den Epochen **Fossilbrocken** fallen. So präparierst du sie:
 - **Meißel** in die Haupthand, Brocken in die zweite Hand, dann Rechtsklick auf den **Präparationstisch**.

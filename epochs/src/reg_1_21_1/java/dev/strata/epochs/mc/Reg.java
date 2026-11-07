@@ -33,6 +33,12 @@ public final class Reg {
         return blocks.register(name, () -> new Block(props.apply(BlockBehaviour.Properties.of())));
     }
 
+    /** Block mit eigener Klasse, z. B. {@link AnalysisTableBlock}. */
+    public Supplier<Block> block(String name, java.util.function.Function<BlockBehaviour.Properties, ? extends Block> factory,
+                                 UnaryOperator<BlockBehaviour.Properties> props) {
+        return blocks.registerBlock(name, factory, props.apply(BlockBehaviour.Properties.of()));
+    }
+
     public Supplier<Item> item(String name, UnaryOperator<Item.Properties> props) {
         Supplier<Item> item = items.register(name, () -> new Item(props.apply(new Item.Properties())));
         tabItems.add(item);

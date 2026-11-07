@@ -38,7 +38,7 @@ public final class EpochsContent {
     public static final Supplier<Block> FOSSIL_TABLE = REG.block("fossil_table",
             p -> p.mapColor(MapColor.WOOD).strength(2.5f).sound(SoundType.WOOD));
     /** Kernanalyse-Tisch (siehe {@link CoreAnalysis}). */
-    public static final Supplier<Block> ANALYSIS_TABLE = REG.block("analysis_table",
+    public static final Supplier<Block> ANALYSIS_TABLE = REG.block("analysis_table", dev.strata.epochs.mc.AnalysisTableBlock::new,
             p -> p.mapColor(MapColor.METAL).strength(2.5f).sound(SoundType.COPPER));
     /** Epochen-Transplantator (siehe {@link Transplanter}). */
     public static final Supplier<Block> TRANSPLANTER = REG.block("transplanter",

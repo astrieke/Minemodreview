@@ -449,14 +449,27 @@ final class SelfTest {
         }
         boolean hopperOk = analyzed == 4 && hopperBe.getItem(0).getCount() == 1;
 
+        // Rohre merken sich die Schnittstelle: Abbau muss den Cache leeren, Neusetzen ihn wieder füllen.
+        var probe = dev.strata.epochs.mc.TablePort.probe(level, table);
+        boolean before = probe.reachable().getAsBoolean();
+        level.setBlockAndUpdate(table, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        int afterRemove = probe.invalidations()[0];
+        boolean gone = !probe.reachable().getAsBoolean();
+        level.setBlockAndUpdate(table, EpochsContent.ANALYSIS_TABLE.get().defaultBlockState());
+        boolean cacheOk = before && afterRemove > 0 && gone && probe.invalidations()[0] > afterRemove
+                && probe.reachable().getAsBoolean();
+        boolean sides = dev.strata.epochs.mc.TablePort.offersFrom(level, table, net.minecraft.core.Direction.NORTH)
+                && !dev.strata.epochs.mc.TablePort.offersFrom(level, table, net.minecraft.core.Direction.DOWN);
+
         hopperBe.clearContent();
         container.clearContent();
         for (BlockPos pos : List.of(hopper, table, chest, lone)) {
             level.setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
         }
-        boolean ok = simOk && movedOk && rejects && hopperOk;
-        StrataEpochs.LOG.info("[Strata-Test] Analyse-Tisch mit Trichter: Simulation={}, Durchreichen={} ({}), Ablehnen={}, Trichter={} -> {}",
-                simOk, movedOk, moved, rejects, hopperOk, ok ? "OK" : "FEHLER");
+        boolean ok = simOk && movedOk && rejects && hopperOk && cacheOk && sides;
+        StrataEpochs.LOG.info("[Strata-Test] Analyse-Tisch mit Trichter: Simulation={}, Durchreichen={} ({}), Ablehnen={}, "
+                + "Trichter={}, Rohr-Cache={}, Seiten={} -> {}",
+                simOk, movedOk, moved, rejects, hopperOk, cacheOk, sides, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 
@@ -627,8 +640,11 @@ final class SelfTest {
             winds &= missingKeys.isEmpty() && scanMs < 200;
             boolean bearing = winds && targets.size() == counts.size() - 1;
             for (var t : targets) {
+                // Die Peilung tastet feiner (16er-Schritte) als dieses Raster (32er): näher ist erlaubt, wenn dort
+                // wirklich das Biom liegt, weiter weg als das Raster aber nicht.
                 BlockPos n = nearest.get(t.biome());
-                if (n == null || Math.abs(t.distance() - Math.sqrt(n.distSqr(origin))) > 48) bearing = false;
+                boolean there = BiomeBearing.biomeAt(level, origin.offset(t.dx(), 0, t.dz())).equals(t.biome());
+                if (n == null || !there || t.distance() > Math.sqrt(n.distSqr(origin)) + 48) bearing = false;
             }
             if (!bearing) ok = false;
             parts.add("Peilung " + targets.stream().map(t -> t.biome().substring(t.biome().indexOf(':') + 1) + " " + t.distance() + " " + t.wind())

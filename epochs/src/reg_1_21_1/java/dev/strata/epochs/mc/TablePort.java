@@ -20,17 +20,21 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
  */
 public final class TablePort implements IItemHandler {
 
+    private final Block block;
     private final ServerLevel level;
     private final BlockPos pos;
 
-    private TablePort(ServerLevel level, BlockPos pos) {
+    private TablePort(ServerLevel level, BlockPos pos, Block block) {
         this.level = level;
+        this.block = block;
         this.pos = pos.immutable();
     }
 
     public static void register(IEventBus modBus, Supplier<Block> table) {
         modBus.addListener((RegisterCapabilitiesEvent event) -> event.registerBlock(Capabilities.ItemHandler.BLOCK,
-                (level, pos, state, be, side) -> level instanceof ServerLevel server ? new TablePort(server, pos) : null,
+                // Nicht von unten: dort sitzt die Ausgabe, ein Rohr darunter bekäme seine Kerne sonst zurück.
+                (level, pos, state, be, side) -> level instanceof ServerLevel server && side != Direction.DOWN
+                        ? new TablePort(server, pos, state.getBlock()) : null,
                 table.get()));
     }
 
@@ -39,6 +43,21 @@ public final class TablePort implements IItemHandler {
         IItemHandler port = level.getCapability(Capabilities.ItemHandler.BLOCK, table, Direction.UP);
         if (port == null) return -1;
         return stack.getCount() - port.insertItem(0, stack, simulate).getCount();
+    }
+
+    /** Für den Selbsttest: ein Cache wie in Rohren (Mekanism & Co.), mit Zähler für Invalidierungen. */
+    public static Probe probe(ServerLevel level, BlockPos table) {
+        int[] count = {0};
+        var cache = net.neoforged.neoforge.capabilities.BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, level, table,
+                Direction.UP, () -> true, () -> count[0]++);
+        return new Probe(() -> cache.getCapability() != null, count);
+    }
+
+    public record Probe(java.util.function.BooleanSupplier reachable, int[] invalidations) {}
+
+    /** Für den Selbsttest: bietet der Tisch von dieser Seite eine Schnittstelle an? */
+    public static boolean offersFrom(ServerLevel level, BlockPos table, Direction side) {
+        return level.getCapability(Capabilities.ItemHandler.BLOCK, table, side) != null;
     }
 
     @Override public int getSlots() { return 1; }
@@ -54,6 +73,7 @@ public final class TablePort implements IItemHandler {
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty()) return stack;
+        if (!level.getBlockState(pos).is(block)) return stack;   // abgebaut, nur noch im Cache eines Rohrs
         ItemStack analyzed = CoreSamples.analyzedByMachine(level.getServer(), stack);
         if (analyzed.isEmpty()) return stack;
         IItemHandler out = level.getCapability(Capabilities.ItemHandler.BLOCK, pos.below(), Direction.UP);
