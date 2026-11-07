@@ -409,6 +409,54 @@ final class SelfTest {
         boolean ok = CoreSamples.isAnalyzed(sample) && lore != null && lore.lines().size() == 5;
         StrataEpochs.LOG.info("[Strata-Test] Kernanalyse: analysiert={}, Zeilen={} -> {}", CoreSamples.isAnalyzed(sample),
                 lore == null ? 0 : lore.lines().size(), ok ? "OK" : "FEHLER");
+        return (ok ? 0 : 1) + testAnalysisPort(server);
+    }
+
+    /**
+     * Kernanalyse-Tisch mit Trichter: Trichter über dem Tisch, Truhe darunter. Simulieren bewegt nichts,
+     * analysierte Kerne und fremde Items lehnt der Tisch ab, ohne Inventar darunter nimmt er nichts.
+     */
+    private static int testAnalysisPort(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        int x = 7000, z = 7000;
+        level.getChunk(x >> 4, z >> 4);
+        int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, x, z) + 1;
+        BlockPos chest = new BlockPos(x, y, z), table = chest.above(), hopper = table.above(), lone = chest.east(3);
+        level.setBlockAndUpdate(chest, net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
+        level.setBlockAndUpdate(table, EpochsContent.ANALYSIS_TABLE.get().defaultBlockState());
+        level.setBlockAndUpdate(hopper, net.minecraft.world.level.block.Blocks.HOPPER.defaultBlockState());
+        level.setBlockAndUpdate(lone, EpochsContent.ANALYSIS_TABLE.get().defaultBlockState());
+        var cores = CoreSamples.create(StrataEpochs.id("crystal_age")).copyWithCount(3);
+        var container = (net.minecraft.world.Container) level.getBlockEntity(chest);
+
+        int simulated = dev.strata.epochs.mc.TablePort.insert(level, table, cores, true);
+        boolean simOk = simulated == 3 && container.isEmpty();
+        int moved = dev.strata.epochs.mc.TablePort.insert(level, table, cores, false);
+        var out = container.getItem(0);
+        var lore = out.get(net.minecraft.core.component.DataComponents.LORE);
+        boolean movedOk = moved == 3 && out.getCount() == 3 && CoreSamples.isAnalyzed(out)
+                && lore != null && lore.lines().size() == 4;
+        boolean rejects = dev.strata.epochs.mc.TablePort.insert(level, table, out.copy(), true) == 0
+                && dev.strata.epochs.mc.TablePort.insert(level, table, new net.minecraft.world.item.ItemStack(EpochsContent.CHISEL.get()), true) == 0
+                && dev.strata.epochs.mc.TablePort.insert(level, lone, cores, true) == 0;
+
+        var hopperBe = (net.minecraft.world.level.block.entity.HopperBlockEntity) level.getBlockEntity(hopper);
+        hopperBe.setItem(0, cores.copyWithCount(2));
+        net.minecraft.world.level.block.entity.HopperBlockEntity.pushItemsTick(level, hopper, level.getBlockState(hopper), hopperBe);
+        int analyzed = 0;
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            if (CoreSamples.isAnalyzed(container.getItem(i))) analyzed += container.getItem(i).getCount();
+        }
+        boolean hopperOk = analyzed == 4 && hopperBe.getItem(0).getCount() == 1;
+
+        hopperBe.clearContent();
+        container.clearContent();
+        for (BlockPos pos : List.of(hopper, table, chest, lone)) {
+            level.setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        }
+        boolean ok = simOk && movedOk && rejects && hopperOk;
+        StrataEpochs.LOG.info("[Strata-Test] Analyse-Tisch mit Trichter: Simulation={}, Durchreichen={} ({}), Ablehnen={}, Trichter={} -> {}",
+                simOk, movedOk, moved, rejects, hopperOk, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

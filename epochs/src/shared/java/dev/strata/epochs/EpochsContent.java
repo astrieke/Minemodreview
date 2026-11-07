@@ -135,5 +135,6 @@ public final class EpochsContent {
         REG.register(modBus);
         ATTACHMENTS.register(modBus);
         modBus.addListener(REG::addToCreativeTabs);
+        dev.strata.epochs.mc.TablePort.register(modBus, ANALYSIS_TABLE);
     }
 }

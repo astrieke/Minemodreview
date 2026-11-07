@@ -31,9 +31,28 @@ public final class CoreSamples {
      * zum Transplantator noch fehlt. Ein analysierter Kern gibt beim Betreten {@link #ANALYSIS_BONUS} mehr Zeit.
      */
     public static void analyze(ItemStack stack, net.minecraft.server.level.ServerPlayer player) {
+        analyze(stack, player.level().getServer(), player);
+    }
+
+    /**
+     * Für Trichter und Rohre am Kernanalyse-Tisch: eine analysierte Kopie des Stapels, oder leer, wenn der Tisch
+     * ihn nicht annimmt (kein Bohrkern, schon analysiert, unbekannte Epoche). Die Notiz hat dann keine
+     * Kodex-Zeile, weil kein Spieler dabei ist; der Zeitbonus gilt genauso.
+     */
+    public static ItemStack analyzedByMachine(net.minecraft.server.MinecraftServer server, ItemStack stack) {
+        if (isAnalyzed(stack)) return ItemStack.EMPTY;
+        String id = epochOf(stack).orElse(null);
+        if (id == null || !dev.strata.core.api.StrataAPI.epochs(server).containsKey(id)) return ItemStack.EMPTY;
+        ItemStack copy = stack.copy();
+        analyze(copy, server, null);
+        return copy;
+    }
+
+    private static void analyze(ItemStack stack, net.minecraft.server.MinecraftServer server,
+                                net.minecraft.server.level.ServerPlayer player) {
         String id = epochOf(stack).orElse(null);
         if (id == null) return;
-        dev.strata.core.Epoch epoch = dev.strata.core.api.StrataAPI.epochs(player.level().getServer()).get(id);
+        dev.strata.core.Epoch epoch = dev.strata.core.api.StrataAPI.epochs(server).get(id);
         List<Component> lines = new java.util.ArrayList<>();
         lines.add(epochName(id));
         lines.add(Component.translatable("tooltip.strata_epochs.analysis.bonus", Math.round(ANALYSIS_BONUS * 100))
@@ -45,7 +64,7 @@ public final class CoreSamples {
         lines.add(Component.translatable("tooltip.strata_epochs.analysis.finds",
                 Component.translatableWithFallback("epoch." + id.replace(':', '.') + ".finds", "?"))
                 .withStyle(net.minecraft.ChatFormatting.GRAY));
-        if (id.startsWith(StrataEpochs.MOD_ID + ":")) {
+        if (player != null && id.startsWith(StrataEpochs.MOD_ID + ":")) {
             String name = id.substring(id.indexOf(':') + 1);
             boolean visited = dev.strata.core.api.StrataAPI.hasNode(player, StrataEpochs.id("visited_" + name));
             boolean fossil = dev.strata.core.api.StrataAPI.hasNode(player, StrataEpochs.id("fossil_" + name));

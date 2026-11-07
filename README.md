@@ -61,6 +61,8 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
 
 Wer mit einem analysierten Kern eine Epoche betritt, hat **25 % mehr Zeit** bis zur Verfestigung.
 
+**Automatisch analysieren:** Ein Trichter oder ein Rohr (Mekanism, Thermal, Create & Co.) schiebt Bohrkerne in den Tisch, und der Tisch legt sie analysiert in das Inventar **darunter** (Truhe, Trichter oder ein anderes Inventar). Ohne Inventar darunter oder wenn es voll ist, nimmt er nichts an; er speichert selbst nichts. Die Notiz hat dann keine Kodex-Zeile, weil kein Spieler dabei ist; die 25 % gelten genauso. Strom braucht der Tisch nicht, von Hand geht die Analyse ja auch sofort.
+
 **Fossilien:** Zeitgestein (2 %) und versteinerter Stein (15 %) lassen in den Epochen **Fossilbrocken** fallen. So präparierst du sie:
 - **Meißel** in die Haupthand, Brocken in die zweite Hand, dann Rechtsklick auf den **Präparationstisch**.
 - Fünf Schläge legen das Fossil frei.
@@ -119,6 +121,7 @@ Kodex-Knoten werden automatisch freigeschaltet:
 | **Jade** | Hinweis beim Anschauen: am Tor „Reise in die Epoche“ bzw. in der Epoche „2× Rechtsklick: Rückweg, Schleichen: Biome peilen“, an Erzen der Fundort. |
 | **FTB Quests, Heracles & Co.** | Für jeden Kodex-Knoten `ns:pfad` vergibt Strata das Advancement `ns:strata_codex/pfad`, falls es existiert. Quests prüfen das als Advancement-Aufgabe. Für die Knoten von Strata Epochs sind die Advancements dabei. Als Quest-Belohnung schaltet `/strata codex grant @p <knoten>` Knoten frei. |
 | **Curios** | Der Zeitanker passt in den Talisman-Slot und wirkt dort wie im Inventar (Spieler bekommen den Slot per Datapack). Gebaut für alle Versionen. Geprüft in 1.21.1 (Server-Test mit simuliertem Spieler) und 26.3 (Client mit echtem Spieler, `SHOT_CURIOS=1`). Andere Mods können über `Solidification.ANCHOR_SOURCES` eigene Orte für den Zeitanker anmelden. |
+| **Trichter, Rohre** (Mekanism, Thermal, Create …) | Der Kernanalyse-Tisch nimmt Bohrkerne über die Item-Schnittstelle von NeoForge an und gibt sie analysiert nach unten weiter (siehe oben). Das ist Teil von Strata Epochs und braucht Strata Bridge nicht. Geprüft mit einem Vanilla-Trichter im Selbsttest aller Versionen. |
 | **KubeJS** (1.21.1 und 26.1) | Plugin mit den Bindings `StrataAPI` (Kodex: `hasNode`, `unlock`, `epochs` …) und `Strata` (`coreSample`, `fossilChunk`, `epochOf`, `timeBonus`, `hasTimeAnchor`, `transplant`). Freischaltungen kommen als NeoForge-Event: `NativeEvents.onEvent('dev.strata.core.api.CodexNodeUnlockedEvent', e => …)`. Geprüft mit `scripts/kubejs-test.sh` in beiden Versionen. |
 
 Eigene Kodex-Knoten bekommen ein Advancement, indem der Pack-Autor einfach `data/<ns>/advancement/strata_codex/<pfad>.json` mit dem Kriterium `"trigger": "minecraft:impossible"` anlegt.

@@ -65,7 +65,7 @@
   "jei.strata_bridge.info.transplanter": "Rechtsklick mit einem Bohrkern verwandelt die Umgebung (Radius 12, per Config) dauerhaft in diese Epoche: Gestein, Oberfläche, Biom, danach wachsen Riesenpilze, Geoden oder Basaltsäulen. Voraussetzung: Die Epoche ist erforscht (besucht und ein Fossil präpariert). Verbraucht den Bohrkern und ein Fossil der Epoche. Nur natürliche Blöcke werden verändert, Bauten bleiben. Nur in der Oberwelt.",
   "advancements.strata_epochs.first_analysis.title": "Unter der Lupe",
   "advancements.strata_epochs.first_analysis.description": "Analysiere einen Bohrkern am Kernanalyse-Tisch",
-  "jei.strata_bridge.info.analysis_table": "Rechtsklick mit Bohrkernen analysiert den Stapel. Die Notiz am Kern zeigt Tiefe, Zeitlimit, Fundstücke und ob die Epoche für den Transplantator erforscht ist. Wer mit einem analysierten Kern eine Epoche betritt, hat 25 % mehr Zeit bis zur Verfestigung.",
+  "jei.strata_bridge.info.analysis_table": "Rechtsklick mit Bohrkernen analysiert den Stapel. Die Notiz am Kern zeigt Tiefe, Zeitlimit, Fundstücke und ob die Epoche für den Transplantator erforscht ist. Wer mit einem analysierten Kern eine Epoche betritt, hat 25 % mehr Zeit bis zur Verfestigung. Trichter und Rohre: Kerne hinein, analysiert kommen sie in das Inventar darunter.",
   "tag.item.curios.charm": "Talisman",
   "advancements.strata_epochs.met_ember_burrower.title": "Glutwühler",
   "advancements.strata_epochs.met_ember_burrower.description": "Begegne dem Glutwühler in der Aschezeit",
