@@ -52,6 +52,9 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
    - **Aschezeit** (Glutsteinerz, liefert **Glutsplitter**, Brennstoff wie eine Lohenrute): *Aschewüste* (Vulkanasche über Basalt), *Magmaspalten* (Schwarzstein mit Magma-Rissen und Lavaseen, viel Glutsteinerz, der Glutwühler kann hier nicht abtauchen; die gefährlichste Zone), *Knochensenke* (Seelenerde mit Netherfossilien).
 4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min, Aschezeit 5 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
 5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
+   - **Inventar-Verfestigung:** Wer weiter bleibt, dem versteinert nach den Blöcken auch das Inventar. Alle 20 s wird ein Stapel aus Schnellleiste oder Rucksack zu einem **versteinerten Gegenstand**. Das Original steckt unversehrt darin, lässt sich aber nicht benutzen.
+   - Der Brocken löst sich von selbst, sobald sein Träger nicht mehr verfestigt: zurück durch das Tor, oder mit einer Keimfrische (dreht die Uhr 60 s zurück). Verloren geht nichts.
+   - Zeitanker und Keimfrische versteinern nie (Item-Tag `strata_epochs:petrify_immune`), Rüstung und zweite Hand auch nicht.
 6. Zweimal Rechtsklick auf das Tor (innerhalb von 3 s) bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.
 
 **Kernanalyse-Tisch** (Kupfer, Fernrohr, Holz, Steinstufe): Rechtsklick mit Bohrkernen analysiert den Stapel. Die Notiz am Kern zeigt:
@@ -222,6 +225,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 
 - `weight`: Häufigkeit der Epoche unter der Oberwelt (0 = nie).
 - `solidify_seconds`: Zeit bis zur Verfestigung (0 = aus, Standard 600).
+- `petrify_items_seconds`: Abstand, in dem danach Gegenstände im Inventar versteinern (0 = aus, Standard 20). Der erste folgt ein Intervall nach Beginn der Verfestigung.
 - `dimension`: optional.
 - `depth`: 1–3, ab welcher Bohrer-Stufe die Epoche erreichbar ist (Standard 1).
 - `landscape`: optional, für den Transplantator.
@@ -247,6 +251,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
 - Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 40 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
 - Kernanalyse-Tisch mit Trichtern und Rohren: freigegeben in Prüfrunde 2 (7/7/8), im Selbsttest mit Vanilla-Trichter und einem Rohr-Cache wie bei Mekanism geprüft. Mit echten Rohr-Mods lief er noch nicht. Strom (FE) nimmt bewusst keiner der Tische an, weil nichts daran Arbeit braucht.
+- Inventar-Verfestigung: im Client gesehen in 1.21.1 (`docs/screenshots/petrify/`, Versteinern im Überlebensmodus). Das Lösen prüft der Selbsttest; von Hand durchgespielt (Tor, Keimfrische) wurde es noch nicht.
 - Epochen-Pflanzen (Quarzdistel, Harzfarn, Glutknolle): freigegeben in Prüfrunde 2 (8/7/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/crops/`). Eine echte Farm auf transplantiertem Boden wurde noch nicht von Hand gespielt.
 - Biome: drei pro Epoche, freigegeben in Prüfrunde 3 (7/7/7), Bilder in `docs/screenshots/biomes/`. Das Tor peilt die Nebenbiome an (Prüfrunde 3: 8/8/8).
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.

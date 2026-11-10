@@ -25,6 +25,8 @@
 #   (Fundort aus dem Selbsttest-Log), mit Nachtsicht, damit man Oberfläche und Features sieht.
 # SHOT_CROPS=1: neben dem Ankunftsplatz stehen die vier Wachstumsstufen der Epochen-Pflanze dieser Epoche
 #   auf ihrem Boden (je zwei Reihen), mit Nachtsicht; die Samen liegen in der Schnellleiste.
+# SHOT_PETRIFY=1: Überlebensmodus mit sehr kurzer Verfestigung; nach 25 s sind mehrere Gegenstände versteinert
+#   (Bild 1: Schnellleiste und Meldung, Bild 2: Inventar).
 # SHOT_BEARING=1: Kurz vor dem Bild peilt der Spieler die Biome (/strata_epochs bearing), die Zeilen stehen im Chat.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -138,6 +140,16 @@ if [ -n "${SHOT_CROPS:-}" ]; then
             done
         done
     } > "$dp/data/strata_shot/function/crops.mcfunction"
+fi
+if [ -n "${SHOT_PETRIFY:-}" ]; then
+    # Inventar-Verfestigung zeigen: Überlebensmodus, Verfestigung nach 4 s (mit Zeitanker 8 s), danach alle 3 s
+    # ein versteinerter Gegenstand. Das zweite Bild (Inventar) zeigt die Brocken mit Namen.
+    mkdir -p "$dp/data/strata_epochs/strata_core/epoch"
+    printf '{\n  "weight": 3,\n  "solidify_seconds": 4,\n  "petrify_items_seconds": 3,\n  "dimension": "strata_epochs:%s"\n}\n' "$epoch" \
+        > "$dp/data/strata_epochs/strata_core/epoch/$epoch.json"
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i 's|^gamemode creative @a\[tag=!strata_shot\]|gamemode survival @a[tag=!strata_shot]\neffect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true\neffect give @a[tag=!strata_shot] minecraft:resistance infinite 4 true|' "$f"
+    sed -i 's|^tag @a add strata_shot|item replace entity @a[tag=!strata_shot] hotbar.5 with strata_epochs:germ_tonic 3\nitem replace entity @a[tag=!strata_shot] hotbar.6 with minecraft:diamond_pickaxe\nitem replace entity @a[tag=!strata_shot] hotbar.7 with minecraft:torch 32\ntag @a add strata_shot|' "$f"
 fi
 if [ -n "${SHOT_MOB:-}" ]; then
     # Bühne erst nach 3 s bauen, wenn die Chunks am Ankunftsplatz geladen sind. Geschlossener Kasten
