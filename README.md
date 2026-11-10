@@ -70,6 +70,22 @@ Wer mit einem analysierten Kern eine Epoche betritt, hat **25 % mehr Zeit** bis 
 
 Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitschädel. Das erste Fossil einer Epoche schließt sie im Kodex ab (`mastered_<epoche>`).
 
+**Epochen-Pflanzen:** Mit 35 % Glück steckt im Fossilbrocken ein uralter Samen seiner Epoche, er kommt beim Präparieren mit heraus.
+
+| Pflanze | Epoche | Boden | Reif gibt sie |
+|---|---|---|---|
+| **Quarzdistel** (Quarzdistel-Samen) | Kristallzeit | Calcit, Amethyst, Packeis | 1 Kristallquarz |
+| **Harzfarn** (Harzfarn-Sporen) | Sporenzeit | Myzel, Moos, Schlamm, Wirrnyzel | 1 Bernsteinsplitter |
+| **Glutknolle** | Aschezeit | Vulkanasche, Schwarzstein, Seelenerde | 1 Glutsplitter, glüht reif |
+
+- Dazu kommen 0–3 neue Samen (Glück hilft).
+- Die Pflanzen wachsen nur in einem Biom ihrer Epoche, also in der Epoche selbst oder auf Boden, den der **Transplantator** dorthin verwandelt hat. So wird ein transplantiertes Gebiet zur Farm für Epochen-Rohstoffe.
+- Licht brauchen sie nicht. Reif sind sie nach etwa 17 Minuten, Knochenmehl hilft ein wenig.
+- An der falschen Stelle sagt dir die Aktionsleiste, welchen Boden die Pflanze braucht.
+- Pack-Autoren erweitern den Boden über die Tags `strata_epochs:soil/<epoche>` und die Biome über `strata_epochs:epoch/<epoche>`.
+
+![Epochen-Pflanzen in vier Stufen](docs/screenshots/crops/crystal_age_1.21.1.png)
+
 **Spiralit (Begleiter):** Ammonit in die Haupthand, Keimfrische in die zweite, Rechtsklick auf den Präparationstisch. Er schlüpft und schwebt rechts vor dir (einer pro Spieler).
 - **Uhr:** Seine Spirale zeigt in 4 Segmenten die Restzeit in der Epoche. In der Warnphase blinkt das innerste Segment, und er läutet.
 - **Ruhe:** In seiner Nähe läuft die Verfestigung 20 % langsamer. Das stapelt nicht mit der Geodenrüstung.

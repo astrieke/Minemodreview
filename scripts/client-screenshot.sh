@@ -23,6 +23,8 @@
 # SHOT_SPIRALIT=1: in der Epoche schlüpft nach 29 s ein Spiralit für den Spieler; Bildserie 20 s lang.
 # SHOT_BIOME=<biom>, z. B. geode_vaults: Spieler landet auf dem Höhlenboden dieses Bioms der Epoche
 #   (Fundort aus dem Selbsttest-Log), mit Nachtsicht, damit man Oberfläche und Features sieht.
+# SHOT_CROPS=1: neben dem Ankunftsplatz stehen die vier Wachstumsstufen der Epochen-Pflanze dieser Epoche
+#   auf ihrem Boden (je zwei Reihen), mit Nachtsicht; die Samen liegen in der Schnellleiste.
 # SHOT_BEARING=1: Kurz vor dem Bild peilt der Spieler die Biome (/strata_epochs bearing), die Zeilen stehen im Chat.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -119,6 +121,23 @@ if [ -n "${SHOT_GEAR:-}" ]; then
     done
     echo "effect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true" >> "$f"
     echo "tag @a add strata_shot" >> "$f"
+fi
+if [ -n "${SHOT_CROPS:-}" ]; then
+    crop=quartz_thistle; seed=quartz_thistle_seeds; floor=minecraft:calcite
+    [ "$epoch" = spore_age ] && { crop=resin_fern; seed=resin_fern_spores; floor=minecraft:mycelium; }
+    [ "$epoch" = ash_age ] && { crop=ember_tubers; seed=ember_tuber; floor=strata_epochs:volcanic_ash; }
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in strata_epochs:$epoch run tp @s $x.5 $((y + 1)) $((z + 3)).5 0 ${SHOT_PITCH:-40}\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:crops 60t\neffect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true|" "$f"
+    sed -i "s|^tag @a add strata_shot|item replace entity @a[tag=!strata_shot] hotbar.0 with strata_epochs:$seed\ntag @a add strata_shot|" "$f"
+    {
+        echo "execute in strata_epochs:$epoch run fill $((x - 5)) $((y - 2)) $((z + 2)) $((x + 5)) $((y + 6)) $((z + 10)) strata_epochs:chronostone hollow"
+        echo "execute in strata_epochs:$epoch run fill $((x - 4)) $((y - 1)) $((z + 3)) $((x + 4)) $((y - 1)) $((z + 9)) $floor"
+        for a in 0 1 2 3; do
+            for row in 5 7; do
+                echo "execute in strata_epochs:$epoch run setblock $((x - 3 + 2 * a)) $y $((z + row)) strata_epochs:$crop[age=$a]"
+            done
+        done
+    } > "$dp/data/strata_shot/function/crops.mcfunction"
 fi
 if [ -n "${SHOT_MOB:-}" ]; then
     # Bühne erst nach 3 s bauen, wenn die Chunks am Ankunftsplatz geladen sind. Geschlossener Kasten
