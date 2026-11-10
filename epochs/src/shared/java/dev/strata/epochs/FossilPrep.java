@@ -111,7 +111,7 @@ public final class FossilPrep {
         return RISK_RUSHED + (RISK_CALM - RISK_RUSHED) * calm;
     }
 
-    /** Ein Meißelschlag. {@code roll} liefert die Zufallszahl für den Bruch (für Tests austauschbar). */
+    /** Ein Meißelschlag. {@code roll} liefert die Zufallszahlen für Bruch und Samen (für Tests austauschbar). */
     static void stroke(ServerPlayer player, ItemStack chisel, BlockPos table, long gap, java.util.function.DoubleSupplier roll) {
         ServerLevel level = (ServerLevel) player.level();
 
@@ -163,8 +163,17 @@ public final class FossilPrep {
         player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(fossilFor(epoch)));
         level.playSound(null, x, y, z, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0f, 1.0f);
         level.playSound(null, x, y, z, SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.4f, 1.4f);
-        Mc.actionbar(player, Component.translatable("message.strata_epochs.fossil.done",
-                Component.translatable(fossilFor(epoch).getDescriptionId())).withStyle(ChatFormatting.GREEN));
+        // Uralte Samen im Gestein: mit etwas Glück kommt einer der Epoche mit heraus (siehe EpochCrop).
+        Item seed = EpochCrop.seedFor(epoch);
+        if (seed != null && roll.getAsDouble() >= 1 - EpochCrop.FOSSIL_SEED_CHANCE) {
+            give(player, new ItemStack(seed));
+            Mc.actionbar(player, Component.translatable("message.strata_epochs.fossil.done_seed",
+                    Component.translatable(fossilFor(epoch).getDescriptionId()),
+                    Component.translatable(seed.getDescriptionId())).withStyle(ChatFormatting.GREEN));
+        } else {
+            Mc.actionbar(player, Component.translatable("message.strata_epochs.fossil.done",
+                    Component.translatable(fossilFor(epoch).getDescriptionId())).withStyle(ChatFormatting.GREEN));
+        }
         onPrepared(player, epoch);
     }
 

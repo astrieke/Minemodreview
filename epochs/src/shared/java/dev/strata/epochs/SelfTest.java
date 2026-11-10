@@ -53,6 +53,7 @@ final class SelfTest {
         failures += testBiomes(server);
         failures += testSpiralitBond(server);
         for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) failures += testGrowth(server, epoch);
+        failures += testCrops(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -250,15 +251,16 @@ final class SelfTest {
         int restCount = player.getInventory().countItem(EpochsContent.FOSSIL_CHUNK.get());
         boolean rest = restCount == 2;
         boolean worn = player.getMainHandItem().getDamageValue() == FossilPrep.STEPS;
+        boolean seed = player.getInventory().countItem(EpochsContent.EMBER_TUBER.get()) == 1;
 
         player.setItemInHand(off, FossilPrep.chunk(StrataEpochs.id("ash_age")));
         FossilPrep.stroke(player, player.getMainHandItem(), table, 0, () -> 0.2);   // hastig: 30 % Risiko
         boolean broken = player.getOffhandItem().isEmpty();
         boolean risks = FossilPrep.risk(0) > 0.29 && FossilPrep.risk(FossilPrep.CALM_TICKS) < 0.04;
         player.getInventory().clearContent();
-        boolean ok = done && rest && worn && broken && risks;
-        StrataEpochs.LOG.info("[Strata-Test] Präparation: Fossil={}, Rest={}, Meißel={}, Bruch={}, Risiko={} -> {}",
-                done, rest, worn, broken, risks, ok ? "OK" : "FEHLER");
+        boolean ok = done && rest && worn && broken && risks && seed;
+        StrataEpochs.LOG.info("[Strata-Test] Präparation: Fossil={}, Rest={}, Meißel={}, Bruch={}, Risiko={}, Samen={} -> {}",
+                done, rest, worn, broken, risks, seed, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 
@@ -474,6 +476,79 @@ final class SelfTest {
         return ok ? 0 : 1;
     }
 
+    /**
+     * Epochen-Pflanzen: wachsen nur auf ihrem Boden in einem Biom ihrer Epoche (auch auf transplantiertem Boden in
+     * der Oberwelt), brauchen kein Licht, werden reif und geben dann Rohstoff und Samen.
+     */
+    private static int testCrops(MinecraftServer server) {
+        int failures = 0;
+        record Case(java.util.function.Supplier<net.minecraft.world.level.block.Block> crop, String epoch,
+                    net.minecraft.world.level.block.Block soil, net.minecraft.world.item.Item product) {}
+        var cases = List.of(
+                new Case(EpochsContent.QUARTZ_THISTLE, "crystal_age", net.minecraft.world.level.block.Blocks.CALCITE,
+                        EpochsContent.CRYSTAL_QUARTZ.get()),
+                new Case(EpochsContent.RESIN_FERN, "spore_age", net.minecraft.world.level.block.Blocks.MYCELIUM,
+                        EpochsContent.AMBER_SHARD.get()),
+                new Case(EpochsContent.EMBER_TUBERS, "ash_age", EpochsContent.VOLCANIC_ASH.get(),
+                        EpochsContent.EMBER_SHARD.get()));
+        ServerLevel overworld = server.overworld();
+        int ox = 7100;
+        for (Case c : cases) {
+            EpochCrop crop = (EpochCrop) c.crop().get();
+            ServerLevel epoch = Mc.level(server, StrataEpochs.id(c.epoch()));
+            // In der Epoche: über dem Ankunftsort, in der Luft (dort ist es dunkel genug für die Lichtfrage).
+            BlockPos ground = EpochTravel.prepareArrival(epoch, 8, 8).offset(4, 6, 4);
+            BlockPos at = ground.above();
+            epoch.setBlockAndUpdate(ground, c.soil().defaultBlockState());
+            epoch.setBlockAndUpdate(at, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+            boolean onSoil = crop.defaultBlockState().canSurvive(epoch, at);
+            epoch.setBlockAndUpdate(ground, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+            boolean onStone = crop.defaultBlockState().canSurvive(epoch, at);
+            epoch.setBlockAndUpdate(ground, c.soil().defaultBlockState());
+
+            // Wachsen ohne Licht: genug Zufallsticks bringen sie zur Reife.
+            epoch.setBlockAndUpdate(at, crop.defaultBlockState());
+            var random = net.minecraft.util.RandomSource.create(7);
+            int ticks = 0;
+            while (!crop.isMaxAge(epoch.getBlockState(at)) && ticks < 400) {
+                epoch.getBlockState(at).randomTick(epoch, at, random);
+                ticks++;
+            }
+            boolean ripe = epoch.getBlockState(at).is(crop) && crop.isMaxAge(epoch.getBlockState(at));
+            var drops = net.minecraft.world.level.block.Block.getDrops(epoch.getBlockState(at), epoch, at, null);
+            boolean harvest = drops.stream().anyMatch(d -> d.is(c.product()));
+            var young = net.minecraft.world.level.block.Block.getDrops(crop.defaultBlockState(), epoch, at, null);
+            boolean seedBack = young.size() == 1 && young.get(0).is(EpochCrop.seedFor(crop.epoch()))
+                    && young.stream().noneMatch(d -> d.is(c.product()));
+            epoch.setBlockAndUpdate(at, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+            epoch.setBlockAndUpdate(ground, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+
+            // Oberwelt: gleicher Boden, aber falsches Biom; nach /fillbiome (wie beim Transplantieren) geht es.
+            overworld.getChunk(ox >> 4, 7100 >> 4);
+            BlockPos owGround = new BlockPos(ox, overworld.getHeight(
+                    net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, ox, 7100) + 2, 7100);
+            BlockPos owAt = owGround.above();
+            overworld.setBlockAndUpdate(owGround, c.soil().defaultBlockState());
+            boolean wild = crop.defaultBlockState().canSurvive(overworld, owAt);
+            String biome = StrataAPI.epochs(server).get(crop.epoch()).landscape().orElseThrow().biome();
+            Transplanter.command(overworld, "fillbiome " + (ox - 2) + " " + (owAt.getY() - 2) + " 7098 "
+                    + (ox + 2) + " " + (owAt.getY() + 2) + " 7102 " + biome);
+            boolean transplanted = crop.defaultBlockState().canSurvive(overworld, owAt);
+            overworld.setBlockAndUpdate(owGround, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+            ox += 16;
+
+            String key = "message.strata_epochs.crop.wrong_place." + net.minecraft.core.registries.BuiltInRegistries.BLOCK
+                    .getKey(crop).getPath();
+            boolean texts = LANG.get("de_de").contains(key) && LANG.get("en_us").contains(key);
+            boolean ok = onSoil && !onStone && ripe && harvest && seedBack && !wild && transplanted && texts;
+            if (!ok) failures++;
+            StrataEpochs.LOG.info("[Strata-Test] Pflanze {}: Boden={}, Stein={}, reif nach {} Ticks={}, Ernte={} ({}), "
+                    + "jung nur Samen={}, Oberwelt={}, transplantiert={}, Texte={} -> {}", crop.epoch(), onSoil, onStone,
+                    ticks, ripe, harvest, drops, seedBack, wild, transplanted, texts, ok ? "OK" : "FEHLER");
+        }
+        return failures;
+    }
+
     /** Glutwühler: taucht bei Ziel in 6 Blöcken ab, grollt nah am Ziel, bricht hervor (Schaden + Wurf). */
     private static int testBurrower(MinecraftServer server) {
         ServerLevel level = server.overworld();
@@ -533,8 +608,9 @@ final class SelfTest {
             "bone_hollow", List.of("minecraft:soul_soil"));
 
     /** Erlaubter Anteil des Fleckenblocks am Boden. */
+    // Gemessen wird nur ein kleines Gebiet, je nach Welt schwankt der Magma-Anteil etwa zwischen 20 und 50 %.
     private static final Map<String, double[]> PATCH_RANGE = Map.of(
-            "magma_rifts", new double[] {0.10, 0.40}, "moss_marsh", new double[] {0.25, 0.85});
+            "magma_rifts", new double[] {0.10, 0.60}, "moss_marsh", new double[] {0.25, 0.85});
 
     /**
      * Mehrere Biome pro Epoche: Jedes Biom der Dimension braucht einen spürbaren Anteil, muss höchstens

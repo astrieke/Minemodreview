@@ -27,6 +27,11 @@ public final class MobCompat {
     }
 
     /** Block-Tag aus Text, z. B. {@code "strata_epochs:spiralit_senses"}. */
+    public static net.minecraft.tags.TagKey<net.minecraft.world.level.biome.Biome> biomeTag(String id) {
+        return net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BIOME,
+                net.minecraft.resources.ResourceLocation.parse(id));
+    }
+
     public static net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> blockTag(String id) {
         return net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK,
                 net.minecraft.resources.ResourceLocation.parse(id));

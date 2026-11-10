@@ -432,6 +432,33 @@
   ],
   "loot_tables": [
     {
+      "block": "quartz_thistle",
+      "base": "minecraft:blocks/beetroots",
+      "replace": {
+        "minecraft:beetroots": "strata_epochs:quartz_thistle",
+        "minecraft:beetroot": "strata_epochs:crystal_quartz",
+        "minecraft:beetroot_seeds": "strata_epochs:quartz_thistle_seeds"
+      }
+    },
+    {
+      "block": "resin_fern",
+      "base": "minecraft:blocks/beetroots",
+      "replace": {
+        "minecraft:beetroots": "strata_epochs:resin_fern",
+        "minecraft:beetroot": "strata_epochs:amber_shard",
+        "minecraft:beetroot_seeds": "strata_epochs:resin_fern_spores"
+      }
+    },
+    {
+      "block": "ember_tubers",
+      "base": "minecraft:blocks/beetroots",
+      "replace": {
+        "minecraft:beetroots": "strata_epochs:ember_tubers",
+        "minecraft:beetroot": "strata_epochs:ember_shard",
+        "minecraft:beetroot_seeds": "strata_epochs:ember_tuber"
+      }
+    },
+    {
       "block": "chronostone",
       "base": "minecraft:blocks/cobbled_deepslate",
       "replace": {

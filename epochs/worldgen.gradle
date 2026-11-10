@@ -271,6 +271,8 @@ def generate = tasks.register('generateEpochData') {
                     ])
                 }
                 (b.structures ?: []).each { tag -> biomeTags.computeIfAbsent(tag) { [] } << "${ns}:${b.id}".toString() }
+                // Alle Biome der Epoche (Epochen-Pflanzen wachsen nur dort, auch auf transplantiertem Boden).
+                biomeTags.computeIfAbsent("${ns}:epoch/${e.id}".toString()) { [] } << "${ns}:${b.id}".toString()
             }
 
             // Dimension: Noise-Generator, die Biome als Punkte im Klima (Temperatur, Feuchte).

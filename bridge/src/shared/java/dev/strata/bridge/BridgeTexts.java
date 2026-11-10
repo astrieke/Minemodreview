@@ -40,6 +40,9 @@ public final class BridgeTexts {
         info.put(EpochsContent.ANCIENT_SKULL, "jei.strata_bridge.info.fossil");
         info.put(() -> EpochsContent.TRANSPLANTER.get().asItem(), "jei.strata_bridge.info.transplanter");
         info.put(() -> EpochsContent.ANALYSIS_TABLE.get().asItem(), "jei.strata_bridge.info.analysis_table");
+        info.put(EpochsContent.QUARTZ_THISTLE_SEEDS::get, "jei.strata_bridge.info.quartz_thistle_seeds");
+        info.put(EpochsContent.RESIN_FERN_SPORES::get, "jei.strata_bridge.info.resin_fern_spores");
+        info.put(EpochsContent.EMBER_TUBER::get, "jei.strata_bridge.info.ember_tuber");
         info.put(EpochsContent.CALCITE_SCALE, "jei.strata_bridge.info.calcite_scale");
         info.put(EpochsContent.SPORE_SAC, "jei.strata_bridge.info.spore_sac");
         info.put(EpochsContent.GERM_TONIC, "jei.strata_bridge.info.germ_tonic");

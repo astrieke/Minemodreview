@@ -151,5 +151,15 @@
   "message.strata_epochs.gate.confirm_leave": "Right-click again to return home · Sneak + right-click: take a biome bearing",
   "message.strata_epochs.spiralit.released": "Your former Spiralit has let go. Anyone can bond with it now.",
   "message.strata_epochs.spiralit.replaced": "A new Spiralit is bonded to you. If your former one is still alive, it will let go once its area loads again.",
-  "message.strata_epochs.spiralit.confirm_replace": "Your former Spiralit is not nearby. Click again to awaken a new one anyway (the old one will let go)."
+  "message.strata_epochs.spiralit.confirm_replace": "Your former Spiralit is not nearby. Click again to awaken a new one anyway (the old one will let go).",
+  "block.strata_epochs.quartz_thistle": "Quartz Thistle",
+  "block.strata_epochs.resin_fern": "Resin Fern",
+  "block.strata_epochs.ember_tubers": "Ember Tubers",
+  "item.strata_epochs.quartz_thistle_seeds": "Quartz Thistle Seeds",
+  "item.strata_epochs.resin_fern_spores": "Resin Fern Spores",
+  "item.strata_epochs.ember_tuber": "Ember Tuber",
+  "message.strata_epochs.fossil.done_seed": "Uncovered: %s – with an ancient seed inside: %s",
+  "message.strata_epochs.crop.wrong_place.quartz_thistle": "Quartz thistles only grow on calcite, amethyst or packed ice in the Crystal Age – or on ground transplanted into the Crystal Age",
+  "message.strata_epochs.crop.wrong_place.resin_fern": "Resin ferns only grow on mycelium, moss, mud or warped nylium in the Spore Age – or on ground transplanted into the Spore Age",
+  "message.strata_epochs.crop.wrong_place.ember_tubers": "Ember tubers only grow on volcanic ash, blackstone or soul soil in the Ash Age – or on ground transplanted into the Ash Age"
 }

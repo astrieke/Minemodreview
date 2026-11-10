@@ -39,6 +39,22 @@ public final class Reg {
         return blocks.registerBlock(name, factory, props.apply(BlockBehaviour.Properties.of()));
     }
 
+    /** Pflanze: ohne Kollision, Zufallsticks, sofort abbaubar; Kolben wie bei Roter Bete (die Konstante heißt ab 26.3 anders). */
+    public Supplier<Block> crop(String name, java.util.function.Function<BlockBehaviour.Properties, ? extends Block> factory,
+                                UnaryOperator<BlockBehaviour.Properties> props) {
+        return blocks.register(name, () -> factory.apply(props.apply(BlockBehaviour.Properties.of().noCollission()
+                .randomTicks().instabreak().sound(net.minecraft.world.level.block.SoundType.CROP)
+                .pushReaction(net.minecraft.world.level.block.Blocks.BEETROOTS.defaultBlockState().getPistonPushReaction()))));
+    }
+
+    /** Saatgut: pflanzt den Block, heißt aber wie das Item ({@code item.<mod>.<name>}). */
+    public Supplier<Item> seed(String name, Supplier<Block> crop) {
+        Supplier<Item> item = items.register(name,
+                () -> new net.minecraft.world.item.ItemNameBlockItem(crop.get(), new Item.Properties()));
+        tabItems.add(item);
+        return item;
+    }
+
     public Supplier<Item> item(String name, UnaryOperator<Item.Properties> props) {
         Supplier<Item> item = items.register(name, () -> new Item(props.apply(new Item.Properties())));
         tabItems.add(item);

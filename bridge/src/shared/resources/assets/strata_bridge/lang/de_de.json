@@ -70,5 +70,8 @@
   "advancements.strata_epochs.met_ember_burrower.title": "Glutwühler",
   "advancements.strata_epochs.met_ember_burrower.description": "Begegne dem Glutwühler in der Aschezeit",
   "jade.strata_bridge.mob.ember_burrower": "Aschezeit · taucht in Asche ab, fester Boden schützt",
-  "config.jade.plugin_strata_bridge.mobs": "Strata-Mobs"
+  "config.jade.plugin_strata_bridge.mobs": "Strata-Mobs",
+  "jei.strata_bridge.info.quartz_thistle_seeds": "Quarzdistel (Kristallzeit), wächst auf Calcit, Amethyst oder Packeis. Uralte Samen stecken manchmal in Fossilbrocken (35 % beim Präparieren). Sie wachsen nur in einem Biom ihrer Epoche, also in der Epoche selbst oder auf Boden, den der Transplantator dorthin verwandelt hat. Licht brauchen sie nicht, reif sind sie nach etwa 17 Minuten. Reif geben sie einen Kristallquarz und 0–3 Samen (Glück hilft).",
+  "jei.strata_bridge.info.resin_fern_spores": "Harzfarn (Sporenzeit), wächst auf Myzel, Moos, Schlamm oder Wirrnyzel. Uralte Samen stecken manchmal in Fossilbrocken (35 % beim Präparieren). Sie wachsen nur in einem Biom ihrer Epoche, also in der Epoche selbst oder auf Boden, den der Transplantator dorthin verwandelt hat. Licht brauchen sie nicht, reif sind sie nach etwa 17 Minuten. Reif geben sie einen Bernsteinsplitter und 0–3 Samen (Glück hilft).",
+  "jei.strata_bridge.info.ember_tuber": "Glutknolle (Aschezeit), wächst auf Vulkanasche, Schwarzstein oder Seelenerde und glüht reif ein wenig. Uralte Samen stecken manchmal in Fossilbrocken (35 % beim Präparieren). Sie wachsen nur in einem Biom ihrer Epoche, also in der Epoche selbst oder auf Boden, den der Transplantator dorthin verwandelt hat. Licht brauchen sie nicht, reif sind sie nach etwa 17 Minuten. Reif geben sie einen Glutsplitter und 0–3 Samen (Glück hilft)."
 }

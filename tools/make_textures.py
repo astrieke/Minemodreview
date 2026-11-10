@@ -1240,6 +1240,250 @@ def analysis_table_side():
     return img
 
 
+# ---------------------------------------------------------------- Epochen-Pflanzen (4 Stufen, ohne Umriss wie Vanilla)
+
+THISTLE_PAL = {'g': '#8fae94', 'G': '#5e7d68', 'd': '#3a5444', 'q': '#5b3d8f', 'p': '#8a5fc8',
+               'w': '#f2f2ff', 'l': '#b8b6ff', 'm': '#7471f2', 'k': '#4a44c0'}
+
+
+def quartz_thistle(stage):
+    # Distel aus der Kristallzeit: graugrüne, stachlige Blätter; reif öffnen sich die violetten Knospen
+    # zu Köpfen aus Kristallquarz-Spitzen.
+    grids = [
+        ['................'] * 11 + [
+            '................',
+            '....g......g....',
+            '....Gg....gG....',
+            '.....G....G.....',
+            '.....d....d.....'],
+        ['................'] * 8 + [
+            '........g.......',
+            '..g.....G....g..',
+            '..Gg....G...gG..',
+            '...Gg..gGg.gG...',
+            '....GgGdGGgG....',
+            '.....dGdGdG.....',
+            '......d.dd......',
+            '......d..d......'],
+        ['................'] * 4 + [
+            '.....q.....q....',
+            '....qpq...qpq...',
+            '....qpq...qpq...',
+            '.....G.....G....',
+            '.g...G....G..g..',
+            '.Gg..G....G.gG..',
+            '..Gg.G...G.gG...',
+            '...GgG...GgG....',
+            '....GG..gGG.....',
+            '.g...dG.Gd...g..',
+            '.Gg..dGGd...gG..',
+            '..Gd..dd...dG...'],
+        [
+            '...w.w....w.w...',
+            '..lwlwl..lwlwl..',
+            '...mlm....mlm...',
+            '..qmkmq..qmkmq..',
+            '...qpq....qpq...',
+            '....G..w...G....',
+            '....G.lwl..G....',
+            '.g..G.mkm..G.g..',
+            '.Gg.G.qpq.G.gG..',
+            '..GgG..G..GgG...',
+            '...GG..G.GG.....',
+            '....GG.GGG......',
+            '.g...dGGd....g..',
+            '.Gg..dGGd...gG..',
+            '..Gd..dd...dG...',
+            '......dd........'],
+    ]
+    return from_grid(grids[stage], THISTLE_PAL)
+
+
+FERN_PAL = {'c': '#b3cc6a', 'f': '#8db04a', 'F': '#5f8a2e', 'D': '#3d5c1d', 'r': '#6b4a22',
+            'y': '#ffd27a', 'a': '#f6ad3e', 'A': '#d9821c'}
+
+
+def resin_fern(stage):
+    # Farn der Sporenzeit: erst eingerollte Triebe, dann Wedel; reif hängen Harztropfen (Bernstein) daran.
+    grids = [
+        ['................'] * 10 + [
+            '.....cc.........',
+            '....c..c...cc...',
+            '....c.cF..c..c..',
+            '.....FF...c.cF..',
+            '......F....FF...',
+            '......D....D....'],
+        ['................'] * 8 + [
+            '..cc........cc..',
+            '.c..f......f..c.',
+            '.c.fF.f..f.Ff.c.',
+            '..fFFfF..FfFFf..',
+            '...fFFF..FFFf...',
+            '....DFF..FFD....',
+            '.....DF..FD.....',
+            '......D..D......'],
+        ['................'] * 4 + [
+            '.f............f.',
+            'fFf..........fFf',
+            '.Ff.f......f.fF.',
+            'fFFfF..cc..FfFFf',
+            '.fFFf.c..c.fFFf.',
+            '..fFFf.fFf.fFf..',
+            '...fFFfFFFfFf...',
+            '....fFFFFFFf....',
+            '.....DFFFFD.....',
+            '......DrrD......',
+            '......D..D......',
+            '................'],
+        [
+            '.......f........',
+            '.f....fFf.....f.',
+            'fFf..f.F.f...fFf',
+            '.Ff.fFfFfFf..fF.',
+            'fFFfF.fFf.FffFFf',
+            '.fFFfafFfFf.fFFf',
+            '..fFFyfFFf.afFf.',
+            '..afFFfFFfFyFf..',
+            '..Ay.fFFFFfA.f..',
+            '...A..fFFf..a...',
+            '......DFFD..A...',
+            '.....DFrrFD.....',
+            '....fD.rr.Df....',
+            '......D..D......',
+            '......D..D......',
+            '................'],
+    ]
+    return from_grid(grids[stage], FERN_PAL)
+
+
+TUBER_PAL = {'e': '#8a8470', 'E': '#615b49', 'x': '#3d3a2f', 'v': '#c2401a',
+             'o': '#ffcf73', 'O': '#ff8a1f', 'R': '#c8380e', 'n': '#5a1e0a'}
+
+
+def ember_tubers(stage):
+    # Glutknollen der Aschezeit: aschgraue Blätter mit roten Adern; reif glühen die Knollen am Boden.
+    grids = [
+        ['................'] * 11 + [
+            '................',
+            '.....e....e.....',
+            '....eEe..eEe....',
+            '.....xE..Ex.....',
+            '......x..x......'],
+        ['................'] * 8 + [
+            '................',
+            '...ee......ee...',
+            '..eEve....evEe..',
+            '..EvEe.ee.eEvE..',
+            '...xEeeEEeeEx...',
+            '....xEExxEEx....',
+            '.....xx..xx.....',
+            '......x..x......'],
+        ['................'] * 5 + [
+            '....ee....ee....',
+            '...eEve..evEe...',
+            '.ee.EvEeeEvE.ee.',
+            'eEve.xEEEEx.evEe',
+            'EvEEe.xEEx.eEEvE',
+            '.xEvEexEExeEvEx.',
+            '..xxEEeEEeEExx..',
+            '....xEEvvEEx....',
+            '.....xEvvEx.....',
+            '......xxxx......',
+            '......x..x......'],
+        ['................'] * 3 + [
+            '....ee....ee....',
+            '...eEve..evEe...',
+            '.ee.EvEeeEvE.ee.',
+            'eEve.xEEEEx.evEe',
+            'EvEEe.xEEx.eEEvE',
+            '.xEvEexEExeEvEx.',
+            '..xxEEeEEeEExx..',
+            '....xEEvvEEx....',
+            '..nRn.xvvx.nRn..',
+            '.nOoRn.xx.nRoOn.',
+            '.ROooRnxxnRooOR.',
+            '.nRORn.xx.nROOn.',
+            '..nnn..x...nnn..'],
+    ]
+    return from_grid(grids[stage], TUBER_PAL)
+
+
+# ---------------------------------------------------------------- Saatgut (Items mit Umriss)
+
+def quartz_thistle_seeds():
+    # Vier kantige, violett schimmernde Samen mit hellem Kristallglanz.
+    pal = {'w': '#f2f2ff', 'l': '#b8b6ff', 'm': '#8a6fe0', 'k': '#4a3a9a', 'q': '#5b3d8f'}
+    rows = [
+        '................',
+        '................',
+        '................',
+        '.........wl.....',
+        '........wlmk....',
+        '.........mkk....',
+        '..wl......k.....',
+        '.wlmk...........',
+        '..mkk.....wl....',
+        '...k.....wlmk...',
+        '.......wl.mkq...',
+        '......wlmk.k....',
+        '.......mkq......',
+        '........k.......',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#21184a')
+
+
+def resin_fern_spores():
+    # Ein Farnblättchen von unten, mit braunen Sporenhäufchen und einem Harztropfen an der Spitze.
+    pal = {'c': '#b3cc6a', 'f': '#8db04a', 'F': '#5f8a2e', 'D': '#3d5c1d', 'r': '#6b4a22',
+           's': '#7a4a1c', 'S': '#4e2e10', 'y': '#ffd27a', 'a': '#f6ad3e'}
+    rows = [
+        '................',
+        '................',
+        '...........ya...',
+        '..........fFa...',
+        '.........fsFF...',
+        '........fFsFf...',
+        '.......fsFFSf...',
+        '......fFsFsf....',
+        '.....fsFFSFf....',
+        '....fFsFsFf.....',
+        '....fsFFSf......',
+        '...fFFsFf.......',
+        '...DFFFf........',
+        '..rD.DD.........',
+        '.r..............',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#22300f')
+
+
+def ember_tuber():
+    # Knolle mit aschgrauer Kruste, durch die Risse glüht es orange.
+    pal = {'n': '#5a1e0a', 'R': '#c8380e', 'O': '#ff8a1f', 'o': '#ffcf73', 'x': '#3d3a2f', 'E': '#615b49',
+           'e': '#8a8470', 'g': '#7a7563'}
+    rows = [
+        '................',
+        '................',
+        '................',
+        '.......x........',
+        '......xEx.......',
+        '.....eegEEx.....',
+        '....eggEERnE....',
+        '...egEEROoREx...',
+        '...gEERooORExx..',
+        '..egERoORnEEEx..',
+        '..gEEnRREEROnx..',
+        '..EEEEEEERoOEx..',
+        '...xEEgEERnEx...',
+        '....xxEEEExx....',
+        '......xxxx......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1c140c')
+
+
 BLOCKS = {
     'chronostone': chronostone,
     'crystal_quartz_ore': crystal_quartz_ore,
@@ -1255,6 +1499,9 @@ BLOCKS = {
     'analysis_table_top': analysis_table_top,
     'analysis_table_side': analysis_table_side,
 }
+for _crop in (quartz_thistle, resin_fern, ember_tubers):
+    for _i in range(4):
+        BLOCKS[f'{_crop.__name__}_stage{_i}'] = (lambda c, i: lambda: c(i))(_crop, _i)
 ITEMS = {
     'core_drill': core_drill,
     'crystal_core_drill': crystal_core_drill,
@@ -1273,6 +1520,9 @@ ITEMS = {
     'spore_sac': spore_sac,
     'germ_tonic': germ_tonic,
     'codex_fragment': codex_fragment,
+    'quartz_thistle_seeds': quartz_thistle_seeds,
+    'resin_fern_spores': resin_fern_spores,
+    'ember_tuber': ember_tuber,
 }
 SPAWN_EGGS = {
     'geode_crawler_spawn_egg': geode_crawler_spawn_egg,

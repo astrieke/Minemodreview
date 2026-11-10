@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "strata_epochs:item/quartz_thistle_seeds"
+  }
+}

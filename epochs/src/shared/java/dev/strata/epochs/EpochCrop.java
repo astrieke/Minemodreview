@@ -1,0 +1,104 @@
+package dev.strata.epochs;
+
+import java.util.function.Supplier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.BeetrootBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+
+/**
+ * Epochen-Pflanze (Quarzdistel, Harzfarn, Glutknolle): vier Stufen wie Rote Bete. Sie steht nur auf dem Boden
+ * ihrer Epoche ({@code #strata_epochs:soil/<epoche>}) und nur in einem Biom der Epoche
+ * ({@code #strata_epochs:epoch/<epoche>}), also in der Epoche selbst oder auf transplantiertem Boden.
+ * Licht braucht sie nicht, die Epochen sind Höhlenwelten.
+ */
+public class EpochCrop extends BeetrootBlock {
+
+    /** Im Mittel wächst sie bei jedem fünften Zufallstick eine Stufe (etwa 17 Minuten bis zur Reife). */
+    public static final int GROWTH_CHANCE = 5;
+
+    private final String epoch;
+    private final TagKey<Block> soil;
+    private final TagKey<Biome> biomes;
+    private final Supplier<? extends Item> seed;
+
+    public EpochCrop(Properties props, String epochName, Supplier<? extends Item> seed) {
+        super(props);
+        this.epoch = StrataEpochs.id(epochName);
+        this.soil = dev.strata.epochs.mc.MobCompat.blockTag(StrataEpochs.id("soil/" + epochName));
+        this.biomes = dev.strata.epochs.mc.MobCompat.biomeTag(StrataEpochs.id("epoch/" + epochName));
+        this.seed = seed;
+    }
+
+    /** Die Epoche, z. B. {@code strata_epochs:crystal_age}. */
+    public String epoch() {
+        return epoch;
+    }
+
+    @Override
+    protected ItemLike getBaseSeedId() {
+        return seed.get();
+    }
+
+    @Override
+    protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.is(soil);
+    }
+
+    @Override
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        BlockPos below = pos.below();
+        return mayPlaceOn(level.getBlockState(below), level, below) && level.getBiome(pos).is(biomes);
+    }
+
+    @Override
+    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        int age = state.getValue(getAgeProperty());
+        if (age < getMaxAge() && random.nextInt(GROWTH_CHANCE) == 0) {
+            level.setBlock(pos, getStateForAge(age + 1), Block.UPDATE_CLIENTS);
+        }
+    }
+
+    /** Chance, dass beim Präparieren eines Fossilbrockens ein Samen seiner Epoche mit herauskommt. */
+    public static final double FOSSIL_SEED_CHANCE = 0.35;
+
+    /** Saatgut der Epoche (oder null, wenn sie keine Pflanze hat, z. B. eine Epoche aus einem Datapack). */
+    public static Item seedFor(String epochId) {
+        for (Supplier<Block> crop : java.util.List.of(EpochsContent.QUARTZ_THISTLE, EpochsContent.RESIN_FERN,
+                EpochsContent.EMBER_TUBERS)) {
+            if (crop.get() instanceof EpochCrop c && c.epoch.equals(epochId)) return c.seed.get();
+        }
+        return null;
+    }
+
+    /**
+     * Rechtsklick mit Saatgut an einer Stelle, wo die Pflanze nicht wachsen kann: Hinweis in der Aktionsleiste,
+     * welcher Boden und welche Epoche gebraucht werden (sonst passiert einfach nichts).
+     */
+    static void onRightClickBlock(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        if (event.getLevel().isClientSide() || event.getFace() == null) return;
+        if (!(event.getItemStack().getItem() instanceof net.minecraft.world.item.BlockItem item)) return;
+        if (!(item.getBlock() instanceof EpochCrop crop)) return;
+        if (!(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)) return;
+        BlockPos target = event.getLevel().getBlockState(event.getPos()).canBeReplaced()
+                ? event.getPos() : event.getPos().relative(event.getFace());
+        if (!event.getLevel().getBlockState(target).canBeReplaced()) return;
+        if (crop.defaultBlockState().canSurvive(event.getLevel(), target)) return;
+        String name = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(crop).getPath();
+        dev.strata.core.mc.Mc.actionbar(player, net.minecraft.network.chat.Component.translatable(
+                "message.strata_epochs.crop.wrong_place." + name).withStyle(net.minecraft.ChatFormatting.GOLD));
+    }
+
+    /** Für den Selbsttest: der Biom-Tag der Epoche. */
+    public TagKey<Biome> biomes() {
+        return biomes;
+    }
+}

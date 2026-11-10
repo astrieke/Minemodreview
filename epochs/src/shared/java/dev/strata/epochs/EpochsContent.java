@@ -48,6 +48,18 @@ public final class EpochsContent {
             p -> p.mapColor(MapColor.COLOR_CYAN).strength(5.0f, 1200.0f).requiresCorrectToolForDrops()
                     .lightLevel(s -> 12).sound(SoundType.AMETHYST));
 
+    // Epochen-Pflanzen (siehe {@link EpochCrop}): Samen stecken in Fossilbrocken, reif geben sie Epochen-Rohstoffe.
+    public static final Supplier<Block> QUARTZ_THISTLE = REG.crop("quartz_thistle",
+            p -> new EpochCrop(p, "crystal_age", EpochsContent.QUARTZ_THISTLE_SEEDS), p -> p.mapColor(MapColor.COLOR_PURPLE));
+    public static final Supplier<Block> RESIN_FERN = REG.crop("resin_fern",
+            p -> new EpochCrop(p, "spore_age", EpochsContent.RESIN_FERN_SPORES), p -> p.mapColor(MapColor.COLOR_ORANGE));
+    public static final Supplier<Block> EMBER_TUBERS = REG.crop("ember_tubers",
+            p -> new EpochCrop(p, "ash_age", EpochsContent.EMBER_TUBER), p -> p.mapColor(MapColor.COLOR_RED)
+                    .lightLevel(s -> s.getValue(net.minecraft.world.level.block.BeetrootBlock.AGE) == 3 ? 5 : 0));
+    public static final Supplier<Item> QUARTZ_THISTLE_SEEDS = REG.seed("quartz_thistle_seeds", QUARTZ_THISTLE);
+    public static final Supplier<Item> RESIN_FERN_SPORES = REG.seed("resin_fern_spores", RESIN_FERN);
+    public static final Supplier<Item> EMBER_TUBER = REG.seed("ember_tuber", EMBER_TUBERS);
+
     // Items
     /** Kernbohrer in drei Stufen: Stufe n erreicht Epochen bis zur Tiefe n. */
     public static final Supplier<Item> CORE_DRILL = REG.item("core_drill", p -> p.durability(64));

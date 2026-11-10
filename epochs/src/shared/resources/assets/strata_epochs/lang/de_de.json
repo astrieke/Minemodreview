@@ -151,5 +151,15 @@
   "message.strata_epochs.gate.confirm_leave": "Nochmal Rechtsklick: Rückweg nach Hause · Schleichen + Rechtsklick: Biome peilen",
   "message.strata_epochs.spiralit.released": "Dein früherer Spiralit hat sich gelöst. Jeder kann ihn jetzt an sich binden.",
   "message.strata_epochs.spiralit.replaced": "Ein neuer Spiralit ist an dich gebunden. Falls dein früherer noch lebt, löst er sich, sobald seine Gegend wieder geladen wird.",
-  "message.strata_epochs.spiralit.confirm_replace": "Dein früherer Spiralit ist nicht in der Nähe. Nochmal klicken, um trotzdem einen neuen zu erwecken (der alte löst sich dann)."
+  "message.strata_epochs.spiralit.confirm_replace": "Dein früherer Spiralit ist nicht in der Nähe. Nochmal klicken, um trotzdem einen neuen zu erwecken (der alte löst sich dann).",
+  "block.strata_epochs.quartz_thistle": "Quarzdistel",
+  "block.strata_epochs.resin_fern": "Harzfarn",
+  "block.strata_epochs.ember_tubers": "Glutknollen",
+  "item.strata_epochs.quartz_thistle_seeds": "Quarzdistel-Samen",
+  "item.strata_epochs.resin_fern_spores": "Harzfarn-Sporen",
+  "item.strata_epochs.ember_tuber": "Glutknolle",
+  "message.strata_epochs.fossil.done_seed": "Freigelegt: %s – und darin ein uralter Samen: %s",
+  "message.strata_epochs.crop.wrong_place.quartz_thistle": "Quarzdisteln wachsen nur auf Calcit, Amethyst oder Packeis in der Kristallzeit – oder auf Boden, der in die Kristallzeit transplantiert wurde",
+  "message.strata_epochs.crop.wrong_place.resin_fern": "Harzfarne wachsen nur auf Myzel, Moos, Schlamm oder Wirrnyzel in der Sporenzeit – oder auf Boden, der in die Sporenzeit transplantiert wurde",
+  "message.strata_epochs.crop.wrong_place.ember_tubers": "Glutknollen wachsen nur auf Vulkanasche, Schwarzstein oder Seelenerde in der Aschezeit – oder auf Boden, der in die Aschezeit transplantiert wurde"
 }

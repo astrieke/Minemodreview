@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "strata_epochs:block/ember_tubers_stage0"
+    },
+    "age=1": {
+      "model": "strata_epochs:block/ember_tubers_stage1"
+    },
+    "age=2": {
+      "model": "strata_epochs:block/ember_tubers_stage2"
+    },
+    "age=3": {
+      "model": "strata_epochs:block/ember_tubers_stage3"
+    }
+  }
+}
