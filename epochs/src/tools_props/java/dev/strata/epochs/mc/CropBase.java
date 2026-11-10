@@ -21,6 +21,12 @@ public abstract class CropBase extends BeetrootBlock {
         return false;
     }
 
+    /** Auch direktes Düngen durch andere Mods (ohne vorherige Prüfung) lässt sie nicht wachsen. */
+    @Override
+    public void performBonemeal(net.minecraft.server.level.ServerLevel level, net.minecraft.util.RandomSource random,
+                                BlockPos pos, BlockState state, net.minecraft.world.level.block.BonemealSource source) {
+    }
+
     /** Für den Selbsttest: nimmt die Pflanze Knochenmehl an (Quelle: Spieler mit Knochenmehl)? */
     public static boolean acceptsBonemeal(BeetrootBlock crop, LevelReader level, BlockPos pos) {
         return crop.isValidBonemealTarget(level, pos, level.getBlockState(pos), BonemealSource.INTERACTION);

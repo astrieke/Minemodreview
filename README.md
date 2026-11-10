@@ -80,7 +80,7 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 
 - Dazu kommen 1–2 Samen (Glück gibt mehr). Saatgut bleibt also knapp, eine Farm wächst langsam.
 - Die Pflanzen wachsen nur in einem Biom ihrer Epoche, also in der Epoche selbst oder auf Boden, den der **Transplantator** dorthin verwandelt hat. So wird ein transplantiertes Gebiet zur Farm für Epochen-Rohstoffe.
-- Licht brauchen sie nicht. Reif sind sie nach etwa 17 Minuten. Knochenmehl wirkt nicht, die Zeit lässt sich nicht abkürzen.
+- Licht brauchen sie nicht. Reif sind sie nach etwa 17 Minuten. Knochenmehl wirkt nicht; sie wachsen nur durch Zufallsticks (die Spielregel `randomTickSpeed` und Beschleuniger-Mods wirken also weiter).
 - An der falschen Stelle sagt dir die Aktionsleiste, welchen Boden die Pflanze braucht.
 - Pack-Autoren erweitern den Boden über die Tags `strata_epochs:soil/<epoche>` und die Biome über `strata_epochs:epoch/<epoche>`.
 
@@ -247,6 +247,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
 - Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 40 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
 - Kernanalyse-Tisch mit Trichtern und Rohren: freigegeben in Prüfrunde 2 (7/7/8), im Selbsttest mit Vanilla-Trichter und einem Rohr-Cache wie bei Mekanism geprüft. Mit echten Rohr-Mods lief er noch nicht. Strom (FE) nimmt bewusst keiner der Tische an, weil nichts daran Arbeit braucht.
+- Epochen-Pflanzen (Quarzdistel, Harzfarn, Glutknolle): freigegeben in Prüfrunde 2 (8/7/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/crops/`). Eine echte Farm auf transplantiertem Boden wurde noch nicht von Hand gespielt.
 - Biome: drei pro Epoche, freigegeben in Prüfrunde 3 (7/7/7), Bilder in `docs/screenshots/biomes/`. Das Tor peilt die Nebenbiome an (Prüfrunde 3: 8/8/8).
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
 - Welten mit Epochen zeigen beim ersten Laden die Vanilla-Warnung „experimentelle Einstellungen“. Das ist bei Datapack-Dimensionen normal; einmal bestätigen reicht.
