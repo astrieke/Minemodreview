@@ -51,10 +51,10 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
    - **Sporenzeit** (Bernstein): *Sporengrotte* (Myzel), *Moosmoor* (Schlamm, Moos und Lehmtümpel mit Tropfblatt), *Leuchtdickicht* (Wirrnyzel mit Wirrpilzen und Zwirbelranken).
    - **Aschezeit** (Glutsteinerz, liefert **Glutsplitter**, Brennstoff wie eine Lohenrute): *Aschewüste* (Vulkanasche über Basalt), *Magmaspalten* (Schwarzstein mit Magma-Rissen und Lavaseen, viel Glutsteinerz, der Glutwühler kann hier nicht abtauchen; die gefährlichste Zone), *Knochensenke* (Seelenerde mit Netherfossilien).
 4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min, Aschezeit 5 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
-5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
    - **Inventar-Verfestigung:** Wer weiter bleibt, dem versteinert nach den Blöcken auch das Inventar. Alle 20 s wird ein Stapel aus Schnellleiste oder Rucksack zu einem **versteinerten Gegenstand**. Das Original steckt unversehrt darin, lässt sich aber nicht benutzen.
    - Der Brocken löst sich von selbst, sobald sein Träger nicht mehr verfestigt: zurück durch das Tor, oder mit einer Keimfrische (dreht die Uhr 60 s zurück). Verloren geht nichts.
    - Zeitanker und Keimfrische versteinern nie (Item-Tag `strata_epochs:petrify_immune`), Rüstung und zweite Hand auch nicht.
+5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
 6. Zweimal Rechtsklick auf das Tor (innerhalb von 3 s) bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.
 
 **Kernanalyse-Tisch** (Kupfer, Fernrohr, Holz, Steinstufe): Rechtsklick mit Bohrkernen analysiert den Stapel. Die Notiz am Kern zeigt:
