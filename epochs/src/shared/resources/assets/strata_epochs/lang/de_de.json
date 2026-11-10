@@ -161,5 +161,11 @@
   "message.strata_epochs.fossil.done_seed": "Freigelegt: %s – und darin ein uralter Samen: %s",
   "message.strata_epochs.crop.wrong_place.quartz_thistle": "Quarzdisteln wachsen nur auf Calcit, Amethyst oder Packeis in der Kristallzeit – oder auf Boden, der in die Kristallzeit transplantiert wurde",
   "message.strata_epochs.crop.wrong_place.resin_fern": "Harzfarne wachsen nur auf Myzel, Moos, Schlamm oder Wirrnyzel in der Sporenzeit – oder auf Boden, der in die Sporenzeit transplantiert wurde",
-  "message.strata_epochs.crop.wrong_place.ember_tubers": "Glutknollen wachsen nur auf Vulkanasche, Schwarzstein oder Seelenerde in der Aschezeit – oder auf Boden, der in die Aschezeit transplantiert wurde"
+  "message.strata_epochs.crop.wrong_place.ember_tubers": "Glutknollen wachsen nur auf Vulkanasche, Schwarzstein oder Seelenerde in der Aschezeit – oder auf Boden, der in die Aschezeit transplantiert wurde",
+  "item.strata_epochs.petrified_item": "Versteinerter Gegenstand",
+  "item.strata_epochs.petrified_item.of": "Versteinert: %s",
+  "tooltip.strata_epochs.petrified_item": "Löst sich, sobald sein Träger nicht mehr verfestigt",
+  "message.strata_epochs.solidify.item": "Die Zeit verfestigt sich – versteinert: %s",
+  "message.strata_epochs.solidify.thaw_one": "Ein versteinerter Gegenstand löst sich wieder",
+  "message.strata_epochs.solidify.thaw": "%s versteinerte Gegenstände lösen sich wieder"
 }

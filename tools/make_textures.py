@@ -1410,6 +1410,32 @@ def ember_tubers(stage):
 
 # ---------------------------------------------------------------- Saatgut (Items mit Umriss)
 
+def petrified_item():
+    # Versteinerter Gegenstand: Brocken aus versteinertem Stein mit goldener Zeit-Ader; oben rechts ragt noch
+    # ein Stück Griff heraus, damit man sieht, dass etwas darin steckt.
+    pal = {'k': PETRI[0], 'd': PETRI[1], 'm': PETRI[2], 'n': PETRI[3], 'l': PETRI[4], 'w': PETRI[5],
+           'g': '#d9a43a', 'y': '#ffe08a', 'h': '#b0804e', 'H': '#83593a', 'b': '#5a3b22'}
+    rows = [
+        '................',
+        '............hh..',
+        '...........hHb..',
+        '..........hHb...',
+        '.....wwlllHb....',
+        '....wlllnnnmd...',
+        '...wllnnynnmmd..',
+        '..wllnnygnmmmd..',
+        '..wlnnnygnmmdd..',
+        '..llnnmmgymmdk..',
+        '..lnnmmmmgymdk..',
+        '..nnmmmmmgmddk..',
+        '..nmmmmddmddkk..',
+        '...mmdddddkkk...',
+        '....ddkkkkk.....',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#231c2a')
+
+
 def quartz_thistle_seeds():
     # Drei graugrüne Samenkapseln der Distel, aus deren Spitze ein kleiner Kristall schaut (nicht wie Kristallquarz).
     pal = {'g': '#a4bfa8', 'G': '#6f8f78', 'd': '#3f5a48', 'k': '#4a44c0', 'm': '#7471f2', 'l': '#c8c6ff'}
@@ -1521,6 +1547,7 @@ ITEMS = {
     'germ_tonic': germ_tonic,
     'codex_fragment': codex_fragment,
     'quartz_thistle_seeds': quartz_thistle_seeds,
+    'petrified_item': petrified_item,
     'resin_fern_spores': resin_fern_spores,
     'ember_tuber': ember_tuber,
 }

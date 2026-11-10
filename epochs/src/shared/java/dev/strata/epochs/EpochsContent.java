@@ -80,6 +80,9 @@ public final class EpochsContent {
     /** Keimfrische: dreht die Verfestigungs-Uhr ein Stück zurück (siehe {@link GermTonic}). */
     public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
 
+    /** Ein versteinerter Gegenstand aus dem Inventar; trägt das Original in sich (siehe {@link ItemPetrification}). */
+    public static final Supplier<Item> PETRIFIED_ITEM = REG.hiddenItem("petrified_item", p -> p.stacksTo(1));
+
     // Fossilien
     /** Roher Fossilbrocken aus einer Epoche; trägt die Epoche und den Präparationsfortschritt. */
     public static final Supplier<Item> FOSSIL_CHUNK = REG.item("fossil_chunk", p -> p.stacksTo(16));

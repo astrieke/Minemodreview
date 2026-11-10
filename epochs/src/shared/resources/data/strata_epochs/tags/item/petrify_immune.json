@@ -1,0 +1,7 @@
+{
+  "_hinweis": "Diese Gegenstände versteinern nie im Inventar (zweite Stufe der Verfestigung). Standard: die Mittel dagegen. Packs können z. B. Totems oder Rückkehr-Items ergänzen.",
+  "values": [
+    "strata_epochs:time_anchor",
+    "strata_epochs:germ_tonic"
+  ]
+}

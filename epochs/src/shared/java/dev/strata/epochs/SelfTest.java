@@ -54,6 +54,7 @@ final class SelfTest {
         failures += testSpiralitBond(server);
         for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) failures += testGrowth(server, epoch);
         failures += testCrops(server);
+        failures += testItemPetrification(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -549,6 +550,61 @@ final class SelfTest {
                     onStone, ticks, ripe, harvest, drops, !noBonemeal, seedBack, wild, transplanted, texts, ok ? "OK" : "FEHLER");
         }
         return failures;
+    }
+
+    /**
+     * Inventar-Verfestigung: Ein Stapel wird zum versteinerten Gegenstand und kommt beim Lösen unverändert zurück
+     * (Anzahl, Abnutzung); Zeitanker und Keimfrische versteinern nie, Rüstung und zweite Hand auch nicht.
+     */
+    private static int testItemPetrification(MinecraftServer server) {
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(server.overworld());
+        var inventory = player.getInventory();
+        inventory.clearContent();
+        var pick = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE);
+        pick.setDamageValue(37);
+        var quartz = new net.minecraft.world.item.ItemStack(EpochsContent.CRYSTAL_QUARTZ.get(), 12);
+        inventory.setItem(0, pick.copy());
+        inventory.setItem(20, quartz.copy());
+        inventory.setItem(1, new net.minecraft.world.item.ItemStack(EpochsContent.TIME_ANCHOR.get()));
+        inventory.setItem(2, new net.minecraft.world.item.ItemStack(EpochsContent.GERM_TONIC.get(), 3));
+        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,
+                new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SHIELD));
+        var random = net.minecraft.util.RandomSource.create(3);
+
+        var first = ItemPetrification.petrifyOne(player, random);
+        var second = ItemPetrification.petrifyOne(player, random);
+        var third = ItemPetrification.petrifyOne(player, random);
+        boolean two = !first.isEmpty() && !second.isEmpty() && third.isEmpty();
+        boolean lumps = ItemPetrification.isPetrified(inventory.getItem(0)) && ItemPetrification.isPetrified(inventory.getItem(20))
+                && inventory.getItem(0).getCount() == 1;
+        boolean keeps = net.minecraft.world.item.ItemStack.matches(ItemPetrification.content(inventory.getItem(0)), pick)
+                && net.minecraft.world.item.ItemStack.matches(ItemPetrification.content(inventory.getItem(20)), quartz);
+        boolean immune = inventory.getItem(1).is(EpochsContent.TIME_ANCHOR.get())
+                && inventory.getItem(2).is(EpochsContent.GERM_TONIC.get())
+                && player.getOffhandItem().is(net.minecraft.world.item.Items.SHIELD);
+        boolean named = inventory.getItem(20).getHoverName().getString().contains("12");
+
+        // Lösen: auch ein Brocken in der zweiten Hand (z. B. dorthin gelegt) kommt zurück.
+        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, inventory.getItem(20).copy());
+        inventory.setItem(20, net.minecraft.world.item.ItemStack.EMPTY);
+        int thawed = ItemPetrification.thaw(player);
+        boolean back = thawed == 2 && net.minecraft.world.item.ItemStack.matches(inventory.getItem(0), pick)
+                && net.minecraft.world.item.ItemStack.matches(player.getOffhandItem(), quartz)
+                && ItemPetrification.thaw(player) == 0;
+        inventory.clearContent();
+
+        boolean data = StrataAPI.epochs(server).get(StrataEpochs.id("crystal_age")).petrifyItemsSeconds() == 20;
+        List<String> missing = new ArrayList<>();
+        for (String key : List.of("item.strata_epochs.petrified_item", "item.strata_epochs.petrified_item.of",
+                "tooltip.strata_epochs.petrified_item", "message.strata_epochs.solidify.item",
+                "message.strata_epochs.solidify.thaw_one", "message.strata_epochs.solidify.thaw")) {
+            for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
+        }
+        boolean ok = two && lumps && keeps && immune && named && back && data && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Inventar-Verfestigung: zwei Stapel={}, Brocken={}, Inhalt={}, immun={}, Name={}, "
+                + "gelöst={} ({}), Datapack={}, Texte fehlen={} -> {}", two, lumps, keeps, immune, named, back, thawed, data,
+                missing, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
     }
 
     /** Glutwühler: taucht bei Ziel in 6 Blöcken ab, grollt nah am Ziel, bricht hervor (Schaden + Wurf). */

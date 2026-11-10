@@ -47,6 +47,11 @@ public final class Reg {
                 .pushReaction(net.minecraft.world.level.block.Blocks.BEETROOTS.defaultBlockState().getPistonPushReaction()))));
     }
 
+    /** Item, das nicht im Kreativ-Tab steht (entsteht nur im Spiel, z. B. ein versteinerter Gegenstand). */
+    public Supplier<Item> hiddenItem(String name, UnaryOperator<Item.Properties> props) {
+        return items.register(name, () -> new Item(props.apply(new Item.Properties())));
+    }
+
     /** Saatgut: pflanzt den Block, heißt aber wie das Item ({@code item.<mod>.<name>}). */
     public Supplier<Item> seed(String name, Supplier<Block> crop) {
         Supplier<Item> item = items.register(name,

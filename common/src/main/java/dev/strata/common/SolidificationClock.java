@@ -19,6 +19,25 @@ public final class SolidificationClock {
         return Math.round(baseTicks * (1.0 + Math.max(0.0, stabilizerBonus)));
     }
 
+    /**
+     * Versteinert bei diesem Schritt der Uhr ein Gegenstand im Inventar? Erst versteinern nur Blöcke; der erste
+     * Gegenstand folgt, wenn die erlaubte Zeit um ein volles Intervall überzogen ist, danach einer pro Intervall.
+     * Gezählt wird nach der Uhr des Spielers, eine Sporenwolke beschleunigt also auch das.
+     *
+     * @param intervalTicks Abstand in Ticks (0 = Gegenstände versteinern nie)
+     */
+    public static boolean petrifiesItem(long ticksBefore, long ticksNow, long allowedTicks, long intervalTicks) {
+        if (intervalTicks <= 0 || allowedTicks == Long.MAX_VALUE || ticksNow < allowedTicks) return false;
+        long before = Math.max(0, ticksBefore - allowedTicks) / intervalTicks;
+        long now = (ticksNow - allowedTicks) / intervalTicks;
+        return now > before;
+    }
+
+    /** Versteinerte Gegenstände lösen sich, sobald der Spieler nicht (mehr) verfestigt. */
+    public static boolean thawsItems(Stage stage) {
+        return stage != Stage.SOLIDIFYING;
+    }
+
     public static Stage stage(long ticksInEpoch, long allowedTicks) {
         if (allowedTicks == Long.MAX_VALUE) return Stage.STABLE;
         if (ticksInEpoch >= allowedTicks) return Stage.SOLIDIFYING;

@@ -32,6 +32,11 @@ public final class MobCompat {
                 net.minecraft.resources.ResourceLocation.parse(id));
     }
 
+    public static net.minecraft.tags.TagKey<net.minecraft.world.item.Item> itemTag(String id) {
+        return net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                net.minecraft.resources.ResourceLocation.parse(id));
+    }
+
     public static net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> blockTag(String id) {
         return net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK,
                 net.minecraft.resources.ResourceLocation.parse(id));

@@ -161,5 +161,11 @@
   "message.strata_epochs.fossil.done_seed": "Uncovered: %s – with an ancient seed inside: %s",
   "message.strata_epochs.crop.wrong_place.quartz_thistle": "Quartz thistles only grow on calcite, amethyst or packed ice in the Crystal Age – or on ground transplanted into the Crystal Age",
   "message.strata_epochs.crop.wrong_place.resin_fern": "Resin ferns only grow on mycelium, moss, mud or warped nylium in the Spore Age – or on ground transplanted into the Spore Age",
-  "message.strata_epochs.crop.wrong_place.ember_tubers": "Ember tubers only grow on volcanic ash, blackstone or soul soil in the Ash Age – or on ground transplanted into the Ash Age"
+  "message.strata_epochs.crop.wrong_place.ember_tubers": "Ember tubers only grow on volcanic ash, blackstone or soul soil in the Ash Age – or on ground transplanted into the Ash Age",
+  "item.strata_epochs.petrified_item": "Petrified Item",
+  "item.strata_epochs.petrified_item.of": "Petrified: %s",
+  "tooltip.strata_epochs.petrified_item": "Comes loose once its carrier is no longer solidifying",
+  "message.strata_epochs.solidify.item": "Time is solidifying – petrified: %s",
+  "message.strata_epochs.solidify.thaw_one": "A petrified item comes loose again",
+  "message.strata_epochs.solidify.thaw": "%s petrified items come loose again"
 }

@@ -13,13 +13,19 @@ import java.util.Optional;
  * @param dimension       die Dimension der Epoche, falls ein Content-Mod sie liefert
  * @param depth           wie tief die Epoche liegt (1 bis 3): Ein Kernbohrer erreicht sie erst ab dieser Stufe
  * @param landscape       wie die Epoche in der Oberwelt aussieht (für den Transplantator), falls angegeben
+ * @param petrifyItemsSeconds wer schon verfestigt, dem versteinert alle so viele Sekunden ein Gegenstand im Inventar
+ *                        (0 = aus, Standard 20)
  */
-public record Epoch(int weight, int solidifySeconds, Optional<String> dimension, int depth, Optional<Landscape> landscape) {
+public record Epoch(int weight, int solidifySeconds, Optional<String> dimension, int depth, Optional<Landscape> landscape,
+                    int petrifyItemsSeconds) {
+
+    /** Standard für {@code petrify_items_seconds}. */
+    public static final int DEFAULT_PETRIFY_ITEMS_SECONDS = 20;
 
     public static final int MAX_DEPTH = 3;
 
     public Epoch(int weight, int solidifySeconds, Optional<String> dimension) {
-        this(weight, solidifySeconds, dimension, 1, Optional.empty());
+        this(weight, solidifySeconds, dimension, 1, Optional.empty(), DEFAULT_PETRIFY_ITEMS_SECONDS);
     }
 
     public static final Codec<Epoch> CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -27,6 +33,8 @@ public record Epoch(int weight, int solidifySeconds, Optional<String> dimension,
             Codec.intRange(0, 86_400).optionalFieldOf("solidify_seconds", 600).forGetter(Epoch::solidifySeconds),
             Mc.ID_CODEC.optionalFieldOf("dimension").forGetter(Epoch::dimension),
             Codec.intRange(1, MAX_DEPTH).optionalFieldOf("depth", 1).forGetter(Epoch::depth),
-            Landscape.CODEC.optionalFieldOf("landscape").forGetter(Epoch::landscape)
+            Landscape.CODEC.optionalFieldOf("landscape").forGetter(Epoch::landscape),
+            Codec.intRange(0, 3_600).optionalFieldOf("petrify_items_seconds", DEFAULT_PETRIFY_ITEMS_SECONDS)
+                    .forGetter(Epoch::petrifyItemsSeconds)
     ).apply(i, Epoch::new));
 }

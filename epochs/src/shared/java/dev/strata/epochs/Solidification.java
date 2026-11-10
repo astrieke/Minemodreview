@@ -16,7 +16,8 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * Wer zu lange in einer Epoche bleibt, verfestigt: erst Warnung, dann Verlangsamung
- * und versteinernde Blöcke in der Nähe. Ein Zeitanker im Inventar verdoppelt die Zeit.
+ * und versteinernde Blöcke in der Nähe, schließlich versteinern Gegenstände im Inventar
+ * ({@link ItemPetrification}). Ein Zeitanker im Inventar verdoppelt die Zeit.
  *
  * <p>Mobs greifen über {@link #speedUp} (Zeitfaktor, z. B. Sporenwolke) und {@link #advance}
  * (Zeit abziehen, z. B. Sanduhr-Puls) in die Uhr ein.
@@ -36,32 +37,45 @@ public final class Solidification {
 
     static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        if (player.tickCount % CHECK_INTERVAL != 0 || player.isCreative() || player.isSpectator()) return;
+        if (player.tickCount % CHECK_INTERVAL != 0) return;
+        if (player.isCreative() || player.isSpectator()) {
+            ItemPetrification.thaw(player);
+            return;
+        }
 
         ServerLevel level = (ServerLevel) player.level();
         Optional<String> epochId = EpochTravel.epochOf(level);
         EpochVisit visit = player.getData(EpochsContent.VISIT.get());
         if (epochId.isEmpty()) {
+            ItemPetrification.thaw(player);   // draußen löst sich alles, auch fremde Fundstücke
             if (visit.ticks() != 0 || visit.bonus() != 0) {
                 player.setData(EpochsContent.VISIT.get(), new EpochVisit(visit.returnDimension(), visit.x(), visit.y(), visit.z(), 0, 0));
             }
             return;
         }
 
-        long ticks = visit.ticks() + Math.round(CHECK_INTERVAL * factor(player));
+        long before = visit.ticks();
+        long ticks = before + Math.round(CHECK_INTERVAL * factor(player));
         player.setData(EpochsContent.VISIT.get(), visit.withTicks(ticks));
 
         Epoch epoch = StrataAPI.epochs(level.getServer()).get(epochId.get());
         double bonus = timeBonus(player);
         long allowed = SolidificationClock.allowedTicks(epoch.solidifySeconds() * 20L, bonus);
 
-        switch (SolidificationClock.stage(ticks, allowed)) {
+        SolidificationClock.Stage stage = SolidificationClock.stage(ticks, allowed);
+        if (SolidificationClock.thawsItems(stage)) ItemPetrification.thaw(player);
+        switch (stage) {
             case STABLE -> { }
             case WARNING -> Mc.actionbar(player, Component.translatable("message.strata_epochs.solidify.warning",
                     (allowed - ticks) / 20).withStyle(ChatFormatting.GOLD));
             case SOLIDIFYING -> {
-                Mc.actionbar(player, Component.translatable("message.strata_epochs.solidify.active")
-                        .withStyle(ChatFormatting.RED));
+                // Zweite Stufe: nach den Blöcken versteinern Gegenstände im Inventar (siehe ItemPetrification).
+                net.minecraft.world.item.ItemStack lost = SolidificationClock.petrifiesItem(before, ticks, allowed,
+                        epoch.petrifyItemsSeconds() * 20L) ? ItemPetrification.petrifyOne(player, level.getRandom())
+                        : net.minecraft.world.item.ItemStack.EMPTY;
+                Mc.actionbar(player, lost.isEmpty() ? Component.translatable("message.strata_epochs.solidify.active")
+                        .withStyle(ChatFormatting.RED) : Component.translatable("message.strata_epochs.solidify.item",
+                        ItemPetrification.describe(lost)).withStyle(ChatFormatting.RED));
                 player.addEffect(new MobEffectInstance(Mc.slowness(), 60, 1));
                 player.addEffect(new MobEffectInstance(Mc.miningFatigue(), 60, 1));
                 if (player.tickCount % PETRIFY_INTERVAL == 0) {   // nach Spielzeit, der Zeitfaktor verschiebt die Uhr
