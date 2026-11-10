@@ -320,6 +320,25 @@ def generate = tasks.register('generateEpochData') {
             def text = zip.getInputStream(entry).withCloseable { it.getText('UTF-8') }
             l.replace.each { from, to -> text = text.replace("\"${from}\"", "\"${to}\"") }
             def table = slurper.parseText(text)
+            // Weniger Bonus-Samen als bei Roter Bete (extra 3 -> z. B. 1), damit Saatgut knapp bleibt.
+            // Das Format ändert sich (functions, ab 26.3 modifier), daher die ganze Tabelle nach der Formel durchsuchen.
+            if (l.bonus_extra != null) {
+                int changed = 0
+                def walk
+                walk = { node ->
+                    if (node instanceof Map) {
+                        if (node.formula == 'minecraft:binomial_with_bonus_count' && node.parameters?.extra != null) {
+                            node.parameters.extra = l.bonus_extra
+                            changed++
+                        }
+                        node.values().each { walk(it) }
+                    } else if (node instanceof List) {
+                        node.each { walk(it) }
+                    }
+                }
+                walk(table)
+                if (changed == 0) throw new GradleException("bonus_extra: keine Binomial-Formel in ${l.base}")
+            }
             table.remove('random_sequence')
             // Fossilbrocken: ein Pool pro Epoche, nur in deren Dimension, mit der Epoche als Komponente.
             def fossilChance = spec.fossils?.blocks?.get(l.block)

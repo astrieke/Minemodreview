@@ -1356,7 +1356,7 @@ def resin_fern(stage):
     return from_grid(grids[stage], FERN_PAL)
 
 
-TUBER_PAL = {'e': '#8a8470', 'E': '#615b49', 'x': '#3d3a2f', 'v': '#c2401a',
+TUBER_PAL = {'e': '#86603f', 'E': '#5e412b', 'x': '#36241a', 'v': '#c2401a',
              'o': '#ffcf73', 'O': '#ff8a1f', 'R': '#c8380e', 'n': '#5a1e0a'}
 
 
@@ -1411,27 +1411,27 @@ def ember_tubers(stage):
 # ---------------------------------------------------------------- Saatgut (Items mit Umriss)
 
 def quartz_thistle_seeds():
-    # Vier kantige, violett schimmernde Samen mit hellem Kristallglanz.
-    pal = {'w': '#f2f2ff', 'l': '#b8b6ff', 'm': '#8a6fe0', 'k': '#4a3a9a', 'q': '#5b3d8f'}
+    # Drei graugrüne Samenkapseln der Distel, aus deren Spitze ein kleiner Kristall schaut (nicht wie Kristallquarz).
+    pal = {'g': '#a4bfa8', 'G': '#6f8f78', 'd': '#3f5a48', 'k': '#4a44c0', 'm': '#7471f2', 'l': '#c8c6ff'}
     rows = [
         '................',
         '................',
-        '................',
-        '.........wl.....',
-        '........wlmk....',
-        '.........mkk....',
-        '..wl......k.....',
-        '.wlmk...........',
-        '..mkk.....wl....',
-        '...k.....wlmk...',
-        '.......wl.mkq...',
-        '......wlmk.k....',
-        '.......mkq......',
-        '........k.......',
-        '................',
+        '..........l.....',
+        '.........lmk....',
+        '.........gGk....',
+        '....l...gGGd....',
+        '...lmk..gGGd....',
+        '...gGk..gGGd....',
+        '..gGGd...gd.....',
+        '..gGGd.....l....',
+        '..gGGd....lmk...',
+        '...gd.....gGk...',
+        '.........gGGd...',
+        '.........gGGd...',
+        '..........gd....',
         '................',
     ]
-    return outline(from_grid(rows, pal), '#21184a')
+    return outline(from_grid(rows, pal), '#1c2a20')
 
 
 def resin_fern_spores():

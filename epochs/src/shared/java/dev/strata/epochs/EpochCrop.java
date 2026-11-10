@@ -10,7 +10,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.BeetrootBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -18,9 +17,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * Epochen-Pflanze (Quarzdistel, Harzfarn, Glutknolle): vier Stufen wie Rote Bete. Sie steht nur auf dem Boden
  * ihrer Epoche ({@code #strata_epochs:soil/<epoche>}) und nur in einem Biom der Epoche
  * ({@code #strata_epochs:epoch/<epoche>}), also in der Epoche selbst oder auf transplantiertem Boden.
- * Licht braucht sie nicht, die Epochen sind Höhlenwelten.
+ * Licht braucht sie nicht, die Epochen sind Höhlenwelten. Knochenmehl wirkt nicht (siehe CropBase).
  */
-public class EpochCrop extends BeetrootBlock {
+public class EpochCrop extends dev.strata.epochs.mc.CropBase {
 
     /** Im Mittel wächst sie bei jedem fünften Zufallstick eine Stufe (etwa 17 Minuten bis zur Reife). */
     public static final int GROWTH_CHANCE = 5;
@@ -62,8 +61,11 @@ public class EpochCrop extends BeetrootBlock {
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         int age = state.getValue(getAgeProperty());
-        if (age < getMaxAge() && random.nextInt(GROWTH_CHANCE) == 0) {
+        if (age >= getMaxAge()) return;
+        // Über die NeoForge-Hooks, damit Jahreszeiten- und Wachstums-Mods mitreden können.
+        if (net.neoforged.neoforge.common.CommonHooks.canCropGrow(level, pos, state, random.nextInt(GROWTH_CHANCE) == 0)) {
             level.setBlock(pos, getStateForAge(age + 1), Block.UPDATE_CLIENTS);
+            net.neoforged.neoforge.common.CommonHooks.fireCropGrowPost(level, pos, level.getBlockState(pos));
         }
     }
 
@@ -84,7 +86,9 @@ public class EpochCrop extends BeetrootBlock {
      * welcher Boden und welche Epoche gebraucht werden (sonst passiert einfach nichts).
      */
     static void onRightClickBlock(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
-        if (event.getLevel().isClientSide() || event.getFace() == null) return;
+        // Nur beim Pflanzen von oben auf einen Block ohne Menü (nicht beim Öffnen einer Truhe mit Samen in der Hand).
+        if (event.getLevel().isClientSide() || event.getFace() != net.minecraft.core.Direction.UP) return;
+        if (event.getLevel().getBlockState(event.getPos()).getMenuProvider(event.getLevel(), event.getPos()) != null) return;
         if (!(event.getItemStack().getItem() instanceof net.minecraft.world.item.BlockItem item)) return;
         if (!(item.getBlock() instanceof EpochCrop crop)) return;
         if (!(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)) return;

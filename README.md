@@ -78,9 +78,9 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 | **Harzfarn** (Harzfarn-Sporen) | Sporenzeit | Myzel, Moos, Schlamm, Wirrnyzel | 1 Bernsteinsplitter |
 | **Glutknolle** | Aschezeit | Vulkanasche, Schwarzstein, Seelenerde | 1 Glutsplitter, glüht reif |
 
-- Dazu kommen 0–3 neue Samen (Glück hilft).
+- Dazu kommen 1–2 Samen (Glück gibt mehr). Saatgut bleibt also knapp, eine Farm wächst langsam.
 - Die Pflanzen wachsen nur in einem Biom ihrer Epoche, also in der Epoche selbst oder auf Boden, den der **Transplantator** dorthin verwandelt hat. So wird ein transplantiertes Gebiet zur Farm für Epochen-Rohstoffe.
-- Licht brauchen sie nicht. Reif sind sie nach etwa 17 Minuten, Knochenmehl hilft ein wenig.
+- Licht brauchen sie nicht. Reif sind sie nach etwa 17 Minuten. Knochenmehl wirkt nicht, die Zeit lässt sich nicht abkürzen.
 - An der falschen Stelle sagt dir die Aktionsleiste, welchen Boden die Pflanze braucht.
 - Pack-Autoren erweitern den Boden über die Tags `strata_epochs:soil/<epoche>` und die Biome über `strata_epochs:epoch/<epoche>`.
 

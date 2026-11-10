@@ -516,7 +516,9 @@ final class SelfTest {
             }
             boolean ripe = epoch.getBlockState(at).is(crop) && crop.isMaxAge(epoch.getBlockState(at));
             var drops = net.minecraft.world.level.block.Block.getDrops(epoch.getBlockState(at), epoch, at, null);
-            boolean harvest = drops.stream().anyMatch(d -> d.is(c.product()));
+            int seeds = drops.stream().filter(d -> d.is(EpochCrop.seedFor(crop.epoch()))).mapToInt(d -> d.getCount()).sum();
+            boolean harvest = drops.stream().anyMatch(d -> d.is(c.product())) && seeds >= 1 && seeds <= 2;
+            boolean noBonemeal = !dev.strata.epochs.mc.CropBase.acceptsBonemeal(crop, epoch, at);
             var young = net.minecraft.world.level.block.Block.getDrops(crop.defaultBlockState(), epoch, at, null);
             boolean seedBack = young.size() == 1 && young.get(0).is(EpochCrop.seedFor(crop.epoch()))
                     && young.stream().noneMatch(d -> d.is(c.product()));
@@ -540,11 +542,11 @@ final class SelfTest {
             String key = "message.strata_epochs.crop.wrong_place." + net.minecraft.core.registries.BuiltInRegistries.BLOCK
                     .getKey(crop).getPath();
             boolean texts = LANG.get("de_de").contains(key) && LANG.get("en_us").contains(key);
-            boolean ok = onSoil && !onStone && ripe && harvest && seedBack && !wild && transplanted && texts;
+            boolean ok = onSoil && !onStone && ripe && harvest && noBonemeal && seedBack && !wild && transplanted && texts;
             if (!ok) failures++;
             StrataEpochs.LOG.info("[Strata-Test] Pflanze {}: Boden={}, Stein={}, reif nach {} Ticks={}, Ernte={} ({}), "
-                    + "jung nur Samen={}, Oberwelt={}, transplantiert={}, Texte={} -> {}", crop.epoch(), onSoil, onStone,
-                    ticks, ripe, harvest, drops, seedBack, wild, transplanted, texts, ok ? "OK" : "FEHLER");
+                    + "Knochenmehl={}, jung nur Samen={}, Oberwelt={}, transplantiert={}, Texte={} -> {}", crop.epoch(), onSoil,
+                    onStone, ticks, ripe, harvest, drops, !noBonemeal, seedBack, wild, transplanted, texts, ok ? "OK" : "FEHLER");
         }
         return failures;
     }

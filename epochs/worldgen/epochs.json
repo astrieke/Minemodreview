@@ -434,6 +434,7 @@
     {
       "block": "quartz_thistle",
       "base": "minecraft:blocks/beetroots",
+      "bonus_extra": 1,
       "replace": {
         "minecraft:beetroots": "strata_epochs:quartz_thistle",
         "minecraft:beetroot": "strata_epochs:crystal_quartz",
@@ -443,6 +444,7 @@
     {
       "block": "resin_fern",
       "base": "minecraft:blocks/beetroots",
+      "bonus_extra": 1,
       "replace": {
         "minecraft:beetroots": "strata_epochs:resin_fern",
         "minecraft:beetroot": "strata_epochs:amber_shard",
@@ -452,6 +454,7 @@
     {
       "block": "ember_tubers",
       "base": "minecraft:blocks/beetroots",
+      "bonus_extra": 1,
       "replace": {
         "minecraft:beetroots": "strata_epochs:ember_tubers",
         "minecraft:beetroot": "strata_epochs:ember_shard",
