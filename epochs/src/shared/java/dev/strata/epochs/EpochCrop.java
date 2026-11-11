@@ -83,20 +83,26 @@ public class EpochCrop extends dev.strata.epochs.mc.CropBase {
     }
 
     /**
-     * Zeitessenz auf eine Epochen-Pflanze: eine Stufe wachsen, verbraucht eine Essenz. Auf einer reifen Pflanze
-     * passiert nichts. Gibt zurück, ob sie gewachsen ist (für den Selbsttest öffentlich).
+     * Zeitessenz auf eine Epochen-Pflanze: alle Epochen-Pflanzen im 3×3-Feld um sie wachsen eine Stufe, das kostet
+     * eine Essenz. Ist keine davon jung genug, passiert nichts und nichts wird verbraucht. Gibt die Zahl der
+     * gewachsenen Pflanzen zurück (für den Selbsttest öffentlich). Wie Knochenmehl ohne die NeoForge-Wachstumshooks:
+     * Dünger ist ein bewusster Eingriff des Spielers, keine natürliche Wachstumsphase.
      */
-    public static boolean applyEssence(ServerLevel level, BlockPos pos, ItemStack essence, boolean consume) {
-        BlockState state = level.getBlockState(pos);
-        if (!(state.getBlock() instanceof EpochCrop crop) || crop.isMaxAge(state) || !essence.is(EpochsContent.TIME_ESSENCE.get())) {
-            return false;
+    public static int applyEssence(ServerLevel level, BlockPos pos, ItemStack essence, boolean consume) {
+        if (!essence.is(EpochsContent.TIME_ESSENCE.get())) return 0;
+        int grown = 0;
+        for (BlockPos p : BlockPos.betweenClosed(pos.offset(-1, 0, -1), pos.offset(1, 0, 1))) {
+            BlockState state = level.getBlockState(p);
+            if (!(state.getBlock() instanceof EpochCrop crop) || crop.isMaxAge(state)) continue;
+            level.setBlockAndUpdate(p, crop.getStateForAge(state.getValue(crop.getAgeProperty()) + 1));
+            level.sendParticles(net.minecraft.core.particles.ParticleTypes.REVERSE_PORTAL, p.getX() + 0.5, p.getY() + 0.5,
+                    p.getZ() + 0.5, 8, 0.3, 0.3, 0.3, 0.05);
+            grown++;
         }
-        level.setBlockAndUpdate(pos, crop.getStateForAge(state.getValue(crop.getAgeProperty()) + 1));
+        if (grown == 0) return 0;
         if (consume) essence.shrink(1);
         level.playSound(null, pos, net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.4f);
-        level.sendParticles(net.minecraft.core.particles.ParticleTypes.REVERSE_PORTAL, pos.getX() + 0.5, pos.getY() + 0.5,
-                pos.getZ() + 0.5, 15, 0.3, 0.3, 0.3, 0.05);
-        return true;
+        return grown;
     }
 
     static void onUseEssence(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {

@@ -80,5 +80,5 @@
   "advancements.strata_epochs.museum.title": "Museum of Earth History",
   "advancements.strata_epochs.museum.description": "Display the whole primeval collection in display cases close together (15 exhibits)",
   "jei.strata_bridge.info.display_case": "Display Case (glass, chronostone, gold): right-click with an item to display one, right-click with an empty hand to take it out; on an empty case it shows the museum's progress. Breaking it drops the exhibit. The collection: per epoch a core sample, fossil, resource and plant, plus a Calcite Scale, Spore Sac and Codex Fragment (15 exhibits) in display cases within 12 blocks. A complete museum gives 10% more time in every epoch, permanently.",
-  "jei.strata_bridge.info.time_essence": "Condensed time. Drops when you seal a time rift (1–2) and with 50% from the Petrified Witness. Right-click an epoch plant to grow it one stage (bone meal does not work on them). Packs and magic mods find it in the item tag strata_epochs:time_essence."
+  "jei.strata_bridge.info.time_essence": "Condensed time. Drops when you seal a time rift (1–2) and with 50% from the Petrified Witness when a player defeats it. Right-click an epoch plant: all epoch plants in the 3×3 area grow one stage for one essence (bone meal does not work on them). Packs and magic mods find it in the item tag strata_epochs:time_essence."
 }

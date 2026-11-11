@@ -84,7 +84,8 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 
 - Dazu kommen 1–2 Samen (Glück gibt mehr). Saatgut bleibt also knapp, eine Farm wächst langsam.
 - Die Pflanzen wachsen nur in einem Biom ihrer Epoche, also in der Epoche selbst oder auf Boden, den der **Transplantator** dorthin verwandelt hat. So wird ein transplantiertes Gebiet zur Farm für Epochen-Rohstoffe.
-- **Zeitessenz** (aus versiegelten Zeitrissen, mit 50 % vom Steinzeugen) ist ihr Dünger: Rechtsklick lässt eine Pflanze eine Stufe wachsen. Packs und Magie-Mods finden die Essenz im Item-Tag `strata_epochs:time_essence`; ein Fluid gibt es nicht.
+- **Zeitessenz** (aus versiegelten Zeitrissen, mit 50 % vom Steinzeugen, wenn ein Spieler ihn besiegt) ist ihr Dünger: Rechtsklick auf eine Pflanze lässt alle Epochen-Pflanzen im 3×3-Feld eine Stufe wachsen, für eine Essenz.
+- Für Packs und Magie-Mods steht die Essenz im Item-Tag `strata_epochs:time_essence` (ein Fluid gibt es nicht). Ein Pack-Rezept nutzt ihn z. B. so: `{"type": "minecraft:crafting_shapeless", "ingredients": ["#strata_epochs:time_essence", "minecraft:clock"], "result": {"id": "minecraft:experience_bottle", "count": 4}}` (ab 1.21.2 schreibt man Zutaten als Text wie hier, in 1.21.1 als `{"tag": "strata_epochs:time_essence"}`).
 - Licht brauchen sie nicht. Reif sind sie nach etwa 17 Minuten. Knochenmehl wirkt nicht; sie wachsen nur durch Zufallsticks (die Spielregel `randomTickSpeed` und Beschleuniger-Mods wirken also weiter).
 - An der falschen Stelle sagt dir die Aktionsleiste, welchen Boden die Pflanze braucht.
 - Pack-Autoren erweitern den Boden über die Tags `strata_epochs:soil/<epoche>` und die Biome über `strata_epochs:epoch/<epoche>`.

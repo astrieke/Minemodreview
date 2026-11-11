@@ -525,15 +525,22 @@ final class SelfTest {
             var young = net.minecraft.world.level.block.Block.getDrops(crop.defaultBlockState(), epoch, at, null);
             boolean seedBack = young.size() == 1 && young.get(0).is(EpochCrop.seedFor(crop.epoch()))
                     && young.stream().noneMatch(d -> d.is(c.product()));
-            // Zeitessenz: eine Stufe pro Essenz, auf einer reifen Pflanze wirkungslos und nicht verbraucht.
-            epoch.setBlockAndUpdate(at, crop.defaultBlockState());
+            // Zeitessenz: alle Epochen-Pflanzen im 3x3-Feld eine Stufe für eine Essenz; reif = wirkungslos, nicht verbraucht.
+            for (BlockPos p : BlockPos.betweenClosed(ground.offset(-1, 0, -1), ground.offset(1, 0, 1))) {
+                epoch.setBlockAndUpdate(p, c.soil().defaultBlockState());
+                epoch.setBlockAndUpdate(p.above(), crop.defaultBlockState());
+            }
             var essence = new net.minecraft.world.item.ItemStack(EpochsContent.TIME_ESSENCE.get(), 5);
-            boolean grew = EpochCrop.applyEssence(epoch, at, essence, true)
-                    && epoch.getBlockState(at).getValue(net.minecraft.world.level.block.BeetrootBlock.AGE) == 1 && essence.getCount() == 4;
+            int grown = EpochCrop.applyEssence(epoch, at, essence, true);
+            boolean field = grown == 9 && essence.getCount() == 4
+                    && epoch.getBlockState(at.offset(1, 0, 1)).getValue(net.minecraft.world.level.block.BeetrootBlock.AGE) == 1;
             EpochCrop.applyEssence(epoch, at, essence, true);
             EpochCrop.applyEssence(epoch, at, essence, true);
-            boolean essenceOk = grew && crop.isMaxAge(epoch.getBlockState(at)) && essence.getCount() == 2
-                    && !EpochCrop.applyEssence(epoch, at, essence, true) && essence.getCount() == 2;
+            boolean essenceOk = field && crop.isMaxAge(epoch.getBlockState(at)) && essence.getCount() == 2
+                    && EpochCrop.applyEssence(epoch, at, essence, true) == 0 && essence.getCount() == 2;
+            for (BlockPos p : BlockPos.betweenClosed(ground.offset(-1, 0, -1), ground.offset(1, 1, 1))) {
+                epoch.setBlockAndUpdate(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+            }
             harvest &= essenceOk;
             epoch.setBlockAndUpdate(at, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
             epoch.setBlockAndUpdate(ground, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
