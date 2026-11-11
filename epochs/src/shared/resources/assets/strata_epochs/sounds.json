@@ -128,5 +128,46 @@
       "strata_epochs:entity/spiralit/death1"
     ],
     "subtitle": "subtitles.strata_epochs.spiralit.death"
+  },
+  "entity.stratolith.ambient": {
+    "sounds": [
+      "strata_epochs:entity/stratolith/ambient1",
+      "strata_epochs:entity/stratolith/ambient2",
+      "strata_epochs:entity/stratolith/ambient3"
+    ],
+    "subtitle": "subtitles.strata_epochs.stratolith.ambient"
+  },
+  "entity.stratolith.hurt": {
+    "sounds": [
+      "strata_epochs:entity/stratolith/hurt1",
+      "strata_epochs:entity/stratolith/hurt2"
+    ],
+    "subtitle": "subtitles.strata_epochs.stratolith.hurt"
+  },
+  "entity.stratolith.death": {
+    "sounds": [
+      "strata_epochs:entity/stratolith/death1"
+    ],
+    "subtitle": "subtitles.strata_epochs.stratolith.death"
+  },
+  "entity.stratolith.rise": {
+    "sounds": [
+      "strata_epochs:entity/stratolith/rise1"
+    ],
+    "subtitle": "subtitles.strata_epochs.stratolith.rise"
+  },
+  "entity.stratolith.rewind": {
+    "sounds": [
+      "strata_epochs:entity/stratolith/rewind1",
+      "strata_epochs:entity/stratolith/rewind2"
+    ],
+    "subtitle": "subtitles.strata_epochs.stratolith.rewind"
+  },
+  "entity.stratolith.slam": {
+    "sounds": [
+      "strata_epochs:entity/stratolith/slam1",
+      "strata_epochs:entity/stratolith/slam2"
+    ],
+    "subtitle": "subtitles.strata_epochs.stratolith.slam"
   }
 }

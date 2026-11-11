@@ -387,12 +387,101 @@ def spiralit(kind, i, rng):
     return x
 
 
+def stratolith(kind, i, rng):
+    if kind == "ambient":
+        # Mahlender Schichtstapel: tiefes, langsames Steinmahlen und ein Grundgestein-Brummen,
+        # darüber ein fernes Kristallklingen (die Krone) und ein Hauch Sporenzischen.
+        dur = 1.8
+        t = t_axis(dur)
+        swell = np.sin(np.pi * t / dur) ** 2
+        grind = band(rng.normal(0, 1, len(t)), 120, 1400) * (0.4 + 0.6 * swell) * 0.5
+        grind = grind + grains(rng, dur, 70, 200, 1200, grain=0.025, amp=0.8)
+        f = rng.choice([110.0, 123.5, 98.0])  # tiefer als der Steinzeuge
+        hum = sum((0.7 ** k) * np.sin(2 * np.pi * f * r * t) for k, r in enumerate([1.0, 1.5 * 1.002, 2.0, 2.5]))
+        x = grind + hum * swell * 0.5
+        at = rng.uniform(0.3, 0.6)                    # Kristallkrone: ein, zwei leise hohe Töne
+        for _ in range(rng.integers(1, 3)):
+            place(x, chime(rng, rng.uniform(1400, 2100), rng.uniform(0.3, 0.5)) * rng.uniform(0.15, 0.3), at)
+            at += rng.uniform(0.4, 0.7)
+        x += high(rng.normal(0, 1, len(t)), 4000) * swell * 0.02   # Sporenhauch, dezent
+        return x
+    if kind == "hurt":
+        # Tiefer Steinriss mit splitterndem Kristall: dumpfer Schlag, Knacken, ein heller Ting.
+        dur = 0.6
+        x = silence(dur)
+        place(x, thud(140, 55, 0.35) * 0.4, 0)
+        place(x, band(rng.normal(0, 1, int(0.07 * SR)), 500, 3500) * env(0.07, 0.0005, 0.02) * 1.2, 0.002)
+        place(x, grains(rng, 0.4, 150, 300, 2000, grain=0.016, amp=0.9, decay_rate=5), 0.02)
+        place(x, chime(rng, rng.uniform(1600, 2200), 0.25) * 0.3, 0.03)   # Kristallsplitter
+        return x
+    if kind == "death":
+        # Der ganze Stapel bricht zusammen: Kristall zerspringt, lange Steinlawine,
+        # das Echo sinkt tief ab, ein letzter Grundgestein-Schlag.
+        dur = 2.6
+        t = t_axis(dur)
+        x = grains(rng, dur, 300, 200, 2000, grain=0.02, decay_rate=1.4, amp=1.3)
+        place(x, thud(150, 45, 0.6) * 0.5, 0)
+        at = 0.0                                       # Kristall zersplittert am Anfang
+        for _ in range(5):
+            place(x, chime(rng, rng.uniform(1300, 2200), rng.uniform(0.2, 0.4)) * rng.uniform(0.2, 0.4), at)
+            at += rng.uniform(0.04, 0.12)
+        ph, _ = sweep(160, 70, dur)                    # absinkendes Echo
+        x += (np.sin(ph) + 0.5 * np.sin(2 * ph)) * env(dur, 0.05, 0.9, hold=0.4) * 0.35
+        place(x, thud(110, 38, 0.7) * 0.45, dur - 0.9)  # letzter Schlag
+        return x
+    if kind == "rise":
+        # Aufsteigen aus dem Boden: anschwellendes unterirdisches Grollen, mahlender Stein,
+        # ein aufwärts gleitender Ton, am Ende ein schwerer Schlag, als er steht.
+        dur = 1.8
+        x = silence(dur)
+        nr = int(1.5 * SR)
+        up = np.clip(np.arange(nr) / SR / 1.3, 0, 1)
+        rumble = np.tanh(low(rng.normal(0, 1, nr), 180, order=4) * 7.0) * 0.55 * up ** 1.4
+        place(x, rumble, 0)
+        ph, _ = sweep(40, 90, 1.5)
+        place(x, np.tanh(1.8 * np.sin(ph)) * up * 0.4, 0)
+        place(x, band(rng.normal(0, 1, nr), 200, 1600) * up ** 1.3 * 0.7, 0)
+        place(x, band(rng.normal(0, 1, nr), 1000, 3000) * up ** 1.6 * 0.18, 0)   # Präsenz für kleine Lautsprecher
+        place(x, grains(rng, 1.4, 120, 300, 2200, amp=0.5, decay_rate=1.5), 0.1)
+        place(x, thud(130, 45, 0.6) * 0.55, 1.4)       # steht
+        return x
+    if kind == "rewind":
+        # Zurückspulen (die Kernmechanik): die ~2-s-Vorwarnung. Ein sofort hörbarer Auftakt
+        # (Glocke + kurzer Abwärts-Ton, damit der Tell gleich am Anfang steht), danach rückwärts
+        # laufende Zeit: ein nach oben saugender Ton und rückwärts gedrehte Chimes, die zum
+        # Zurückspulen hin anschwellen. Gegenzug (Spitzhacke von vorn) hat so volle 2 s Zeit.
+        dur = 2.0
+        t = t_axis(dur)
+        x = silence(dur)
+        place(x, chime(rng, 660, 1.4, ratios=(1.0, 2.0, 3.0), bright=0.6) * env(1.4, 0.005, 1.1) * 0.4, 0.0)
+        ph0, _ = sweep(520, 300, 0.25)                 # Auftakt-Abwärtston, gleich am Anfang
+        place(x, (np.sin(ph0) + 0.4 * np.sin(2 * ph0)) * env(0.25, 0.004, 0.12) * 0.35, 0.0)
+        rev = np.clip(t / dur, 0, 1) ** 1.4            # umgekehrte Hülle: schwillt zum Ende an
+        ph, _ = sweep(180, 560, dur, shape="exp")
+        x += (np.sin(ph) + 0.4 * np.sin(2 * ph)) * rev * 0.4
+        at = 0.15                                      # rückwärts gedrehte Chimes
+        while at < dur - 0.35:
+            place(x, chime(rng, rng.uniform(900, 1800), 0.3)[::-1] * 0.25, at)
+            at += rng.uniform(0.28, 0.42)
+        x += band(rng.normal(0, 1, len(t)), 400, 3000) * rev * 0.1
+        return x
+    # slam: Hammerschlag — tiefes, mahlendes Brüllen des Bosses, kurz und schwer.
+    dur = 0.7
+    x = silence(dur)
+    place(x, growl_voiced(rng, 90, 70, 0.5, rough=35) * env(0.5, 0.01, 0.25, hold=0.1), 0)
+    place(x, low(rng.normal(0, 1, int(0.3 * SR)), 2000) * env(0.3, 0.002, 0.12) * 0.4, 0)
+    place(x, grains(rng, 0.5, 100, 250, 1800, amp=0.5, decay_rate=4), 0.02)
+    place(x, band(rng.normal(0, 1, int(0.025 * SR)), 1500, 5000) * env(0.025, 0.0004, 0.01) * 0.5, 0.0)  # heller Crack
+    return x
+
+
 MOBS = {
     "geode_crawler": (geode_crawler, {"ambient": 3, "hurt": 2, "death": 2}),
     "spore_bellows": (spore_bellows, {"ambient": 3, "hurt": 2, "death": 2}),
     "petrified_witness": (petrified_witness, {"ambient": 3, "hurt": 2, "death": 1}),
     "ember_burrower": (ember_burrower, {"ambient": 3, "hurt": 2, "death": 2, "dig": 3, "tremor": 2, "emerge": 2}),
     "spiralit": (spiralit, {"ambient": 3, "hurt": 2, "death": 1}),
+    "stratolith": (stratolith, {"ambient": 3, "hurt": 2, "death": 1, "rise": 1, "rewind": 2, "slam": 2}),
 }
 
 

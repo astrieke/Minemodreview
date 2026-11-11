@@ -140,7 +140,7 @@ public class Stratolith extends StrataMob {
         rising = RISE_TICKS;
         playAction("rise");
         setGlow(GLOW_CORE, 1.0f);
-        sound(SoundEvents.WARDEN_EMERGE, 1.5f, 0.8f);
+        sound(EpochsMobs.STRATOLITH_RISE.get(), 1.5f, 1.0f);
     }
 
     public boolean isRising() {
@@ -329,17 +329,17 @@ public class Stratolith extends StrataMob {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.RAVAGER_AMBIENT;
+        return EpochsMobs.STRATOLITH_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.IRON_GOLEM_HURT;
+        return EpochsMobs.STRATOLITH_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.IRON_GOLEM_DEATH;
+        return EpochsMobs.STRATOLITH_DEATH.get();
     }
 
     @Override
@@ -475,7 +475,7 @@ public class Stratolith extends StrataMob {
             mob.getNavigation().stop();
             mob.playAction("rewind");
             mob.setGlow(GLOW_CORE, 1.0f);
-            mob.sound(SoundEvents.BELL_RESONATE, 2.0f, 0.5f);
+            mob.sound(EpochsMobs.STRATOLITH_REWIND.get(), 2.0f, 1.0f);
             for (ServerPlayer p : mob.bossBar.getPlayers()) {
                 Mc.actionbar(p, Component.translatable("message.strata_epochs.stratolith.rewind").withStyle(net.minecraft.ChatFormatting.GOLD));
             }
@@ -617,7 +617,7 @@ public class Stratolith extends StrataMob {
                     swing = 0;
                     cooldown = (int) v("cooldown", 60);
                     playAction("slam");
-                    sound(SoundEvents.RAVAGER_ROAR, 1.2f, 0.6f);
+                    sound(EpochsMobs.STRATOLITH_SLAM.get(), 1.4f, 1.0f);
                 }
             }
         }

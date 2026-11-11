@@ -78,6 +78,12 @@ public final class EpochsMobs {
     public static final Supplier<SoundEvent> SPIRALIT_AMBIENT = REG.sound("entity.spiralit.ambient");
     public static final Supplier<SoundEvent> SPIRALIT_HURT = REG.sound("entity.spiralit.hurt");
     public static final Supplier<SoundEvent> SPIRALIT_DEATH = REG.sound("entity.spiralit.death");
+    public static final Supplier<SoundEvent> STRATOLITH_AMBIENT = REG.sound("entity.stratolith.ambient");
+    public static final Supplier<SoundEvent> STRATOLITH_HURT = REG.sound("entity.stratolith.hurt");
+    public static final Supplier<SoundEvent> STRATOLITH_DEATH = REG.sound("entity.stratolith.death");
+    public static final Supplier<SoundEvent> STRATOLITH_RISE = REG.sound("entity.stratolith.rise");
+    public static final Supplier<SoundEvent> STRATOLITH_REWIND = REG.sound("entity.stratolith.rewind");
+    public static final Supplier<SoundEvent> STRATOLITH_SLAM = REG.sound("entity.stratolith.slam");
 
     private EpochsMobs() {}
 

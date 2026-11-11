@@ -987,19 +987,26 @@ final class SelfTest {
         } catch (java.io.IOException e) {
             loot = false;
         }
+        boolean sounds = true;   // eigene Boss-Klänge: in sounds.json eingetragen (Dateien prüft testMob)
+        for (String kind : List.of("ambient", "hurt", "death", "rise", "rewind", "slam")) {
+            if (!SOUNDS.containsKey("entity.stratolith." + kind)) sounds = false;
+        }
         List<String> missing = new ArrayList<>();
         for (String key : List.of("entity.strata_epochs.stratolith", "item.strata_epochs.layer_core",
                 "item.strata_epochs.heart_of_deep_time", "message.strata_epochs.stratolith.shed.1",
                 "message.strata_epochs.stratolith.shed.2", "message.strata_epochs.stratolith.rewind",
                 "message.strata_epochs.stratolith.broken", "message.strata_epochs.stratolith.need_mastery",
                 "message.strata_epochs.stratolith.no_space", "message.strata_epochs.stratolith.peaceful",
-                "message.strata_epochs.stratolith.top")) {
+                "message.strata_epochs.stratolith.top",
+                "subtitles.strata_epochs.stratolith.ambient", "subtitles.strata_epochs.stratolith.hurt",
+                "subtitles.strata_epochs.stratolith.death", "subtitles.strata_epochs.stratolith.rise",
+                "subtitles.strata_epochs.stratolith.rewind", "subtitles.strata_epochs.stratolith.slam")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
-        boolean ok = summonOk && risingSafe && layers && rewound && countered && heart && codex && loot && missing.isEmpty();
+        boolean ok = summonOk && risingSafe && layers && rewound && countered && heart && codex && loot && sounds && missing.isEmpty();
         StrataEpochs.LOG.info("[Strata-Test] Stratolith: Beschwörung={}, Aufsteigen geschützt={}, Schichten={} (Höhe {}/{}/{}), "
-                + "Zurückspulen={}, Konter von vorn={}, Herz={}, Kodex={}, Beute={}, Texte fehlen={} -> {}",
-                summonOk, risingSafe, layers, h0, h1, h2, rewound, countered, heart, codex, loot, missing, ok ? "OK" : "FEHLER");
+                + "Zurückspulen={}, Konter von vorn={}, Herz={}, Kodex={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
+                summonOk, risingSafe, layers, h0, h1, h2, rewound, countered, heart, codex, loot, sounds, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 
