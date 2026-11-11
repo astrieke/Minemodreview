@@ -1501,8 +1501,8 @@ def display_case_trim():
 
 
 def time_essence():
-    # Zeitessenz: Tropfen verdichteter Zeit mit Spitze oben; violetter Kern mit goldenem Sanduhr-Funken,
-    # Glanz oben links. Keine losen Pixel außerhalb der Silhouette.
+    # Zeitessenz: Tropfen verdichteter Zeit mit Spitze oben; violetter Kern, goldene Spiegelung
+    # schräg oben links (Licht von oben links). Keine losen Pixel außerhalb der Silhouette.
     pal = {'w': '#fff6d8', 'y': '#ffe08a', 'g': '#d9a43a', 'l': '#b48cff', 'v': '#7a4fd6', 'V': '#4b2f9a', 'k': '#2a1a5c'}
     rows = [
         '................',
@@ -1511,11 +1511,11 @@ def time_essence():
         '......lll.......',
         '......lwl.......',
         '.....lwlvl......',
-        '....lwlvvvl.....',
-        '....lwvVVVv.....',
-        '...lwvVggVVv....',
-        '...lvVVyyVVv....',
-        '...lvVVggVVv....',
+        '....lyglvvl.....',
+        '....lwgVVVv.....',
+        '...lwvVVVVVv....',
+        '...lvVVVVVVv....',
+        '...lvVVVVVVv....',
         '...lvVVVVVVv....',
         '....vVVVVVv.....',
         '.....vVVVv......',

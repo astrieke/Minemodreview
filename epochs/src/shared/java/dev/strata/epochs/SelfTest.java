@@ -764,6 +764,9 @@ final class SelfTest {
                 "message.strata_epochs.rift.how", "message.strata_epochs.rift.sealed")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
+        for (String lang : List.of("de_de", "en_us")) {
+            if (!LANG.get(lang).contains("message.strata_epochs.essence.ripe")) missing.add(lang + ":message.strata_epochs.essence.ripe");
+        }
         boolean ok = opened && spreads && spaced && stillOpen && refused && sealed && reward && expired && dims
                 && eligible && surface && pruned && peaceful && moss && dry && missing.isEmpty();
         StrataEpochs.LOG.info("[Strata-Test] Zeitrisse: offen={}, Boden={} ({} Blöcke, Bau bleibt), Abstand={}, läuft={}, "

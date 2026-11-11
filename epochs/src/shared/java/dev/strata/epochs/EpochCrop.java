@@ -83,7 +83,7 @@ public class EpochCrop extends dev.strata.epochs.mc.CropBase {
     }
 
     /**
-     * Zeitessenz auf eine Epochen-Pflanze: alle Epochen-Pflanzen im 3×3-Feld um sie wachsen eine Stufe, das kostet
+     * Zeitessenz auf eine Epochen-Pflanze: alle Epochen-Pflanzen im 3×3-Feld um sie (±1 Block Höhe) wachsen eine Stufe, das kostet
      * eine Essenz. Ist keine davon jung genug, passiert nichts und nichts wird verbraucht. Gibt die Zahl der
      * gewachsenen Pflanzen zurück (für den Selbsttest öffentlich). Wie Knochenmehl ohne die NeoForge-Wachstumshooks:
      * Dünger ist ein bewusster Eingriff des Spielers, keine natürliche Wachstumsphase.
@@ -91,7 +91,7 @@ public class EpochCrop extends dev.strata.epochs.mc.CropBase {
     public static int applyEssence(ServerLevel level, BlockPos pos, ItemStack essence, boolean consume) {
         if (!essence.is(EpochsContent.TIME_ESSENCE.get())) return 0;
         int grown = 0;
-        for (BlockPos p : BlockPos.betweenClosed(pos.offset(-1, 0, -1), pos.offset(1, 0, 1))) {
+        for (BlockPos p : BlockPos.betweenClosed(pos.offset(-1, -1, -1), pos.offset(1, 1, 1))) {   // auch abgestufte Beete
             BlockState state = level.getBlockState(p);
             if (!(state.getBlock() instanceof EpochCrop crop) || crop.isMaxAge(state)) continue;
             level.setBlockAndUpdate(p, crop.getStateForAge(state.getValue(crop.getAgeProperty()) + 1));
@@ -111,7 +111,10 @@ public class EpochCrop extends dev.strata.epochs.mc.CropBase {
         event.setCanceled(true);
         event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
         if (!(event.getLevel() instanceof ServerLevel level) || !(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)) return;
-        applyEssence(level, event.getPos(), event.getItemStack(), !player.isCreative());
+        if (applyEssence(level, event.getPos(), event.getItemStack(), !player.isCreative()) == 0) {
+            dev.strata.core.mc.Mc.actionbar(player, net.minecraft.network.chat.Component.translatable(
+                    "message.strata_epochs.essence.ripe").withStyle(net.minecraft.ChatFormatting.GRAY));
+        }
     }
 
     /**
