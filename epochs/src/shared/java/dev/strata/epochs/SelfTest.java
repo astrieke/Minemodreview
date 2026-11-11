@@ -56,6 +56,7 @@ final class SelfTest {
         failures += testCrops(server);
         failures += testItemPetrification(server);
         failures += testRifts(server);
+        failures += testMuseum(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -746,6 +747,75 @@ final class SelfTest {
                 + "Oberfläche={}, Verwaiste weg={}, Friedlich={}, Moos={}, wasserfest={}, Texte fehlen={} -> {}",
                 opened, spreads, converted, spaced, stillOpen, refused, sealed, reward, expired, dims, eligible,
                 surface, pruned, peaceful, moss, dry, missing, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /**
+     * Museum der Erdgeschichte: Vitrine stellt einen Gegenstand aus (Display trägt das Item), lehnt einen zweiten
+     * ab, gibt ihn heraus, lässt ihn beim Entfernen fallen; mit Bohrkern und Fossil jeder Epoche in der Nähe
+     * schaltet sich der Kodex-Knoten {@code museum} frei.
+     */
+    private static int testMuseum(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        int cx = 8800, cz = 8800;
+        for (int k = 0; k < 12 && !cleanSite(level, cx, cz, 6); k++) cz += 160;
+        int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz);
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("strata_museum_test".getBytes()), "strata_museum_test"));
+        StrataAPI.unlock(player, StrataEpochs.id("first_core"));
+        var requirements = DisplayCases.requirements(server);
+
+        List<net.minecraft.world.item.ItemStack> exhibits = new ArrayList<>();
+        for (String e : List.of("crystal_age", "spore_age", "ash_age")) {
+            exhibits.add(CoreSamples.create(StrataEpochs.id(e)));
+            exhibits.add(new net.minecraft.world.item.ItemStack(FossilPrep.fossilFor(StrataEpochs.id(e)), 2));
+        }
+        List<BlockPos> cases = new ArrayList<>();
+        boolean placed = true;
+        for (int i = 0; i < exhibits.size(); i++) {
+            BlockPos pos = new BlockPos(cx - 5 + 2 * i, y, cz);
+            level.setBlockAndUpdate(pos, EpochsContent.DISPLAY_CASE.get().defaultBlockState());
+            cases.add(pos);
+            var held = exhibits.get(i).copy();
+            int before = held.getCount();
+            placed &= DisplayCases.put(level, pos, held) && held.getCount() == before - 1
+                    && net.minecraft.world.item.ItemStack.isSameItemSameComponents(DisplayCases.exhibit(level, pos), exhibits.get(i));
+            if (i < exhibits.size() - 1) {
+                placed &= DisplayCases.present(level, cases.get(0)).size() == i + 1;
+            }
+        }
+        boolean occupied = !DisplayCases.put(level, cases.get(0), new net.minecraft.world.item.ItemStack(EpochsContent.CRYSTAL_QUARTZ.get()));
+        boolean complete = requirements.size() == 6 && DisplayCases.present(level, cases.get(0)).size() == 6;
+        DisplayCases.checkMuseum(player, level, cases.get(0));
+        boolean codex = StrataAPI.hasNode(player, StrataEpochs.id("museum"));
+
+        var taken = DisplayCases.take(level, cases.get(0));
+        boolean takeOut = CoreSamples.epochOf(taken).isPresent() && DisplayCases.find(level, cases.get(0)) == null
+                && DisplayCases.present(level, cases.get(1)).size() == 5;
+        // Abbau: Exponat fällt heraus, das Display verschwindet.
+        BlockPos last = cases.get(cases.size() - 1);
+        level.setBlockAndUpdate(last, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        var drops = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(last).inflate(1.5));
+        boolean dropped = drops.stream().anyMatch(d -> d.getItem().is(FossilPrep.fossilFor(StrataEpochs.id("ash_age"))))
+                && DisplayCases.find(level, last) == null;
+        drops.forEach(net.minecraft.world.entity.Entity::discard);
+        for (BlockPos pos : cases) {
+            DisplayCases.take(level, pos);
+            level.setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        }
+        level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,
+                new net.minecraft.world.phys.AABB(cases.get(0)).inflate(14)).forEach(net.minecraft.world.entity.Entity::discard);
+
+        List<String> missing = new ArrayList<>();
+        for (String key : List.of("block.strata_epochs.display_case", "message.strata_epochs.museum.core",
+                "message.strata_epochs.museum.progress", "message.strata_epochs.museum.done",
+                "message.strata_epochs.museum.complete", "message.strata_epochs.museum.occupied")) {
+            for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
+        }
+        boolean ok = placed && occupied && complete && codex && takeOut && dropped && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Museum: ausgestellt={}, belegt={}, vollständig={} ({} Exponate), Kodex={}, "
+                + "herausgenommen={}, fällt heraus={}, Texte fehlen={} -> {}", placed, occupied, complete, requirements.size(),
+                codex, takeOut, dropped, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

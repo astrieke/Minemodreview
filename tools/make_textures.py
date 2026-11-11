@@ -1468,6 +1468,38 @@ def time_rift_frames():
     return frames
 
 
+def display_case_base():
+    # Sockel der Vitrine: poliertes Zeitgestein mit Goldleiste oben und unten und eingelassener Schichtlinie.
+    pal = {'g': '#d9a43a', 'y': '#ffe08a', 'G': '#9c6f1e', 'a': '#5c5468', 'b': '#4a4356', 'c': '#3a3446', 'd': '#2c2736'}
+    rows = ['................'] * 11 + [
+        'yyyyyyyyyyyyyyyy',
+        'aaabaaaaabaaaaba',
+        'bbbbccbbbbbccbbb',
+        'cddcccccdcccccdc',
+        'GGGGGGGGGGGGGGGG',
+    ]
+    img = from_grid(rows, pal)
+    # Obere Hälfte (vom Modell nicht genutzt) neutral füllen, damit die Kachel vollständig ist.
+    for y in range(11):
+        for x in range(16):
+            img.putpixel((x, y), rgb(pal['b']))
+    return img
+
+
+def display_case_base_top():
+    # Oberseite des Sockels (unter dem Glas sichtbar): dunkler Samt auf Zeitgestein mit Goldrand.
+    pal = {'y': '#ffe08a', 'g': '#d9a43a', 'r': '#5a1f2e', 'R': '#46172a', 'k': '#2c2736'}
+    rows = ['ggggggggggggggggg'[:16]] + ['g' + ('rR' * 8)[:14] + 'g' if y % 2 else 'g' + ('Rr' * 8)[:14] + 'g' for y in range(14)] + ['gggggggggggggggg']
+    return from_grid(rows, pal)
+
+
+def display_case_trim():
+    # Goldener Rahmen auf der Glashaube, innen frei.
+    pal = {'y': '#ffe08a', 'g': '#d9a43a', 'G': '#9c6f1e'}
+    rows = ['yyyyyyyyyyyyyyyy'] + ['gG............Gg'] * 14 + ['GGGGGGGGGGGGGGGG']
+    return from_grid(rows, pal)
+
+
 def quartz_thistle_seeds():
     # Drei graugrüne Samenkapseln der Distel, aus deren Spitze ein kleiner Kristall schaut (nicht wie Kristallquarz).
     pal = {'g': '#a4bfa8', 'G': '#6f8f78', 'd': '#3f5a48', 'k': '#4a44c0', 'm': '#7471f2', 'l': '#c8c6ff'}
@@ -1556,6 +1588,9 @@ BLOCKS = {
     'transplanter_side': transplanter_side,
     'analysis_table_top': analysis_table_top,
     'analysis_table_side': analysis_table_side,
+    'display_case_base': display_case_base,
+    'display_case_base_top': display_case_base_top,
+    'display_case_trim': display_case_trim,
 }
 for _crop in (quartz_thistle, resin_fern, ember_tubers):
     for _i in range(4):

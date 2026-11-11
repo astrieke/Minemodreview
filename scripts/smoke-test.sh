@@ -15,9 +15,9 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 
 # Demo-Datapack (2 Epochen, 3 Knoten) + Strata Epochs (3 Epochen, 13 Knoten)
-expected_core='\[Strata\] 5 Epochen und 17 Kodex-Knoten geladen, 0 Fehler'
+expected_core='\[Strata\] 5 Epochen und 18 Kodex-Knoten geladen, 0 Fehler'
 expected_test='\[Strata-Test\] Fertig, 0 Fehler'
-expected_bridge='\[Strata-Bridge-Test\] 20 von 20 Advancements geladen'
+expected_bridge='\[Strata-Bridge-Test\] 21 von 21 Advancements geladen'
 expected_chain='\[Strata-Bridge-Test\] Freischaltung: .* -> OK'
 failed=()
 

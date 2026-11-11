@@ -76,5 +76,8 @@
   "jei.strata_bridge.info.ember_tuber": "Ember Tuber (Ash Age), grows on volcanic ash, blackstone or soul soil and glows a little when ripe. Ancient seeds are sometimes hidden in fossil chunks (35% when preparing). They only grow in a biome of their epoch: in the epoch itself or on ground the Transplanter turned into it. They need no light and bone meal does not work; they ripen in about 17 minutes. Ripe, they give one Ember Shard and 1–2 seeds (Fortune gives more).",
   "jei.strata_bridge.info.petrified_item": "Once you are solidifying in an epoch, your inventory follows the blocks: every 20 s a stack turns into a petrified item, first from your backpack, then your hotbar, never your main hand. The original is safe inside but cannot be used. It comes loose by itself as soon as its carrier is no longer solidifying: go back through the gate, drink a Germ Tonic, or on death. Other players' lumps only come loose outside the epochs. Time Anchors and Germ Tonics never petrify, and neither do armor or the off hand.",
   "advancements.strata_epochs.sealed_rift.title": "Seam of Time",
-  "advancements.strata_epochs.sealed_rift.description": "Seal a time rift with a Time Anchor"
+  "advancements.strata_epochs.sealed_rift.description": "Seal a time rift with a Time Anchor",
+  "advancements.strata_epochs.museum.title": "Museum of Earth History",
+  "advancements.strata_epochs.museum.description": "Display a core sample and the fossil of every epoch in display cases close together",
+  "jei.strata_bridge.info.display_case": "Display Case (glass, chronostone, gold): right-click with an item to display one, right-click with an empty hand to take it out. Breaking it drops the exhibit. With a core sample and the fossil of every epoch in display cases within 12 blocks, the Museum of Earth History is complete; the action bar shows your progress when you display something."
 }

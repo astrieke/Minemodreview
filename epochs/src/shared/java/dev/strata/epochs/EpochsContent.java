@@ -48,6 +48,10 @@ public final class EpochsContent {
             p -> p.mapColor(MapColor.COLOR_CYAN).strength(5.0f, 1200.0f).requiresCorrectToolForDrops()
                     .lightLevel(s -> 12).sound(SoundType.AMETHYST));
 
+    /** Vitrine für das Museum der Erdgeschichte (siehe {@link DisplayCases}). */
+    public static final Supplier<Block> DISPLAY_CASE = REG.block("display_case", DisplayCaseBlock::new,
+            p -> p.mapColor(MapColor.COLOR_GRAY).strength(1.5f, 6.0f).sound(SoundType.GLASS).noOcclusion());
+
     /** Zeitriss in der Oberwelt (siehe {@link TimeRifts}): ohne Kollision, unzerstörbar, nur mit Zeitanker zu versiegeln. */
     public static final Supplier<Block> TIME_RIFT = REG.ghost("time_rift", TimeRiftBlock::new,
             p -> p.mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 11).sound(SoundType.AMETHYST).randomTicks());
@@ -107,6 +111,7 @@ public final class EpochsContent {
         REG.blockItem(TRANSPLANTER, "transplanter");
         REG.blockItem(ANALYSIS_TABLE, "analysis_table");
         REG.blockItem(EPOCH_GATE, "epoch_gate");
+        REG.blockItem(DISPLAY_CASE, "display_case");
     }
 
     /** Auf dem Bohrkern: welche Epoche er zeigt. */

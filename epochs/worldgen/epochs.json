@@ -432,6 +432,13 @@
   ],
   "loot_tables": [
     {
+      "block": "display_case",
+      "base": "minecraft:blocks/fletching_table",
+      "replace": {
+        "minecraft:fletching_table": "strata_epochs:display_case"
+      }
+    },
+    {
       "block": "quartz_thistle",
       "base": "minecraft:blocks/beetroots",
       "bonus_extra": 1,

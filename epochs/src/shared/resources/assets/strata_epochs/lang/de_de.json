@@ -171,5 +171,11 @@
   "block.strata_epochs.time_rift": "Zeitriss",
   "message.strata_epochs.rift.opened": "Ein Zeitriss zur %s öffnet sich, %s von dir, %s Blöcke entfernt",
   "message.strata_epochs.rift.how": "Schleichen und Rechtsklick mit einem Zeitanker versiegelt den Riss",
-  "message.strata_epochs.rift.sealed": "Riss versiegelt – die Epoche gibt etwas frei"
+  "message.strata_epochs.rift.sealed": "Riss versiegelt – die Epoche gibt etwas frei",
+  "block.strata_epochs.display_case": "Vitrine",
+  "message.strata_epochs.museum.core": "Bohrkern der %s",
+  "message.strata_epochs.museum.progress": "Museum der Erdgeschichte: %s von %s Exponaten – es fehlt z. B. %s",
+  "message.strata_epochs.museum.done": "Museum der Erdgeschichte vollständig!",
+  "message.strata_epochs.museum.complete": "Das Museum der Erdgeschichte ist vollständig",
+  "message.strata_epochs.museum.occupied": "In dieser Vitrine steht schon etwas (Rechtsklick mit leerer Hand nimmt es heraus)"
 }

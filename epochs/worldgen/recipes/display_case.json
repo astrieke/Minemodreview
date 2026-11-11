@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "GGG",
+    "G G",
+    "CAC"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "C": "strata_epochs:chronostone",
+    "A": "minecraft:gold_ingot"
+  },
+  "result": {
+    "id": "strata_epochs:display_case",
+    "count": 2
+  }
+}
