@@ -4,15 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Der sichtbare Zeitriss: ein senkrechter, leuchtender Spalt ohne Kollision. Abbauen geht nicht, nur Versiegeln
  * mit einem Zeitanker (siehe {@link TimeRifts}). Die Partikel kommen vom Client, der Server ergänzt die Farbe der Epoche.
- * Ein Rissblock ohne Datensatz (abgelaufen, während seine Gegend entladen war) entfernt sich beim Zufallstick.
+ * Wasser und Lava spülen ihn nicht weg (siehe RiftBase). Ein Rissblock ohne Datensatz (abgelaufen, während seine Gegend entladen war) entfernt sich beim Zufallstick.
  */
-public final class TimeRiftBlock extends Block {
+public final class TimeRiftBlock extends dev.strata.epochs.mc.RiftBase {
 
     public TimeRiftBlock(Properties props) {
         super(props);

@@ -724,6 +724,10 @@ final class SelfTest {
         peaceful &= TimeRifts.mayReleaseMob(level, pos);
         server.setDifficulty(difficulty, true);
         boolean moss = TimeRifts.surfaceFor(level, StrataEpochs.id("spore_age")).is(net.minecraft.world.level.block.Blocks.MOSS_BLOCK);
+        // Wasser spült den Riss nicht weg (sonst ließe er sich mit einem Eimer ohne Zeitanker schließen).
+        var riftState = EpochsContent.TIME_RIFT.get().defaultBlockState();
+        boolean dry = riftState.getBlock() instanceof net.minecraft.world.level.block.LiquidBlockContainer c
+                && !c.placeLiquid(level, orphan, riftState, net.minecraft.world.level.material.Fluids.WATER.getSource(false));
         boolean before = TimeRifts.epochsFor(player).contains(epoch);
         StrataAPI.unlock(player, StrataEpochs.id("first_core"));
         StrataAPI.unlock(player, StrataEpochs.id("visited_crystal_age"));
@@ -736,12 +740,12 @@ final class SelfTest {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
         boolean ok = opened && spreads && spaced && stillOpen && refused && sealed && reward && expired && dims
-                && eligible && surface && pruned && peaceful && moss && missing.isEmpty();
+                && eligible && surface && pruned && peaceful && moss && dry && missing.isEmpty();
         StrataEpochs.LOG.info("[Strata-Test] Zeitrisse: offen={}, Boden={} ({} Blöcke, Bau bleibt), Abstand={}, läuft={}, "
                 + "ohne Anker zu={}, versiegelt={}, Belohnung={}, abgelaufen={}, Dimensionen={}, nur besuchte={}, "
-                + "Oberfläche={}, Verwaiste weg={}, Friedlich={}, Moos={}, Texte fehlen={} -> {}",
+                + "Oberfläche={}, Verwaiste weg={}, Friedlich={}, Moos={}, wasserfest={}, Texte fehlen={} -> {}",
                 opened, spreads, converted, spaced, stillOpen, refused, sealed, reward, expired, dims, eligible,
-                surface, pruned, peaceful, moss, missing, ok ? "OK" : "FEHLER");
+                surface, pruned, peaceful, moss, dry, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

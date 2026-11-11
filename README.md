@@ -105,7 +105,7 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 Nur natürliche Blöcke (Tag `strata_epochs:transplantable`) werden verändert, Bauten bleiben. Er wirkt nur in der Oberwelt. Radius, Tempo und Anzahl stehen in der Config (`[transplanter]`), die Landschaft im Datapack (Feld `landscape` der Epoche).
 
 **Zeitrisse (Verwerfungen):** Wer schon einmal in einer Epoche war, bei dem reißt in der Oberwelt ab und zu ein Riss in eine dieser Epochen auf, 24–40 Blöcke entfernt. Der Chat nennt Epoche, Richtung und Entfernung.
-- Der Spalt ist zwei Blöcke hoch, darüber steht eine Partikelsäule in der Farbe der Epoche. Risse öffnen sich nur, wenn du an der Oberfläche bist.
+- Der Spalt ist zwei Blöcke hoch, darüber steht eine Partikelsäule in der Farbe der Epoche. Wasser und Lava spülen ihn nicht weg. Risse öffnen sich nur, wenn du an der Oberfläche bist (höchstens 8 Blöcke unter dem Himmel; unter einem hohen Dach also nicht).
 - Solange er offen ist, laufen drei Risslinien vom Spalt nach außen (bis 6 Blöcke): Alle 2 s wird ein natürlicher Oberflächenblock zum Boden der Epoche (Calcit, Moos, Vulkanasche). Erlaubt sind nur gewachsene Blöcke (Tag `strata_epochs:rift_convertible`); Ackerland, Wege, Terrakotta, Sandstein und Bauten bleiben. Alle 30 s kommt ein Mob der Epoche heraus (höchstens 3 in der Nähe, nicht auf Friedlich).
 - **Schleichen + Rechtsklick mit einem Zeitanker** versiegelt den Riss. Er gibt einen Fossilbrocken der Epoche und 2–4 Rohstoffe frei; der Kodex-Knoten `sealed_rift` schaltet sich frei.
 - Sonst schließt er sich nach 5 Minuten von selbst. Die Verwerfung im Boden bleibt.
@@ -264,7 +264,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 40 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
 - Kernanalyse-Tisch mit Trichtern und Rohren: freigegeben in Prüfrunde 2 (7/7/8), im Selbsttest mit Vanilla-Trichter und einem Rohr-Cache wie bei Mekanism geprüft. Mit echten Rohr-Mods lief er noch nicht. Strom (FE) nimmt bewusst keiner der Tische an, weil nichts daran Arbeit braucht.
 - Inventar-Verfestigung: freigegeben in Prüfrunde 2 (7/8/8). Im Client gesehen in 1.21.1 (`docs/screenshots/petrify/`, Versteinern im Überlebensmodus). Das Lösen (draußen, beim Tod, fremde Brocken) prüft der Selbsttest; von Hand durchgespielt wurde es noch nicht. Bricht ein anderer Mod den Tod ab (Wiederbelebung), sind die Gegenstände trotzdem schon gelöst.
-- Zeitrisse: im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/rifts/`). Wie oft sie im echten Spiel auftauchen (20 min, 35 %), ist geschätzt und noch nicht ausprobiert.
+- Zeitrisse: freigegeben in Prüfrunde 2 (8/7/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/rifts/`). Wie oft sie im echten Spiel auftauchen (20 min, 35 %), ist geschätzt und noch nicht ausprobiert.
 - Epochen-Pflanzen (Quarzdistel, Harzfarn, Glutknolle): freigegeben in Prüfrunde 2 (8/7/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/crops/`). Eine echte Farm auf transplantiertem Boden wurde noch nicht von Hand gespielt.
 - Biome: drei pro Epoche, freigegeben in Prüfrunde 3 (7/7/7), Bilder in `docs/screenshots/biomes/`. Das Tor peilt die Nebenbiome an (Prüfrunde 3: 8/8/8).
 - Die Texturen sind von Hand gestaltete Pixel-Art aus `tools/make_textures.py` (von einem Prüf-Agenten in 4 Runden auf mindestens 7/10 pro Textur gebracht); ein menschlicher Pixel-Artist könnte sie weiter verfeinern.
