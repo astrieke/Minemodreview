@@ -29,6 +29,7 @@
 #   (Bild 1: Schnellleiste und Meldung, Bild 2: Inventar).
 # SHOT_RIFT=<epoche>: in der Oberwelt (flache Testwelt) öffnet sich nach 30 s ein Zeitriss vor dem Spieler;
 #   Bildserie 40 s lang (alle 1 s): Riss, Partikel und der Boden, der zur Epoche wird.
+# SHOT_MUSEUM=1: in der Oberwelt stehen sechs Vitrinen mit Bohrkern und Fossil jeder Epoche (Museum der Erdgeschichte).
 # SHOT_BEARING=1: Kurz vor dem Bild peilt der Spieler die Biome (/strata_epochs bearing), die Zeilen stehen im Chat.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -98,6 +99,23 @@ time set day
 execute as @p at @p run strata_epochs rift strata_epochs:$SHOT_RIFT
 tp @p 0.5 -58 -14.5 0 12
 MC
+fi
+if [ -n "${SHOT_MUSEUM:-}" ]; then
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in minecraft:overworld run tp @s 5.5 -59 -4.5 0 30\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:museum 400t|" "$f"
+    {
+        echo "time set day"
+        i=0
+        for item in 'strata_epochs:core_sample[strata_epochs:sample_epoch="strata_epochs:crystal_age"]' strata_epochs:ammonite_fossil \
+                    'strata_epochs:core_sample[strata_epochs:sample_epoch="strata_epochs:spore_age"]' strata_epochs:fern_fossil \
+                    'strata_epochs:core_sample[strata_epochs:sample_epoch="strata_epochs:ash_age"]' strata_epochs:ancient_skull; do
+            cx=$((i * 2)); cz=$(( i % 2 == 0 ? 0 : 1 ))   # nur positive Werte: "$cx.5" ist die Blockmitte
+            echo "execute in minecraft:overworld run setblock $cx -60 $cz strata_epochs:display_case"
+            echo "execute in minecraft:overworld run summon minecraft:item_display $cx.5 -59.38 $cz.5 {Tags:[\"strata_exhibit\",\"shot$i\"],billboard:\"vertical\",transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.6f,0.6f,0.6f]}}"
+            echo "item replace entity @e[type=minecraft:item_display,tag=shot$i] contents with $item"
+            i=$((i + 1))
+        done
+    } > "$dp/data/strata_shot/function/museum.mcfunction"
 fi
 if [ -n "${SHOT_CURIOS:-}" ]; then
     GRADLE_ARGS="${GRADLE_ARGS:-} -PwithCurios"
