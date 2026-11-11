@@ -525,6 +525,16 @@ final class SelfTest {
             var young = net.minecraft.world.level.block.Block.getDrops(crop.defaultBlockState(), epoch, at, null);
             boolean seedBack = young.size() == 1 && young.get(0).is(EpochCrop.seedFor(crop.epoch()))
                     && young.stream().noneMatch(d -> d.is(c.product()));
+            // Zeitessenz: eine Stufe pro Essenz, auf einer reifen Pflanze wirkungslos und nicht verbraucht.
+            epoch.setBlockAndUpdate(at, crop.defaultBlockState());
+            var essence = new net.minecraft.world.item.ItemStack(EpochsContent.TIME_ESSENCE.get(), 5);
+            boolean grew = EpochCrop.applyEssence(epoch, at, essence, true)
+                    && epoch.getBlockState(at).getValue(net.minecraft.world.level.block.BeetrootBlock.AGE) == 1 && essence.getCount() == 4;
+            EpochCrop.applyEssence(epoch, at, essence, true);
+            EpochCrop.applyEssence(epoch, at, essence, true);
+            boolean essenceOk = grew && crop.isMaxAge(epoch.getBlockState(at)) && essence.getCount() == 2
+                    && !EpochCrop.applyEssence(epoch, at, essence, true) && essence.getCount() == 2;
+            harvest &= essenceOk;
             epoch.setBlockAndUpdate(at, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
             epoch.setBlockAndUpdate(ground, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
 
@@ -685,7 +695,14 @@ final class SelfTest {
                 && level.getData(EpochsContent.RIFTS.get()).stream().noneMatch(r -> r.pos() == pos.asLong());
         var drops = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(pos).inflate(2));
         boolean reward = drops.stream().anyMatch(e -> e.getItem().is(EpochsContent.FOSSIL_CHUNK.get()))
-                && drops.stream().anyMatch(e -> e.getItem().is(EpochsContent.CRYSTAL_QUARTZ.get()));
+                && drops.stream().anyMatch(e -> e.getItem().is(EpochsContent.CRYSTAL_QUARTZ.get()))
+                && drops.stream().anyMatch(e -> e.getItem().is(EpochsContent.TIME_ESSENCE.get()));
+        // Steinzeuge lässt Zeitessenz fallen (50 %): steht in seiner Beutetabelle.
+        try (var in = SelfTest.class.getResourceAsStream("/data/strata_epochs/loot_table/entities/petrified_witness.json")) {
+            reward &= in != null && new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).contains("strata_epochs:time_essence");
+        } catch (java.io.IOException e) {
+            reward = false;
+        }
         drops.forEach(net.minecraft.world.entity.Entity::discard);
         player.setShiftKeyDown(false);
         player.getInventory().clearContent();
@@ -736,7 +753,7 @@ final class SelfTest {
         level.setBlockAndUpdate(build, net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState());
 
         List<String> missing = new ArrayList<>();
-        for (String key : List.of("block.strata_epochs.time_rift", "message.strata_epochs.rift.opened",
+        for (String key : List.of("block.strata_epochs.time_rift", "item.strata_epochs.time_essence", "message.strata_epochs.rift.opened",
                 "message.strata_epochs.rift.how", "message.strata_epochs.rift.sealed")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }

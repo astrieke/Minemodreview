@@ -1500,6 +1500,30 @@ def display_case_trim():
     return from_grid(rows, pal)
 
 
+def time_essence():
+    # Zeitessenz: schwebender Tropfen verdichteter Zeit; violetter Wirbel innen, goldener Glanz oben links, zwei Funken.
+    pal = {'w': '#fff6d8', 'y': '#ffe08a', 'g': '#d9a43a', 'l': '#b48cff', 'v': '#7a4fd6', 'V': '#4b2f9a', 'k': '#2a1a5c'}
+    rows = [
+        '................',
+        '.......y....w...',
+        '.......g........',
+        '......lll.......',
+        '.....lwyll......',
+        '....lwyvvll.....',
+        '...lwyvVVvll....',
+        '...lyvVggVvl....',
+        '...lvVgkkgVv....',
+        '...lvVkVgkVv....',
+        '...lvVVkkVVv....',
+        '....vVVVVVv.....',
+        '.....vvVvv....y.',
+        '......kkk.......',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1a0f3a')
+
+
 def quartz_thistle_seeds():
     # Drei graugrüne Samenkapseln der Distel, aus deren Spitze ein kleiner Kristall schaut (nicht wie Kristallquarz).
     pal = {'g': '#a4bfa8', 'G': '#6f8f78', 'd': '#3f5a48', 'k': '#4a44c0', 'm': '#7471f2', 'l': '#c8c6ff'}
@@ -1615,6 +1639,7 @@ ITEMS = {
     'codex_fragment': codex_fragment,
     'quartz_thistle_seeds': quartz_thistle_seeds,
     'petrified_item': petrified_item,
+    'time_essence': time_essence,
     'resin_fern_spores': resin_fern_spores,
     'ember_tuber': ember_tuber,
 }

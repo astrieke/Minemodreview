@@ -178,5 +178,6 @@
   "message.strata_epochs.museum.done": "Museum of Earth History complete!",
   "message.strata_epochs.museum.complete": "The Museum of Earth History is complete",
   "message.strata_epochs.museum.occupied": "This case already holds something (right-click with an empty hand to take it out)",
-  "message.strata_epochs.museum.contribute": "The museum is complete – display an exhibit yourself to complete it for you"
+  "message.strata_epochs.museum.contribute": "The museum is complete – display an exhibit yourself to complete it for you",
+  "item.strata_epochs.time_essence": "Time Essence"
 }

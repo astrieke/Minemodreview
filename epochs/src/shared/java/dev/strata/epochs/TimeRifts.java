@@ -46,8 +46,8 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
  * Risse öffnen sich nur bei Spielern an der Oberfläche. Der Spalt ist zwei Blöcke hoch, darüber steht eine
  * Partikelsäule in der Farbe der Epoche. Ein Rissblock ohne Datensatz (z. B. nach Ablauf in entladener Gegend)
  * verschwindet beim nächsten Zufallstick.
- * Schleichen + Rechtsklick mit einem Zeitanker versiegelt den Riss: Er gibt ein Fossil der Epoche und ein paar
- * Rohstoffe frei. Sonst schließt er sich nach der Lebensdauer von selbst, die Verwerfung im Boden bleibt.
+ * Schleichen + Rechtsklick mit einem Zeitanker versiegelt den Riss: Er gibt ein Fossil der Epoche, 1–2 Zeitessenzen
+ * und ein paar Rohstoffe frei. Sonst schließt er sich nach der Lebensdauer von selbst, die Verwerfung im Boden bleibt.
  */
 public final class TimeRifts {
 
@@ -296,6 +296,7 @@ public final class TimeRifts {
         if (!sealed || rift == null) return;
         List<ItemStack> loot = new ArrayList<>();
         loot.add(FossilPrep.chunk(rift.epoch()));
+        loot.add(new ItemStack(EpochsContent.TIME_ESSENCE.get(), 1 + level.getRandom().nextInt(2)));
         Kind kind = KINDS.get(rift.epoch());
         if (kind != null) loot.add(new ItemStack(kind.resource.get(), 2 + level.getRandom().nextInt(3)));
         for (ItemStack stack : loot) {

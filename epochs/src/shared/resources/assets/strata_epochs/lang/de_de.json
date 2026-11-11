@@ -178,5 +178,6 @@
   "message.strata_epochs.museum.done": "Museum der Erdgeschichte vollständig!",
   "message.strata_epochs.museum.complete": "Das Museum der Erdgeschichte ist vollständig",
   "message.strata_epochs.museum.occupied": "In dieser Vitrine steht schon etwas (Rechtsklick mit leerer Hand nimmt es heraus)",
-  "message.strata_epochs.museum.contribute": "Das Museum ist vollständig – stelle selbst ein Exponat aus, um es für dich abzuschließen"
+  "message.strata_epochs.museum.contribute": "Das Museum ist vollständig – stelle selbst ein Exponat aus, um es für dich abzuschließen",
+  "item.strata_epochs.time_essence": "Zeitessenz"
 }

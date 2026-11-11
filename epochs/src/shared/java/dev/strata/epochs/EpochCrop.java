@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.LevelReader;
@@ -79,6 +80,32 @@ public class EpochCrop extends dev.strata.epochs.mc.CropBase {
             if (crop.get() instanceof EpochCrop c && c.epoch.equals(epochId)) return c.seed.get();
         }
         return null;
+    }
+
+    /**
+     * Zeitessenz auf eine Epochen-Pflanze: eine Stufe wachsen, verbraucht eine Essenz. Auf einer reifen Pflanze
+     * passiert nichts. Gibt zurück, ob sie gewachsen ist (für den Selbsttest öffentlich).
+     */
+    public static boolean applyEssence(ServerLevel level, BlockPos pos, ItemStack essence, boolean consume) {
+        BlockState state = level.getBlockState(pos);
+        if (!(state.getBlock() instanceof EpochCrop crop) || crop.isMaxAge(state) || !essence.is(EpochsContent.TIME_ESSENCE.get())) {
+            return false;
+        }
+        level.setBlockAndUpdate(pos, crop.getStateForAge(state.getValue(crop.getAgeProperty()) + 1));
+        if (consume) essence.shrink(1);
+        level.playSound(null, pos, net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.4f);
+        level.sendParticles(net.minecraft.core.particles.ParticleTypes.REVERSE_PORTAL, pos.getX() + 0.5, pos.getY() + 0.5,
+                pos.getZ() + 0.5, 15, 0.3, 0.3, 0.3, 0.05);
+        return true;
+    }
+
+    static void onUseEssence(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        if (!event.getItemStack().is(EpochsContent.TIME_ESSENCE.get())) return;
+        if (!(event.getLevel().getBlockState(event.getPos()).getBlock() instanceof EpochCrop)) return;
+        event.setCanceled(true);
+        event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
+        if (!(event.getLevel() instanceof ServerLevel level) || !(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)) return;
+        applyEssence(level, event.getPos(), event.getItemStack(), !player.isCreative());
     }
 
     /**

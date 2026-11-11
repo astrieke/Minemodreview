@@ -84,6 +84,7 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 
 - Dazu kommen 1–2 Samen (Glück gibt mehr). Saatgut bleibt also knapp, eine Farm wächst langsam.
 - Die Pflanzen wachsen nur in einem Biom ihrer Epoche, also in der Epoche selbst oder auf Boden, den der **Transplantator** dorthin verwandelt hat. So wird ein transplantiertes Gebiet zur Farm für Epochen-Rohstoffe.
+- **Zeitessenz** (aus versiegelten Zeitrissen, mit 50 % vom Steinzeugen) ist ihr Dünger: Rechtsklick lässt eine Pflanze eine Stufe wachsen. Packs und Magie-Mods finden die Essenz im Item-Tag `strata_epochs:time_essence`; ein Fluid gibt es nicht.
 - Licht brauchen sie nicht. Reif sind sie nach etwa 17 Minuten. Knochenmehl wirkt nicht; sie wachsen nur durch Zufallsticks (die Spielregel `randomTickSpeed` und Beschleuniger-Mods wirken also weiter).
 - An der falschen Stelle sagt dir die Aktionsleiste, welchen Boden die Pflanze braucht.
 - Pack-Autoren erweitern den Boden über die Tags `strata_epochs:soil/<epoche>` und die Biome über `strata_epochs:epoch/<epoche>`.
@@ -116,7 +117,7 @@ Nur natürliche Blöcke (Tag `strata_epochs:transplantable`) werden verändert, 
 **Zeitrisse (Verwerfungen):** Wer schon einmal in einer Epoche war, bei dem reißt in der Oberwelt ab und zu ein Riss in eine dieser Epochen auf, 24–40 Blöcke entfernt. Der Chat nennt Epoche, Richtung und Entfernung.
 - Der Spalt ist zwei Blöcke hoch, darüber steht eine Partikelsäule in der Farbe der Epoche. Wasser und Lava spülen ihn nicht weg. Risse öffnen sich nur, wenn du an der Oberfläche bist (höchstens 8 Blöcke unter dem Himmel; unter einem hohen Dach also nicht).
 - Solange er offen ist, laufen drei Risslinien vom Spalt nach außen (bis 6 Blöcke): Alle 2 s wird ein natürlicher Oberflächenblock zum Boden der Epoche (Calcit, Moos, Vulkanasche). Erlaubt sind nur gewachsene Blöcke (Tag `strata_epochs:rift_convertible`); Ackerland, Wege, Terrakotta, Sandstein und Bauten bleiben. Alle 30 s kommt ein Mob der Epoche heraus (höchstens 3 in der Nähe, nicht auf Friedlich).
-- **Schleichen + Rechtsklick mit einem Zeitanker** versiegelt den Riss. Er gibt einen Fossilbrocken der Epoche und 2–4 Rohstoffe frei; der Kodex-Knoten `sealed_rift` schaltet sich frei.
+- **Schleichen + Rechtsklick mit einem Zeitanker** versiegelt den Riss. Er gibt einen Fossilbrocken der Epoche, 1–2 **Zeitessenzen** und 2–4 Rohstoffe frei; der Kodex-Knoten `sealed_rift` schaltet sich frei.
 - Sonst schließt er sich nach 5 Minuten von selbst. Die Verwerfung im Boden bleibt.
 - Auf Servern mit Grundstücksschutz (FTB Chunks, Open Parties and Claims) besser `griefing = false` setzen: Risse fragen den Schutz nicht ab.
 - Config `[rifts]`: `enabled`, `griefing` (Boden verändern), `dimensions` (Standard nur die Oberwelt), `interval_minutes` (20) und `chance` (0,35) pro Spieler, `lifetime_seconds` (300), `max_active` (4). Zwei Risse liegen mindestens 96 Blöcke auseinander.

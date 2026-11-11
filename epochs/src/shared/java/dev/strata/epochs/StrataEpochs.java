@@ -40,6 +40,7 @@ public final class StrataEpochs {
         NeoForge.EVENT_BUS.addListener(DisplayCases::onRightClickBlock);
         NeoForge.EVENT_BUS.addListener(TimeRifts::onLevelTick);
         NeoForge.EVENT_BUS.addListener(EpochCrop::onRightClickBlock);
+        NeoForge.EVENT_BUS.addListener(EpochCrop::onUseEssence);
         NeoForge.EVENT_BUS.addListener(Transplanter::onRightClickBlock);
         NeoForge.EVENT_BUS.addListener(Transplanter::onLevelTick);
         NeoForge.EVENT_BUS.addListener(BiomeBearing::onLevelTick);

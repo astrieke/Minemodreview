@@ -85,6 +85,13 @@ public final class EpochsContent {
     public static final Supplier<Item> SPORE_SAC = REG.item("spore_sac", p -> p);
     /** Drop des Steinzeugen: Rechtsklick schaltet den Kodex-Knoten „Echo eines Reisenden“ frei. */
     public static final Supplier<Item> CODEX_FRAGMENT = REG.item("codex_fragment", p -> p.stacksTo(16));
+    /**
+     * Zeitessenz: verdichtete Zeit aus versiegelten Zeitrissen und vom Steinzeugen. Lässt eine Epochen-Pflanze eine
+     * Stufe wachsen (Knochenmehl wirkt bei ihnen nicht, siehe {@link EpochCrop}); Item-Tag
+     * {@code strata_epochs:time_essence} für Magie-Mods und Rezepte von Packs.
+     */
+    public static final Supplier<Item> TIME_ESSENCE = REG.item("time_essence", p -> p.rarity(net.minecraft.world.item.Rarity.UNCOMMON));
+
     /** Keimfrische: dreht die Verfestigungs-Uhr ein Stück zurück (siehe {@link GermTonic}). */
     public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
 

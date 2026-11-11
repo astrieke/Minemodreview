@@ -41,6 +41,7 @@ public final class BridgeTexts {
         info.put(() -> EpochsContent.TRANSPLANTER.get().asItem(), "jei.strata_bridge.info.transplanter");
         info.put(() -> EpochsContent.ANALYSIS_TABLE.get().asItem(), "jei.strata_bridge.info.analysis_table");
         info.put(EpochsContent.PETRIFIED_ITEM::get, "jei.strata_bridge.info.petrified_item");
+        info.put(EpochsContent.TIME_ESSENCE::get, "jei.strata_bridge.info.time_essence");
         info.put(() -> EpochsContent.DISPLAY_CASE.get().asItem(), "jei.strata_bridge.info.display_case");
         info.put(EpochsContent.QUARTZ_THISTLE_SEEDS::get, "jei.strata_bridge.info.quartz_thistle_seeds");
         info.put(EpochsContent.RESIN_FERN_SPORES::get, "jei.strata_bridge.info.resin_fern_spores");
