@@ -55,6 +55,8 @@ PAL = {
     'basalt':        ['#1f1d22', '#2c2a30', '#3b3840', '#4c4852', '#5e5a64'],
     'ember':         ['#5a1205', '#9e2a0c', '#e0531c', '#ff9a3c', '#ffd27a'],
     'fossil':        ['#6e5f44', '#9c8a64', '#cbb98f', '#e6d8b4', '#f2e8cc'],
+    # Sporenschicht des Stratolithen: Moosgrün der Sporenzeit, Oberseite hell genug gegen den grünen Nebel
+    'moss':          ['#26381a', '#36502a', '#4f7a3a', '#6b9a4a', '#8db45e'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
 }
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
@@ -440,10 +442,31 @@ def d_fin_tip(img, f, rnd):
             put(img, r, x, y, '#ffd27a')
 
 
+def d_moss(img, f, rnd):
+    # Sporenschicht des Stratolithen: helle Myzelflecken und einzelne Bernsteinsporen auf allen Seiten und oben.
+    for name in ('north', 'south', 'east', 'west', 'up'):
+        x0, y0, w, h = f[name]
+        for _ in range(max(3, w * h // 14)):
+            x, y = rnd.randrange(w), rnd.randrange(h)
+            put(img, f[name], x, y, rnd.choice(['#c9d9a0', '#b3cc6a', '#d8e4b8']))
+        for _ in range(max(1, w * h // 60)):
+            put(img, f[name], rnd.randrange(w), rnd.randrange(h), '#e0a030')
+
+
+def d_stratolith_eyes(img, f, rnd):
+    # Zwei schmale, glühende Augenschlitze im Grundgestein, über dem Sanduhr-Kern.
+    r = f['north']                                          # 26 x 12
+    for x in (7, 8, 9, 16, 17, 18):
+        put(img, r, x, 2, '#ffd27a')
+    for x in (8, 17):
+        put(img, r, x, 3, '#e0a030')
+
+
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
            'amber_top': d_amber_top,
            'spiral': d_spiral, 'hood': d_hood, 'fossil': d_fossil, 'eyes': d_eyes, 'fin_tip': d_fin_tip,
-           'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass}
+           'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass, 'moss': d_moss,
+           'stratolith_eyes': d_stratolith_eyes}
 
 
 # Leucht-Ebenen: Name -> Materialien (ganze Würfel) oder Farben (einzelne Pixel, z. B. Augen),
@@ -460,6 +483,9 @@ GLOW = {
                        'veins': {'colors': {'#e86a2c'}, 'glow_color': '#ff9a3c'}},
     # Die Spiralrille ist die Uhr: 4 Segmente (außen 1 -> innen 4), die von außen nach innen erlöschen.
     # Die Augen leuchten mit dem innersten Segment.
+    # Kern (Sanduhr) und Augen glühen; die Kristalle leuchten, solange die Kristallschicht da ist.
+    'stratolith': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a'}},
+                   'crystals': {'materials': {'quartz'}}},
     'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
                  'spiral_2': {'colors': {'#4a3591'}, 'glow_color': '#c9a8ff'},
                  'spiral_3': {'colors': {'#4a3592'}, 'glow_color': '#c9a8ff'},

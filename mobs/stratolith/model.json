@@ -1,0 +1,1716 @@
+{
+ "id": "stratolith",
+ "name": "Stratolith",
+ "texture_size": [
+  128,
+  128
+ ],
+ "bones": [
+  {
+   "name": "root",
+   "origin": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "name": "leg_left",
+   "parent": "root",
+   "origin": [
+    7,
+    12,
+    0
+   ]
+  },
+  {
+   "name": "leg_right",
+   "parent": "root",
+   "origin": [
+    -7,
+    12,
+    0
+   ]
+  },
+  {
+   "name": "base",
+   "parent": "root",
+   "origin": [
+    0,
+    12,
+    0
+   ]
+  },
+  {
+   "name": "core",
+   "parent": "base",
+   "origin": [
+    0,
+    19,
+    -11.5
+   ]
+  },
+  {
+   "name": "arm_left",
+   "parent": "base",
+   "origin": [
+    15.5,
+    22,
+    0
+   ]
+  },
+  {
+   "name": "arm_right",
+   "parent": "base",
+   "origin": [
+    -15.5,
+    22,
+    0
+   ]
+  },
+  {
+   "name": "shed2_spore",
+   "parent": "base",
+   "origin": [
+    0,
+    24,
+    0
+   ]
+  },
+  {
+   "name": "shed1_crystal",
+   "parent": "shed2_spore",
+   "origin": [
+    0,
+    33,
+    0
+   ]
+  }
+ ],
+ "cubes": [
+  {
+   "name": "leg_l",
+   "bone": "leg_left",
+   "from": [
+    3,
+    0,
+    -4
+   ],
+   "to": [
+    11,
+    12,
+    4
+   ],
+   "uv_offset": [
+    64,
+    61
+   ],
+   "material": "strata_dark"
+  },
+  {
+   "name": "leg_r",
+   "bone": "leg_right",
+   "from": [
+    -11,
+    0,
+    -4
+   ],
+   "to": [
+    -3,
+    12,
+    4
+   ],
+   "uv_offset": [
+    64,
+    61
+   ],
+   "material": "strata_dark",
+   "mirror_uv": true
+  },
+  {
+   "name": "bedrock",
+   "bone": "base",
+   "from": [
+    -13,
+    12,
+    -11
+   ],
+   "to": [
+    13,
+    24,
+    11
+   ],
+   "uv_offset": [
+    0,
+    0
+   ],
+   "material": "strata",
+   "veins": true,
+   "face": "stratolith_eyes"
+  },
+  {
+   "name": "hourglass",
+   "bone": "core",
+   "from": [
+    -2.5,
+    15.5,
+    -12
+   ],
+   "to": [
+    2.5,
+    22.5,
+    -11
+   ],
+   "uv_offset": [
+    96,
+    48
+   ],
+   "material": "gold",
+   "face": "hourglass"
+  },
+  {
+   "name": "arm_l",
+   "bone": "arm_left",
+   "from": [
+    13,
+    6,
+    -3
+   ],
+   "to": [
+    18,
+    22,
+    3
+   ],
+   "uv_offset": [
+    96,
+    0
+   ],
+   "material": "strata_dark"
+  },
+  {
+   "name": "arm_r",
+   "bone": "arm_right",
+   "from": [
+    -18,
+    6,
+    -3
+   ],
+   "to": [
+    -13,
+    22,
+    3
+   ],
+   "uv_offset": [
+    96,
+    0
+   ],
+   "material": "strata_dark",
+   "mirror_uv": true
+  },
+  {
+   "name": "fist_l",
+   "bone": "arm_left",
+   "from": [
+    12.5,
+    0,
+    -3.5
+   ],
+   "to": [
+    18.5,
+    6,
+    3.5
+   ],
+   "uv_offset": [
+    96,
+    22
+   ],
+   "material": "basalt"
+  },
+  {
+   "name": "fist_r",
+   "bone": "arm_right",
+   "from": [
+    -18.5,
+    0,
+    -3.5
+   ],
+   "to": [
+    -12.5,
+    6,
+    3.5
+   ],
+   "uv_offset": [
+    96,
+    22
+   ],
+   "material": "basalt",
+   "mirror_uv": true
+  },
+  {
+   "name": "spore_layer",
+   "bone": "shed2_spore",
+   "from": [
+    -11,
+    24,
+    -9
+   ],
+   "to": [
+    11,
+    33,
+    9
+   ],
+   "uv_offset": [
+    0,
+    34
+   ],
+   "material": "moss",
+   "face": "moss"
+  },
+  {
+   "name": "mushroom_l",
+   "bone": "shed2_spore",
+   "from": [
+    -10,
+    33,
+    -9
+   ],
+   "to": [
+    -5,
+    36,
+    -6
+   ],
+   "uv_offset": [
+    96,
+    57
+   ],
+   "material": "rim"
+  },
+  {
+   "name": "mushroom_r",
+   "bone": "shed2_spore",
+   "from": [
+    5,
+    33,
+    6
+   ],
+   "to": [
+    10,
+    36,
+    9
+   ],
+   "uv_offset": [
+    96,
+    57
+   ],
+   "material": "rim",
+   "mirror_uv": true
+  },
+  {
+   "name": "crystal_layer",
+   "bone": "shed1_crystal",
+   "from": [
+    -8,
+    33,
+    -6
+   ],
+   "to": [
+    8,
+    38,
+    6
+   ],
+   "uv_offset": [
+    0,
+    61
+   ],
+   "material": "calcite"
+  },
+  {
+   "name": "crystal_big",
+   "bone": "shed1_crystal",
+   "from": [
+    -2,
+    38,
+    -2
+   ],
+   "to": [
+    2,
+    50,
+    2
+   ],
+   "uv_offset": [
+    64,
+    81
+   ],
+   "material": "quartz",
+   "rotation": [
+    0,
+    0,
+    -6
+   ],
+   "origin": [
+    0,
+    38,
+    0
+   ]
+  },
+  {
+   "name": "crystal_left",
+   "bone": "shed1_crystal",
+   "from": [
+    -7,
+    37,
+    -1
+   ],
+   "to": [
+    -4,
+    45,
+    2
+   ],
+   "uv_offset": [
+    80,
+    81
+   ],
+   "material": "quartz",
+   "rotation": [
+    0,
+    0,
+    18
+   ],
+   "origin": [
+    -5.5,
+    37,
+    0.5
+   ]
+  },
+  {
+   "name": "crystal_right",
+   "bone": "shed1_crystal",
+   "from": [
+    3,
+    37,
+    -3
+   ],
+   "to": [
+    6,
+    43,
+    0
+   ],
+   "uv_offset": [
+    92,
+    81
+   ],
+   "material": "quartz",
+   "rotation": [
+    12,
+    0,
+    -22
+   ],
+   "origin": [
+    4.5,
+    37,
+    -1.5
+   ]
+  }
+ ],
+ "animations": [
+  {
+   "name": "animation.stratolith.idle",
+   "length": 4.0,
+   "loop": "loop",
+   "keyframes": [
+    {
+     "bone": "base",
+     "channel": "position",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "position",
+     "time": 2,
+     "value": [
+      0,
+      -0.4,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "position",
+     "time": 4,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed2_spore",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed2_spore",
+     "channel": "rotation",
+     "time": 2,
+     "value": [
+      0,
+      0,
+      1.5
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed2_spore",
+     "channel": "rotation",
+     "time": 4,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed1_crystal",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed1_crystal",
+     "channel": "rotation",
+     "time": 2,
+     "value": [
+      0,
+      5,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed1_crystal",
+     "channel": "rotation",
+     "time": 4,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "core",
+     "channel": "scale",
+     "time": 0,
+     "value": [
+      1,
+      1,
+      1
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "core",
+     "channel": "scale",
+     "time": 2,
+     "value": [
+      1.08,
+      1.08,
+      1.08
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "core",
+     "channel": "scale",
+     "time": 4,
+     "value": [
+      1,
+      1,
+      1
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 2,
+     "value": [
+      0,
+      0,
+      -3
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 4,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 2,
+     "value": [
+      0,
+      0,
+      3
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 4,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    }
+   ]
+  },
+  {
+   "name": "animation.stratolith.walk",
+   "length": 1.2,
+   "loop": "loop",
+   "keyframes": [
+    {
+     "bone": "leg_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_left",
+     "channel": "rotation",
+     "time": 0.3,
+     "value": [
+      -22,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_left",
+     "channel": "rotation",
+     "time": 0.6,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_left",
+     "channel": "rotation",
+     "time": 0.9,
+     "value": [
+      22,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_left",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_right",
+     "channel": "rotation",
+     "time": 0.3,
+     "value": [
+      22,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_right",
+     "channel": "rotation",
+     "time": 0.6,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_right",
+     "channel": "rotation",
+     "time": 0.9,
+     "value": [
+      -22,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "leg_right",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0.3,
+     "value": [
+      14,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0.9,
+     "value": [
+      -14,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0.3,
+     "value": [
+      -14,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0.9,
+     "value": [
+      14,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0.3,
+     "value": [
+      0,
+      0,
+      2.5
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0.9,
+     "value": [
+      0,
+      0,
+      -2.5
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    }
+   ]
+  },
+  {
+   "name": "animation.stratolith.slam",
+   "length": 1.4,
+   "loop": "once",
+   "keyframes": [
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0.6,
+     "value": [
+      -150,
+      0,
+      -10
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0.8,
+     "value": [
+      -150,
+      0,
+      -10
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 1.0,
+     "value": [
+      10,
+      0,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 1.4,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0.6,
+     "value": [
+      -150,
+      0,
+      10
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0.8,
+     "value": [
+      -150,
+      0,
+      10
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 1.0,
+     "value": [
+      10,
+      0,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 1.4,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0.6,
+     "value": [
+      -8,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0.8,
+     "value": [
+      -8,
+      0,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 1.0,
+     "value": [
+      7,
+      0,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 1.4,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    }
+   ]
+  },
+  {
+   "name": "animation.stratolith.shards",
+   "length": 1.2,
+   "loop": "once",
+   "keyframes": [
+    {
+     "bone": "shed1_crystal",
+     "channel": "position",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed1_crystal",
+     "channel": "position",
+     "time": 0.5,
+     "value": [
+      0,
+      2.5,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed1_crystal",
+     "channel": "position",
+     "time": 1.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0.5,
+     "value": [
+      0,
+      0,
+      -45
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0.5,
+     "value": [
+      0,
+      0,
+      45
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "core",
+     "channel": "scale",
+     "time": 0,
+     "value": [
+      1,
+      1,
+      1
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "core",
+     "channel": "scale",
+     "time": 0.5,
+     "value": [
+      1.25,
+      1.25,
+      1.25
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "core",
+     "channel": "scale",
+     "time": 1.2,
+     "value": [
+      1,
+      1,
+      1
+     ],
+     "interpolation": "catmullrom"
+    }
+   ]
+  },
+  {
+   "name": "animation.stratolith.spores",
+   "length": 1.2,
+   "loop": "once",
+   "keyframes": [
+    {
+     "bone": "shed2_spore",
+     "channel": "scale",
+     "time": 0,
+     "value": [
+      1,
+      1,
+      1
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed2_spore",
+     "channel": "scale",
+     "time": 0.45,
+     "value": [
+      1.12,
+      1.16,
+      1.12
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed2_spore",
+     "channel": "scale",
+     "time": 0.6,
+     "value": [
+      0.95,
+      0.92,
+      0.95
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "shed2_spore",
+     "channel": "scale",
+     "time": 1.2,
+     "value": [
+      1,
+      1,
+      1
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0.45,
+     "value": [
+      -40,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0.45,
+     "value": [
+      -40,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 1.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    }
+   ]
+  },
+  {
+   "name": "animation.stratolith.rewind",
+   "length": 2.0,
+   "loop": "once",
+   "keyframes": [
+    {
+     "bone": "core",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "core",
+     "channel": "rotation",
+     "time": 2.0,
+     "value": [
+      0,
+      0,
+      -360
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0.4,
+     "value": [
+      -60,
+      -35,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 1.6,
+     "value": [
+      -60,
+      -35,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 2.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0.4,
+     "value": [
+      -60,
+      35,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 1.6,
+     "value": [
+      -60,
+      35,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 2.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "position",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "position",
+     "time": 0.4,
+     "value": [
+      0,
+      -1,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "position",
+     "time": 1.6,
+     "value": [
+      0,
+      -1,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "base",
+     "channel": "position",
+     "time": 2.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    }
+   ]
+  },
+  {
+   "name": "animation.stratolith.shed",
+   "length": 1.0,
+   "loop": "once",
+   "keyframes": [
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0.15,
+     "value": [
+      0,
+      0,
+      -6
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0.3,
+     "value": [
+      0,
+      0,
+      6
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 0.5,
+     "value": [
+      0,
+      0,
+      -3
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "base",
+     "channel": "rotation",
+     "time": 1.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0.3,
+     "value": [
+      -30,
+      0,
+      -20
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 1.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0.3,
+     "value": [
+      -30,
+      0,
+      20
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 1.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    }
+   ]
+  },
+  {
+   "name": "animation.stratolith.rise",
+   "length": 3.0,
+   "loop": "once",
+   "keyframes": [
+    {
+     "bone": "root",
+     "channel": "position",
+     "time": 0,
+     "value": [
+      0,
+      -50,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "root",
+     "channel": "position",
+     "time": 2.2,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "root",
+     "channel": "position",
+     "time": 3.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      -160,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 2.2,
+     "value": [
+      -160,
+      0,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 2.6,
+     "value": [
+      15,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_left",
+     "channel": "rotation",
+     "time": 3.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 0,
+     "value": [
+      -160,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 2.2,
+     "value": [
+      -160,
+      0,
+      0
+     ],
+     "interpolation": "linear"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 2.6,
+     "value": [
+      15,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    },
+    {
+     "bone": "arm_right",
+     "channel": "rotation",
+     "time": 3.0,
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "interpolation": "catmullrom"
+    }
+   ]
+  }
+ ]
+}

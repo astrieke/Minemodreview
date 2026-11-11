@@ -80,7 +80,7 @@ Alles liegt in Strata Epochs (`epochs/src/`). Der Mob-Code ist bis auf wenige Ad
 
 **Geodenkriecher, offen für die Definition of Done:**
 - Sounds: eigene, synthetisch erzeugte Klänge (siehe „Mob-Sounds“ unten).
-- Die Calcitschuppe wird schon gebraucht: Zweitrezept für den Zeitanker. Den Bohrkopf Stufe 2 gibt es noch nicht.
+- Die Calcitschuppe wird gebraucht: Zweitrezept für den Zeitanker, Geodenrüstung und als Exponat im Museum der Erdgeschichte. Der früher geplante „Bohrkopf Stufe 2“ ist im Kristall-Kernbohrer aufgegangen (Kernbohrer + 4 Kristallquarz); die Schuppe bleibt bewusst optional, damit die Bohrer-Stufen auch mit abgeschalteten Mobs erreichbar sind.
 
 ## Entscheidung in Kürze
 
