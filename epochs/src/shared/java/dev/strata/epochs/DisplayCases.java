@@ -35,6 +35,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
  *       drei Mob-Trophäen (Calcitschuppe, Sporenbeutel, Kodex-Fragment) = 15 Exponate; Epochen aus Datapacks mit
  *       eigener Dimension zählen mit ihrem Bohrkern.</li>
  *   <li>Rechtsklick mit leerer Hand auf eine leere Vitrine zeigt den Stand.</li>
+ *   <li>Den Knoten (und den Bonus) bekommt nur, wer selbst mindestens ein Exponat des Museums ausgestellt hat
+ *       (Tag {@code strata_by_<uuid>} am Display). Ein gemeinsames Museum geht also, verschenkt wird nichts.</li>
  * </ul>
  */
 public final class DisplayCases {
@@ -95,13 +97,17 @@ public final class DisplayCases {
         return display == null ? ItemStack.EMPTY : display.getSlot(0).get();
     }
 
-    /** Stellt einen Gegenstand aus (nimmt einen vom Stapel). Gibt false zurück, wenn die Vitrine belegt ist. */
-    public static boolean put(ServerLevel level, BlockPos pos, ItemStack held) {
+    /**
+     * Stellt einen Gegenstand aus (nimmt einen vom Stapel), {@code by} ist die UUID des Spielers (leer = niemand).
+     * Gibt false zurück, wenn die Vitrine belegt ist.
+     */
+    public static boolean put(ServerLevel level, BlockPos pos, ItemStack held, String by) {
         if (held.isEmpty() || find(level, pos) != null) return false;
+        String tags = "\"" + TAG + "\"" + (by.isEmpty() ? "" : ",\"" + byTag(by) + "\"");
         Transplanter.command(level, String.format(Locale.ROOT, "summon minecraft:item_display %.2f %.2f %.2f "
-                + "{Tags:[\"%s\"],billboard:\"vertical\",transformation:{left_rotation:[0f,0f,0f,1f],"
+                + "{Tags:[%s],billboard:\"vertical\",transformation:{left_rotation:[0f,0f,0f,1f],"
                 + "right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.6f,0.6f,0.6f]}}",
-                pos.getX() + 0.5, pos.getY() + HEIGHT, pos.getZ() + 0.5, TAG));
+                pos.getX() + 0.5, pos.getY() + HEIGHT, pos.getZ() + 0.5, tags));
         Display.ItemDisplay display = find(level, pos);
         if (display == null) return false;
         display.getSlot(0).set(held.copyWithCount(1));
@@ -129,6 +135,18 @@ public final class DisplayCases {
         level.addFreshEntity(item);
     }
 
+    private static String byTag(String uuid) {
+        return "strata_by_" + uuid;
+    }
+
+    /** Hat dieser Spieler zu den Exponaten in Vitrinen um {@code center} selbst etwas beigetragen? */
+    public static boolean contributed(ServerLevel level, BlockPos center, String uuid) {
+        String tag = byTag(uuid);
+        return level.getEntitiesOfClass(Display.ItemDisplay.class, new AABB(center).inflate(MUSEUM_RANGE),
+                d -> dev.strata.epochs.mc.EntityTags.has(d, TAG) && dev.strata.epochs.mc.EntityTags.has(d, tag)
+                        && level.getBlockState(d.blockPosition()).is(EpochsContent.DISPLAY_CASE.get())).size() > 0;
+    }
+
     /** Welche Museums-Exponate liegen in Vitrinen um {@code center}? Gibt die erfüllten Einträge zurück. */
     public static List<Exhibit> present(ServerLevel level, BlockPos center) {
         List<ItemStack> shown = new ArrayList<>();
@@ -149,6 +167,10 @@ public final class DisplayCases {
         List<Exhibit> have = present(level, pos);
         if (all.isEmpty()) return;
         if (have.size() >= all.size()) {
+            if (!StrataAPI.hasNode(player, StrataEpochs.id("museum")) && !contributed(level, pos, player.getStringUUID())) {
+                Mc.actionbar(player, Component.translatable("message.strata_epochs.museum.contribute").withStyle(ChatFormatting.YELLOW));
+                return;
+            }
             boolean fresh = StrataAPI.unlock(player, StrataEpochs.id("museum"));
             Mc.actionbar(player, Component.translatable(fresh ? "message.strata_epochs.museum.done"
                     : "message.strata_epochs.museum.complete").withStyle(ChatFormatting.GOLD));
@@ -183,6 +205,6 @@ public final class DisplayCases {
             Mc.actionbar(player, Component.translatable("message.strata_epochs.museum.occupied").withStyle(ChatFormatting.GRAY));
             return;
         }
-        if (put(level, pos, held)) checkMuseum(player, level, pos);
+        if (put(level, pos, held, player.getStringUUID())) checkMuseum(player, level, pos);
     }
 }

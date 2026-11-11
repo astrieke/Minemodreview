@@ -783,18 +783,24 @@ final class SelfTest {
             cases.add(pos);
             var held = exhibits.get(i).copy();
             int before = held.getCount();
-            placed &= DisplayCases.put(level, pos, held) && held.getCount() == before - 1
+            placed &= DisplayCases.put(level, pos, held, i == 3 ? player.getStringUUID() : "") && held.getCount() == before - 1
                     && net.minecraft.world.item.ItemStack.isSameItemSameComponents(DisplayCases.exhibit(level, pos), exhibits.get(i));
             if (i < exhibits.size() - 1) {
                 placed &= DisplayCases.present(level, cases.get(0)).size() == i + 1;
             }
         }
-        boolean occupied = !DisplayCases.put(level, cases.get(0), new net.minecraft.world.item.ItemStack(EpochsContent.CRYSTAL_QUARTZ.get()));
+        boolean occupied = !DisplayCases.put(level, cases.get(0), new net.minecraft.world.item.ItemStack(EpochsContent.CRYSTAL_QUARTZ.get()), "");
         boolean complete = requirements.size() == 15 && DisplayCases.present(level, cases.get(0)).size() == 15;
+        // Besucher ohne eigenes Exponat bekommt den Knoten nicht.
+        var visitor = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("strata_museum_visitor".getBytes()), "strata_museum_visitor"));
+        StrataAPI.unlock(visitor, StrataEpochs.id("first_core"));
+        DisplayCases.checkMuseum(visitor, level, cases.get(0));
+        boolean visitorOut = !StrataAPI.hasNode(visitor, StrataEpochs.id("museum"));
         double bonusBefore = Solidification.timeBonus(player);
         DisplayCases.checkMuseum(player, level, cases.get(0));
         boolean codex = StrataAPI.hasNode(player, StrataEpochs.id("museum"))
-                && Math.abs(Solidification.timeBonus(player) - bonusBefore - DisplayCases.MUSEUM_BONUS) < 1e-9;
+                && Math.abs(Solidification.timeBonus(player) - bonusBefore - DisplayCases.MUSEUM_BONUS) < 1e-9 && visitorOut;
 
         // Fremdes Item-Display (ohne Tag) in einer leeren Vitrine: wird weder gefunden noch entfernt.
         BlockPos spare = new BlockPos(cx + 9, y, cz);
@@ -827,7 +833,8 @@ final class SelfTest {
         List<String> missing = new ArrayList<>();
         for (String key : List.of("block.strata_epochs.display_case", "message.strata_epochs.museum.core",
                 "message.strata_epochs.museum.progress", "message.strata_epochs.museum.done",
-                "message.strata_epochs.museum.complete", "message.strata_epochs.museum.occupied")) {
+                "message.strata_epochs.museum.complete", "message.strata_epochs.museum.occupied",
+                "message.strata_epochs.museum.contribute")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
         boolean ok = placed && occupied && complete && codex && foreign && takeOut && dropped && missing.isEmpty();
