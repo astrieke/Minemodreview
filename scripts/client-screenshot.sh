@@ -102,14 +102,18 @@ MC
 fi
 if [ -n "${SHOT_MUSEUM:-}" ]; then
     f="$dp/data/strata_shot/function/tick.mcfunction"
-    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in minecraft:overworld run tp @s 5.5 -59 -4.5 0 30\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:museum 400t|" "$f"
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in minecraft:overworld run tp @s 4.5 -57 -4.5 0 32\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:museum 400t|" "$f"
     {
         echo "time set day"
         i=0
+        # Die ganze Sammlung (15): pro Epoche Bohrkern, Fossil, Rohstoff, Pflanze; dazu drei Mob-Trophäen.
         for item in 'strata_epochs:core_sample[strata_epochs:sample_epoch="strata_epochs:crystal_age"]' strata_epochs:ammonite_fossil \
+                    strata_epochs:crystal_quartz strata_epochs:quartz_thistle_seeds strata_epochs:calcite_scale \
                     'strata_epochs:core_sample[strata_epochs:sample_epoch="strata_epochs:spore_age"]' strata_epochs:fern_fossil \
-                    'strata_epochs:core_sample[strata_epochs:sample_epoch="strata_epochs:ash_age"]' strata_epochs:ancient_skull; do
-            cx=$((i * 2)); cz=$(( i % 2 == 0 ? 0 : 1 ))   # nur positive Werte: "$cx.5" ist die Blockmitte
+                    strata_epochs:amber_shard strata_epochs:resin_fern_spores strata_epochs:spore_sac \
+                    'strata_epochs:core_sample[strata_epochs:sample_epoch="strata_epochs:ash_age"]' strata_epochs:ancient_skull \
+                    strata_epochs:ember_shard strata_epochs:ember_tuber strata_epochs:codex_fragment; do
+            cx=$(( (i % 5) * 2 )); cz=$(( (i / 5) * 2 ))   # nur positive Werte: "$cx.5" ist die Blockmitte
             echo "execute in minecraft:overworld run setblock $cx -60 $cz strata_epochs:display_case"
             echo "execute in minecraft:overworld run summon minecraft:item_display $cx.5 -59.38 $cz.5 {Tags:[\"strata_exhibit\",\"shot$i\"],billboard:\"vertical\",transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.6f,0.6f,0.6f]}}"
             echo "item replace entity @e[type=minecraft:item_display,tag=shot$i] contents with $item"

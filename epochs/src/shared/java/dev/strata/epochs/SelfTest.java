@@ -758,7 +758,7 @@ final class SelfTest {
     private static int testMuseum(MinecraftServer server) {
         ServerLevel level = server.overworld();
         int cx = 8800, cz = 8800;
-        for (int k = 0; k < 12 && !cleanSite(level, cx, cz, 6); k++) cz += 160;
+        for (int k = 0; k < 12 && !cleanSite(level, cx, cz, 9); k++) cz += 160;
         int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz);
         var player = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
                 new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("strata_museum_test".getBytes()), "strata_museum_test"));
@@ -770,10 +770,15 @@ final class SelfTest {
             exhibits.add(CoreSamples.create(StrataEpochs.id(e)));
             exhibits.add(new net.minecraft.world.item.ItemStack(FossilPrep.fossilFor(StrataEpochs.id(e)), 2));
         }
+        for (var item : List.of(EpochsContent.CRYSTAL_QUARTZ, EpochsContent.QUARTZ_THISTLE_SEEDS, EpochsContent.AMBER_SHARD,
+                EpochsContent.RESIN_FERN_SPORES, EpochsContent.EMBER_SHARD, EpochsContent.EMBER_TUBER,
+                EpochsContent.CALCITE_SCALE, EpochsContent.SPORE_SAC, EpochsContent.CODEX_FRAGMENT)) {
+            exhibits.add(new net.minecraft.world.item.ItemStack(item.get()));
+        }
         List<BlockPos> cases = new ArrayList<>();
         boolean placed = true;
         for (int i = 0; i < exhibits.size(); i++) {
-            BlockPos pos = new BlockPos(cx - 5 + 2 * i, y, cz);
+            BlockPos pos = new BlockPos(cx - 4 + 2 * (i % 5), y, cz - 2 + 2 * (i / 5));   // 5 x 3, alles in Reichweite
             level.setBlockAndUpdate(pos, EpochsContent.DISPLAY_CASE.get().defaultBlockState());
             cases.add(pos);
             var held = exhibits.get(i).copy();
@@ -785,18 +790,31 @@ final class SelfTest {
             }
         }
         boolean occupied = !DisplayCases.put(level, cases.get(0), new net.minecraft.world.item.ItemStack(EpochsContent.CRYSTAL_QUARTZ.get()));
-        boolean complete = requirements.size() == 6 && DisplayCases.present(level, cases.get(0)).size() == 6;
+        boolean complete = requirements.size() == 15 && DisplayCases.present(level, cases.get(0)).size() == 15;
+        double bonusBefore = Solidification.timeBonus(player);
         DisplayCases.checkMuseum(player, level, cases.get(0));
-        boolean codex = StrataAPI.hasNode(player, StrataEpochs.id("museum"));
+        boolean codex = StrataAPI.hasNode(player, StrataEpochs.id("museum"))
+                && Math.abs(Solidification.timeBonus(player) - bonusBefore - DisplayCases.MUSEUM_BONUS) < 1e-9;
+
+        // Fremdes Item-Display (ohne Tag) in einer leeren Vitrine: wird weder gefunden noch entfernt.
+        BlockPos spare = new BlockPos(cx + 9, y, cz);
+        level.setBlockAndUpdate(spare, EpochsContent.DISPLAY_CASE.get().defaultBlockState());
+        Transplanter.command(level, "summon minecraft:item_display " + (spare.getX() + 0.5) + " " + (spare.getY() + 0.6) + " "
+                + (spare.getZ() + 0.5) + " {Tags:[\"strata_foreign_test\"]}");
+        boolean foreign = DisplayCases.find(level, spare) == null && DisplayCases.take(level, spare).isEmpty()
+                && level.getEntitiesOfClass(net.minecraft.world.entity.Display.ItemDisplay.class,
+                        new net.minecraft.world.phys.AABB(spare)).size() == 1;
+        Transplanter.command(level, "kill @e[type=minecraft:item_display,tag=strata_foreign_test]");
+        level.setBlockAndUpdate(spare, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
 
         var taken = DisplayCases.take(level, cases.get(0));
         boolean takeOut = CoreSamples.epochOf(taken).isPresent() && DisplayCases.find(level, cases.get(0)) == null
-                && DisplayCases.present(level, cases.get(1)).size() == 5;
+                && DisplayCases.present(level, cases.get(1)).size() == 14;
         // Abbau: Exponat fällt heraus, das Display verschwindet.
         BlockPos last = cases.get(cases.size() - 1);
         level.setBlockAndUpdate(last, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
         var drops = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(last).inflate(1.5));
-        boolean dropped = drops.stream().anyMatch(d -> d.getItem().is(FossilPrep.fossilFor(StrataEpochs.id("ash_age"))))
+        boolean dropped = drops.stream().anyMatch(d -> d.getItem().is(EpochsContent.CODEX_FRAGMENT.get()))
                 && DisplayCases.find(level, last) == null;
         drops.forEach(net.minecraft.world.entity.Entity::discard);
         for (BlockPos pos : cases) {
@@ -804,7 +822,7 @@ final class SelfTest {
             level.setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
         }
         level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,
-                new net.minecraft.world.phys.AABB(cases.get(0)).inflate(14)).forEach(net.minecraft.world.entity.Entity::discard);
+                new net.minecraft.world.phys.AABB(cases.get(0)).inflate(20)).forEach(net.minecraft.world.entity.Entity::discard);
 
         List<String> missing = new ArrayList<>();
         for (String key : List.of("block.strata_epochs.display_case", "message.strata_epochs.museum.core",
@@ -812,10 +830,10 @@ final class SelfTest {
                 "message.strata_epochs.museum.complete", "message.strata_epochs.museum.occupied")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
-        boolean ok = placed && occupied && complete && codex && takeOut && dropped && missing.isEmpty();
-        StrataEpochs.LOG.info("[Strata-Test] Museum: ausgestellt={}, belegt={}, vollständig={} ({} Exponate), Kodex={}, "
-                + "herausgenommen={}, fällt heraus={}, Texte fehlen={} -> {}", placed, occupied, complete, requirements.size(),
-                codex, takeOut, dropped, missing, ok ? "OK" : "FEHLER");
+        boolean ok = placed && occupied && complete && codex && foreign && takeOut && dropped && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Museum: ausgestellt={}, belegt={}, vollständig={} ({} Exponate), Kodex+Bonus={}, "
+                + "fremdes Display bleibt={}, herausgenommen={}, fällt heraus={}, Texte fehlen={} -> {}", placed, occupied,
+                complete, requirements.size(), codex, foreign, takeOut, dropped, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

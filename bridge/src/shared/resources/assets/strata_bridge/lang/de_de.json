@@ -78,6 +78,6 @@
   "advancements.strata_epochs.sealed_rift.title": "Naht der Zeit",
   "advancements.strata_epochs.sealed_rift.description": "Versiegle einen Zeitriss mit einem Zeitanker",
   "advancements.strata_epochs.museum.title": "Museum der Erdgeschichte",
-  "advancements.strata_epochs.museum.description": "Stelle von jeder Epoche einen Bohrkern und ihr Fossil in Vitrinen nah beieinander aus",
-  "jei.strata_bridge.info.display_case": "Vitrine (Glas, Zeitgestein, Gold): Rechtsklick mit einem Gegenstand stellt einen davon aus, Rechtsklick mit leerer Hand nimmt ihn wieder heraus. Abbauen lässt das Exponat herausfallen. Stehen im Umkreis von 12 Blöcken von jeder Epoche ein Bohrkern und ihr Fossil in Vitrinen, ist das Museum der Erdgeschichte vollständig; beim Ausstellen zeigt die Aktionsleiste den Stand."
+  "advancements.strata_epochs.museum.description": "Stelle die ganze Sammlung der Urzeit in Vitrinen nah beieinander aus (15 Exponate)",
+  "jei.strata_bridge.info.display_case": "Vitrine (Glas, Zeitgestein, Gold): Rechtsklick mit einem Gegenstand stellt einen davon aus, Rechtsklick mit leerer Hand nimmt ihn wieder heraus, auf eine leere Vitrine zeigt er den Stand des Museums. Abbauen lässt das Exponat herausfallen. Die Sammlung: pro Epoche Bohrkern, Fossil, Rohstoff und Pflanze, dazu Calcitschuppe, Sporenbeutel und Kodex-Fragment (15 Exponate) in Vitrinen im Umkreis von 12 Blöcken. Ein vollständiges Museum gibt dauerhaft 10 % mehr Zeit in allen Epochen."
 }

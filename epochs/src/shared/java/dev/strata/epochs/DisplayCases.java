@@ -29,14 +29,20 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
  * <ul>
  *   <li>Rechtsklick mit einem Gegenstand stellt einen davon aus, Rechtsklick mit leerer Hand nimmt ihn heraus.</li>
  *   <li>Wird die Vitrine entfernt (Abbau, Explosion, Kolben), fällt das Exponat heraus.</li>
- *   <li>Museum: Liegen in Vitrinen im Umkreis von {@link #MUSEUM_RANGE} Blöcken von jeder Epoche mit Dimension
- *       ein Bohrkern und ihr Fossil, schaltet sich der Kodex-Knoten {@code strata_epochs:museum} frei.</li>
+ *   <li>Museum: Liegt in Vitrinen im Umkreis von {@link #MUSEUM_RANGE} Blöcken die ganze Sammlung, schaltet sich
+ *       der Kodex-Knoten {@code strata_epochs:museum} frei. Er gibt dauerhaft {@link #MUSEUM_BONUS} mehr Zeit in
+ *       allen Epochen. Die Sammlung: pro Epoche von Strata Epochs Bohrkern, Fossil, Rohstoff und Pflanze, dazu die
+ *       drei Mob-Trophäen (Calcitschuppe, Sporenbeutel, Kodex-Fragment) = 15 Exponate; Epochen aus Datapacks mit
+ *       eigener Dimension zählen mit ihrem Bohrkern.</li>
+ *   <li>Rechtsklick mit leerer Hand auf eine leere Vitrine zeigt den Stand.</li>
  * </ul>
  */
 public final class DisplayCases {
 
     public static final String TAG = "strata_exhibit";
     public static final int MUSEUM_RANGE = 12;
+    /** Zusatzzeit in allen Epochen mit vollständigem Museum (als Anteil, wie der Zeitanker). */
+    public static final double MUSEUM_BONUS = 0.10;
     /** Höhe des Exponats über der Unterkante der Vitrine (in der Glashaube). */
     private static final double HEIGHT = 0.62;
 
@@ -45,7 +51,7 @@ public final class DisplayCases {
     /** Ein Exponat, das zum Museum gehört: Beschriftung und Prüfung. */
     public record Exhibit(Component label, Predicate<ItemStack> matches) {}
 
-    /** Was das Museum braucht: pro Epoche mit Dimension ein Bohrkern und (falls bekannt) ihr Fossil. */
+    /** Was das Museum braucht (siehe Klassenbeschreibung). */
     public static List<Exhibit> requirements(MinecraftServer server) {
         List<Exhibit> list = new ArrayList<>();
         for (var e : StrataAPI.epochs(server).entrySet()) {
@@ -54,18 +60,33 @@ public final class DisplayCases {
             String id = e.getKey();
             list.add(new Exhibit(Component.translatable("message.strata_epochs.museum.core", CoreSamples.epochName(id)),
                     s -> CoreSamples.epochOf(s).map(id::equals).orElse(false)));
-            if (FossilPrep.epochOfFossil(new ItemStack(FossilPrep.fossilFor(id))).map(id::equals).orElse(false)) {
-                var fossil = FossilPrep.fossilFor(id);
-                list.add(new Exhibit(Component.translatable(fossil.getDescriptionId()), s -> s.is(fossil)));
+            if (!id.startsWith(StrataEpochs.MOD_ID + ":")) continue;
+            String name = id.substring(id.indexOf(':') + 1);
+            List<java.util.function.Supplier<? extends net.minecraft.world.item.Item>> items = switch (name) {
+                case "crystal_age" -> List.of(EpochsContent.AMMONITE_FOSSIL, EpochsContent.CRYSTAL_QUARTZ, EpochsContent.QUARTZ_THISTLE_SEEDS);
+                case "spore_age" -> List.of(EpochsContent.FERN_FOSSIL, EpochsContent.AMBER_SHARD, EpochsContent.RESIN_FERN_SPORES);
+                case "ash_age" -> List.of(EpochsContent.ANCIENT_SKULL, EpochsContent.EMBER_SHARD, EpochsContent.EMBER_TUBER);
+                default -> List.of();
+            };
+            for (var item : items) list.add(item(item.get()));
+        }
+        if (!list.isEmpty()) {
+            for (var trophy : List.of(EpochsContent.CALCITE_SCALE, EpochsContent.SPORE_SAC, EpochsContent.CODEX_FRAGMENT)) {
+                list.add(item(trophy.get()));
             }
         }
         return list;
     }
 
+    private static Exhibit item(net.minecraft.world.item.Item item) {
+        return new Exhibit(Component.translatable(item.getDescriptionId()), s -> s.is(item));
+    }
+
     /** Das Display in der Vitrine bei {@code pos} (oder null). */
     public static Display.ItemDisplay find(ServerLevel level, BlockPos pos) {
-        // Erkannt an der Lage (in der Vitrine); das Tag dient nur Befehlen, sein Abfragen heißt ab 26.3 anders.
-        var found = level.getEntitiesOfClass(Display.ItemDisplay.class, new AABB(pos));
+        // Nur eigene Exponate (Tag), fremde Deko-Displays an derselben Stelle bleiben unberührt.
+        var found = level.getEntitiesOfClass(Display.ItemDisplay.class, new AABB(pos),
+                d -> dev.strata.epochs.mc.EntityTags.has(d, TAG));
         return found.isEmpty() ? null : found.get(0);
     }
 
@@ -111,7 +132,8 @@ public final class DisplayCases {
     /** Welche Museums-Exponate liegen in Vitrinen um {@code center}? Gibt die erfüllten Einträge zurück. */
     public static List<Exhibit> present(ServerLevel level, BlockPos center) {
         List<ItemStack> shown = new ArrayList<>();
-        for (var d : level.getEntitiesOfClass(Display.ItemDisplay.class, new AABB(center).inflate(MUSEUM_RANGE))) {
+        for (var d : level.getEntitiesOfClass(Display.ItemDisplay.class, new AABB(center).inflate(MUSEUM_RANGE),
+                d -> dev.strata.epochs.mc.EntityTags.has(d, TAG))) {
             if (level.getBlockState(d.blockPosition()).is(EpochsContent.DISPLAY_CASE.get())) shown.add(d.getSlot(0).get());
         }
         List<Exhibit> result = new ArrayList<>();
@@ -147,6 +169,10 @@ public final class DisplayCases {
         if (!(event.getLevel() instanceof ServerLevel level) || !(event.getEntity() instanceof ServerPlayer player)) return;
         BlockPos pos = event.getPos();
         if (held.isEmpty()) {
+            if (find(level, pos) == null) {             // leere Vitrine: nur den Stand zeigen
+                checkMuseum(player, level, pos);
+                return;
+            }
             ItemStack taken = take(level, pos);
             if (!taken.isEmpty() && !player.getInventory().add(taken)) {
                 level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), taken));

@@ -105,9 +105,10 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 Nur natürliche Blöcke (Tag `strata_epochs:transplantable`) werden verändert, Bauten bleiben. Er wirkt nur in der Oberwelt. Radius, Tempo und Anzahl stehen in der Config (`[transplanter]`), die Landschaft im Datapack (Feld `landscape` der Epoche).
 
 **Museum der Erdgeschichte:** Die **Vitrine** (2 Stück aus 5 Glas, 2 Zeitgestein und 1 Gold) stellt einen Gegenstand aus: Rechtsklick mit dem Gegenstand legt einen hinein, er schwebt in der Glashaube und dreht sich zum Betrachter. Rechtsklick mit leerer Hand nimmt ihn heraus, beim Abbauen fällt er heraus.
-- Liegen im Umkreis von 12 Blöcken von jeder Epoche **ein Bohrkern und ihr Fossil** in Vitrinen (bei Strata Epochs 6 Exponate), ist das Museum vollständig: Kodex-Knoten `museum` mit Advancement.
-- Beim Ausstellen zeigt die Aktionsleiste den Stand („4 von 6 Exponaten – es fehlt z. B. Farnabdruck“).
-- Epochen aus Datapacks mit eigener Dimension zählen mit ihrem Bohrkern dazu.
+- **Die Sammlung** (15 Exponate): von jeder Epoche Bohrkern, Fossil, Rohstoff (Kristallquarz, Bernstein, Glutsplitter) und Pflanze (Samen, Sporen, Knolle), dazu die Mob-Trophäen Calcitschuppe, Sporenbeutel und Kodex-Fragment. Epochen aus Datapacks mit eigener Dimension zählen mit ihrem Bohrkern dazu.
+- Liegt alles in Vitrinen im Umkreis von 12 Blöcken, ist das Museum vollständig: Kodex-Knoten `museum` mit Advancement und **dauerhaft 10 % mehr Zeit** in allen Epochen.
+- Beim Ausstellen und per Rechtsklick mit leerer Hand auf eine leere Vitrine zeigt die Aktionsleiste den Stand („9 von 15 Exponaten – es fehlt z. B. Sporenbeutel“).
+- Nur eigene Exponate zählen; fremde Item-Displays (Deko, Karten) an derselben Stelle bleiben unberührt.
 
 ![Museum der Erdgeschichte: sechs Vitrinen](docs/screenshots/museum/vitrinen_1.21.1.png)
 
@@ -148,7 +149,7 @@ Kodex-Knoten werden automatisch freigeschaltet:
 - `first_analysis` nach der ersten Kernanalyse
 - `first_transplant` nach der ersten Transplantation
 - `sealed_rift` beim ersten versiegelten Zeitriss
-- `museum`, wenn das Museum der Erdgeschichte vollständig ist
+- `museum`, wenn das Museum der Erdgeschichte vollständig ist (+10 % Zeit in allen Epochen)
 
 ## Strata Bridge: Anbindung an andere Mods
 

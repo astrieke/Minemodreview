@@ -114,10 +114,11 @@ public final class Solidification {
         return false;
     }
 
-    /** Zusatzzeit als Anteil: Zeitanker +100 %, analysierter Bohrkern beim Betreten +25 %. */
+    /** Zusatzzeit als Anteil: Zeitanker +100 %, analysierter Bohrkern beim Betreten +25 %, vollständiges Museum +10 %. */
     public static double timeBonus(ServerPlayer player) {
         double anchor = hasTimeAnchor(player) ? 1.0 : 0.0;
-        return anchor + player.getData(EpochsContent.VISIT.get()).bonus();
+        double museum = StrataAPI.hasNode(player, StrataEpochs.id("museum")) ? DisplayCases.MUSEUM_BONUS : 0.0;
+        return anchor + museum + player.getData(EpochsContent.VISIT.get()).bonus();
     }
 
     /** Stand der Uhr: verbleibender Anteil der erlaubten Zeit (0..1) und Phase. */
