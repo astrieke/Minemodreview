@@ -27,6 +27,8 @@
 #   auf ihrem Boden (je zwei Reihen), mit Nachtsicht; die Samen liegen in der Schnellleiste.
 # SHOT_PETRIFY=1: Überlebensmodus mit sehr kurzer Verfestigung; nach 25 s sind mehrere Gegenstände versteinert
 #   (Bild 1: Schnellleiste und Meldung, Bild 2: Inventar).
+# SHOT_RIFT=<epoche>: in der Oberwelt (flache Testwelt) öffnet sich nach 30 s ein Zeitriss vor dem Spieler;
+#   Bildserie 40 s lang (alle 1 s): Riss, Partikel und der Boden, der zur Epoche wird.
 # SHOT_BEARING=1: Kurz vor dem Bild peilt der Spieler die Biome (/strata_epochs bearing), die Zeilen stehen im Chat.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -86,6 +88,15 @@ if [ -n "${SHOT_TRANSPLANT:-}" ]; then
     cat > "$dp/data/strata_shot/function/transplant.mcfunction" <<MC
 time set day
 execute in minecraft:overworld positioned 0 -60 0 run strata_epochs transplant strata_epochs:$SHOT_TRANSPLANT 10
+MC
+fi
+if [ -n "${SHOT_RIFT:-}" ]; then
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    sed -i "s|^execute as @a\[tag=!strata_shot\].*|execute as @a[tag=!strata_shot] in minecraft:overworld run tp @s 0.5 -60 -2.5 0 0\nexecute if entity @a[tag=!strata_shot] run schedule function strata_shot:rift 600t|" "$f"
+    cat > "$dp/data/strata_shot/function/rift.mcfunction" <<MC
+time set day
+execute as @p at @p run strata_epochs rift strata_epochs:$SHOT_RIFT
+tp @p 0.5 -59 -6.5 0 22
 MC
 fi
 if [ -n "${SHOT_CURIOS:-}" ]; then
@@ -251,8 +262,8 @@ if [ $ok -eq 1 ]; then
     fi
     DISPLAY="$display" import -window root "$out"
     echo "Screenshot: $out"
-    if [ -n "${SHOT_TRANSPLANT:-}${SHOT_SPIRALIT:-}" ]; then
-        n=$([ -n "${SHOT_TRANSPLANT:-}" ] && echo 39 || echo 19)
+    if [ -n "${SHOT_TRANSPLANT:-}${SHOT_SPIRALIT:-}${SHOT_RIFT:-}" ]; then
+        n=$([ -n "${SHOT_TRANSPLANT:-}${SHOT_RIFT:-}" ] && echo 39 || echo 19)
         for i in $(seq -w 0 "$n"); do
             DISPLAY="$display" import -window root "${out%.png}_act_$i.png"
             sleep 1
