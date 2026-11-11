@@ -20,8 +20,13 @@ import net.minecraft.world.item.component.ItemLore;
 /**
  * Zweite Stufe der Verfestigung: Nach den Blöcken versteinern Gegenstände im Inventar. Ein Stapel wird zu einem
  * „versteinerten Gegenstand“, der das Original unverändert in sich trägt und sich nicht benutzen lässt.
- * Er löst sich von selbst, sobald sein Träger nicht (mehr) verfestigt: zurück in der Oberwelt, nach einer
- * Keimfrische oder in den Händen eines anderen Spielers. Verloren geht dabei nichts.
+ * Er löst sich von selbst, sobald sein Träger nicht (mehr) verfestigt: zurück in der Oberwelt oder nach einer
+ * Keimfrische. Bei einem anderen Spieler löst er sich erst außerhalb der Epochen, sonst könnte ein Mitspieler
+ * ihn einfach aufheben und zurückgeben. Beim Tod löst sich alles, bevor das Inventar herausfällt (Netherit
+ * verbrennt nicht, der Fluch des Verschwindens wirkt). Verloren geht dabei nichts.
+ *
+ * <p>Versteinert wird zuerst der Rucksack, dann die Schnellleiste, nie die Haupthand. Brocken passen nicht in
+ * Shulkerkisten oder Bündel (sonst ließen sich Kisten verschachteln) und verbrennen nicht.
  *
  * <p>Pro Epoche einstellbar über {@code petrify_items_seconds} (0 = aus). Was nie versteinert, steht im
  * Item-Tag {@code strata_epochs:petrify_immune} (Standard: Zeitanker und Keimfrische, die Mittel dagegen).
@@ -36,6 +41,18 @@ public final class ItemPetrification {
 
     private ItemPetrification() {}
 
+    /** Der versteinerte Gegenstand: passt nicht in Shulkerkisten und Bündel. */
+    public static final class Lump extends Item {
+        public Lump(Properties props) {
+            super(props);
+        }
+
+        @Override
+        public boolean canFitInsideContainerItems() {
+            return false;
+        }
+    }
+
     public static boolean isPetrified(ItemStack stack) {
         return stack.is(EpochsContent.PETRIFIED_ITEM.get());
     }
@@ -46,8 +63,9 @@ public final class ItemPetrification {
     }
 
     /** Der versteinerte Gegenstand zu einem Stapel (das Original steckt als Kopie darin). */
-    public static ItemStack petrify(ItemStack original) {
+    public static ItemStack petrify(ItemStack original, String owner) {
         ItemStack lump = new ItemStack(EpochsContent.PETRIFIED_ITEM.get());
+        lump.set(EpochsContent.PETRIFIED_OWNER.get(), owner);
         lump.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(original.copy())));
         lump.set(DataComponents.ITEM_NAME, Component.translatable("item.strata_epochs.petrified_item.of", describe(original)));
         lump.set(DataComponents.LORE, new ItemLore(List.of(
@@ -62,19 +80,25 @@ public final class ItemPetrification {
     }
 
     /**
-     * Versteinert einen zufälligen Stapel aus Schnellleiste oder Rucksack. Gibt das Original zurück (für die
-     * Meldung) oder leer, wenn nichts mehr versteinern kann.
+     * Versteinert einen zufälligen Stapel: zuerst aus dem Rucksack, erst wenn dort nichts mehr geht aus der
+     * Schnellleiste, nie die Haupthand. Gibt das Original zurück (für die Meldung) oder leer, wenn nichts mehr
+     * versteinern kann.
      */
     public static ItemStack petrifyOne(ServerPlayer player, RandomSource random) {
         var inventory = player.getInventory();
+        ItemStack held = player.getMainHandItem();
         List<Integer> candidates = new ArrayList<>();
-        for (int slot = 0; slot < SLOTS; slot++) {
-            if (canPetrify(inventory.getItem(slot))) candidates.add(slot);
+        for (int pass = 0; pass < 2 && candidates.isEmpty(); pass++) {
+            int from = pass == 0 ? 9 : 0, to = pass == 0 ? SLOTS : 9;
+            for (int slot = from; slot < to; slot++) {
+                ItemStack stack = inventory.getItem(slot);
+                if (canPetrify(stack) && stack != held) candidates.add(slot);
+            }
         }
         if (candidates.isEmpty()) return ItemStack.EMPTY;
         int slot = candidates.get(random.nextInt(candidates.size()));
         ItemStack original = inventory.getItem(slot);
-        inventory.setItem(slot, petrify(original));
+        inventory.setItem(slot, petrify(original, player.getStringUUID()));
         ServerLevel level = (ServerLevel) player.level();
         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.STONE_PLACE, SoundSource.PLAYERS, 1.0f, 0.6f);
         level.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
@@ -83,13 +107,18 @@ public final class ItemPetrification {
         return original;
     }
 
-    /** Löst alle versteinerten Gegenstände im ganzen Inventar (auch Rüstung und zweite Hand). Gibt die Anzahl zurück. */
-    public static int thaw(ServerPlayer player) {
+    /**
+     * Löst versteinerte Gegenstände im ganzen Inventar (auch Rüstung und zweite Hand). In einer Epoche nur die
+     * eigenen ({@code inEpoch}), draußen alle. Gibt die Anzahl zurück.
+     */
+    public static int thaw(ServerPlayer player, boolean inEpoch) {
         var inventory = player.getInventory();
+        String self = player.getStringUUID();
         int thawed = 0;
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
             ItemStack stack = inventory.getItem(slot);
             if (!isPetrified(stack)) continue;
+            if (inEpoch && !self.equals(stack.getOrDefault(EpochsContent.PETRIFIED_OWNER.get(), self))) continue;
             inventory.setItem(slot, content(stack));
             thawed++;
         }
@@ -101,6 +130,11 @@ public final class ItemPetrification {
                     : "message.strata_epochs.solidify.thaw", thawed).withStyle(ChatFormatting.GREEN));
         }
         return thawed;
+    }
+
+    /** Vor dem Tod: alles lösen, damit die Originale wie gewohnt herausfallen (oder verschwinden). */
+    static void onDeath(net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player && !player.level().isClientSide()) thaw(player, false);
     }
 
     /** „3× Diamant“ bzw. nur der Name bei einem einzelnen Gegenstand. */

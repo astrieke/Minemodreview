@@ -35,11 +35,11 @@ public final class Solidification {
 
     private Solidification() {}
 
-    static void onPlayerTick(PlayerTickEvent.Post event) {
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.tickCount % CHECK_INTERVAL != 0) return;
         if (player.isCreative() || player.isSpectator()) {
-            ItemPetrification.thaw(player);
+            ItemPetrification.thaw(player, false);
             return;
         }
 
@@ -47,7 +47,7 @@ public final class Solidification {
         Optional<String> epochId = EpochTravel.epochOf(level);
         EpochVisit visit = player.getData(EpochsContent.VISIT.get());
         if (epochId.isEmpty()) {
-            ItemPetrification.thaw(player);   // draußen löst sich alles, auch fremde Fundstücke
+            ItemPetrification.thaw(player, false);   // draußen löst sich alles, auch fremde Fundstücke
             if (visit.ticks() != 0 || visit.bonus() != 0) {
                 player.setData(EpochsContent.VISIT.get(), new EpochVisit(visit.returnDimension(), visit.x(), visit.y(), visit.z(), 0, 0));
             }
@@ -63,7 +63,7 @@ public final class Solidification {
         long allowed = SolidificationClock.allowedTicks(epoch.solidifySeconds() * 20L, bonus);
 
         SolidificationClock.Stage stage = SolidificationClock.stage(ticks, allowed);
-        if (SolidificationClock.thawsItems(stage)) ItemPetrification.thaw(player);
+        if (SolidificationClock.thawsItems(stage)) ItemPetrification.thaw(player, true);
         switch (stage) {
             case STABLE -> { }
             case WARNING -> Mc.actionbar(player, Component.translatable("message.strata_epochs.solidify.warning",

@@ -52,7 +52,8 @@ Nicht jede 1.21-Zwischenversion (1.21.2 bis 1.21.10) wird unterstützt. Modpacks
    - **Aschezeit** (Glutsteinerz, liefert **Glutsplitter**, Brennstoff wie eine Lohenrute): *Aschewüste* (Vulkanasche über Basalt), *Magmaspalten* (Schwarzstein mit Magma-Rissen und Lavaseen, viel Glutsteinerz, der Glutwühler kann hier nicht abtauchen; die gefährlichste Zone), *Knochensenke* (Seelenerde mit Netherfossilien).
 4. **Verfestigung:** Nach 75 % der erlaubten Zeit (Kristallzeit 10 min, Sporenzeit 7 min, Aschezeit 5 min) kommt eine Warnung. Danach wirst du langsamer, und um dich herum versteinern Blöcke.
    - **Inventar-Verfestigung:** Wer weiter bleibt, dem versteinert nach den Blöcken auch das Inventar. Alle 20 s wird ein Stapel aus Schnellleiste oder Rucksack zu einem **versteinerten Gegenstand**. Das Original steckt unversehrt darin, lässt sich aber nicht benutzen.
-   - Der Brocken löst sich von selbst, sobald sein Träger nicht mehr verfestigt: zurück durch das Tor, oder mit einer Keimfrische (dreht die Uhr 60 s zurück). Verloren geht nichts.
+   - Der Brocken löst sich von selbst, sobald sein Träger nicht mehr verfestigt: zurück durch das Tor, oder mit einer Keimfrische (dreht die Uhr 60 s zurück). Verloren geht nichts. Versteinert wird zuerst der Rucksack, dann die Schnellleiste, nie die Haupthand.
+   - Beim Tod löst sich alles, bevor das Inventar herausfällt. Brocken eines anderen Spielers lösen sich erst außerhalb der Epochen. In Truhen bleibt ein Brocken zu, bis ihn wieder ein Spieler trägt; in Shulkerkisten und Bündel passt er nicht, und er verbrennt nicht.
    - Zeitanker und Keimfrische versteinern nie (Item-Tag `strata_epochs:petrify_immune`), Rüstung und zweite Hand auch nicht.
 5. Ein **Zeitanker** im Inventar (Kristallquarz, Bernstein, Gold) verdoppelt die erlaubte Zeit.
 6. Zweimal Rechtsklick auf das Tor (innerhalb von 3 s) bringt dich zurück. Tore in Epochen lassen sich nicht abbauen, damit der Rückweg nie verloren geht.

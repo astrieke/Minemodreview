@@ -53,6 +53,12 @@ public final class Reg {
         return items.registerSimpleItem(name, props);
     }
 
+    /** Wie {@link #hiddenItem(String, UnaryOperator)}, mit eigener Item-Klasse. */
+    public Supplier<Item> hiddenItem(String name, java.util.function.Function<Item.Properties, ? extends Item> factory,
+                                     UnaryOperator<Item.Properties> props) {
+        return items.registerItem(name, factory, props);
+    }
+
     /** Saatgut: pflanzt den Block, heißt aber wie das Item ({@code item.<mod>.<name>}). */
     public Supplier<Item> seed(String name, Supplier<Block> crop) {
         Supplier<Item> item = items.registerItem(name, p -> new net.minecraft.world.item.BlockItem(crop.get(), p));

@@ -81,7 +81,8 @@ public final class EpochsContent {
     public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
 
     /** Ein versteinerter Gegenstand aus dem Inventar; trägt das Original in sich (siehe {@link ItemPetrification}). */
-    public static final Supplier<Item> PETRIFIED_ITEM = REG.hiddenItem("petrified_item", p -> p.stacksTo(1));
+    public static final Supplier<Item> PETRIFIED_ITEM = REG.hiddenItem("petrified_item", ItemPetrification.Lump::new,
+            p -> p.stacksTo(1).fireResistant());
 
     // Fossilien
     /** Roher Fossilbrocken aus einer Epoche; trägt die Epoche und den Präparationsfortschritt. */
@@ -111,6 +112,10 @@ public final class EpochsContent {
     /** Am Bohrkern: 1 = am Kernanalyse-Tisch analysiert. */
     public static final Supplier<net.minecraft.core.component.DataComponentType<Integer>> ANALYZED =
             REG.intComponent("analyzed");
+
+    /** Am versteinerten Gegenstand: UUID des Spielers, bei dem er versteinert ist. */
+    public static final Supplier<net.minecraft.core.component.DataComponentType<String>> PETRIFIED_OWNER =
+            REG.stringComponent("petrified_owner");
 
     /** Am Fossilbrocken: wie viele Meißelschläge schon sitzen. */
     public static final Supplier<net.minecraft.core.component.DataComponentType<Integer>> PREP_PROGRESS =

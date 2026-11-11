@@ -52,6 +52,12 @@ public final class Reg {
         return items.register(name, () -> new Item(props.apply(new Item.Properties())));
     }
 
+    /** Wie {@link #hiddenItem(String, UnaryOperator)}, mit eigener Item-Klasse. */
+    public Supplier<Item> hiddenItem(String name, java.util.function.Function<Item.Properties, ? extends Item> factory,
+                                     UnaryOperator<Item.Properties> props) {
+        return items.register(name, () -> factory.apply(props.apply(new Item.Properties())));
+    }
+
     /** Saatgut: pflanzt den Block, heißt aber wie das Item ({@code item.<mod>.<name>}). */
     public Supplier<Item> seed(String name, Supplier<Block> crop) {
         Supplier<Item> item = items.register(name,

@@ -554,7 +554,9 @@ final class SelfTest {
 
     /**
      * Inventar-Verfestigung: Ein Stapel wird zum versteinerten Gegenstand und kommt beim Lösen unverändert zurück
-     * (Anzahl, Abnutzung); Zeitanker und Keimfrische versteinern nie, Rüstung und zweite Hand auch nicht.
+     * (Anzahl, Abnutzung). Reihenfolge: Rucksack, dann Schnellleiste, nie die Haupthand; Zeitanker, Keimfrische,
+     * Rüstung und zweite Hand nie. Fremde Brocken lösen sich in der Epoche nicht, beim Tod löst sich alles,
+     * und im echten Spielertick draußen auch. Brocken passen nicht in Behälter-Items und verbrennen nicht.
      */
     private static int testItemPetrification(MinecraftServer server) {
         var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(server.overworld());
@@ -562,35 +564,58 @@ final class SelfTest {
         inventory.clearContent();
         var pick = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE);
         pick.setDamageValue(37);
+        var sword = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_SWORD);
         var quartz = new net.minecraft.world.item.ItemStack(EpochsContent.CRYSTAL_QUARTZ.get(), 12);
-        inventory.setItem(0, pick.copy());
-        inventory.setItem(20, quartz.copy());
+        var dirt = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIRT, 40);
+        inventory.setItem(0, pick.copy());   // Haupthand (Platz 0 ist ausgewählt)
         inventory.setItem(1, new net.minecraft.world.item.ItemStack(EpochsContent.TIME_ANCHOR.get()));
         inventory.setItem(2, new net.minecraft.world.item.ItemStack(EpochsContent.GERM_TONIC.get(), 3));
+        inventory.setItem(3, sword.copy());
+        inventory.setItem(20, quartz.copy());
+        inventory.setItem(25, dirt.copy());
         player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,
                 new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SHIELD));
         var random = net.minecraft.util.RandomSource.create(3);
 
-        var first = ItemPetrification.petrifyOne(player, random);
-        var second = ItemPetrification.petrifyOne(player, random);
-        var third = ItemPetrification.petrifyOne(player, random);
-        boolean two = !first.isEmpty() && !second.isEmpty() && third.isEmpty();
-        boolean lumps = ItemPetrification.isPetrified(inventory.getItem(0)) && ItemPetrification.isPetrified(inventory.getItem(20))
-                && inventory.getItem(0).getCount() == 1;
-        boolean keeps = net.minecraft.world.item.ItemStack.matches(ItemPetrification.content(inventory.getItem(0)), pick)
-                && net.minecraft.world.item.ItemStack.matches(ItemPetrification.content(inventory.getItem(20)), quartz);
+        var p1 = ItemPetrification.petrifyOne(player, random);
+        var p2 = ItemPetrification.petrifyOne(player, random);
+        boolean backpackFirst = ItemPetrification.isPetrified(inventory.getItem(20)) && ItemPetrification.isPetrified(inventory.getItem(25))
+                && !ItemPetrification.isPetrified(inventory.getItem(3)) && !p1.isEmpty() && !p2.isEmpty();
+        var p3 = ItemPetrification.petrifyOne(player, random);
+        var p4 = ItemPetrification.petrifyOne(player, random);
+        boolean order = backpackFirst && p3.is(net.minecraft.world.item.Items.IRON_SWORD) && p4.isEmpty()
+                && net.minecraft.world.item.ItemStack.matches(inventory.getItem(0), pick);
+        boolean keeps = net.minecraft.world.item.ItemStack.matches(ItemPetrification.content(inventory.getItem(20)), quartz)
+                && net.minecraft.world.item.ItemStack.matches(ItemPetrification.content(inventory.getItem(25)), dirt);
         boolean immune = inventory.getItem(1).is(EpochsContent.TIME_ANCHOR.get())
                 && inventory.getItem(2).is(EpochsContent.GERM_TONIC.get())
                 && player.getOffhandItem().is(net.minecraft.world.item.Items.SHIELD);
         boolean named = inventory.getItem(20).getHoverName().getString().contains("12");
 
-        // Lösen: auch ein Brocken in der zweiten Hand (z. B. dorthin gelegt) kommt zurück.
-        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, inventory.getItem(20).copy());
-        inventory.setItem(20, net.minecraft.world.item.ItemStack.EMPTY);
-        int thawed = ItemPetrification.thaw(player);
-        boolean back = thawed == 2 && net.minecraft.world.item.ItemStack.matches(inventory.getItem(0), pick)
-                && net.minecraft.world.item.ItemStack.matches(player.getOffhandItem(), quartz)
-                && ItemPetrification.thaw(player) == 0;
+        // Brocken taugt nicht als Behälter-Inhalt und verbrennt nicht.
+        var lump = inventory.getItem(20);
+        boolean noNesting = !lump.getItem().canFitInsideContainerItems();
+        boolean fireproof = new net.minecraft.world.entity.item.ItemEntity(server.overworld(), 0, 300, 0, lump.copy()).fireImmune();
+
+        // Fremder Brocken: in der Epoche bleibt er zu, eigene lösen sich.
+        var foreign = lump.copy();
+        foreign.set(EpochsContent.PETRIFIED_OWNER.get(), "00000000-0000-0000-0000-000000000001");
+        inventory.setItem(30, foreign);
+        int ownInEpoch = ItemPetrification.thaw(player, true);
+        boolean coop = ownInEpoch == 3 && ItemPetrification.isPetrified(inventory.getItem(30))
+                && net.minecraft.world.item.ItemStack.matches(inventory.getItem(20), quartz);
+
+        // Tod: vorher löst sich alles (auch der fremde Brocken), damit die Originale herausfallen.
+        ItemPetrification.onDeath(new net.neoforged.neoforge.event.entity.living.LivingDeathEvent(player,
+                player.damageSources().lava()));
+        boolean death = !ItemPetrification.isPetrified(inventory.getItem(30))
+                && net.minecraft.world.item.ItemStack.matches(inventory.getItem(30), quartz);
+
+        // Echter Spielertick in der Oberwelt: Brocken (auch in der zweiten Hand) löst sich.
+        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, ItemPetrification.petrify(sword, player.getStringUUID()));
+        player.tickCount = 0;
+        Solidification.onPlayerTick(new net.neoforged.neoforge.event.tick.PlayerTickEvent.Post(player));
+        boolean tick = net.minecraft.world.item.ItemStack.matches(player.getOffhandItem(), sword);
         inventory.clearContent();
 
         boolean data = StrataAPI.epochs(server).get(StrataEpochs.id("crystal_age")).petrifyItemsSeconds() == 20;
@@ -600,10 +625,10 @@ final class SelfTest {
                 "message.strata_epochs.solidify.thaw_one", "message.strata_epochs.solidify.thaw")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
-        boolean ok = two && lumps && keeps && immune && named && back && data && missing.isEmpty();
-        StrataEpochs.LOG.info("[Strata-Test] Inventar-Verfestigung: zwei Stapel={}, Brocken={}, Inhalt={}, immun={}, Name={}, "
-                + "gelöst={} ({}), Datapack={}, Texte fehlen={} -> {}", two, lumps, keeps, immune, named, back, thawed, data,
-                missing, ok ? "OK" : "FEHLER");
+        boolean ok = order && keeps && immune && named && noNesting && fireproof && coop && death && tick && data && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Inventar-Verfestigung: Reihenfolge={}, Inhalt={}, immun={}, Name={}, "
+                + "nicht in Behältern={}, feuerfest={}, fremde bleiben={}, Tod={}, Tick={}, Datapack={}, Texte fehlen={} -> {}",
+                order, keeps, immune, named, noNesting, fireproof, coop, death, tick, data, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

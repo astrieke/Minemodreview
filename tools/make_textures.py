@@ -1411,21 +1411,21 @@ def ember_tubers(stage):
 # ---------------------------------------------------------------- Saatgut (Items mit Umriss)
 
 def petrified_item():
-    # Versteinerter Gegenstand: Brocken aus versteinertem Stein mit goldener Zeit-Ader; oben rechts ragt noch
-    # ein Stück Griff heraus, damit man sieht, dass etwas darin steckt.
-    pal = {'k': PETRI[0], 'd': PETRI[1], 'm': PETRI[2], 'n': PETRI[3], 'l': PETRI[4], 'w': PETRI[5],
-           'g': '#d9a43a', 'y': '#ffe08a', 'h': '#b0804e', 'H': '#83593a', 'b': '#5a3b22'}
+    # Versteinerter Gegenstand: Brocken aus versteinertem Stein (5 Töne) mit goldener Zeit-Ader (2 Töne); oben
+    # rechts ragt noch ein Stück Griff heraus (2 Töne), damit man sieht, dass etwas darin steckt.
+    pal = {'k': PETRI[0], 'd': PETRI[1], 'm': PETRI[2], 'n': PETRI[3], 'l': PETRI[5],
+           'g': '#d9a43a', 'y': '#ffe08a', 'h': '#b0804e', 'b': '#6b4a2a'}
     rows = [
         '................',
         '............hh..',
-        '...........hHb..',
-        '..........hHb...',
-        '.....wwlllHb....',
-        '....wlllnnnmd...',
-        '...wllnnynnmmd..',
-        '..wllnnygnmmmd..',
-        '..wlnnnygnmmdd..',
-        '..llnnmmgymmdk..',
+        '...........hhb..',
+        '..........hhb...',
+        '.....llllnhb....',
+        '....lllnnnnmd...',
+        '...llnnnynnmmd..',
+        '..llnnnygnmmmd..',
+        '..llnnnygnmmdd..',
+        '..lnnnmmgymmdk..',
         '..lnnmmmmgymdk..',
         '..nnmmmmmgmddk..',
         '..nmmmmddmddkk..',

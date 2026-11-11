@@ -31,6 +31,8 @@ public final class StrataEpochs {
         NeoForge.EVENT_BUS.addListener(EpochInteractions::onRightClickBlock);
         BreakHook.preventBreaking(EpochInteractions::isProtectedGate);
         NeoForge.EVENT_BUS.addListener(Solidification::onPlayerTick);
+        // Hohe Priorität: vor anderen Mods (Gräber, Rucksäcke), die beim Tod das Inventar einsammeln.
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST, ItemPetrification::onDeath);
         NeoForge.EVENT_BUS.addListener(GermTonic::onRightClick);
         NeoForge.EVENT_BUS.addListener(FossilPrep::onRightClickBlock);
         NeoForge.EVENT_BUS.addListener(CoreAnalysis::onRightClickBlock);
