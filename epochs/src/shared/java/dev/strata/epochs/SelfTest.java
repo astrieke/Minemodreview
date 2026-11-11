@@ -606,8 +606,9 @@ final class SelfTest {
                 && net.minecraft.world.item.ItemStack.matches(inventory.getItem(20), quartz);
 
         // Tod: vorher löst sich alles (auch der fremde Brocken), damit die Originale herausfallen.
-        ItemPetrification.onDeath(new net.neoforged.neoforge.event.entity.living.LivingDeathEvent(player,
-                player.damageSources().lava()));
+        // Über den Event-Bus, damit auch Registrierung und Priorität geprüft sind.
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.living.LivingDeathEvent(
+                player, player.damageSources().lava()));
         boolean death = !ItemPetrification.isPetrified(inventory.getItem(30))
                 && net.minecraft.world.item.ItemStack.matches(inventory.getItem(30), quartz);
 
