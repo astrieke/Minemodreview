@@ -246,8 +246,10 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 | Immer | **Hammerschlag** (`slam`): 0,6 s Ausholen, 0,2 s Halten über dem Kopf, Schlag mit Bodenwelle. |
 | Belohnung | **Herz der Tiefenzeit** (nur, wenn ein Spieler ihn besiegt), 2–4 Zeitessenzen, Zeitgestein; Kodex-Knoten `stratolith` für den Sieger und Spieler in 32 Blöcken. Das Herz in der zweiten Hand: Transplantator mit 1,5-fachem Radius und ohne Fossil-Kosten, es wird nicht verbraucht. |
 | Klang | vorerst Vanilla (Verwüster, Eisengolem, tiefer gestimmt). |
+| Ort | Beschwören lässt er sich überall mit Zeitgestein, auch in einer Epoche. Dort beschleunigt der Sporenstoß die Verfestigung (×2,5) und die Inventar-Verfestigung kann einsetzen: ein Kampf in der Epoche ist bewusst die harte Variante, gedacht ist die Oberwelt. |
+| Herz | Wird nicht verbraucht und hebt die Fossil-Kosten des Transplantators dauerhaft auf: bewusst als Endspiel-Belohnung (der Transplantator braucht weiter Bohrkern und Kodex-Meisterschaft). |
 
-Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
+Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen); Runde 2 mit Code: 7/7/7, freigegeben. Vor einem Release einmal von Hand kämpfen (Diamant und Netherit, Zeit bis zum Sieg, Zahl der Rückspulungen notieren). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
 ## Später (gesammelt, nicht eingeplant)
 

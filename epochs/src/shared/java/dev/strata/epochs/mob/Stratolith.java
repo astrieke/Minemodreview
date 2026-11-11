@@ -285,9 +285,8 @@ public class Stratolith extends StrataMob {
     }
 
     @Override
-    public void onSyncedDataUpdated(net.minecraft.network.syncher.EntityDataAccessor<?> accessor) {
-        super.onSyncedDataUpdated(accessor);
-        refreshDimensions();   // Phase kommt beim Client an: Trefferfläche dort ebenfalls anpassen
+    protected void onStageChanged() {
+        refreshDimensions();   // nur bei Phasenwechsel (nicht bei jedem Kernglühen), auf Server und Client
     }
 
     boolean busy() {

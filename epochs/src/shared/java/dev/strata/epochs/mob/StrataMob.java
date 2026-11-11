@@ -70,6 +70,7 @@ public abstract class StrataMob extends PathfinderMob {
     public void onSyncedDataUpdated(EntityDataAccessor<?> accessor) {
         super.onSyncedDataUpdated(accessor);
         if (DATA_ACTION.equals(accessor)) clientActionStart = tickCount;
+        if (DATA_STAGE.equals(accessor)) onStageChanged();
     }
 
     @Override
@@ -167,6 +168,9 @@ public abstract class StrataMob extends PathfinderMob {
     protected void setStage(int stage) {
         entityData.set(DATA_STAGE, stage);
     }
+
+    /** Die Phase hat sich geändert (Server und Client), z. B. um die Trefferfläche anzupassen. */
+    protected void onStageChanged() {}
 
     // ---- Datapack-Werte ----
 
