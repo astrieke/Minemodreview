@@ -21,7 +21,7 @@ public final class MobPoser {
 
     /** Was der Renderer pro Bild übergibt (aus Entity oder Render-State). */
     public record Input(float ageInTicks, float walkPos, float walkSpeed, float headYaw, float headPitch,
-                        String action, float actionSeconds) {}
+                        String action, float actionSeconds, int stage) {}
 
     private final StrataMobDef def;
     private final MobModelData model;
@@ -46,6 +46,13 @@ public final class MobPoser {
 
     public void pose(Input in) {
         for (ModelPart part : bones.values()) part.resetPose();
+        // Abgeworfene Teile: Knochen „shedN_…“ ab Phase N unsichtbar (mit allen Kindern).
+        for (Map.Entry<String, ModelPart> e : bones.entrySet()) {
+            String n = e.getKey();
+            if (n.length() > 5 && n.startsWith("shed") && Character.isDigit(n.charAt(4))) {
+                e.getValue().visible = in.stage() < n.charAt(4) - '0';
+            }
+        }
 
         if (def.idle() != null) apply(model.animation(def.idle()), in.ageInTicks() / 20f, 1f);
 

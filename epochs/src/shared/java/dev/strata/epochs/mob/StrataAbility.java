@@ -82,6 +82,7 @@ public abstract class StrataAbility<M extends StrataMob> {
         switch (phase) {
             case READY -> { }
             case WARNING -> {
+                onWarnTick();
                 if (--timer <= 0) activate();
             }
             case ACTIVE -> {
@@ -105,6 +106,9 @@ public abstract class StrataAbility<M extends StrataMob> {
     }
 
     protected void onWarn() {}
+
+    /** Jeden Tick der Vorwarnung (z. B. Warnkreise am Boden). */
+    protected void onWarnTick() {}
 
     protected void onStart() {}
 

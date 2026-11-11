@@ -601,6 +601,31 @@ def ember_burrower_spawn_egg():
     return outline(from_grid(rows, pal), '#1f1a18')
 
 
+def stratolith_spawn_egg():
+    # Spawn-Ei: Gesteinsschichten (Grundgestein, Myzel mit Grün, Calcit) mit Quarzspitze und goldenem Kern.
+    pal = {'q': '#a9a8ff', 'Q': '#6f6cf0', 'c': '#dcd6c8', 'C': '#b3ad9f', 'g': '#4f7a3a', 'm': '#84757c',
+           'M': '#6a5c64', 's': '#5e5868', 'S': '#3c3742', 'k': '#2c2736', 'y': '#ffd27a'}
+    rows = [
+        '................',
+        '.......q........',
+        '......qQ........',
+        '......cQc.......',
+        '.....cccCC......',
+        '....gggggggg....',
+        '...mmmmmmmmMM...',
+        '...mmmmmmmmMM...',
+        '..ssssssssssSS..',
+        '..ssssyysssssS..',
+        '..SSSSyySSSSSk..',
+        '..sssssssssSSk..',
+        '...SSSSSSSSSk...',
+        '....kkkkkkkk....',
+        '......kkkk......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1a1622')
+
+
 def codex_fragment():
     # Drop des Steinzeugen: abgebrochene Steintafel mit Gesteinsschichten und goldener Sanduhr-Rune.
     pal = {'s': '#3c3742', 'S': '#5e5868', 'g': '#77707c', 'o': '#b08a5a', 'c': '#dcd6cf',
@@ -1525,6 +1550,59 @@ def time_essence():
     return outline(from_grid(rows, pal), '#1a0f3a')
 
 
+def layer_core():
+    # Schichtkern: schräger Bohrkern mit drei Schichten (Kristall, Myzel mit Grün, Grundgestein) und Goldkappen.
+    pal = {'y': '#ffe08a', 'g': '#d9a43a', 'G': '#9c6a12', 'q': '#a9a8ff', 'Q': '#6f6cf0', 'm': '#84757c',
+           'M': '#6a5c64', 'v': '#4f7a3a', 's': '#5e5868', 'S': '#3c3742', 'k': '#2c2736'}
+    rows = [
+        '................',
+        '..........yyg...',
+        '.........yggG...',
+        '........qqgGQ...',
+        '.......qqqQQ....',
+        '......vqqQQ.....',
+        '.....vmmmM......',
+        '....vmmmMM......',
+        '....mmmMM.......',
+        '...sssSS........',
+        '..ssssSk........',
+        '..sssSk.........',
+        '.yggGk..........',
+        '.ggGG...........',
+        '..G.............',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1a1622')
+
+
+def heart_of_deep_time():
+    # Herz der Tiefenzeit: Herz aus Gesteinsschichten mit goldener Sanduhr in der Mitte und violettem Glanz.
+    pal = {'y': '#ffe08a', 'g': '#d9a43a', 'G': '#9c6a12', 'l': '#b48cff', 'v': '#7a4fd6', 'V': '#4b2f9a',
+           's': '#77707c', 'S': '#5e5868', 'k': '#3c3742'}
+    rows = [
+        '................',
+        '................',
+        '...lvv....vvl...',
+        '..lvvVV..vVVvV..',
+        '..vvssSSssSSVV..',
+        '..vsggggggggSV..',
+        '..vss.yyyy.SSV..',
+        '..VSS..yy..SSk..',
+        '...SS..yg..Sk...',
+        '...kSS.gGGSSk...',
+        '....kSgGGGSk....',
+        '.....kGGGGk.....',
+        '......kGGk......',
+        '.......kk.......',
+        '................',
+        '................',
+    ]
+    img = from_grid(rows, pal)
+    for x, y in ((6, 6), (9, 6), (5, 7), (6, 7), (9, 7), (10, 7), (6, 8), (9, 8), (6, 9)):
+        img.putpixel((x, y), rgb('#2a1a5c'))                 # dunkles Glas der Sanduhr
+    return outline(img, '#14101e')
+
+
 def quartz_thistle_seeds():
     # Drei graugrüne Samenkapseln der Distel, aus deren Spitze ein kleiner Kristall schaut (nicht wie Kristallquarz).
     pal = {'g': '#a4bfa8', 'G': '#6f8f78', 'd': '#3f5a48', 'k': '#4a44c0', 'm': '#7471f2', 'l': '#c8c6ff'}
@@ -1641,6 +1719,8 @@ ITEMS = {
     'quartz_thistle_seeds': quartz_thistle_seeds,
     'petrified_item': petrified_item,
     'time_essence': time_essence,
+    'layer_core': layer_core,
+    'heart_of_deep_time': heart_of_deep_time,
     'resin_fern_spores': resin_fern_spores,
     'ember_tuber': ember_tuber,
 }
@@ -1649,6 +1729,7 @@ SPAWN_EGGS = {
     'spore_bellows_spawn_egg': spore_bellows_spawn_egg,
     'petrified_witness_spawn_egg': petrified_witness_spawn_egg,
     'ember_burrower_spawn_egg': ember_burrower_spawn_egg,
+    'stratolith_spawn_egg': stratolith_spawn_egg,
 }
 
 

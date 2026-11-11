@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/first_core",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:heart_of_deep_time"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.stratolith.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.stratolith.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

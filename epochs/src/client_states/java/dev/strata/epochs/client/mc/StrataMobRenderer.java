@@ -34,6 +34,7 @@ public final class StrataMobRenderer<T extends StrataMob> extends MobRenderer<T,
         super.extractRenderState(entity, state, partialTick);
         state.action = entity.currentAction();
         state.actionSeconds = entity.actionSeconds(partialTick);
+        state.stage = entity.stage();
         for (int i = 0; i < state.glow.length; i++) state.glow[i] = entity.isInvisible() ? 0f : entity.glow(i);
     }
 

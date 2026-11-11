@@ -55,8 +55,8 @@ PAL = {
     'basalt':        ['#1f1d22', '#2c2a30', '#3b3840', '#4c4852', '#5e5a64'],
     'ember':         ['#5a1205', '#9e2a0c', '#e0531c', '#ff9a3c', '#ffd27a'],
     'fossil':        ['#6e5f44', '#9c8a64', '#cbb98f', '#e6d8b4', '#f2e8cc'],
-    # Sporenschicht des Stratolithen: Moosgrün der Sporenzeit, Oberseite hell genug gegen den grünen Nebel
-    'moss':          ['#26381a', '#36502a', '#4f7a3a', '#6b9a4a', '#8db45e'],
+    # Sporenschicht des Stratolithen: Myzel (grauviolett) wie der Boden der Sporenzeit
+    'mycel':         ['#3a3138', '#4f444c', '#6a5c64', '#84757c', '#9c8c92'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
 }
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
@@ -442,30 +442,57 @@ def d_fin_tip(img, f, rnd):
             put(img, r, x, y, '#ffd27a')
 
 
-def d_moss(img, f, rnd):
-    # Sporenschicht des Stratolithen: helle Myzelflecken und einzelne Bernsteinsporen auf allen Seiten und oben.
-    for name in ('north', 'south', 'east', 'west', 'up'):
+def d_mycel(img, f, rnd):
+    # Sporenschicht des Stratolithen: grüne Myzelfäden oben und an den Kanten, wenige Bernsteinsporen.
+    x0, y0, w, h = f['up']
+    for _ in range(w * h // 9):
+        put(img, f['up'], rnd.randrange(w), rnd.randrange(h), rnd.choice(['#4f7a3a', '#6b9a4a']))
+    for name in ('north', 'south', 'east', 'west'):
         x0, y0, w, h = f[name]
-        for _ in range(max(3, w * h // 14)):
-            x, y = rnd.randrange(w), rnd.randrange(h)
-            put(img, f[name], x, y, rnd.choice(['#c9d9a0', '#b3cc6a', '#d8e4b8']))
-        for _ in range(max(1, w * h // 60)):
-            put(img, f[name], rnd.randrange(w), rnd.randrange(h), '#e0a030')
+        for x in range(w):                                   # grüner Saum an der Oberkante
+            if rnd.random() < 0.7:
+                put(img, f[name], x, 0, '#4f7a3a')
+            if rnd.random() < 0.3:
+                put(img, f[name], x, 1, '#36502a')
+        for _ in range(max(1, w // 8)):
+            put(img, f[name], rnd.randrange(w), rnd.randrange(2, h), '#e0a030')
+
+
+def d_mushroom_cap(img, f, rnd):
+    # Pilzhut in Sporenbalg-Farben: Oberseite rotbraun mit hellen Tupfen, Seiten oben Hutrand, unten Lamellen,
+    # in der Mitte unten ein heller Stiel.
+    x0, y0, w, h = f['up']
+    for y in range(h):
+        for x in range(w):
+            put(img, f['up'], x, y, '#e8915a' if (x in (0, w - 1) or y in (0, h - 1)) else '#c0502a')
+    for x, y in ((1, 1), (3, 2), (2, 3)):
+        if x < w and y < h:
+            put(img, f['up'], x, y, '#ffc89a')
+    for name in ('north', 'south', 'east', 'west'):
+        x0, y0, w, h = f[name]
+        for x in range(w):
+            put(img, f[name], x, 0, '#e8915a')
+            put(img, f[name], x, 1, '#c0502a')
+            put(img, f[name], x, h - 1, '#2a1a10')
+        put(img, f[name], w // 2, h - 1, '#d6c29a')
 
 
 def d_stratolith_eyes(img, f, rnd):
-    # Zwei schmale, glühende Augenschlitze im Grundgestein, über dem Sanduhr-Kern.
+    # Gesicht: dunkle Stirnkante oben im Sockel, darunter zwei glühende 3x2-Augen; die Sanduhr ist der Kern darunter.
     r = f['north']                                          # 26 x 12
-    for x in (7, 8, 9, 16, 17, 18):
-        put(img, r, x, 2, '#ffd27a')
-    for x in (8, 17):
-        put(img, r, x, 3, '#e0a030')
+    for x in range(4, 22):
+        put(img, r, x, 0, '#1b1724')
+    for ex in (6, 17):
+        for x in range(ex, ex + 3):
+            put(img, r, x, 1, '#ffe08a')
+            put(img, r, x, 2, '#ffd27a')
+        put(img, r, ex - 1, 1, '#1b1724'); put(img, r, ex + 3, 1, '#1b1724')
 
 
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
            'amber_top': d_amber_top,
            'spiral': d_spiral, 'hood': d_hood, 'fossil': d_fossil, 'eyes': d_eyes, 'fin_tip': d_fin_tip,
-           'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass, 'moss': d_moss,
+           'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass, 'mycel': d_mycel, 'mushroom_cap': d_mushroom_cap,
            'stratolith_eyes': d_stratolith_eyes}
 
 
@@ -484,7 +511,7 @@ GLOW = {
     # Die Spiralrille ist die Uhr: 4 Segmente (außen 1 -> innen 4), die von außen nach innen erlöschen.
     # Die Augen leuchten mit dem innersten Segment.
     # Kern (Sanduhr) und Augen glühen; die Kristalle leuchten, solange die Kristallschicht da ist.
-    'stratolith': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a'}},
+    'stratolith': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a', '#ffe08a'}},
                    'crystals': {'materials': {'quartz'}}},
     'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
                  'spiral_2': {'colors': {'#4a3591'}, 'glow_color': '#c9a8ff'},

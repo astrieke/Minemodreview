@@ -180,5 +180,17 @@
   "message.strata_epochs.museum.occupied": "In dieser Vitrine steht schon etwas (Rechtsklick mit leerer Hand nimmt es heraus)",
   "message.strata_epochs.museum.contribute": "Das Museum ist vollständig – stelle selbst ein Exponat aus, um es für dich abzuschließen",
   "item.strata_epochs.time_essence": "Zeitessenz",
-  "message.strata_epochs.essence.ripe": "Hier ist schon alles reif – die Zeitessenz bleibt dir"
+  "message.strata_epochs.essence.ripe": "Hier ist schon alles reif – die Zeitessenz bleibt dir",
+  "entity.strata_epochs.stratolith": "Stratolith",
+  "item.strata_epochs.stratolith_spawn_egg": "Stratolith-Spawn-Ei",
+  "item.strata_epochs.layer_core": "Schichtkern",
+  "item.strata_epochs.heart_of_deep_time": "Herz der Tiefenzeit",
+  "message.strata_epochs.stratolith.shed.1": "Die Kristallschicht bricht ab!",
+  "message.strata_epochs.stratolith.shed.2": "Die Sporenschicht stürzt herab – nur noch Grundgestein!",
+  "message.strata_epochs.stratolith.rewind": "Der Stratolith spult die Zeit zurück – Spitzhacke auf den Kern, von vorn!",
+  "message.strata_epochs.stratolith.broken": "Kern getroffen – das Zurückspulen bricht ab!",
+  "message.strata_epochs.stratolith.top": "Den Schichtkern auf die Oberseite von Zeitgestein setzen",
+  "message.strata_epochs.stratolith.peaceful": "Auf Friedlich erwacht kein Stratolith",
+  "message.strata_epochs.stratolith.need_mastery": "Erst wer alle drei Epochen gemeistert hat (Fossil jeder Epoche), kann den Stratolithen wecken",
+  "message.strata_epochs.stratolith.no_space": "Zu wenig Platz: 3 × 4 × 3 Blöcke über dem Zeitgestein müssen frei sein"
 }

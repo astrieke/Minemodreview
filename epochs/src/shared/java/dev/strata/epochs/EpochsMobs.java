@@ -50,6 +50,12 @@ public final class EpochsMobs {
     public static final Supplier<Item> EMBER_BURROWER_SPAWN_EGG =
             REG.spawnEgg("ember_burrower_spawn_egg", EMBER_BURROWER, 0x4f4844, 0xe0531c);
 
+    /** Mini-Boss, nur per Schichtkern beschworen (spawnt nicht natürlich). Breite inkl. Arme, Höhe je Phase im Code. */
+    public static final Supplier<EntityType<dev.strata.epochs.mob.Stratolith>> STRATOLITH =
+            REG.entity("stratolith", dev.strata.epochs.mob.Stratolith::new, MobCategory.MONSTER, 2.3f, 3.1f, 10);
+    public static final Supplier<Item> STRATOLITH_SPAWN_EGG =
+            REG.spawnEgg("stratolith_spawn_egg", STRATOLITH, 0x3c3742, 0x9b87ff);
+
     /** Begleiter aus dem Ammonit-Fossil, spawnt nicht natürlich. */
     public static final Supplier<EntityType<Spiralit>> SPIRALIT =
             REG.entity("spiralit", Spiralit::new, MobCategory.CREATURE, 0.6f, 0.9f, 8);
@@ -83,6 +89,7 @@ public final class EpochsMobs {
             event.put(PETRIFIED_WITNESS.get(), PetrifiedWitness.createAttributes().build());
             event.put(SPIRALIT.get(), Spiralit.createAttributes().build());
             event.put(EMBER_BURROWER.get(), EmberBurrower.createAttributes().build());
+            event.put(STRATOLITH.get(), dev.strata.epochs.mob.Stratolith.createAttributes().build());
         });
         modBus.addListener((RegisterSpawnPlacementsEvent event) -> {
             event.register(GEODE_CRAWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,

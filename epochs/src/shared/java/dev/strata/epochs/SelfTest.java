@@ -57,6 +57,7 @@ final class SelfTest {
         failures += testItemPetrification(server);
         failures += testRifts(server);
         failures += testMuseum(server);
+        failures += testStratolith(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -868,6 +869,137 @@ final class SelfTest {
         StrataEpochs.LOG.info("[Strata-Test] Museum: ausgestellt={}, belegt={}, vollständig={} ({} Exponate), Kodex+Bonus={}, "
                 + "fremdes Display bleibt={}, herausgenommen={}, fällt heraus={}, Texte fehlen={} -> {}", placed, occupied,
                 complete, requirements.size(), codex, foreign, takeOut, dropped, missing, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /**
+     * Stratolith: Beschwörung nur mit Meisterschaft und Platz; unverwundbar beim Aufsteigen; Schichtwechsel bei 2/3
+     * und 1/3 Leben (Beute, kleinere Trefferfläche, Phase gespeichert); Zurückspulen holt verlorenes Leben zurück,
+     * ein Spitzhackentreffer von vorn stoppt es (von hinten nicht); Herz der Tiefenzeit verstärkt den Transplantator;
+     * Kodex beim Sieg.
+     */
+    // Hinweis: tick() direkt aufgerufen zählt tickCount nicht hoch (das macht sonst der Server), daher tickCount++.
+    private static int testStratolith(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        int cx = 9200, cz = 9200;
+        for (int k = 0; k < 12 && !cleanSite(level, cx, cz, 6); k++) cz += 160;
+        int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz);
+        BlockPos stone = new BlockPos(cx, y - 1, cz);
+        level.setBlockAndUpdate(stone, EpochsContent.CHRONOSTONE.get().defaultBlockState());
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("strata_boss_test".getBytes()), "strata_boss_test"));
+        player.setPos(cx + 0.5, y, cz + 4.5);
+        var difficulty = level.getDifficulty();
+        server.setDifficulty(net.minecraft.world.Difficulty.NORMAL, true);
+
+        boolean needsMastery = "need_mastery".equals(StratolithSummon.problem(player, level, stone.above()));
+        StrataAPI.unlock(player, StrataEpochs.id("first_core"));
+        for (String e : StratolithSummon.REQUIRED) {
+            StrataAPI.unlock(player, StrataEpochs.id("visited_" + e));
+            StrataAPI.unlock(player, StrataEpochs.id("fossil_" + e));
+            StrataAPI.unlock(player, StrataEpochs.id("mastered_" + e));
+        }
+        level.setBlockAndUpdate(stone.above(2), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        boolean needsSpace = "no_space".equals(StratolithSummon.problem(player, level, stone.above()));
+        level.setBlockAndUpdate(stone.above(2), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        boolean summonOk = needsMastery && needsSpace && StratolithSummon.problem(player, level, stone.above()) == null;
+
+        var boss = StratolithSummon.summon(level, stone.above());
+        boss.setYRot(0);
+        boss.setYHeadRot(0);
+        boss.yBodyRot = 0;   // schaut nach Süden (+z): der Testspieler steht vorn
+        float full = boss.getHealth();
+        boss.hurt(level.damageSources().generic(), 20);
+        boolean risingSafe = boss.isRising() && boss.getHealth() == full && boss.bossBar() != null;
+        for (int i = 0; i < dev.strata.epochs.mob.Stratolith.RISE_TICKS + 2; i++) { boss.tickCount++; boss.tick(); }
+
+        // Phase 1 -> 2 -> 3: Schicht fällt nach dem Abwurf (20 Ticks), Höhe schrumpft.
+        float h0 = boss.getBbHeight();
+        boss.setHealth(full * 0.6f);
+        for (int i = 0; i < 25; i++) { boss.tickCount++; boss.tick(); }
+        float h1 = boss.getBbHeight();
+        boolean crystalDrop = !level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, boss.getBoundingBox().inflate(4),
+                e -> e.getItem().is(EpochsContent.CRYSTAL_QUARTZ.get())).isEmpty();
+        boss.setHealth(full * 0.3f);
+        for (int i = 0; i < 25; i++) { boss.tickCount++; boss.tick(); }
+        float h2 = boss.getBbHeight();
+        boolean layers = boss.layer() == 2 && boss.getData(EpochsContent.STRATOLITH_LAYER.get()) == 2 && crystalDrop
+                && h0 > h1 && h1 > h2 && Math.abs(h2 - 1.5f) < 0.01f
+                && !level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, boss.getBoundingBox().inflate(4),
+                        e -> e.getItem().is(EpochsContent.AMBER_SHARD.get())).isEmpty();
+
+        // Zurückspulen: 9 s bei 70 Leben, dann Treffer auf 50 -> nach der Vorwarnung wieder 70.
+        boss.setHealth(70);
+        for (int i = 0; i < 200; i++) { boss.tickCount++; boss.tick(); }
+        boss.setHealth(50);
+        boolean started = boss.triggerRewind();
+        for (int i = 0; i < 45; i++) { boss.tickCount++; boss.tick(); }
+        boolean rewound = started && boss.getHealth() >= 69.9f;
+
+        // Konter: zweiter Stratolith in Phase 3, Spitzhacke von hinten wirkungslos, von vorn bricht es ab.
+        var second = StratolithSummon.summon(level, stone.above().offset(0, 0, 0));
+        second.setYRot(0);
+        second.setYHeadRot(0);
+        second.yBodyRot = 0;
+        for (int i = 0; i < dev.strata.epochs.mob.Stratolith.RISE_TICKS + 2; i++) { second.tickCount++; second.tick(); }
+        second.setHealth(70);
+        for (int i = 0; i < 200; i++) { second.tickCount++; second.tick(); }
+        second.setHealth(50);
+        second.triggerRewind();
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,
+                new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_PICKAXE));
+        player.setPos(second.getX(), second.getY(), second.getZ() - 3);   // hinten
+        second.hurt(player.damageSources().playerAttack(player), 1);
+        boolean backNoEffect = second.rewindPhase() == dev.strata.epochs.mob.StrataAbility.Phase.WARNING;
+        for (int i = 0; i < 11; i++) { second.tickCount++; second.tick(); }   // Unverwundbarkeit nach dem Treffer abwarten (Feld ab 26.3 privat)
+        player.setPos(second.getX(), second.getY(), second.getZ() + 3);   // vorn
+        second.hurt(player.damageSources().playerAttack(player), 1);
+        boolean countered = backNoEffect && second.rewindPhase() != dev.strata.epochs.mob.StrataAbility.Phase.WARNING
+                && second.isStunned();
+        for (int i = 0; i < 45; i++) { second.tickCount++; second.tick(); }
+        countered &= second.getHealth() < 55;
+        second.discard();
+
+        // Herz der Tiefenzeit in der zweiten Hand: größerer Radius, Transplantator ohne Fossil.
+        int base = StratolithSummon.transplantRadius(player);
+        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,
+                new net.minecraft.world.item.ItemStack(EpochsContent.HEART_OF_DEEP_TIME.get()));
+        boolean heart = StratolithSummon.hasHeart(player) && StratolithSummon.transplantRadius(player) > base;
+        player.getInventory().clearContent();
+        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, net.minecraft.world.item.ItemStack.EMPTY);
+
+        // Sieg: Kodex-Knoten für Spieler in der Nähe.
+        player.setPos(boss.getX() + 2, boss.getY(), boss.getZ());
+        for (int i = 0; i < 11; i++) { boss.tickCount++; boss.tick(); }
+        boss.hurt(player.damageSources().playerAttack(player), 10_000);
+        boolean codex = !boss.isAlive() && StrataAPI.hasNode(player, StrataEpochs.id("stratolith"));
+        level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(stone).inflate(12))
+                .forEach(net.minecraft.world.entity.Entity::discard);
+        level.getEntitiesOfClass(dev.strata.epochs.mob.StrataMob.class, new net.minecraft.world.phys.AABB(stone).inflate(20))
+                .forEach(net.minecraft.world.entity.Entity::discard);
+        level.setBlockAndUpdate(stone, net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState());
+        server.setDifficulty(difficulty, true);
+
+        boolean loot;
+        try (var in = SelfTest.class.getResourceAsStream("/data/strata_epochs/loot_table/entities/stratolith.json")) {
+            String text = in == null ? "" : new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            loot = text.contains("strata_epochs:heart_of_deep_time") && text.contains("minecraft:killed_by_player");
+        } catch (java.io.IOException e) {
+            loot = false;
+        }
+        List<String> missing = new ArrayList<>();
+        for (String key : List.of("entity.strata_epochs.stratolith", "item.strata_epochs.layer_core",
+                "item.strata_epochs.heart_of_deep_time", "message.strata_epochs.stratolith.shed.1",
+                "message.strata_epochs.stratolith.shed.2", "message.strata_epochs.stratolith.rewind",
+                "message.strata_epochs.stratolith.broken", "message.strata_epochs.stratolith.need_mastery",
+                "message.strata_epochs.stratolith.no_space", "message.strata_epochs.stratolith.peaceful",
+                "message.strata_epochs.stratolith.top")) {
+            for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
+        }
+        boolean ok = summonOk && risingSafe && layers && rewound && countered && heart && codex && loot && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Stratolith: Beschwörung={}, Aufsteigen geschützt={}, Schichten={} (Höhe {}/{}/{}), "
+                + "Zurückspulen={}, Konter von vorn={}, Herz={}, Kodex={}, Beute={}, Texte fehlen={} -> {}",
+                summonOk, risingSafe, layers, h0, h1, h2, rewound, countered, heart, codex, loot, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

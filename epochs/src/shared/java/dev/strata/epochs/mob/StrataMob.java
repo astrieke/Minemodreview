@@ -34,6 +34,9 @@ public abstract class StrataMob extends PathfinderMob {
     /** Stärke der Leucht-Ebenen, je 8 Bit (0..255) für bis zu 4 Ebenen, vom Server gesetzt. */
     private static final EntityDataAccessor<Integer> DATA_GLOW =
             SynchedEntityData.defineId(StrataMob.class, EntityDataSerializers.INT);
+    /** Phase (z. B. abgeworfene Schichten des Stratolithen): Knochen {@code shedN_…} sind ab Phase N ausgeblendet. */
+    private static final EntityDataAccessor<Integer> DATA_STAGE =
+            SynchedEntityData.defineId(StrataMob.class, EntityDataSerializers.INT);
 
     private static final int TUNING_REFRESH_TICKS = 200;
     private static final int ENCOUNTER_INTERVAL = 40;
@@ -60,6 +63,7 @@ public abstract class StrataMob extends PathfinderMob {
         super.defineSynchedData(builder);
         builder.define(DATA_ACTION, 0);
         builder.define(DATA_GLOW, 0);
+        builder.define(DATA_STAGE, 0);
     }
 
     @Override
@@ -152,6 +156,16 @@ public abstract class StrataMob extends PathfinderMob {
 
     public float glow(int layer) {
         return ((entityData.get(DATA_GLOW) >>> (layer * 8)) & 0xFF) / 255f;
+    }
+
+    // ---- Phase ----
+
+    public int stage() {
+        return entityData.get(DATA_STAGE);
+    }
+
+    protected void setStage(int stage) {
+        entityData.set(DATA_STAGE, stage);
     }
 
     // ---- Datapack-Werte ----

@@ -19,6 +19,6 @@ public final class StrataMobModel extends EntityModel<StrataMobRenderState> {
     public void setupAnim(StrataMobRenderState state) {
         super.setupAnim(state);
         poser.pose(new MobPoser.Input(state.ageInTicks, state.walkAnimationPos, state.walkAnimationSpeed,
-                state.yRot, state.xRot, state.action, state.actionSeconds));
+                state.yRot, state.xRot, state.action, state.actionSeconds, state.stage));
     }
 }

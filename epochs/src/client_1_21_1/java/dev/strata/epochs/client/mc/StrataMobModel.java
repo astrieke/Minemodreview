@@ -23,7 +23,7 @@ public final class StrataMobModel<T extends StrataMob> extends EntityModel<T> {
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         float partial = ageInTicks - entity.tickCount;
         poser.pose(new MobPoser.Input(ageInTicks, limbSwing, limbSwingAmount, netHeadYaw, headPitch,
-                entity.currentAction(), entity.actionSeconds(partial)));
+                entity.currentAction(), entity.actionSeconds(partial), entity.stage()));
     }
 
     @Override

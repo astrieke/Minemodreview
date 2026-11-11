@@ -80,16 +80,17 @@ public final class Transplanter {
             return;
         }
         Item fossil = FossilPrep.fossilFor(id);
+        boolean heart = StratolithSummon.hasHeart(player);   // Herz der Tiefenzeit: kein Fossil nötig, größerer Radius
         if (!player.isCreative()) {
-            int slot = findSlot(player, fossil);
-            if (slot < 0) {
+            int slot = heart ? -2 : findSlot(player, fossil);
+            if (slot == -1) {
                 fail(player, "need_fossil", net.minecraft.network.chat.Component.translatable(fossil.getDescriptionId()));
                 return;
             }
-            player.getInventory().getItem(slot).shrink(1);
+            if (slot >= 0) player.getInventory().getItem(slot).shrink(1);
             held.shrink(1);
         }
-        start(level, pos, id, epoch.landscape().get(), EpochsConfig.TRANSPLANT_RADIUS.get(), player);
+        start(level, pos, id, epoch.landscape().get(), StratolithSummon.transplantRadius(player), player);
     }
 
     /** Startet eine Transplantation (auch für Tests und Befehle). */

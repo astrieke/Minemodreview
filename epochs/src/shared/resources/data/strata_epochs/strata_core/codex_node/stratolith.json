@@ -1,0 +1,7 @@
+{
+  "requires": [
+    "strata_epochs:mastered_crystal_age",
+    "strata_epochs:mastered_spore_age",
+    "strata_epochs:mastered_ash_age"
+  ]
+}

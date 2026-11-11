@@ -92,6 +92,12 @@ public final class EpochsContent {
      */
     public static final Supplier<Item> TIME_ESSENCE = REG.item("time_essence", p -> p.rarity(net.minecraft.world.item.Rarity.UNCOMMON));
 
+    /** Schichtkern: weckt auf Zeitgestein den Stratolithen (siehe {@link StratolithSummon}). */
+    public static final Supplier<Item> LAYER_CORE = REG.item("layer_core", p -> p.stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE));
+    /** Herz der Tiefenzeit: Beute des Stratolithen; in der zweiten Hand verstärkt es den Transplantator. */
+    public static final Supplier<Item> HEART_OF_DEEP_TIME = REG.item("heart_of_deep_time",
+            p -> p.stacksTo(1).fireResistant().rarity(net.minecraft.world.item.Rarity.EPIC));
+
     /** Keimfrische: dreht die Verfestigungs-Uhr ein Stück zurück (siehe {@link GermTonic}). */
     public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
 
@@ -156,6 +162,10 @@ public final class EpochsContent {
     /** An der Dimension: laufende Transplantationen (überstehen so einen Neustart). */
     public static final Supplier<AttachmentType<java.util.List<TransplantRecord>>> TRANSPLANTS =
             Mc.attachment(ATTACHMENTS, "transplants", java.util.List::of, TransplantRecord.LIST_CODEC, false);
+
+    /** Am Stratolithen: wie viele Schichten er schon abgeworfen hat (0–2), damit es nach dem Laden so bleibt. */
+    public static final Supplier<AttachmentType<Integer>> STRATOLITH_LAYER =
+            Mc.attachment(ATTACHMENTS, "stratolith_layer", () -> 0, com.mojang.serialization.Codec.INT, false);
 
     /** An der Dimension: offene Zeitrisse (überstehen so einen Neustart). */
     public static final Supplier<AttachmentType<java.util.List<RiftRecord>>> RIFTS =

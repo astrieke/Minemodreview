@@ -1,0 +1,44 @@
+{
+  "entity": "strata_epochs:stratolith",
+  "attributes": {
+    "max_health": 240,
+    "attack_damage": 12,
+    "armor": 10,
+    "movement_speed": 0.18
+  },
+  "abilities": {
+    "slam": {
+      "enabled": true,
+      "reach": 3.5,
+      "cooldown": 60,
+      "lift": 0.5
+    },
+    "shards": {
+      "enabled": true,
+      "warning": 24,
+      "cooldown": 120,
+      "range": 16,
+      "radius": 1.4,
+      "damage": 8,
+      "lift": 0.6
+    },
+    "spores": {
+      "enabled": true,
+      "warning": 20,
+      "cooldown": 200,
+      "range": 10,
+      "radius": 6,
+      "cloud_ticks": 100,
+      "factor": 2.5,
+      "slow_duration": 80,
+      "bellows_cap": 4
+    },
+    "rewind": {
+      "enabled": true,
+      "warning": 40,
+      "cooldown": 300,
+      "min_loss": 12,
+      "stun": 40
+    }
+  }
+}

@@ -180,5 +180,17 @@
   "message.strata_epochs.museum.occupied": "This case already holds something (right-click with an empty hand to take it out)",
   "message.strata_epochs.museum.contribute": "The museum is complete – display an exhibit yourself to complete it for you",
   "item.strata_epochs.time_essence": "Time Essence",
-  "message.strata_epochs.essence.ripe": "Everything here is already ripe – you keep the Time Essence"
+  "message.strata_epochs.essence.ripe": "Everything here is already ripe – you keep the Time Essence",
+  "entity.strata_epochs.stratolith": "Stratolith",
+  "item.strata_epochs.stratolith_spawn_egg": "Stratolith Spawn Egg",
+  "item.strata_epochs.layer_core": "Layer Core",
+  "item.strata_epochs.heart_of_deep_time": "Heart of Deep Time",
+  "message.strata_epochs.stratolith.shed.1": "The crystal layer breaks off!",
+  "message.strata_epochs.stratolith.shed.2": "The spore layer crashes down – only bedrock left!",
+  "message.strata_epochs.stratolith.rewind": "The Stratolith rewinds time – pickaxe on its core, from the front!",
+  "message.strata_epochs.stratolith.broken": "Core hit – the rewind breaks off!",
+  "message.strata_epochs.stratolith.top": "Place the Layer Core on top of chronostone",
+  "message.strata_epochs.stratolith.peaceful": "No Stratolith awakens on Peaceful",
+  "message.strata_epochs.stratolith.need_mastery": "Only those who mastered all three epochs (a fossil of each) can awaken the Stratolith",
+  "message.strata_epochs.stratolith.no_space": "Not enough room: 3 × 4 × 3 blocks above the chronostone must be free"
 }
