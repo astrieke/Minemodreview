@@ -30,6 +30,8 @@
 # SHOT_RIFT=<epoche>: in der Oberwelt (flache Testwelt) öffnet sich nach 30 s ein Zeitriss vor dem Spieler;
 #   Bildserie 40 s lang (alle 1 s): Riss, Partikel und der Boden, der zur Epoche wird.
 # SHOT_MUSEUM=1: in der Oberwelt stehen sechs Vitrinen mit Bohrkern und Fossil jeder Epoche (Museum der Erdgeschichte).
+# SHOT_NBT2=',<nbt>' (mit SHOT_MOB): zusätzliche NBT für das rechte Exemplar, z. B. die Phase des Stratolithen
+#   ',"neoforge:attachments":{"strata_epochs:stratolith_layer":2}'.
 # SHOT_BEARING=1: Kurz vor dem Bild peilt der Spieler die Biome (/strata_epochs bearing), die Zeilen stehen im Chat.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -224,7 +226,7 @@ MC
     else
         cat >> "$dp/data/strata_shot/function/stage.mcfunction" <<MC
 execute in strata_epochs:$epoch run summon $SHOT_MOB $((x - 1)).5 $y $((z + 8)).5 {NoAI:1b,PersistenceRequired:1b,Rotation:[90f,0f]}
-execute in strata_epochs:$epoch run summon $SHOT_MOB $((x + 2)).5 $y $((z + 8)).5 {NoAI:1b,PersistenceRequired:1b,Rotation:[180f,0f]}
+execute in strata_epochs:$epoch run summon $SHOT_MOB $((x + 2)).5 $y $((z + 8)).5 {NoAI:1b,PersistenceRequired:1b,Rotation:[180f,0f]${SHOT_NBT2:-}}
 MC
     fi
     # SHOT_DARK=1: ohne Nachtsicht, so wie man den Mob in der dunklen Epoche sieht.

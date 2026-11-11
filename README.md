@@ -92,6 +92,13 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 
 ![Epochen-Pflanzen in vier Stufen](docs/screenshots/crops/crystal_age_1.21.1.png)
 
+**Stratolith (Mini-Boss):** Wer alle drei Epochen gemeistert hat, setzt einen **Schichtkern** (Kristallquarz, Bernstein, Glutsplitter, Zeitessenz, Zeitgestein) auf Zeitgestein. Der Stratolith steigt aus dem Boden, ein Stapel aus drei Gesteinsschichten mit Boss-Leiste.
+- Bei 2/3 und 1/3 Leben bricht die oberste Schicht ab und fällt als Beute herunter. Jede Schicht kämpft anders: Kristallspitzen schießen nach einem Warnkreis unter dir aus dem Boden; die Sporenschicht stößt Sporen aus und ruft Sporenbälge; das Grundgestein **spult die Zeit zurück** und holt sich Leben wieder.
+- Das Zurückspulen stoppt nur ein Schlag mit einer **Spitzhacke von vorn** während der Vorwarnung (der Kern tritt dann hervor).
+- Belohnung: das **Herz der Tiefenzeit**. In der zweiten Hand wirkt der Transplantator mit 1,5-fachem Radius und ohne Fossil-Kosten. Dazu Zeitessenz und der Kodex-Knoten `stratolith`.
+
+![Stratolith: links nur noch Grundgestein, rechts mit Kristallkrone](mobs/stratolith/shots/ingame_phases_1.21.1.png)
+
 **Spiralit (Begleiter):** Ammonit in die Haupthand, Keimfrische in die zweite, Rechtsklick auf den Präparationstisch. Er schlüpft und schwebt rechts vor dir (einer pro Spieler).
 - **Uhr:** Seine Spirale zeigt in 4 Segmenten die Restzeit in der Epoche. In der Warnphase blinkt das innerste Segment, und er läutet.
 - **Ruhe:** In seiner Nähe läuft die Verfestigung 20 % langsamer. Das stapelt nicht mit der Geodenrüstung.
@@ -153,6 +160,7 @@ Kodex-Knoten werden automatisch freigeschaltet:
 - `first_transplant` nach der ersten Transplantation
 - `sealed_rift` beim ersten versiegelten Zeitriss
 - `museum`, wenn das Museum der Erdgeschichte vollständig ist (+10 % Zeit in allen Epochen)
+- `stratolith` für alle, die den Stratolithen besiegen
 
 ## Strata Bridge: Anbindung an andere Mods
 
@@ -277,6 +285,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 40 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
 - Kernanalyse-Tisch mit Trichtern und Rohren: freigegeben in Prüfrunde 2 (7/7/8), im Selbsttest mit Vanilla-Trichter und einem Rohr-Cache wie bei Mekanism geprüft. Mit echten Rohr-Mods lief er noch nicht. Strom (FE) nimmt bewusst keiner der Tische an, weil nichts daran Arbeit braucht.
 - Inventar-Verfestigung: freigegeben in Prüfrunde 2 (7/8/8). Im Client gesehen in 1.21.1 (`docs/screenshots/petrify/`, Versteinern im Überlebensmodus). Das Lösen (draußen, beim Tod, fremde Brocken) prüft der Selbsttest; von Hand durchgespielt wurde es noch nicht. Bricht ein anderer Mod den Tod ab (Wiederbelebung), sind die Gegenstände trotzdem schon gelöst.
+- Stratolith: im Spiel in 1.21.1 und 26.3 (Boss-Leiste, Phasen), Selbsttest für Beschwörung, Phasen, Zurückspulen, Konter und Belohnung. Klänge sind vorerst Vanilla; von Hand gekämpft wurde noch nicht, die Werte sind geschätzt.
 - Zeitessenz: freigegeben in Prüfrunde 2 (7/8/8). Nur als Item mit Tag, ein Fluid gibt es nicht; wie oft sie im echten Spiel anfällt, ist geschätzt.
 - Museum der Erdgeschichte: freigegeben in Prüfrunde 2 (8/8/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/museum/`, Vitrinen per Befehl befüllt). Das Ausstellen von Hand per Rechtsklick prüft der Selbsttest nur über die Hilfsfunktion.
 - Zeitrisse: freigegeben in Prüfrunde 2 (8/7/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/rifts/`). Wie oft sie im echten Spiel auftauchen (20 min, 35 %), ist geschätzt und noch nicht ausprobiert.

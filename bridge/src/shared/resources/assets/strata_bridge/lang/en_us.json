@@ -84,5 +84,6 @@
   "advancements.strata_epochs.stratolith.title": "Vanquisher of Deep Time",
   "advancements.strata_epochs.stratolith.description": "Defeat the Stratolith",
   "jei.strata_bridge.info.layer_core": "Layer Core (crystal quartz, amber, ember shard, time essence, chronostone): right-click the top of chronostone to awaken the Stratolith, a mini-boss of three rock layers. Only for those who mastered all three epochs, with 3 × 4 × 3 blocks of room and not on Peaceful. Phases: crystal spikes from the ground, a spore burst with Spore Bellows, and a rewind that only a pickaxe on its core, from the front, can stop.",
-  "jei.strata_bridge.info.heart_of_deep_time": "Loot of the Stratolith. In your off hand it strengthens the Transplanter: one and a half times the radius and no fossil needed. It is not used up."
+  "jei.strata_bridge.info.heart_of_deep_time": "Loot of the Stratolith. In your off hand it strengthens the Transplanter: one and a half times the radius and no fossil needed. It is not used up.",
+  "jade.strata_bridge.mob.stratolith": "Mini-boss · three layers, a pickaxe on its core stops the rewind"
 }

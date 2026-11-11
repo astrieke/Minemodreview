@@ -90,6 +90,26 @@ public final class StrataBridge {
                 .forEach(id -> LOG.error("[Strata-Bridge-Test] Advancement fehlt: {}", id));
         LOG.info("[Strata-Bridge-Test] {} von {} Advancements geladen", found, BUILTIN_ADVANCEMENTS.size());
 
+        // Texte: jede JEI-Seite, jeder Jade-Hinweis für Strata-Mobs und jedes Advancement in Deutsch und Englisch.
+        java.util.Set<String> keys = new java.util.TreeSet<>(BridgeTexts.jeiInfo().values());
+        for (var def : java.util.List.of(dev.strata.epochs.mob.GeodeCrawler.DEF, dev.strata.epochs.mob.SporeBellows.DEF,
+                dev.strata.epochs.mob.PetrifiedWitness.DEF, dev.strata.epochs.mob.EmberBurrower.DEF,
+                dev.strata.epochs.mob.Spiralit.DEF, dev.strata.epochs.mob.Stratolith.DEF)) {
+            keys.add("jade.strata_bridge.mob." + def.name());
+        }
+        for (String id : BUILTIN_ADVANCEMENTS) {
+            String node = id.substring(id.lastIndexOf('/') + 1);
+            keys.add("advancements.strata_epochs." + node + ".title");
+            keys.add("advancements.strata_epochs." + node + ".description");
+        }
+        java.util.List<String> missingTexts = new java.util.ArrayList<>();
+        for (String lang : java.util.List.of("de_de", "en_us")) {
+            java.util.Set<String> have = langKeys(lang);
+            for (String key : keys) if (!have.contains(key)) missingTexts.add(lang + ":" + key);
+        }
+        LOG.info("[Strata-Bridge-Test] Texte: {} geprüft, fehlen {} -> {}", keys.size(), missingTexts,
+                missingTexts.isEmpty() ? "OK" : "FEHLER");
+
         // Kette prüfen: Knoten freischalten -> Event -> Advancement, mit einem simulierten Spieler.
         ServerPlayer fake = FakePlayerFactory.getMinecraft(server.overworld());
         int[] events = {0};
@@ -118,4 +138,14 @@ public final class StrataBridge {
         }
     }
 
+
+    private static java.util.Set<String> langKeys(String lang) {
+        try (var in = StrataBridge.class.getResourceAsStream("/assets/strata_bridge/lang/" + lang + ".json")) {
+            if (in == null) return java.util.Set.of();
+            return com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8))
+                    .getAsJsonObject().keySet();
+        } catch (java.io.IOException e) {
+            return java.util.Set.of();
+        }
+    }
 }

@@ -84,5 +84,6 @@
   "advancements.strata_epochs.stratolith.title": "Bezwinger der Tiefenzeit",
   "advancements.strata_epochs.stratolith.description": "Besiege den Stratolithen",
   "jei.strata_bridge.info.layer_core": "Schichtkern (Kristallquarz, Bernstein, Glutsplitter, Zeitessenz, Zeitgestein): Rechtsklick auf die Oberseite von Zeitgestein weckt den Stratolithen, einen Mini-Boss aus drei Gesteinsschichten. Nur wer alle drei Epochen gemeistert hat, mit 3 × 4 × 3 Blöcken Platz und nicht auf Friedlich. Phasen: Kristallspitzen aus dem Boden, Sporenstoß mit Sporenbälgen, Zurückspulen – das stoppt nur eine Spitzhacke auf den Kern, von vorn.",
-  "jei.strata_bridge.info.heart_of_deep_time": "Beute des Stratolithen. In der zweiten Hand verstärkt es den Transplantator: anderthalbfacher Radius und kein Fossil nötig. Es wird dabei nicht verbraucht."
+  "jei.strata_bridge.info.heart_of_deep_time": "Beute des Stratolithen. In der zweiten Hand verstärkt es den Transplantator: anderthalbfacher Radius und kein Fossil nötig. Es wird dabei nicht verbraucht.",
+  "jade.strata_bridge.mob.stratolith": "Mini-Boss · drei Schichten, Spitzhacke auf den Kern stoppt das Zurückspulen"
 }

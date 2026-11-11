@@ -228,6 +228,27 @@ Effekte nutzen nur Vanilla-Partikel und -Sounds. Das spart Assets und funktionie
 - **Code:** Jede Fähigkeit ist ein eigenes Goal mit Vorwarnzeit, Wirkung und Abklingzeit. Ein gemeinsames `StrataAbility`-Gerüst in M0 hält den Aufwand pro Fähigkeit klein. Effekte laufen über Server-Partikel und Sounds, ohne eigene Pakete.
 - **Verfestigung:** Sporenstoß und Sanduhr-Puls greifen in die Uhr ein (`SolidificationClock`). Sie brauchen dafür eine kleine API: einen Zeitfaktor pro Spieler und „Zeit abziehen“.
 
+## Stratolith (Mini-Boss, umgesetzt)
+
+Wandelnder Schichtstapel: Grundgestein-Sockel mit Gesicht (Stirnkante, zwei glühende Augen) und Sanduhr-Kern darunter,
+Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und die Kristallkrone (Calcit, drei Quarzspitzen).
+9 Knochen, 15 Würfel, Textur 128 × 128 (Ausnahme für den Boss), Leucht-Ebenen `core` (Kern, Augen) und `crystals`.
+
+| | |
+|---|---|
+| Beschwörung | Schichtkern (Kristallquarz, Bernstein, Glutsplitter, Zeitessenz, Zeitgestein) auf die Oberseite von Zeitgestein. Nur mit `mastered_<epoche>` für alle drei Epochen, mit 3 × 4 × 3 Blöcken Platz und nicht auf Friedlich. Er steigt 3 s aus dem Boden (`rise`) und ist dabei unverwundbar. |
+| Werte | 240 Leben, 12 Schaden, Rüstung 10, langsam (0,18), kein Rückstoß; Boss-Leiste. Trefferfläche 2,3 breit (mit Armen), Höhe je Phase 3,1 / 2,3 / 1,5. |
+| Phase 1: Kristallschicht (100–67 %) | **Kristallspitzen** (`shards`): 1,2 s Warnkreis am Boden unter jedem Spieler in 16 Blöcken, dann brechen Spitzen hervor (8 Schaden, Wurf). |
+| Phase 2: Sporenschicht (67–33 %) | **Sporenstoß** (`spores`): Sporenwolke (Verfestigung ×2,5 in Epochen), Langsamkeit II, zwei Sporenbälge (höchstens 4 in der Nähe). |
+| Phase 3: Grundgestein (33–0 %) | **Zurückspulen** (`rewind`): 2 s Vorwarnung, der Kern tritt hervor und dreht sich; danach holt er sich das Leben der letzten 8 s zurück (höchstens bis 1/3). |
+| Kern-Regel | Ein Treffer mit einer **Spitzhacke von vorn** (Angreifer höchstens 45° neben seiner Blickrichtung) während der Vorwarnung bricht das Zurückspulen ab und betäubt ihn 2 s. Von der Seite oder hinten zählt er nicht. Mehr als eine Trefferfläche hat Vanilla nicht; „von vorn“ ersetzt den Treffer auf den Kern. |
+| Abwurf | Bei 2/3 und 1/3 Leben kippt die oberste Schicht 1 s lang ab (`shed_crystal`, `shed_spore`), erst dann ist sie weg. Sie lässt Kristallquarz und Quarzdistel-Samen bzw. Bernstein und einen Sporenbeutel fallen. Die Phase steht als Attachment am Mob und übersteht Entladen. |
+| Immer | **Hammerschlag** (`slam`): 0,6 s Ausholen, 0,2 s Halten über dem Kopf, Schlag mit Bodenwelle. |
+| Belohnung | **Herz der Tiefenzeit** (nur, wenn ein Spieler ihn besiegt), 2–4 Zeitessenzen, Zeitgestein; Kodex-Knoten `stratolith` für den Sieger und Spieler in 32 Blöcken. Das Herz in der zweiten Hand: Transplantator mit 1,5-fachem Radius und ohne Fossil-Kosten, es wird nicht verbraucht. |
+| Klang | vorerst Vanilla (Verwüster, Eisengolem, tiefer gestimmt). |
+
+Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
+
 ## Später (gesammelt, nicht eingeplant)
 
 | Mob | Epoche | Rolle | Warum später |
@@ -235,7 +256,6 @@ Effekte nutzen nur Vanilla-Partikel und -Sounds. Das spart Assets und funktionie
 | Bernsteinmotte (`amber_moth`) | Sporenzeit | passiv; man fängt sie, und sie reift zu Bernstein mit Einschluss (Fossil-Quelle) | Fliegen ist am teuersten, und das Insektenmodell ist schwer |
 | Resonanzling (`resonant_shard`) | Kristallzeit | neutral; lässt Erz in der Nähe aufleuchten und pausiert kurz die Verfestigung | schwebt, braucht also Flug-Navigation |
 | Harzschnecke (`resin_snail`) | Sporenzeit | passiv; ihre Spur härtet zu Bernsteinplatten aus | gut, aber ohne Bezug zum Kern-Ablauf |
-| **Stratolith** (`stratolith`) | Arena | Mini-Boss mit drei Gesteinsschichten als Phasen (Kristall, Sporen, Grundgestein mit „Zurückspulen“); Belohnung: Herz der Tiefenzeit für den Transplantator | ein Boss kostet laut Programmierer 5–10 Personentage |
 
 ## Technische Architektur
 
