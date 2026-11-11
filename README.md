@@ -105,12 +105,14 @@ Je nach Epoche bekommst du einen Ammonit, einen Farnabdruck oder einen Urzeitsch
 Nur natürliche Blöcke (Tag `strata_epochs:transplantable`) werden verändert, Bauten bleiben. Er wirkt nur in der Oberwelt. Radius, Tempo und Anzahl stehen in der Config (`[transplanter]`), die Landschaft im Datapack (Feld `landscape` der Epoche).
 
 **Zeitrisse (Verwerfungen):** Wer schon einmal in einer Epoche war, bei dem reißt in der Oberwelt ab und zu ein Riss in eine dieser Epochen auf, 24–40 Blöcke entfernt. Der Chat nennt Epoche, Richtung und Entfernung.
-- Solange er offen ist, wird alle 2 s ein natürlicher Oberflächenblock (Tag `strata_epochs:transplantable`) in der Nähe zum Boden der Epoche. Der Kreis wächst bis Radius 5. Alle 30 s kommt ein Mob der Epoche heraus (höchstens 3 in der Nähe).
+- Der Spalt ist zwei Blöcke hoch, darüber steht eine Partikelsäule in der Farbe der Epoche. Risse öffnen sich nur, wenn du an der Oberfläche bist.
+- Solange er offen ist, laufen drei Risslinien vom Spalt nach außen (bis 6 Blöcke): Alle 2 s wird ein natürlicher Oberflächenblock zum Boden der Epoche (Calcit, Moos, Vulkanasche). Erlaubt sind nur gewachsene Blöcke (Tag `strata_epochs:rift_convertible`); Ackerland, Wege, Terrakotta, Sandstein und Bauten bleiben. Alle 30 s kommt ein Mob der Epoche heraus (höchstens 3 in der Nähe, nicht auf Friedlich).
 - **Schleichen + Rechtsklick mit einem Zeitanker** versiegelt den Riss. Er gibt einen Fossilbrocken der Epoche und 2–4 Rohstoffe frei; der Kodex-Knoten `sealed_rift` schaltet sich frei.
 - Sonst schließt er sich nach 5 Minuten von selbst. Die Verwerfung im Boden bleibt.
+- Auf Servern mit Grundstücksschutz (FTB Chunks, Open Parties and Claims) besser `griefing = false` setzen: Risse fragen den Schutz nicht ab.
 - Config `[rifts]`: `enabled`, `griefing` (Boden verändern), `dimensions` (Standard nur die Oberwelt), `interval_minutes` (20) und `chance` (0,35) pro Spieler, `lifetime_seconds` (300), `max_active` (4). Zwei Risse liegen mindestens 96 Blöcke auseinander.
 
-![Zeitriss zur Sporenzeit nach 39 s](docs/screenshots/rifts/sporenzeit_39s_1.21.1.png)
+![Zeitriss zur Kristallzeit nach 39 s](docs/screenshots/rifts/kristallzeit_39s_1.21.1.png)
 
 | Transplantation (Kristallzeit, 26.3) | Spiralit (1.21.1) |
 |---|---|

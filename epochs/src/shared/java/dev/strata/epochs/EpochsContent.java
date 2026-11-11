@@ -50,7 +50,7 @@ public final class EpochsContent {
 
     /** Zeitriss in der Oberwelt (siehe {@link TimeRifts}): ohne Kollision, unzerstörbar, nur mit Zeitanker zu versiegeln. */
     public static final Supplier<Block> TIME_RIFT = REG.ghost("time_rift", TimeRiftBlock::new,
-            p -> p.mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 11).sound(SoundType.AMETHYST));
+            p -> p.mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 11).sound(SoundType.AMETHYST).randomTicks());
 
     // Epochen-Pflanzen (siehe {@link EpochCrop}): Samen stecken in Fossilbrocken, reif geben sie Epochen-Rohstoffe.
     public static final Supplier<Block> QUARTZ_THISTLE = REG.crop("quartz_thistle",

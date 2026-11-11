@@ -96,7 +96,7 @@ if [ -n "${SHOT_RIFT:-}" ]; then
     cat > "$dp/data/strata_shot/function/rift.mcfunction" <<MC
 time set day
 execute as @p at @p run strata_epochs rift strata_epochs:$SHOT_RIFT
-tp @p 0.5 -59 -6.5 0 22
+tp @p 0.5 -58 -14.5 0 12
 MC
 fi
 if [ -n "${SHOT_CURIOS:-}" ]; then

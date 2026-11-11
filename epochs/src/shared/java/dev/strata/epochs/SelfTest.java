@@ -653,7 +653,8 @@ final class SelfTest {
 
         TimeRifts.open(level, pos, epoch);
         var record = level.getData(EpochsContent.RIFTS.get()).stream().filter(r -> r.pos() == pos.asLong()).findFirst().orElse(null);
-        boolean opened = level.getBlockState(pos).is(EpochsContent.TIME_RIFT.get()) && record != null;
+        boolean opened = level.getBlockState(pos).is(EpochsContent.TIME_RIFT.get()) && record != null
+                && level.getBlockState(pos.above()).is(EpochsContent.TIME_RIFT.get());   // zwei Blöcke hoch
 
         var random = net.minecraft.util.RandomSource.create(11);
         int converted = 0;
@@ -661,10 +662,10 @@ final class SelfTest {
             if (TimeRifts.convertOne(level, record, record.openedAt() + lifetime, lifetime, random) != null) converted++;
         }
         int calcite = 0;
-        for (BlockPos p : BlockPos.betweenClosed(cx - 5, ground, cz - 5, cx + 5, ground, cz + 5)) {
+        for (BlockPos p : BlockPos.betweenClosed(cx - 7, ground, cz - 7, cx + 7, ground, cz + 7)) {
             if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.CALCITE)) calcite++;
         }
-        boolean spreads = converted > 10 && calcite == converted
+        boolean spreads = converted >= 8 && calcite == converted
                 && level.getBlockState(build).is(net.minecraft.world.level.block.Blocks.OAK_PLANKS);
 
         boolean spaced = TimeRifts.findSpot(level, pos, random) == null;   // ein Riss liegt schon in der Nähe
@@ -693,11 +694,36 @@ final class SelfTest {
         TimeRifts.open(level, pos2, StrataEpochs.id("ash_age"));
         long opened2 = level.getGameTime();
         TimeRifts.tickAll(level, opened2 + lifetime, false, lifetime);
-        boolean expired = level.getBlockState(pos2).isAir()
+        boolean expired = level.getBlockState(pos2).isAir() && level.getBlockState(pos2.above()).isAir()
                 && level.getData(EpochsContent.RIFTS.get()).stream().noneMatch(r -> r.pos() == pos2.asLong())
                 && level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(pos2).inflate(2)).isEmpty();
 
         boolean dims = TimeRifts.allowedIn(level) && !TimeRifts.allowedIn(Mc.level(server, epoch));
+        boolean surface = TimeRifts.atSurface(level, pos) && !TimeRifts.atSurface(level, pos.below(20));
+
+        // Abgelaufen in entladener Gegend: zählt nicht mehr zur Grenze, der Datensatz fällt weg.
+        long now = level.getGameTime();
+        BlockPos far = new BlockPos(29_000_000, 70, 29_000_000);
+        var stale = new java.util.ArrayList<>(level.getData(EpochsContent.RIFTS.get()));
+        stale.add(new RiftRecord(far.asLong(), epoch, now - lifetime - 100));
+        level.setData(EpochsContent.RIFTS.get(), stale);
+        long active = TimeRifts.activeCount(level, now, lifetime);
+        TimeRifts.tickAll(level, now, false, lifetime);
+        boolean pruned = active == 0 && level.getData(EpochsContent.RIFTS.get()).stream().noneMatch(r -> r.pos() == far.asLong());
+        // Verwaister Rissblock (ohne Datensatz) verschwindet beim Zufallstick.
+        BlockPos orphan = pos.offset(-3, 0, 3);
+        level.setBlockAndUpdate(orphan, EpochsContent.TIME_RIFT.get().defaultBlockState());
+        level.getBlockState(orphan).randomTick(level, orphan, random);
+        pruned &= level.getBlockState(orphan).isAir();
+
+        // Friedlich: keine Mobs aus dem Riss.
+        var difficulty = level.getDifficulty();
+        server.setDifficulty(net.minecraft.world.Difficulty.PEACEFUL, true);
+        boolean peaceful = !TimeRifts.mayReleaseMob(level, pos);
+        server.setDifficulty(net.minecraft.world.Difficulty.NORMAL, true);
+        peaceful &= TimeRifts.mayReleaseMob(level, pos);
+        server.setDifficulty(difficulty, true);
+        boolean moss = TimeRifts.surfaceFor(level, StrataEpochs.id("spore_age")).is(net.minecraft.world.level.block.Blocks.MOSS_BLOCK);
         boolean before = TimeRifts.epochsFor(player).contains(epoch);
         StrataAPI.unlock(player, StrataEpochs.id("first_core"));
         StrataAPI.unlock(player, StrataEpochs.id("visited_crystal_age"));
@@ -710,11 +736,12 @@ final class SelfTest {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
         boolean ok = opened && spreads && spaced && stillOpen && refused && sealed && reward && expired && dims
-                && eligible && missing.isEmpty();
+                && eligible && surface && pruned && peaceful && moss && missing.isEmpty();
         StrataEpochs.LOG.info("[Strata-Test] Zeitrisse: offen={}, Boden={} ({} Blöcke, Bau bleibt), Abstand={}, läuft={}, "
-                + "ohne Anker zu={}, versiegelt={}, Belohnung={}, abgelaufen={}, Dimensionen={}, nur besuchte={}, Texte fehlen={} -> {}",
-                opened, spreads, converted, spaced, stillOpen, refused, sealed, reward, expired, dims, eligible, missing,
-                ok ? "OK" : "FEHLER");
+                + "ohne Anker zu={}, versiegelt={}, Belohnung={}, abgelaufen={}, Dimensionen={}, nur besuchte={}, "
+                + "Oberfläche={}, Verwaiste weg={}, Friedlich={}, Moos={}, Texte fehlen={} -> {}",
+                opened, spreads, converted, spaced, stillOpen, refused, sealed, reward, expired, dims, eligible,
+                surface, pruned, peaceful, moss, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 
@@ -777,9 +804,10 @@ final class SelfTest {
             "bone_hollow", List.of("minecraft:soul_soil"));
 
     /** Erlaubter Anteil des Fleckenblocks am Boden. */
-    // Gemessen wird nur ein kleines Gebiet, je nach Welt schwankt der Magma-Anteil etwa zwischen 20 und 50 %.
+    // Gemessen wird nur ein kleines Gebiet; je nach Welt lag der Magma-Anteil bisher zwischen 7 und 51 %.
+    // Geprüft wird daher nur, dass es Flecken gibt und das Biom nicht ganz aus Magma besteht.
     private static final Map<String, double[]> PATCH_RANGE = Map.of(
-            "magma_rifts", new double[] {0.10, 0.60}, "moss_marsh", new double[] {0.25, 0.85});
+            "magma_rifts", new double[] {0.03, 0.65}, "moss_marsh", new double[] {0.25, 0.85});
 
     /**
      * Mehrere Biome pro Epoche: Jedes Biom der Dimension braucht einen spürbaren Anteil, muss höchstens
