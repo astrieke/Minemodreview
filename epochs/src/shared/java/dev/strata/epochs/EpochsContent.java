@@ -48,6 +48,10 @@ public final class EpochsContent {
             p -> p.mapColor(MapColor.COLOR_CYAN).strength(5.0f, 1200.0f).requiresCorrectToolForDrops()
                     .lightLevel(s -> 12).sound(SoundType.AMETHYST));
 
+    /** Zeitriss in der Oberwelt (siehe {@link TimeRifts}): ohne Kollision, unzerstörbar, nur mit Zeitanker zu versiegeln. */
+    public static final Supplier<Block> TIME_RIFT = REG.ghost("time_rift", TimeRiftBlock::new,
+            p -> p.mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 11).sound(SoundType.AMETHYST));
+
     // Epochen-Pflanzen (siehe {@link EpochCrop}): Samen stecken in Fossilbrocken, reif geben sie Epochen-Rohstoffe.
     public static final Supplier<Block> QUARTZ_THISTLE = REG.crop("quartz_thistle",
             p -> new EpochCrop(p, "crystal_age", EpochsContent.QUARTZ_THISTLE_SEEDS), p -> p.mapColor(MapColor.COLOR_PURPLE));
@@ -140,6 +144,10 @@ public final class EpochsContent {
     /** An der Dimension: laufende Transplantationen (überstehen so einen Neustart). */
     public static final Supplier<AttachmentType<java.util.List<TransplantRecord>>> TRANSPLANTS =
             Mc.attachment(ATTACHMENTS, "transplants", java.util.List::of, TransplantRecord.LIST_CODEC, false);
+
+    /** An der Dimension: offene Zeitrisse (überstehen so einen Neustart). */
+    public static final Supplier<AttachmentType<java.util.List<RiftRecord>>> RIFTS =
+            Mc.attachment(ATTACHMENTS, "rifts", java.util.List::of, RiftRecord.LIST_CODEC, false);
 
     private EpochsContent() {}
 

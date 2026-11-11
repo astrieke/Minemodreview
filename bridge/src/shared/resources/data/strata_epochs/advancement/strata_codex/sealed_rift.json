@@ -1,0 +1,22 @@
+{
+  "parent": "strata_epochs:strata_codex/first_core",
+  "display": {
+    "icon": {
+      "id": "strata_epochs:time_anchor"
+    },
+    "title": {
+      "translate": "advancements.strata_epochs.sealed_rift.title"
+    },
+    "description": {
+      "translate": "advancements.strata_epochs.sealed_rift.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

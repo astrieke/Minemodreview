@@ -167,5 +167,9 @@
   "tooltip.strata_epochs.petrified_item": "Löst sich, sobald sein Träger nicht mehr verfestigt",
   "message.strata_epochs.solidify.item": "Die Zeit verfestigt sich – versteinert: %s",
   "message.strata_epochs.solidify.thaw_one": "Ein versteinerter Gegenstand löst sich wieder",
-  "message.strata_epochs.solidify.thaw": "%s versteinerte Gegenstände lösen sich wieder"
+  "message.strata_epochs.solidify.thaw": "%s versteinerte Gegenstände lösen sich wieder",
+  "block.strata_epochs.time_rift": "Zeitriss",
+  "message.strata_epochs.rift.opened": "Ein Zeitriss zur %s öffnet sich, %s von dir, %s Blöcke entfernt",
+  "message.strata_epochs.rift.how": "Schleichen und Rechtsklick mit einem Zeitanker versiegelt den Riss",
+  "message.strata_epochs.rift.sealed": "Riss versiegelt – die Epoche gibt etwas frei"
 }

@@ -59,6 +59,13 @@ public final class Reg {
         return items.registerItem(name, factory, props);
     }
 
+    /** Erscheinung ohne Kollision, unzerstörbar und ohne Drop (z. B. der Zeitriss). */
+    public Supplier<Block> ghost(String name, java.util.function.Function<BlockBehaviour.Properties, ? extends Block> factory,
+                                 UnaryOperator<BlockBehaviour.Properties> props) {
+        return blocks.registerBlock(name, factory, p -> props.apply(p.noCollision().strength(-1.0f, 3_600_000.0f)
+                .noLootTable().noOcclusion()));
+    }
+
     /** Saatgut: pflanzt den Block, heißt aber wie das Item ({@code item.<mod>.<name>}). */
     public Supplier<Item> seed(String name, Supplier<Block> crop) {
         Supplier<Item> item = items.registerItem(name, p -> new net.minecraft.world.item.BlockItem(crop.get(), p));

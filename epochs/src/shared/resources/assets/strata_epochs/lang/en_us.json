@@ -167,5 +167,9 @@
   "tooltip.strata_epochs.petrified_item": "Comes loose once its carrier is no longer solidifying",
   "message.strata_epochs.solidify.item": "Time is solidifying – petrified: %s",
   "message.strata_epochs.solidify.thaw_one": "A petrified item comes loose again",
-  "message.strata_epochs.solidify.thaw": "%s petrified items come loose again"
+  "message.strata_epochs.solidify.thaw": "%s petrified items come loose again",
+  "block.strata_epochs.time_rift": "Time Rift",
+  "message.strata_epochs.rift.opened": "A time rift to the %s opens %s of you, %s blocks away",
+  "message.strata_epochs.rift.how": "Sneak and right-click with a Time Anchor to seal the rift",
+  "message.strata_epochs.rift.sealed": "Rift sealed – the epoch leaves something behind"
 }

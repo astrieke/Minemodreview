@@ -15,6 +15,13 @@ public final class EpochsConfig {
     public static final ModConfigSpec.IntValue TRANSPLANT_RADIUS;
     public static final ModConfigSpec.IntValue TRANSPLANT_BLOCKS_PER_TICK;
     public static final ModConfigSpec.IntValue TRANSPLANT_MAX_JOBS;
+    public static final ModConfigSpec.BooleanValue RIFTS;
+    public static final ModConfigSpec.BooleanValue RIFT_GRIEFING;
+    public static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> RIFT_DIMENSIONS;
+    public static final ModConfigSpec.IntValue RIFT_INTERVAL;
+    public static final ModConfigSpec.DoubleValue RIFT_CHANCE;
+    public static final ModConfigSpec.IntValue RIFT_LIFETIME;
+    public static final ModConfigSpec.IntValue RIFT_MAX_ACTIVE;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -33,6 +40,20 @@ public final class EpochsConfig {
                 .defineInRange("blocks_per_tick", 256, 16, 8192);
         TRANSPLANT_MAX_JOBS = b.comment("Höchstens so viele Transplantationen gleichzeitig pro Server")
                 .defineInRange("max_jobs", 2, 1, 16);
+        b.pop();
+        b.comment("Zeitrisse (Verwerfungen): bei Spielern, die schon in einer Epoche waren, reißt ab und zu ein Riss auf")
+                .push("rifts");
+        RIFTS = b.comment("Zeitrisse an").define("enabled", true);
+        RIFT_GRIEFING = b.comment("Offene Risse verwandeln natürlichen Boden (Tag strata_epochs:transplantable) in Epochen-Boden")
+                .define("griefing", true);
+        RIFT_DIMENSIONS = b.comment("Dimensionen, in denen Risse entstehen (alle anderen sind ausgenommen)")
+                .defineListAllowEmpty("dimensions", java.util.List.of("minecraft:overworld"), () -> "minecraft:overworld",
+                        o -> o instanceof String);
+        RIFT_INTERVAL = b.comment("Alle so viele Minuten wird pro Spieler gewürfelt").defineInRange("interval_minutes", 20, 1, 1440);
+        RIFT_CHANCE = b.comment("Chance pro Wurf, dass sich ein Riss öffnet").defineInRange("chance", 0.35, 0.0, 1.0);
+        RIFT_LIFETIME = b.comment("So viele Sekunden bleibt ein Riss offen, wenn niemand ihn versiegelt")
+                .defineInRange("lifetime_seconds", 300, 30, 3600);
+        RIFT_MAX_ACTIVE = b.comment("Höchstens so viele offene Risse pro Dimension").defineInRange("max_active", 4, 1, 64);
         b.pop();
         SPEC = b.build();
     }

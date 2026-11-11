@@ -55,6 +55,7 @@ final class SelfTest {
         for (String epoch : List.of("crystal_age", "spore_age", "ash_age")) failures += testGrowth(server, epoch);
         failures += testCrops(server);
         failures += testItemPetrification(server);
+        failures += testRifts(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -630,6 +631,90 @@ final class SelfTest {
         StrataEpochs.LOG.info("[Strata-Test] Inventar-Verfestigung: Reihenfolge={}, Inhalt={}, immun={}, Name={}, "
                 + "nicht in Behältern={}, feuerfest={}, fremde bleiben={}, Tod={}, Tick={}, Datapack={}, Texte fehlen={} -> {}",
                 order, keeps, immune, named, noNesting, fireproof, coop, death, tick, data, missing, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /**
+     * Zeitrisse: öffnen, natürlichen Boden zur Epoche machen (Bauten bleiben), nur mit Zeitanker beim Schleichen
+     * versiegeln (Fossil + Rohstoff), nach der Lebensdauer von selbst schließen, Abstand zu anderen Rissen,
+     * nur in erlaubten Dimensionen, nur Epochen, die der Spieler besucht hat.
+     */
+    private static int testRifts(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        int cx = 8500, cz = 8500;
+        for (int k = 0; k < 12 && !cleanSite(level, cx, cz, 8); k++) cz += 160;
+        var hm = net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES;
+        int ground = level.getHeight(hm, cx, cz) - 1;
+        BlockPos pos = new BlockPos(cx, ground + 1, cz);
+        BlockPos build = new BlockPos(cx + 1, ground, cz);
+        level.setBlockAndUpdate(build, net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState());
+        String epoch = StrataEpochs.id("crystal_age");
+        long lifetime = 6000;
+
+        TimeRifts.open(level, pos, epoch);
+        var record = level.getData(EpochsContent.RIFTS.get()).stream().filter(r -> r.pos() == pos.asLong()).findFirst().orElse(null);
+        boolean opened = level.getBlockState(pos).is(EpochsContent.TIME_RIFT.get()) && record != null;
+
+        var random = net.minecraft.util.RandomSource.create(11);
+        int converted = 0;
+        for (int i = 0; i < 80 && record != null; i++) {
+            if (TimeRifts.convertOne(level, record, record.openedAt() + lifetime, lifetime, random) != null) converted++;
+        }
+        int calcite = 0;
+        for (BlockPos p : BlockPos.betweenClosed(cx - 5, ground, cz - 5, cx + 5, ground, cz + 5)) {
+            if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.CALCITE)) calcite++;
+        }
+        boolean spreads = converted > 10 && calcite == converted
+                && level.getBlockState(build).is(net.minecraft.world.level.block.Blocks.OAK_PLANKS);
+
+        boolean spaced = TimeRifts.findSpot(level, pos, random) == null;   // ein Riss liegt schon in der Nähe
+        TimeRifts.tickAll(level, record == null ? 0 : record.openedAt() + 40, false, lifetime);
+        boolean stillOpen = level.getBlockState(pos).is(EpochsContent.TIME_RIFT.get());
+
+        // Eigener Test-Spieler: der Kodex des Standard-Testspielers bleibt für andere Tests unberührt.
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("strata_rift_test".getBytes()), "strata_rift_test"));
+        player.setPos(cx + 2.5, ground + 1, cz + 0.5);
+        player.setShiftKeyDown(true);
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(EpochsContent.CHISEL.get()));
+        boolean refused = !TimeRifts.seal(player, level, pos) && level.getBlockState(pos).is(EpochsContent.TIME_RIFT.get());
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(EpochsContent.TIME_ANCHOR.get()));
+        boolean sealed = TimeRifts.seal(player, level, pos) && level.getBlockState(pos).isAir()
+                && level.getData(EpochsContent.RIFTS.get()).stream().noneMatch(r -> r.pos() == pos.asLong());
+        var drops = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(pos).inflate(2));
+        boolean reward = drops.stream().anyMatch(e -> e.getItem().is(EpochsContent.FOSSIL_CHUNK.get()))
+                && drops.stream().anyMatch(e -> e.getItem().is(EpochsContent.CRYSTAL_QUARTZ.get()));
+        drops.forEach(net.minecraft.world.entity.Entity::discard);
+        player.setShiftKeyDown(false);
+        player.getInventory().clearContent();
+
+        // Ohne Versiegeln: nach der Lebensdauer zu, ohne Belohnung.
+        BlockPos pos2 = pos.offset(3, 0, 3);
+        TimeRifts.open(level, pos2, StrataEpochs.id("ash_age"));
+        long opened2 = level.getGameTime();
+        TimeRifts.tickAll(level, opened2 + lifetime, false, lifetime);
+        boolean expired = level.getBlockState(pos2).isAir()
+                && level.getData(EpochsContent.RIFTS.get()).stream().noneMatch(r -> r.pos() == pos2.asLong())
+                && level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(pos2).inflate(2)).isEmpty();
+
+        boolean dims = TimeRifts.allowedIn(level) && !TimeRifts.allowedIn(Mc.level(server, epoch));
+        boolean before = TimeRifts.epochsFor(player).contains(epoch);
+        StrataAPI.unlock(player, StrataEpochs.id("first_core"));
+        StrataAPI.unlock(player, StrataEpochs.id("visited_crystal_age"));
+        boolean eligible = !before && TimeRifts.epochsFor(player).contains(epoch);
+        level.setBlockAndUpdate(build, net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState());
+
+        List<String> missing = new ArrayList<>();
+        for (String key : List.of("block.strata_epochs.time_rift", "message.strata_epochs.rift.opened",
+                "message.strata_epochs.rift.how", "message.strata_epochs.rift.sealed")) {
+            for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
+        }
+        boolean ok = opened && spreads && spaced && stillOpen && refused && sealed && reward && expired && dims
+                && eligible && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Zeitrisse: offen={}, Boden={} ({} Blöcke, Bau bleibt), Abstand={}, läuft={}, "
+                + "ohne Anker zu={}, versiegelt={}, Belohnung={}, abgelaufen={}, Dimensionen={}, nur besuchte={}, Texte fehlen={} -> {}",
+                opened, spreads, converted, spaced, stillOpen, refused, sealed, reward, expired, dims, eligible, missing,
+                ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

@@ -38,7 +38,10 @@ final class EpochsCommands {
                                         .executes(ctx -> transplant(ctx, IntegerArgumentType.getInteger(ctx, "radius"))))))
                 .then(Commands.literal("spiralit").executes(EpochsCommands::spiralit))
                 .then(Commands.literal("status").executes(EpochsCommands::status))
-                .then(Commands.literal("bearing").executes(EpochsCommands::bearing)));
+                .then(Commands.literal("bearing").executes(EpochsCommands::bearing))
+                .then(Commands.literal("rift")
+                        .then(Commands.literal("close").executes(EpochsCommands::closeRifts))
+                        .then(Commands.argument("epoch", Mc.idArgument()).executes(EpochsCommands::openRift))));
     }
 
     private static int transplant(CommandContext<CommandSourceStack> ctx, int radius) {
@@ -83,5 +86,31 @@ final class EpochsCommands {
         Vec3 at = player.position().add(look.x * 2, 1.0, look.z * 2);
         Spiralit.hatch((ServerLevel) player.level(), at, player);
         return 1;
+    }
+
+    /** Öffnet einen Zeitriss 3 Blöcke vor dem Spieler (zum Ausprobieren). */
+    private static int openRift(com.mojang.brigadier.context.CommandContext<net.minecraft.commands.CommandSourceStack> ctx)
+            throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        String id = Mc.getId(ctx, "epoch");
+        var epoch = dev.strata.core.api.StrataAPI.epochs(ctx.getSource().getServer()).get(id);
+        if (epoch == null || epoch.landscape().isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal(id + " hat keine Landschaft (Feld landscape)"));
+            return 0;
+        }
+        var player = ctx.getSource().getPlayerOrException();
+        var level = (net.minecraft.server.level.ServerLevel) player.level();
+        var look = player.getLookAngle();
+        int x = (int) Math.floor(player.getX() + look.x * 3), z = (int) Math.floor(player.getZ() + look.z * 3);
+        var pos = new net.minecraft.core.BlockPos(x,
+                level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
+        TimeRifts.open(level, pos, id);
+        ctx.getSource().sendSuccess(() -> Component.literal("Zeitriss geöffnet: " + id + " bei " + pos.toShortString()), true);
+        return 1;
+    }
+
+    private static int closeRifts(com.mojang.brigadier.context.CommandContext<net.minecraft.commands.CommandSourceStack> ctx) {
+        int n = TimeRifts.closeAll(ctx.getSource().getLevel());
+        ctx.getSource().sendSuccess(() -> Component.literal(n + " Zeitrisse geschlossen"), true);
+        return n;
     }
 }

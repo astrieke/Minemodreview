@@ -51,6 +51,7 @@ public final class StrataBridge {
             "strata_epochs:strata_codex/met_spiralit",
             "strata_epochs:strata_codex/met_ember_burrower",
             "strata_epochs:strata_codex/first_transplant",
+            "strata_epochs:strata_codex/sealed_rift",
             "strata_epochs:strata_codex/first_analysis",
             "strata_epochs:strata_codex/witness_echo");
 

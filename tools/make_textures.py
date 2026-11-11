@@ -1436,6 +1436,38 @@ def petrified_item():
     return outline(from_grid(rows, pal), '#231c2a')
 
 
+def time_rift_frames():
+    # Zeitriss: senkrechter, gezackter Spalt mit fast schwarzem Kern, violetten Rändern (Mod-Farbe) und goldenen
+    # Funken. Vier Bilder, in denen Rand und Funken flackern (Animation über .mcmeta).
+    pal = {'k': '#0d0820', 'K': '#1f1240', 'v': '#4b2f9a', 'V': '#7a4fd6', 'l': '#b48cff', 'g': '#d9a43a', 'y': '#ffe08a'}
+    # Breite des Kerns pro Zeile (Mitte bei x = 7,5), leicht gezackt.
+    core = [0, 1, 1, 2, 2, 1, 2, 3, 3, 2, 2, 1, 2, 1, 1, 0]
+    shift = [0, 0, 1, 1, 0, 0, -1, -1, 0, 0, 1, 1, 0, -1, -1, 0]
+    frames = []
+    for f in range(4):
+        rnd = random.Random(900 + f)
+        rows = []
+        for y in range(16):
+            row = ['.'] * 16
+            c = 7 + shift[y]
+            w = core[y]
+            for x in range(c - w, c + w + 1):
+                row[x] = 'k' if abs(x - c) < w else 'K'
+            for side in (c - w - 1, c + w + 1):
+                if 0 <= side < 16:
+                    row[side] = 'V' if (y + f) % 3 else 'l'
+            for side in (c - w - 2, c + w + 2):
+                if 0 <= side < 16 and rnd.random() < 0.55:
+                    row[side] = 'v'
+            rows.append(''.join(row))
+        img = from_grid(rows, pal)
+        for _ in range(3):                                     # Funken neben dem Spalt
+            x, y = rnd.choice([(3, rnd.randrange(2, 14)), (12, rnd.randrange(2, 14)), (rnd.randrange(4, 12), 0)])
+            img.putpixel((x, y), rgb(pal['y'] if rnd.random() < 0.5 else pal['g']))
+        frames.append(img)
+    return frames
+
+
 def quartz_thistle_seeds():
     # Drei graugrüne Samenkapseln der Distel, aus deren Spitze ein kleiner Kristall schaut (nicht wie Kristallquarz).
     pal = {'g': '#a4bfa8', 'G': '#6f8f78', 'd': '#3f5a48', 'k': '#4a44c0', 'm': '#7471f2', 'l': '#c8c6ff'}
@@ -1573,6 +1605,15 @@ def save_all():
         path = os.path.join(OUT, 'item', name + '.png')
         img.save(path)
         images[('item', name)] = img
+    # Zeitriss: vier Bilder untereinander, abgespielt über die .mcmeta daneben.
+    frames = time_rift_frames()
+    strip = Image.new('RGBA', (16, 16 * len(frames)), (0, 0, 0, 0))
+    for i, fr in enumerate(frames):
+        strip.paste(fr, (0, 16 * i))
+    strip.save(os.path.join(OUT, 'block', 'time_rift.png'))
+    with open(os.path.join(OUT, 'block', 'time_rift.png.mcmeta'), 'w') as fh:
+        fh.write('{\n  "animation": {\n    "frametime": 3,\n    "interpolate": false\n  }\n}\n')
+    images[('block', 'time_rift')] = frames[0]
     # Rüstung am Körper: 1.21.1 textures/models/armor/<name>_layer_1/2.png, ab 1.21.2 entity/equipment/...
     l1, l2 = armor_layers()
     epochs = os.path.join(os.path.dirname(__file__), '..', 'epochs', 'src')
