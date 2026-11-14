@@ -251,7 +251,7 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 
 Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen); Runde 2 mit Code: 7/7/7, freigegeben. Vor einem Release einmal von Hand kämpfen (Diamant und Netherit, Zeit bis zum Sieg, Zahl der Rückspulungen notieren). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
-## Bernsteinmotte (Entwurf, in Arbeit)
+## Bernsteinmotte (umgesetzt, freigegeben)
 
 Eine große Motte (Spannweite 19 px, etwa 1,2 Blöcke): dunkelbrauner Pelzkörper mit hellem Kragen vorn und
 Bernsteinringen am Hinterleib, große dunkle Facettenaugen mit rötlichem Glanzpunkt, gefiederte helle Fühler, breite
@@ -259,7 +259,7 @@ helle Bernsteinflügel mit leuchtendem Vorderrand, dunklen Fransen am Hinterrand
 Kern, geschlossener dunkler Ring). 8 Knochen, 9 Würfel, 64 × 32. Flügel und Fühler sind flache Platten wie die
 Bienenflügel in Vanilla; Ober- und Unterseite sind gleich bemalt, damit nichts flackert.
 Animationen `idle` (Schweben, Fühler wippen), `fly`, `dust` (Schuppenstaub), `land` (Flügel dachförmig nach hinten).
-Leucht-Ebene `spots` (Augenkerne und Vorderränder): ruhig 0,5, in der Vorwarnung flackernd 1,0.
+Leucht-Ebene `spots` (Augenkerne, Vorderränder und die hellen Flügelflächen): ruhig 0,5, in der Vorwarnung flackernd 1,0.
 Trefferfläche 0,7 × 0,4 (flacher Körper; die Flügelspitzen ragen hinaus).
 Kontrast der Oberseiten (Mittel `#b1803e`): Sporenzeit dunkel 3,9:1, Sporenzeit-Nebel 1,4:1 (Sporenbalg zum Vergleich
 1,35:1); gegen den Nebel zeichnen die dunklen Fransen und das Leuchten die Kante.
@@ -300,7 +300,10 @@ langsamer und verstummt), Staub (0,5 s steigendes Schwirren als Warnung, dann ei
 blind, mark, cooldown), `trap` (radius, harden_chance), `spawn` (max_light, max_nearby).
 
 Prüfung Modell Runde 1: 6/5/7 (Vorne und hinten auf den Oberseiten vertauscht, Augenfleck ohne Ring, Lesbarkeit und
-Vorwarnung im Dunkeln, Balance der Fossil-Quelle, Fallen-Regel). Alles umgesetzt.
+Vorwarnung im Dunkeln, Balance der Fossil-Quelle, Fallen-Regel), Runde 2 mit Code: 8/7/8, **freigegeben**. Danach:
+Die Motte prüft eine bekannte Falle jeden Tick, die volle Suche läuft nur einmal pro Sekunde. Offen für später: eine
+längere Vorwarnung im Datapack streckt die Animation `dust` nicht mit (der Schlag bleibt bei 0,5 s); die Markierung
+(Vanilla-Leuchten, durch Wände sichtbar) kann im Datapack mit `dust.mark = 0` abgeschaltet werden, etwa für PvP.
 
 ## Resonanzling (umgesetzt, freigegeben)
 

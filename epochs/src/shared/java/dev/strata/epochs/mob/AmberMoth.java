@@ -159,7 +159,7 @@ public class AmberMoth extends StrataMob {
             }
         }
         if (fleeTicks > 0) fleeTicks--;
-        if (fleeTicks == 0 && (trap != null || tickCount % 20 == 0) && tuning().abilityEnabled("trap") && findTrap(level)) return;
+        if (fleeTicks == 0 && tuning().abilityEnabled("trap") && findTrap(level)) return;
         if (tickCount % SEEK_TICKS == 0 || target == null || position().distanceTo(target) < 0.3) chooseTarget(level);
         move(level);
     }
@@ -301,11 +301,17 @@ public class AmberMoth extends StrataMob {
 
     /** Eine Harzfalle mit Lichtquelle daneben in Reichweite? Dann hinfliegen und landen. */
     private boolean findTrap(ServerLevel level) {
+        // Bekannte Falle: jeden Tick nur sie prüfen; die volle Suche läuft höchstens einmal pro Sekunde.
+        if (trap != null && level.getBlockState(trap).is(EpochsContent.RESIN_TRAP.get()) && lit(level, trap)) {
+            return approach(level, trap);
+        }
+        trap = null;
+        if (tickCount % 20 != 0) return false;
         int r = (int) Math.ceil(Math.min(16, value("trap", "radius", TRAP_RADIUS)));
         BlockPos best = null;
         double bestDistance = Double.MAX_VALUE;
         BlockPos center = blockPosition();
-        // einmal pro Sekunde (solange keine Falle bekannt ist): höchstens (2r+1)² × 9 Blöcke
+        // höchstens (2r+1)² × 9 Blöcke, einmal pro Sekunde
         for (BlockPos p : BlockPos.betweenClosed(center.offset(-r, -4, -r), center.offset(r, 4, r))) {
             if (!level.getBlockState(p).is(EpochsContent.RESIN_TRAP.get()) || !lit(level, p)) continue;
             double d = p.distToCenterSqr(position());
@@ -319,6 +325,10 @@ public class AmberMoth extends StrataMob {
             return false;
         }
         trap = best;
+        return approach(level, best);
+    }
+
+    private boolean approach(ServerLevel level, BlockPos best) {
         target = Vec3.atCenterOf(best.above()).add(0, 0.05, 0);
         if (position().distanceTo(target) < 0.6) {
             landTicks = 0;
