@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
+import dev.strata.epochs.mc.MobCompat;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -82,7 +83,7 @@ public final class Transplanter {
         Item fossil = FossilPrep.fossilFor(id);
         boolean heart = StratolithSummon.hasHeart(player);   // Herz der Tiefenzeit: kein Fossil nötig, größerer Radius
         if (!player.isCreative()) {
-            int slot = heart ? -2 : findSlot(player, fossil);
+            int slot = heart ? -2 : findFossilSlot(player, id, fossil);
             if (slot == -1) {
                 fail(player, "need_fossil", net.minecraft.network.chat.Component.translatable(fossil.getDescriptionId()));
                 return;
@@ -158,9 +159,20 @@ public final class Transplanter {
         }
     }
 
-    private static int findSlot(ServerPlayer player, Item item) {
+    /**
+     * Fossilien, die für eine Epoche zählen: Item-Tag {@code strata_epochs:transplant_fossils/<epoche>} (z. B. Farnfossil
+     * und Bernstein mit Einschluss für die Sporenzeit); ohne Tag-Eintrag das präparierte Fossil der Epoche.
+     */
+    public static boolean acceptsFossil(ItemStack stack, String epochId, Item fallback) {
+        if (stack.isEmpty()) return false;
+        String path = epochId.substring(epochId.indexOf(':') + 1);
+        if (stack.is(MobCompat.itemTag(StrataEpochs.id("transplant_fossils/" + path)))) return true;
+        return stack.is(fallback);
+    }
+
+    private static int findFossilSlot(ServerPlayer player, String epochId, Item fallback) {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            if (player.getInventory().getItem(i).is(item)) return i;
+            if (acceptsFossil(player.getInventory().getItem(i), epochId, fallback)) return i;
         }
         return -1;
     }

@@ -52,6 +52,14 @@ public final class EpochsContent {
     public static final Supplier<Block> DISPLAY_CASE = REG.block("display_case", DisplayCaseBlock::new,
             p -> p.mapColor(MapColor.COLOR_GRAY).strength(1.5f, 6.0f).sound(SoundType.GLASS).noOcclusion());
 
+    /** Harzfalle (siehe {@link dev.strata.epochs.mob.AmberMoth}): leer, mit gefangener Motte, ausgehärtet. */
+    public static final Supplier<Block> RESIN_TRAP = REG.block("resin_trap",
+            p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.5f).sound(SoundType.HONEY_BLOCK));
+    public static final Supplier<Block> RESIN_TRAP_MOTH = REG.block("resin_trap_moth", ResinTrapBlock::new,
+            p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.5f).sound(SoundType.HONEY_BLOCK).randomTicks());
+    public static final Supplier<Block> RESIN_TRAP_HARDENED = REG.block("resin_trap_hardened",
+            p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.8f).sound(SoundType.AMETHYST));
+
     /** Zeitriss in der Oberwelt (siehe {@link TimeRifts}): ohne Kollision, unzerstörbar, nur mit Zeitanker zu versiegeln. */
     public static final Supplier<Block> TIME_RIFT = REG.ghost("time_rift", TimeRiftBlock::new,
             p -> p.mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 11).sound(SoundType.AMETHYST).randomTicks());
@@ -101,6 +109,8 @@ public final class EpochsContent {
     /** Keimfrische: dreht die Verfestigungs-Uhr ein Stück zurück (siehe {@link GermTonic}). */
     public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
     /** Abwurf des Resonanzlings: 3 Ladungen, je eine lässt die eigene Uhr 30 s ruhen. */
+    /** Aus der ausgehärteten Harzfalle: zählt beim Transplantator als Fossil der Sporenzeit. */
+    public static final Supplier<Item> AMBER_INCLUSION = REG.item("amber_inclusion", p -> p.rarity(net.minecraft.world.item.Rarity.UNCOMMON));
     public static final Supplier<Item> RESONANT_SPLINTER = REG.item("resonant_splinter",
             p -> p.durability(dev.strata.epochs.mob.ResonantShard.SPLINTER_CHARGES));
 
@@ -128,6 +138,7 @@ public final class EpochsContent {
         REG.blockItem(ANALYSIS_TABLE, "analysis_table");
         REG.blockItem(EPOCH_GATE, "epoch_gate");
         REG.blockItem(DISPLAY_CASE, "display_case");
+        REG.blockItem(RESIN_TRAP, "resin_trap");
     }
 
     /** Auf dem Bohrkern: welche Epoche er zeigt. */

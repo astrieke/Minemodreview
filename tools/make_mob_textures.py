@@ -63,6 +63,10 @@ PAL = {
 # senkrechten Kristallstreifen; Ring rundum gleich golden, weil er sich dreht.
 PAL['crystal'] = ['#2c2670', '#4a43b8', '#8582f5', '#a9a8ff', '#e6e6ff']   # Seiten heller: Kontrast zum Nebel
 PAL['gold_ring'] = PAL['gold']
+# Bernsteinmotte: dunkles Pelzbraun, bernsteinfarbene Flügel, helle gefiederte Fühler
+PAL['moth_fur'] = ['#2a1c12', '#3b2818', '#4f3620', '#66482c', '#7d5a38']
+PAL['moth_wing'] = ['#7a3e0c', '#a8580f', '#d07a1a', '#eda23a', '#ffcf6a']
+PAL['moth_antenna'] = ['#8a7458', '#b39c78', '#d6c29a', '#e9dbb8', '#f7efd8']
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
 STRATA = [('#3c3742', 3), ('#77707c', 3), ('#b08a5a', 2), ('#5e5868', 3), ('#dcd6cf', 1), ('#77707c', 2), ('#3c3742', 2)]
 STRATA_PERIOD = sum(h for _, h in STRATA)
@@ -512,11 +516,101 @@ def d_resonant_face(img, f, rnd):
             put(img, s, x, 3, '#efebe0')
 
 
+def _both_wing_faces(img, f, fn):
+    # Flache Flügel (Höhe 0): Ober- und Unterseite liegen in einer Ebene und müssen gleich aussehen, sonst flackern sie.
+    for face in ('up', 'down'):
+        r = f[face]
+        for y in range(r[3]):
+            for x in range(r[2]):
+                put(img, r, x, y, fn(x, y, r[2], r[3]))
+
+
+def d_moth_wing_front(img, f, rnd):
+    # Box-UV: Zeile 0 der Ober-/Unterseite liegt hinten (+z). r = Abstand vom Vorderrand.
+    w = PAL['moth_wing']
+    spots = {(2, 2), (6, 3), (3, 3), (6, 1)}                # unregelmäßige hellere Tupfen
+    def color(x, y, wd, h):
+        r = h - 1 - y
+        if (x, r) == (4, 2):
+            return '#ffe08a'                                # Augenfleck: leuchtender Kern …
+        if abs(x - 4) <= 1 and abs(r - 2) <= 1:
+            return '#3b2818'                                # … mit geschlossenem dunklem Ring
+        if r == 0:
+            return w[4] if x < wd - 1 else w[3]             # heller Vorderrand (leuchtet mit)
+        if r == h - 1:
+            return '#3b2818' if x % 2 == 0 else w[1]        # dunkle Fransen am Hinterrand (Kante gegen den Nebel)
+        if x == wd - 1:
+            return w[1]                                     # Spitze etwas dunkler
+        if x == 0:
+            return w[2]                                     # Flügelwurzel am Körper
+        return w[3] if (x, r) in spots else w[4]
+    _both_wing_faces(img, f, color)
+
+
+def d_moth_wing_back(img, f, rnd):
+    w = PAL['moth_wing']
+    def color(x, y, wd, h):
+        r = h - 1 - y
+        if (x, r) == (3, 1):
+            return '#3b2818'                                # kleiner dunkler Fleck
+        if r == 0:
+            return w[3]
+        if r == h - 1:
+            return '#3b2818' if x % 2 == 0 else w[1]
+        if x == wd - 1 or x == 0:
+            return w[2]
+        return w[3] if (x, r) == (4, 2) else w[4]
+    _both_wing_faces(img, f, color)
+
+
+def d_moth_feather(img, f, rnd):
+    # Gefiederte Fühler: heller Schaft in der Mitte, Federästchen abwechselnd hell und dunkel.
+    a = PAL['moth_antenna']
+    _both_wing_faces(img, f, lambda x, y, wd, h: a[4] if x == wd // 2 else (a[3] if (x + y) % 2 else a[1]))
+
+
+def d_moth_collar(img, f, rnd):
+    # Heller Pelzkragen vorn am Brustteil.
+    for x in range(f['north'][2]):
+        put(img, f['north'], x, 0, '#b39c78')
+    for x in range(f['up'][2]):
+        put(img, f['up'], x, f['up'][3] - 1, '#b39c78')   # Box-UV: die letzte Zeile der Oberseite liegt vorn
+
+
+def d_moth_stripes(img, f, rnd):
+    # Hinterleib mit Bernsteinringen.
+    for face in ('east', 'west'):
+        r = f[face]
+        for y in range(r[3]):
+            for x in range(r[2]):
+                if x % 2 == 1:
+                    put(img, r, x, y, '#a8580f' if y == 0 else '#7a3e0c')
+    r = f['up']
+    for y in range(r[3]):
+        if y % 2 == 1:
+            for x in range(r[2]):
+                put(img, r, x, y, '#a8580f')
+
+
+def d_moth_eyes(img, f, rnd):
+    # Große dunkle Facettenaugen an den Kopfseiten, mit einem rötlichen Glanzpunkt; vorn die Augenränder.
+    for face in ('east', 'west'):
+        r = f[face]
+        for y in range(r[3]):
+            for x in range(r[2]):
+                put(img, r, x, y, '#1b1110')
+        put(img, r, 0, 0, '#c0502a')                         # rötlicher Glanzpunkt
+    r = f['north']
+    put(img, r, 0, 0, '#1b1110'); put(img, r, r[2] - 1, 0, '#1b1110')
+
+
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
            'amber_top': d_amber_top,
            'spiral': d_spiral, 'hood': d_hood, 'fossil': d_fossil, 'eyes': d_eyes, 'fin_tip': d_fin_tip,
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass, 'mycel': d_mycel, 'mushroom_cap': d_mushroom_cap,
-           'stratolith_eyes': d_stratolith_eyes, 'resonant_face': d_resonant_face}
+           'stratolith_eyes': d_stratolith_eyes, 'resonant_face': d_resonant_face,
+           'moth_wing_front': d_moth_wing_front, 'moth_wing_back': d_moth_wing_back, 'moth_collar': d_moth_collar,
+           'moth_stripes': d_moth_stripes, 'moth_eyes': d_moth_eyes, 'moth_feather': d_moth_feather}
 
 
 # Leucht-Ebenen: Name -> Materialien (ganze Würfel) oder Farben (einzelne Pixel, z. B. Augen),
@@ -539,6 +633,8 @@ GLOW = {
     # Resonanzling: Quarz (Zinken, Spitze) leuchtet je nach Stimmung; Augen und Stimmritze eigene Ebene
     'resonant_shard': {'crystals': {'materials': {'crystal'}},
                        'eyes': {'colors': {'#eeeaff', '#8f7cff'}}},
+    # Bernsteinmotte: die Kerne der Augenflecken glimmen (im Dunkeln der Sporenzeit lesbar)
+    'amber_moth': {'spots': {'colors': {'#ffe08a', '#ffcf6a'}}},   # Augenkerne und Vorderränder
     'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
                  'spiral_2': {'colors': {'#4a3591'}, 'glow_color': '#c9a8ff'},
                  'spiral_3': {'colors': {'#4a3592'}, 'glow_color': '#c9a8ff'},

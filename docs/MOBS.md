@@ -251,6 +251,57 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 
 Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen); Runde 2 mit Code: 7/7/7, freigegeben. Vor einem Release einmal von Hand kämpfen (Diamant und Netherit, Zeit bis zum Sieg, Zahl der Rückspulungen notieren). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
+## Bernsteinmotte (Entwurf, in Arbeit)
+
+Eine große Motte (Spannweite 19 px, etwa 1,2 Blöcke): dunkelbrauner Pelzkörper mit hellem Kragen vorn und
+Bernsteinringen am Hinterleib, große dunkle Facettenaugen mit rötlichem Glanzpunkt, gefiederte helle Fühler, breite
+helle Bernsteinflügel mit leuchtendem Vorderrand, dunklen Fransen am Hinterrand und je einem Augenfleck (leuchtender
+Kern, geschlossener dunkler Ring). 8 Knochen, 9 Würfel, 64 × 32. Flügel und Fühler sind flache Platten wie die
+Bienenflügel in Vanilla; Ober- und Unterseite sind gleich bemalt, damit nichts flackert.
+Animationen `idle` (Schweben, Fühler wippen), `fly`, `dust` (Schuppenstaub), `land` (Flügel dachförmig nach hinten).
+Leucht-Ebene `spots` (Augenkerne und Vorderränder): ruhig 0,5, in der Vorwarnung flackernd 1,0.
+Trefferfläche 0,7 × 0,4 (flacher Körper; die Flügelspitzen ragen hinaus).
+Kontrast der Oberseiten (Mittel `#b1803e`): Sporenzeit dunkel 3,9:1, Sporenzeit-Nebel 1,4:1 (Sporenbalg zum Vergleich
+1,35:1); gegen den Nebel zeichnen die dunklen Fransen und das Leuchten die Kante.
+
+**Rolle im Ablauf:** eine erneuerbare Fossil-Quelle der Sporenzeit. Bisher kommt das Fossil der Sporenzeit (für den
+Transplantator) nur aus Fossilbrocken im Zeitgestein. Die Motte macht daraus einen kleinen Kreislauf:
+Bernstein abbauen und Harzfarn anbauen → Harzfalle bauen → Licht daneben → Motte fangen → Bernstein mit Einschluss.
+
+| Fähigkeit | Auslöser | Wirkung | Signal | Gegenzug / Grenze | Startwerte |
+|---|---|---|---|---|---|
+| **Lichttanz** | passiv | Sie prüft alle 2 s einige Stellen in 10 Blöcken und fliegt zur hellsten (Blocklicht ≥ 8), die sie in 1,6 Blöcken Abstand umkreist; ohne Licht flattert sie ziellos. | glitzernder Bernsteinstaub hinter ihr | – (Hilfe: eine Fackel lenkt sie) | Radius 10, Mindestlicht 8 |
+| **Schuppenstaub** | ein Spieler in 3 Blöcken sprintet oder trifft sie | 0,5 s Vorwarnung, dann ein Staubstoß: Spieler in 2,5 Blöcken sind 2 s geblendet und **4 s markiert** (sie leuchten, für Mitspieler sichtbar: die Schuppen haften); die Motte flieht. | Flügel flach gespreizt und stark zitternd (±12°), Fühler nach vorn, das Leuchten flackert voll, Funken um sie herum, ein lautes Schwirren | Schleichen erschreckt sie nie; in der Vorwarnung zurücktreten. | Radius 2,5, Blindheit 2 s, Markierung 4 s, Abklingzeit 10 s |
+| **Harzfalle** | eine Harzfalle in 10 Blöcken mit einer **Lichtquelle direkt daneben** (Lichtstärke ≥ 10, z. B. Fackel oder Leuchtstein) | Die Falle hat Vorrang vor dem Lichttanz: Die Motte fliegt hin, landet (0,8 s) und bleibt kleben. Aus dem Block wird die „Harzfalle mit Motte“ (eigene Textur, die Motte im Harz). Genau eine Motte pro Falle. | Animation `land`, Harztropfen-Partikel, Honig-Geräusch | – | Lockradius 10 |
+
+**Harzfalle (Block):** 4 Bernstein, 1 Harzfarn-Spore, 4 Stöcke. Drei Blöcke: leer → mit Motte → ausgehärtet. Leer
+oder mit Motte abgebaut gibt sie sich selbst zurück (die Motte ist dann verloren). Die Falle mit Motte härtet **nur in
+einer Epoche** aus (Zufallstick, Chance 0,25, im Mittel etwa 4,5 min; `abilities.trap.harden_chance`). Ausgehärtet gibt
+sie per Rechtsklick oder Abbau **Bernstein mit Einschluss** und ist verbraucht.
+
+**Balance:** Jedes Fossil kostet eine Falle (4 Bernstein und eine Spore aus dem Pflanzenanbau) und Zeit in der Epoche,
+wo die Verfestigung läuft. In transplantierten Gebieten der Oberwelt können Motten spawnen, aber dort härtet nichts
+aus: keine AFK-Farm. Das Herz der Tiefenzeit bleibt die Endspiel-Belohnung (alle Epochen, ohne Kosten, größerer Radius);
+der Einschluss hilft nur bei der Sporenzeit. Im Museum zählt er nicht (dort bleibt das Farnfossil).
+
+**Bernstein mit Einschluss:** gilt beim Transplantator als Fossil der Sporenzeit (Tag
+`strata_epochs:transplant_fossils/spore_age`, dazu gehört weiter das Farnfossil; per Datapack erweiterbar). Die
+Kodex-Meisterschaft der Sporenzeit braucht weiter ein präpariertes Fossil aus einem Fossilbrocken.
+
+**Abwurf:** 0–1 Bernstein, wenn ein Spieler sie tötet (töten lohnt sich kaum; die Falle ist der Weg).
+
+**Spawn:** Sporenzeit (Sporengrotte, Leuchtdickicht), Gruppen von 1–3, Kategorie Umgebung wie Fledermäuse, nur bei
+Blocklicht ≤ 7, höchstens 6 im Umkreis von 32 Blöcken.
+
+**Klänge:** Ruf (leises Flattern mit feinem Sirren), Schmerz (Zirpen, hektischer Flügelschlag), Tod (das Flattern wird
+langsamer und verstummt), Staub (0,5 s steigendes Schwirren als Warnung, dann ein weicher Stoß).
+
+**Datapack-Werte (`strata_core:mob_tuning`):** `light` (radius, min_light), `dust` (trigger_radius, warning, radius,
+blind, mark, cooldown), `trap` (radius, harden_chance), `spawn` (max_light, max_nearby).
+
+Prüfung Modell Runde 1: 6/5/7 (Vorne und hinten auf den Oberseiten vertauscht, Augenfleck ohne Ring, Lesbarkeit und
+Vorwarnung im Dunkeln, Balance der Fossil-Quelle, Fallen-Regel). Alles umgesetzt.
+
 ## Resonanzling (umgesetzt, freigegeben)
 
 Eine lebende Stimmgabel aus Kristallquarz: Calcit-Kern mit Gesicht (zwei leuchtende Augenschlitze, darunter die
@@ -315,7 +366,6 @@ stößt beim Drehen nicht mehr hinein), einfarbige Ringseiten, U-Brücke ohne ha
 
 | Mob | Epoche | Rolle | Warum später |
 |---|---|---|---|
-| Bernsteinmotte (`amber_moth`) | Sporenzeit | passiv; man fängt sie, und sie reift zu Bernstein mit Einschluss (Fossil-Quelle) | Fliegen ist am teuersten, und das Insektenmodell ist schwer |
 | Harzschnecke (`resin_snail`) | Sporenzeit | passiv; ihre Spur härtet zu Bernsteinplatten aus | gut, aber ohne Bezug zum Kern-Ablauf |
 
 ## Technische Architektur

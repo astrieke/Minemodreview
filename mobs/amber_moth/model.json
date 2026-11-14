@@ -1,0 +1,1738 @@
+{
+  "id": "amber_moth",
+  "name": "Bernsteinmotte",
+  "texture_size": [
+    64,
+    32
+  ],
+  "hover": 14,
+  "bones": [
+    {
+      "name": "root",
+      "origin": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "body",
+      "parent": "root",
+      "origin": [
+        0,
+        4.5,
+        0
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "origin": [
+        0,
+        4.5,
+        -2
+      ]
+    },
+    {
+      "name": "antenna_left",
+      "parent": "head",
+      "origin": [
+        0.5,
+        5.5,
+        -4
+      ]
+    },
+    {
+      "name": "antenna_right",
+      "parent": "head",
+      "origin": [
+        -0.5,
+        5.5,
+        -4
+      ]
+    },
+    {
+      "name": "abdomen",
+      "parent": "body",
+      "origin": [
+        0,
+        4,
+        2
+      ]
+    },
+    {
+      "name": "wing_left",
+      "parent": "body",
+      "origin": [
+        1.5,
+        5.5,
+        0
+      ]
+    },
+    {
+      "name": "wing_right",
+      "parent": "body",
+      "origin": [
+        -1.5,
+        5.5,
+        0
+      ]
+    }
+  ],
+  "cubes": [
+    {
+      "name": "thorax",
+      "bone": "body",
+      "from": [
+        -1.5,
+        3,
+        -2
+      ],
+      "to": [
+        1.5,
+        6,
+        2
+      ],
+      "uv_offset": [
+        0,
+        0
+      ],
+      "material": "moth_fur",
+      "face": "moth_collar"
+    },
+    {
+      "name": "abdomen",
+      "bone": "abdomen",
+      "from": [
+        -1,
+        3,
+        2
+      ],
+      "to": [
+        1,
+        5,
+        8
+      ],
+      "uv_offset": [
+        14,
+        0
+      ],
+      "material": "moth_fur",
+      "face": "moth_stripes"
+    },
+    {
+      "name": "head",
+      "bone": "head",
+      "from": [
+        -1,
+        3.5,
+        -4
+      ],
+      "to": [
+        1,
+        5.5,
+        -2
+      ],
+      "uv_offset": [
+        30,
+        0
+      ],
+      "material": "moth_fur",
+      "face": "moth_eyes"
+    },
+    {
+      "name": "antenna_left",
+      "bone": "antenna_left",
+      "from": [
+        0.5,
+        5.5,
+        -7
+      ],
+      "to": [
+        2.5,
+        5.5,
+        -4
+      ],
+      "uv_offset": [
+        38,
+        0
+      ],
+      "material": "moth_antenna",
+      "rotation": [
+        35,
+        -15,
+        0
+      ],
+      "origin": [
+        0.5,
+        5.5,
+        -4
+      ],
+      "face": "moth_feather"
+    },
+    {
+      "name": "antenna_right",
+      "bone": "antenna_right",
+      "from": [
+        -2.5,
+        5.5,
+        -7
+      ],
+      "to": [
+        -0.5,
+        5.5,
+        -4
+      ],
+      "uv_offset": [
+        38,
+        0
+      ],
+      "material": "moth_antenna",
+      "rotation": [
+        35,
+        15,
+        0
+      ],
+      "origin": [
+        -0.5,
+        5.5,
+        -4
+      ],
+      "mirror_uv": true,
+      "face": "moth_feather"
+    },
+    {
+      "name": "wing_left_front",
+      "bone": "wing_left",
+      "from": [
+        1.5,
+        5.5,
+        -4
+      ],
+      "to": [
+        9.5,
+        5.5,
+        1
+      ],
+      "uv_offset": [
+        0,
+        16
+      ],
+      "material": "moth_wing",
+      "face": "moth_wing_front"
+    },
+    {
+      "name": "wing_left_back",
+      "bone": "wing_left",
+      "from": [
+        1.5,
+        5.5,
+        1
+      ],
+      "to": [
+        7.5,
+        5.5,
+        5
+      ],
+      "uv_offset": [
+        26,
+        16
+      ],
+      "material": "moth_wing",
+      "face": "moth_wing_back"
+    },
+    {
+      "name": "wing_right_front",
+      "bone": "wing_right",
+      "from": [
+        -9.5,
+        5.5,
+        -4
+      ],
+      "to": [
+        -1.5,
+        5.5,
+        1
+      ],
+      "uv_offset": [
+        0,
+        16
+      ],
+      "material": "moth_wing",
+      "mirror_uv": true
+    },
+    {
+      "name": "wing_right_back",
+      "bone": "wing_right",
+      "from": [
+        -7.5,
+        5.5,
+        1
+      ],
+      "to": [
+        -1.5,
+        5.5,
+        5
+      ],
+      "uv_offset": [
+        26,
+        16
+      ],
+      "material": "moth_wing",
+      "mirror_uv": true
+    }
+  ],
+  "animations": [
+    {
+      "name": "animation.amber_moth.idle",
+      "length": 0.5,
+      "loop": "loop",
+      "peak": 0.125,
+      "keyframes": [
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0,
+            0,
+            20.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.05,
+          "value": [
+            0,
+            0,
+            40.572
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            53.287
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            53.287
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            40.572
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            20.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            -0.572
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            0,
+            0,
+            -13.287
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            -13.287
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            0,
+            0,
+            -0.572
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            20.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0,
+            0,
+            -20.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.05,
+          "value": [
+            0,
+            0,
+            -40.572
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            -53.287
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            -53.287
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            -40.572
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            -20.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            0.572
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            0,
+            0,
+            13.287
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            13.287
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            0,
+            0,
+            0.572
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            -20.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.0,
+          "value": [
+            0,
+            0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.05,
+          "value": [
+            0,
+            0.235,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.1,
+          "value": [
+            0,
+            0.38,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.15,
+          "value": [
+            0,
+            0.38,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.2,
+          "value": [
+            0,
+            0.235,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.25,
+          "value": [
+            0,
+            0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.3,
+          "value": [
+            0,
+            -0.235,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.35,
+          "value": [
+            0,
+            -0.38,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.4,
+          "value": [
+            0,
+            -0.38,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.45,
+          "value": [
+            0,
+            -0.235,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.5,
+          "value": [
+            0,
+            -0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            -0.0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.05,
+          "value": [
+            -2.351,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            -3.804,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            -3.804,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            -2.351,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            -0.0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            2.351,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            3.804,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            3.804,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            2.351,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0.0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0.0,
+            0,
+            0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0.125,
+          "value": [
+            6.0,
+            0,
+            3.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0.0,
+            0,
+            0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0.375,
+          "value": [
+            -6.0,
+            0,
+            -3.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            -0.0,
+            0,
+            -0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0.0,
+            0,
+            -0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0.125,
+          "value": [
+            6.0,
+            0,
+            -3.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0.0,
+            0,
+            -0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0.375,
+          "value": [
+            -6.0,
+            0,
+            3.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            -0.0,
+            0,
+            0.0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.amber_moth.fly",
+      "length": 0.3,
+      "loop": "loop",
+      "peak": 0.075,
+      "keyframes": [
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0,
+            0,
+            15.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.05,
+          "value": [
+            0,
+            0,
+            53.971
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            53.971
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            15.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            -23.971
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            -23.971
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            15.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0,
+            0,
+            -15.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.05,
+          "value": [
+            0,
+            0,
+            -53.971
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            -53.971
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            -15.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            23.971
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            23.971
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            -15.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -10,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -10,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -8,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -8,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.amber_moth.dust",
+      "length": 1.0,
+      "loop": "once",
+      "peak": 0.35,
+      "keyframes": [
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            20
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            0,
+            0,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            0,
+            0,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            -35
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.62,
+          "value": [
+            0,
+            0,
+            65
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            20
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            -20
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            0,
+            0,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            0,
+            0,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            35
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.62,
+          "value": [
+            0,
+            0,
+            -65
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            -20
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            -25,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            -25,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            -25,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            -25,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            12,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.55,
+          "value": [
+            -15,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.6,
+          "value": [
+            0,
+            1.5,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.amber_moth.land",
+      "length": 0.8,
+      "loop": "once",
+      "peak": 0.8,
+      "keyframes": [
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            20
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            55
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            0,
+            -30,
+            10
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            0,
+            -55,
+            -12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            -20
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            -55
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            0,
+            30,
+            -10
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "wing_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            0,
+            55,
+            12
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.5,
+          "value": [
+            0,
+            -1,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.8,
+          "value": [
+            0,
+            -1.5,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "abdomen",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            6,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -15,
+            -20,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "antenna_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -15,
+            20,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    }
+  ]
+}

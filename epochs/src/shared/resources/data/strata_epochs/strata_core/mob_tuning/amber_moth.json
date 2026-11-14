@@ -1,0 +1,33 @@
+{
+  "entity": "strata_epochs:amber_moth",
+  "attributes": {
+    "max_health": 4,
+    "movement_speed": 0.25
+  },
+  "spawn": {
+    "enabled": true,
+    "max_nearby": 6,
+    "max_light": 7
+  },
+  "abilities": {
+    "light": {
+      "enabled": true,
+      "radius": 10,
+      "min_light": 8
+    },
+    "dust": {
+      "enabled": true,
+      "trigger_radius": 3,
+      "warning": 10,
+      "radius": 2.5,
+      "blind": 40,
+      "cooldown": 200,
+      "mark": 80
+    },
+    "trap": {
+      "enabled": true,
+      "radius": 10,
+      "harden_chance": 0.25
+    }
+  }
+}

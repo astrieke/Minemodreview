@@ -543,6 +543,62 @@ def resonant_shard(kind, i, rng):
     return x
 
 
+def flutter(rng, dur, rate, lo=900, hi=3200, amp=1.0):
+    """Flügelschlag: schnelle Folge weicher, gefilterter Luftstöße (Rate in Schlägen pro Sekunde)."""
+    x = silence(dur)
+    at = 0.0
+    while at < dur - 0.02:
+        n = int(0.018 * SR)
+        g = band(rng.normal(0, 1, n), lo, hi) * env(0.018, 0.002, 0.006)
+        place(x, g * rng.uniform(0.6, 1.0) * amp, at)
+        at += 1.0 / rate * rng.uniform(0.85, 1.15)
+    return x
+
+
+def amber_moth(kind, i, rng):
+    if kind == "ambient":
+        # Leises Flattern, das an- und abschwillt, dazu ein feines Sirren.
+        dur = 0.9
+        t = t_axis(dur)
+        x = flutter(rng, dur, rng.uniform(22, 28)) * np.sin(np.pi * t / dur) ** 0.8
+        x += np.sin(2 * np.pi * rng.uniform(2400, 2800) * t) * np.sin(np.pi * t / dur) ** 2 * 0.06
+        return x
+    if kind == "hurt":
+        # Kurzes, hohes Zirpen und ein hektischer Flügelschlag.
+        dur = 0.35
+        x = silence(dur)
+        ph, _ = sweep(rng.uniform(3200, 3600), 2200, 0.08)
+        place(x, np.sin(ph) * env(0.08, 0.002, 0.04) * 0.6, 0)
+        place(x, flutter(rng, 0.3, 40, amp=1.2), 0.03)
+        return x
+    if kind == "death":
+        # Das Flattern wird langsamer und verstummt, ein letztes Zirpen sinkt ab.
+        dur = 1.1
+        t = t_axis(dur)
+        x = silence(dur)
+        at = 0.0
+        rate = 30.0
+        while at < dur - 0.1:
+            n = int(0.02 * SR)
+            g = band(rng.normal(0, 1, n), 800, 3000) * env(0.02, 0.002, 0.007)
+            place(x, g * (1 - at / dur), at)
+            at += 1.0 / rate
+            rate *= 0.93
+        ph, _ = sweep(3000, 1200, 0.3)
+        place(x, np.sin(ph) * env(0.3, 0.005, 0.12) * 0.4, 0.05)
+        return x
+    # dust: Warnung 0,5 s (schnelles, steigendes Schwirren), dann ein weicher Staubstoß.
+    dur = 0.9
+    t = t_axis(dur)
+    x = silence(dur)
+    whir = flutter(rng, 0.5, 60, lo=1200, hi=4500) * np.clip(t_axis(0.5) / 0.4, 0, 1)
+    place(x, whir, 0)
+    puff = band(rng.normal(0, 1, int(0.35 * SR)), 500, 5000) * env(0.35, 0.004, 0.1) * 1.3
+    place(x, puff, 0.5)
+    place(x, grains(rng, 0.35, 120, 2500, 7000, grain=0.004, amp=0.4, decay_rate=6), 0.52)
+    return x
+
+
 MOBS = {
     "geode_crawler": (geode_crawler, {"ambient": 3, "hurt": 2, "death": 2}),
     "spore_bellows": (spore_bellows, {"ambient": 3, "hurt": 2, "death": 2}),
@@ -551,6 +607,7 @@ MOBS = {
     "spiralit": (spiralit, {"ambient": 3, "hurt": 2, "death": 1}),
     "stratolith": (stratolith, {"ambient": 3, "hurt": 2, "death": 1, "rise": 1, "rewind": 2, "slam": 2}),
     "resonant_shard": (resonant_shard, {"ambient": 2, "hurt": 2, "death": 1, "resonate": 1, "dissonance": 1, "shriek": 1}),
+    "amber_moth": (amber_moth, {"ambient": 3, "hurt": 2, "death": 1, "dust": 1}),
 }
 
 

@@ -10,7 +10,8 @@
     "ember_burrower",
     "spiralit",
     "stratolith",
-    "resonant_shard"
+    "resonant_shard",
+    "amber_moth"
   ],
   "ore_replaceables_tag": "strata_epochs:epoch_ore_replaceables",
   "epochs": [
@@ -180,6 +181,12 @@
               "weight": 80,
               "min": 1,
               "max": 3
+            },
+            {
+              "entity": "strata_epochs:amber_moth",
+              "weight": 30,
+              "min": 1,
+              "max": 3
             }
           ],
           "exclude_features": [
@@ -283,6 +290,12 @@
               "weight": 60,
               "min": 1,
               "max": 2
+            },
+            {
+              "entity": "strata_epochs:amber_moth",
+              "weight": 30,
+              "min": 1,
+              "max": 3
             }
           ],
           "music_from": "minecraft:lush_caves",
@@ -553,6 +566,27 @@
       "base": "minecraft:blocks/fletching_table",
       "replace": {
         "minecraft:fletching_table": "strata_epochs:analysis_table"
+      }
+    },
+    {
+      "block": "resin_trap",
+      "base": "minecraft:blocks/fletching_table",
+      "replace": {
+        "minecraft:fletching_table": "strata_epochs:resin_trap"
+      }
+    },
+    {
+      "block": "resin_trap_moth",
+      "base": "minecraft:blocks/fletching_table",
+      "replace": {
+        "minecraft:fletching_table": "strata_epochs:resin_trap"
+      }
+    },
+    {
+      "block": "resin_trap_hardened",
+      "base": "minecraft:blocks/fletching_table",
+      "replace": {
+        "minecraft:fletching_table": "strata_epochs:amber_inclusion"
       }
     }
   ],

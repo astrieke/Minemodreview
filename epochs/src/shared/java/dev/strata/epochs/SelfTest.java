@@ -59,6 +59,7 @@ final class SelfTest {
         failures += testMuseum(server);
         failures += testStratolith(server);
         failures += testResonantShard(server);
+        failures += testAmberMoth(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -88,6 +89,8 @@ final class SelfTest {
                 l -> new dev.strata.epochs.mob.EmberBurrower(EpochsMobs.EMBER_BURROWER.get(), l), "ash_age");
         failures += testMob(server, dev.strata.epochs.mob.Spiralit.DEF,
                 l -> new dev.strata.epochs.mob.Spiralit(EpochsMobs.SPIRALIT.get(), l), "ash_age");
+        failures += testMob(server, dev.strata.epochs.mob.AmberMoth.DEF,
+                l -> new dev.strata.epochs.mob.AmberMoth(EpochsMobs.AMBER_MOTH.get(), l), "spore_age");
         failures += testMob(server, dev.strata.epochs.mob.ResonantShard.DEF,
                 l -> new dev.strata.epochs.mob.ResonantShard(EpochsMobs.RESONANT_SHARD.get(), l), "crystal_age");
         StrataEpochs.LOG.info("[Strata-Test] Fertig, {} Fehler", failures);
@@ -1144,6 +1147,129 @@ final class SelfTest {
                 + "eingestimmt={}, Splitter={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
                 paused, clockStill, noCalmWhileFollowing, softIgnored, farIgnored, warned, silenced, firstHitWarns,
                 secondHitSilences, farHitIgnored, firstHitHarmless, secondHitHurts, selfDefense, tuned, splinterOk, loot, sounds, missing, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /**
+     * Bernsteinmotte und Harzfalle: Falle nur mit Lichtquelle daneben; eine Motte fliegt zur beleuchteten Falle, landet
+     * und wird eingeschlossen; die Falle härtet im Zufallstick aus und gibt Bernstein mit Einschluss, der beim
+     * Transplantator als Fossil der Sporenzeit zählt. Sprinten erschreckt sie (Staub blendet, sie flieht), Schleichen nie.
+     */
+    private static int testAmberMoth(MinecraftServer server) {
+        String epoch = StrataEpochs.id("spore_age");
+        ServerLevel level = StrataAPI.epochs(server).get(epoch).dimension().map(d -> Mc.level(server, d)).orElse(null);
+        if (level == null) {
+            StrataEpochs.LOG.error("[Strata-Test] Bernsteinmotte: Sporenzeit fehlt");
+            return 1;
+        }
+        BlockPos ground = EpochTravel.prepareArrival(level, -640, 640);
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("strata_moth_test".getBytes()), "strata_moth_test"));
+        player.setPos(ground.getX() + 0.5, ground.getY(), ground.getZ() + 0.5);
+        var air = net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();
+        var glow = net.minecraft.world.level.block.Blocks.GLOWSTONE.defaultBlockState();
+        java.util.function.Function<net.minecraft.world.phys.Vec3, dev.strata.epochs.mob.AmberMoth> spawn = at -> {
+            var m = new dev.strata.epochs.mob.AmberMoth(EpochsMobs.AMBER_MOTH.get(), level);
+            m.setPos(at.x, at.y, at.z);
+            level.addFreshEntity(m);
+            return m;
+        };
+        java.util.function.BiConsumer<net.minecraft.world.entity.Mob, Integer> run = (m, n) -> {
+            for (int i = 0; i < n && !m.isRemoved(); i++) { m.tickCount++; m.tick(); }
+        };
+        // Freier Raum für die Versuche (3 hoch), damit Höhlenwände nicht stören.
+        for (BlockPos p : BlockPos.betweenClosed(ground.offset(-1, 0, -4), ground.offset(9, 3, 4))) level.setBlockAndUpdate(p, air);
+        for (BlockPos p : BlockPos.betweenClosed(ground.offset(-1, -1, -4), ground.offset(9, -1, 4))) {
+            level.setBlockAndUpdate(p, net.minecraft.world.level.block.Blocks.MUD.defaultBlockState());
+        }
+
+        // Falle direkt angeflogen: ohne Licht keine Falle, mit Leuchtstein daneben schon.
+        BlockPos trapA = ground.offset(2, 0, -2);
+        level.setBlockAndUpdate(trapA, EpochsContent.RESIN_TRAP.get().defaultBlockState());
+        boolean unlit = !dev.strata.epochs.mob.AmberMoth.lit(level, trapA);
+        level.setBlockAndUpdate(trapA.west(), glow);
+        boolean lit = unlit && dev.strata.epochs.mob.AmberMoth.lit(level, trapA);
+        var a = spawn.apply(net.minecraft.world.phys.Vec3.atCenterOf(trapA.above()));
+        a.landOn(trapA);
+        run.accept(a, dev.strata.epochs.mob.AmberMoth.LAND_TICKS + 2);
+        boolean caught = a.isRemoved() && level.getBlockState(trapA).is(EpochsContent.RESIN_TRAP_MOTH.get());
+
+        // Echter Anflug: Motte 3 Blöcke neben einer beleuchteten Falle findet sie selbst.
+        BlockPos trapB = ground.offset(7, 0, 2);
+        level.setBlockAndUpdate(trapB, EpochsContent.RESIN_TRAP.get().defaultBlockState());
+        level.setBlockAndUpdate(trapB.east(), glow);
+        var b = spawn.apply(net.minecraft.world.phys.Vec3.atCenterOf(trapB.above()).add(-3, 0.5, 0));
+        run.accept(b, 200);
+        boolean flewIn = b.isRemoved() && level.getBlockState(trapB).is(EpochsContent.RESIN_TRAP_MOTH.get());
+
+        // Aushärten im Zufallstick, dann Ernte.
+        var block = level.getBlockState(trapB);
+        for (int i = 0; i < 200 && block.is(EpochsContent.RESIN_TRAP_MOTH.get()); i++) {
+            block.randomTick(level, trapB, level.getRandom());
+            block = level.getBlockState(trapB);
+        }
+        boolean hardened = block.is(EpochsContent.RESIN_TRAP_HARDENED.get());
+        // In der Oberwelt härtet sie nie aus (keine AFK-Farm in transplantierten Gebieten).
+        ServerLevel overworld = server.overworld();
+        BlockPos outside = new BlockPos(-9100, Mc.minY(overworld) + 2, 9100);
+        overworld.getChunk(outside);
+        overworld.setBlockAndUpdate(outside, EpochsContent.RESIN_TRAP_MOTH.get().defaultBlockState());
+        for (int i = 0; i < 200; i++) overworld.getBlockState(outside).randomTick(overworld, outside, overworld.getRandom());
+        boolean onlyInEpoch = overworld.getBlockState(outside).is(EpochsContent.RESIN_TRAP_MOTH.get());
+        overworld.setBlockAndUpdate(outside, air);
+        dev.strata.epochs.mob.AmberMoth.harvest(level, trapB, player);
+        boolean harvested = level.getBlockState(trapB).isAir()
+                && player.getInventory().contains(new net.minecraft.world.item.ItemStack(EpochsContent.AMBER_INCLUSION.get()));
+        player.getInventory().clearContent();
+
+        var inclusion = new net.minecraft.world.item.ItemStack(EpochsContent.AMBER_INCLUSION.get());
+        boolean fossil = Transplanter.acceptsFossil(inclusion, epoch, FossilPrep.fossilFor(epoch))
+                && Transplanter.acceptsFossil(new net.minecraft.world.item.ItemStack(EpochsContent.FERN_FOSSIL.get()), epoch, FossilPrep.fossilFor(epoch))
+                && !Transplanter.acceptsFossil(inclusion, StrataEpochs.id("crystal_age"), FossilPrep.fossilFor(StrataEpochs.id("crystal_age")));
+
+        // Erschrecken: Sprinten ja, Schleichen nie; Staub blendet Spieler in der Nähe, danach flieht sie.
+        player.setSprinting(true);
+        boolean sprintScares = dev.strata.epochs.mob.AmberMoth.scares(player);
+        player.setShiftKeyDown(true);
+        boolean sneakSafe = sprintScares && !dev.strata.epochs.mob.AmberMoth.scares(player);
+        player.setShiftKeyDown(false);
+        player.setSprinting(false);
+        dev.strata.epochs.mob.AmberMoth.TEST_PLAYERS.add(player);
+        var c = spawn.apply(player.position().add(1.2, 0.8, 0));
+        c.scare(player.position());
+        boolean warned = c.warning() && !player.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS);
+        run.accept(c, dev.strata.epochs.mob.AmberMoth.WARNING_TICKS + 2);
+        boolean dusted = warned && player.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS) && c.fleeing();
+        dev.strata.epochs.mob.AmberMoth.TEST_PLAYERS.remove(player);
+        player.removeAllEffects();
+        c.discard();
+        if (!b.isRemoved()) b.discard();
+        level.setBlockAndUpdate(trapA, air);
+
+        boolean loot;
+        try (var in = SelfTest.class.getResourceAsStream("/data/strata_epochs/loot_table/blocks/resin_trap_hardened.json");
+             var recipe = SelfTest.class.getResourceAsStream("/data/strata_epochs/recipe/resin_trap.json")) {
+            String text = in == null ? "" : new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            loot = text.contains("strata_epochs:amber_inclusion") && recipe != null;
+        } catch (java.io.IOException e) {
+            loot = false;
+        }
+        boolean sounds = true;
+        for (String kind : List.of("ambient", "hurt", "death", "dust")) {
+            if (!SOUNDS.containsKey("entity.amber_moth." + kind)) sounds = false;
+        }
+        List<String> missing = new ArrayList<>();
+        for (String key : List.of("entity.strata_epochs.amber_moth", "item.strata_epochs.amber_moth_spawn_egg",
+                "block.strata_epochs.resin_trap", "block.strata_epochs.resin_trap_moth", "block.strata_epochs.resin_trap_hardened",
+                "item.strata_epochs.amber_inclusion", "subtitles.strata_epochs.amber_moth.ambient",
+                "subtitles.strata_epochs.amber_moth.hurt", "subtitles.strata_epochs.amber_moth.death",
+                "subtitles.strata_epochs.amber_moth.dust")) {
+            for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
+        }
+        boolean ok = lit && caught && flewIn && hardened && onlyInEpoch && harvested && fossil && sneakSafe && dusted && loot && sounds && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Bernsteinmotte: Licht an der Falle={}, gefangen={}, Anflug={}, ausgehärtet={}, nur in Epoche={}, Ernte={}, "
+                + "Fossil-Tag={}, Schleichen sicher={}, Staub+Flucht={}, Beute+Rezept={}, Klänge={}, Texte fehlen={} -> {}",
+                lit, caught, flewIn, hardened, onlyInEpoch, harvested, fossil, sneakSafe, dusted, loot, sounds, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

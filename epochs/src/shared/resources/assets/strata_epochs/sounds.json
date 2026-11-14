@@ -207,5 +207,32 @@
       "strata_epochs:entity/resonant_shard/shriek1"
     ],
     "subtitle": "subtitles.strata_epochs.resonant_shard.shriek"
+  },
+  "entity.amber_moth.ambient": {
+    "sounds": [
+      "strata_epochs:entity/amber_moth/ambient1",
+      "strata_epochs:entity/amber_moth/ambient2",
+      "strata_epochs:entity/amber_moth/ambient3"
+    ],
+    "subtitle": "subtitles.strata_epochs.amber_moth.ambient"
+  },
+  "entity.amber_moth.hurt": {
+    "sounds": [
+      "strata_epochs:entity/amber_moth/hurt1",
+      "strata_epochs:entity/amber_moth/hurt2"
+    ],
+    "subtitle": "subtitles.strata_epochs.amber_moth.hurt"
+  },
+  "entity.amber_moth.death": {
+    "sounds": [
+      "strata_epochs:entity/amber_moth/death1"
+    ],
+    "subtitle": "subtitles.strata_epochs.amber_moth.death"
+  },
+  "entity.amber_moth.dust": {
+    "sounds": [
+      "strata_epochs:entity/amber_moth/dust1"
+    ],
+    "subtitle": "subtitles.strata_epochs.amber_moth.dust"
   }
 }

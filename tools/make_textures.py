@@ -1677,6 +1677,117 @@ def ember_tuber():
     return outline(from_grid(rows, pal), '#1c140c')
 
 
+# Harzfalle: klebriger Bernsteinharz (dunkler, mit Glanzschlieren und Tropfen oben), dann mit Motte, dann ausgehärtet.
+RESIN = ['#5a2a06', '#7a3c08', '#9c4f0c', '#bd6a14', '#d9821c', '#f0a23a']
+HARD_AMBER = ['#8a4a0c', '#b4640f', '#d4831e', '#eda23a', '#f8c45c', '#ffe08a']
+MOTH_SILHOUETTE = [
+    '..dd.....dd.',
+    '.dmmd.b.dmmd',
+    'dmmmdbbbdmmm',
+    '.dmmdbbbdmmd',
+    '..dd.bbb.dd.',
+    '......b.....',
+]
+
+
+def _resin(seed, pal, smooth):
+    img = canvas()
+    rnd = random.Random(seed)
+    coarse = tile_noise(seed + 1, 8)
+    fine = tile_noise(seed + 2, 4)
+    for y in range(16):
+        for x in range(16):
+            v = 0.5 + (coarse[y][x] - 0.5) * (0.35 if smooth else 0.55) + (fine[y][x] - 0.5) * 0.25
+            v += rnd.uniform(-0.05, 0.05) if smooth else rnd.uniform(-0.12, 0.12)
+            img.putpixel((x, y), pick(pal, v))
+    return img
+
+
+def _moth_inside(img, dark, mid, body):
+    for dy, row in enumerate(MOTH_SILHOUETTE):
+        for dx, ch in enumerate(row):
+            if ch == 'd':
+                img.putpixel((2 + dx, 5 + dy), rgb(dark))
+            elif ch == 'm':
+                img.putpixel((2 + dx, 5 + dy), rgb(mid))
+            elif ch == 'b':
+                img.putpixel((2 + dx, 5 + dy), rgb(body))
+
+
+def resin_trap():
+    img = _resin(401, RESIN, smooth=False)
+    for x, y in [(2, 3), (3, 4), (9, 2), (10, 3), (12, 9), (5, 11)]:   # Glanzschlieren
+        img.putpixel((x, y), rgb('#f6ad3e'))
+    for x in (4, 11):                                                  # Tropfen
+        img.putpixel((x, 0), rgb('#f0a23a'))
+        img.putpixel((x, 1), rgb('#d9821c'))
+    return img
+
+
+def resin_trap_moth():
+    img = resin_trap()
+    _moth_inside(img, '#2a1c12', '#6a3606', '#3b2818')
+    return img
+
+
+def resin_trap_hardened():
+    img = _resin(403, HARD_AMBER, smooth=True)
+    _moth_inside(img, '#5a2a06', '#a2560f', '#4f3620')
+    for i in range(5):                                                 # polierter Glanz oben links
+        img.putpixel((1 + i, 1 + i // 2), rgb('#fff3c8'))
+    img.putpixel((1, 2), rgb('#fff3c8'))
+    return img
+
+
+def amber_inclusion():
+    # Bernstein mit Einschluss: runder, polierter Bernstein, darin eine Motte; Glanz oben links.
+    pal = {'w': '#fff3c8', 'y': '#ffd27a', 'l': '#f6ad3e', 'm': '#d9821c', 'd': '#a2560f', 'k': '#5a2a06',
+           'b': '#3b2818', 'n': '#6a3606'}
+    rows = [
+        '................',
+        '................',
+        '.....lllll......',
+        '....lwyllllm....',
+        '...lwyllllllmd..',
+        '...lyllllllmmd..',
+        '..llnnllbllnnmd.',
+        '..lnnnnbbbnnnmd.',
+        '..llnnlbbbnnmmd.',
+        '..lllllbbbmmmmd.',
+        '...lllllbmmmmd..',
+        '...mmmmmmmmmdd..',
+        '....mmmmmmddd...',
+        '.....dddddkk....',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#3a1a04')
+
+
+def amber_moth_spawn_egg():
+    # Spawn-Ei: dunkles Pelzbraun mit zwei bernsteinfarbenen Flügelflecken und hellem Kragen.
+    pal = {'f': '#4f3620', 'F': '#3b2818', 'd': '#2a1c12', 'c': '#c9a77a', 'a': '#eda23a', 'A': '#d07a1a', 'y': '#ffe08a'}
+    rows = [
+        '................',
+        '......ffff......',
+        '.....fccccF.....',
+        '....ffffffFF....',
+        '...fAAffffAAF...',
+        '...AaaAffAaaAF..',
+        '..fAayAffAyaAF..',
+        '..fAaaAffAaaAFd.',
+        '..ffAAffffAAFFd.',
+        '..fffffffffFFFd.',
+        '..fffffffFFFFdd.',
+        '...ffffFFFFFdd..',
+        '....FFFFFFFdd...',
+        '.....dddddd.....',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1b1110')
+
+
 BLOCKS = {
     'chronostone': chronostone,
     'crystal_quartz_ore': crystal_quartz_ore,
@@ -1694,6 +1805,9 @@ BLOCKS = {
     'display_case_base': display_case_base,
     'display_case_base_top': display_case_base_top,
     'display_case_trim': display_case_trim,
+    'resin_trap': resin_trap,
+    'resin_trap_moth': resin_trap_moth,
+    'resin_trap_hardened': resin_trap_hardened,
 }
 for _crop in (quartz_thistle, resin_fern, ember_tubers):
     for _i in range(4):
@@ -1774,6 +1888,7 @@ ITEMS = {
     'resin_fern_spores': resin_fern_spores,
     'ember_tuber': ember_tuber,
     'resonant_splinter': resonant_splinter,
+    'amber_inclusion': amber_inclusion,
 }
 SPAWN_EGGS = {
     'geode_crawler_spawn_egg': geode_crawler_spawn_egg,
@@ -1782,6 +1897,7 @@ SPAWN_EGGS = {
     'ember_burrower_spawn_egg': ember_burrower_spawn_egg,
     'stratolith_spawn_egg': stratolith_spawn_egg,
     'resonant_shard_spawn_egg': resonant_shard_spawn_egg,
+    'amber_moth_spawn_egg': amber_moth_spawn_egg,
 }
 
 

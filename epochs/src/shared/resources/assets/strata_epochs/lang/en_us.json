@@ -214,5 +214,15 @@
   "subtitles.strata_epochs.resonant_shard.resonate": "Resonant Shard rings",
   "subtitles.strata_epochs.resonant_shard.dissonance": "Resonant Shard grows uneasy",
   "subtitles.strata_epochs.resonant_shard.shriek": "Resonant Shard shrieks",
-  "message.strata_epochs.resonant_splinter.no_epoch": "The Resonant Splinter only rings in an epoch"
+  "message.strata_epochs.resonant_splinter.no_epoch": "The Resonant Splinter only rings in an epoch",
+  "entity.strata_epochs.amber_moth": "Amber Moth",
+  "item.strata_epochs.amber_moth_spawn_egg": "Amber Moth Spawn Egg",
+  "block.strata_epochs.resin_trap": "Resin Trap",
+  "block.strata_epochs.resin_trap_moth": "Resin Trap with Moth",
+  "block.strata_epochs.resin_trap_hardened": "Hardened Resin Trap",
+  "item.strata_epochs.amber_inclusion": "Amber with Inclusion",
+  "subtitles.strata_epochs.amber_moth.ambient": "Amber Moth flutters",
+  "subtitles.strata_epochs.amber_moth.hurt": "Amber Moth chirps",
+  "subtitles.strata_epochs.amber_moth.death": "Amber Moth dies",
+  "subtitles.strata_epochs.amber_moth.dust": "Amber Moth sheds dust"
 }

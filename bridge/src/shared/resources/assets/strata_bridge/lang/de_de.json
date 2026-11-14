@@ -89,5 +89,10 @@
   "advancements.strata_epochs.met_resonant_shard.title": "Gleichklang",
   "advancements.strata_epochs.met_resonant_shard.description": "Begegne einem Resonanzling in der Kristallzeit",
   "jade.strata_bridge.mob.resonant_shard": "Kristallzeit · Ruheplatz: Bei ihm ruht die Verfestigung",
-  "jei.strata_bridge.info.resonant_splinter": "Fällt vom Resonanzling, wenn ein Spieler ihn tötet. Rechtsklick in einer Epoche: Die eigene Verfestigung ruht 30 s, danach 5 min Abklingzeit. Hält 3 Ladungen und wirkt auch beim Abbauen. Lebend ist der Resonanzling ein ortsfester Ruheplatz, solange man in seiner Nähe nicht abbaut oder kämpft."
+  "jei.strata_bridge.info.resonant_splinter": "Fällt vom Resonanzling, wenn ein Spieler ihn tötet. Rechtsklick in einer Epoche: Die eigene Verfestigung ruht 30 s, danach 5 min Abklingzeit. Hält 3 Ladungen und wirkt auch beim Abbauen. Lebend ist der Resonanzling ein ortsfester Ruheplatz, solange man in seiner Nähe nicht abbaut oder kämpft.",
+  "advancements.strata_epochs.met_amber_moth.title": "Ins Licht",
+  "advancements.strata_epochs.met_amber_moth.description": "Begegne einer Bernsteinmotte in der Sporenzeit",
+  "jade.strata_bridge.mob.amber_moth": "Sporenzeit · fliegt zum Licht, sprinte nicht in ihrer Nähe",
+  "jei.strata_bridge.info.resin_trap": "Stell die Harzfalle in der Sporenzeit auf und setz eine Lichtquelle direkt daneben (Fackel, Leuchtstein). Bernsteinmotten fliegen zum Licht und bleiben am Harz kleben. Nach einigen Minuten härtet die Falle aus; Rechtsklick oder Abbauen gibt dann Bernstein mit Einschluss.",
+  "jei.strata_bridge.info.amber_inclusion": "Aus der ausgehärteten Harzfalle. Gilt beim Transplantator als Fossil der Sporenzeit, wie das Farnfossil."
 }

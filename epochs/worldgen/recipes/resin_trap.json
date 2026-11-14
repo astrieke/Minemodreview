@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SAS",
+    "ARA",
+    "SAS"
+  ],
+  "key": {
+    "S": "minecraft:stick",
+    "A": "strata_epochs:amber_shard",
+    "R": "strata_epochs:resin_fern_spores"
+  },
+  "result": {
+    "id": "strata_epochs:resin_trap",
+    "count": 1
+  }
+}

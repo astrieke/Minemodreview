@@ -25,7 +25,8 @@ BACKGROUNDS = [('Kristallzeit dunkel', '#2a1f4d'), ('Kristallzeit Nebel', '#6e56
 EPOCH_BG = {'geode_crawler': ['#2a1f4d', '#6e56b8'], 'spore_bellows': ['#1f3318', '#4f7a3a'],
             'petrified_witness': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a'],
             'spiralit': ['#2a1f4d', '#6e56b8', '#1f3318', '#4f7a3a', '#1d110d', '#5b3a2e'],
-            'ember_burrower': ['#1d110d', '#5b3a2e']}
+            'ember_burrower': ['#1d110d', '#5b3a2e'], 'resonant_shard': ['#2a1f4d', '#6e56b8'],
+            'amber_moth': ['#1f3318', '#4f7a3a']}
 PLAYER_PX = 28.8
 CELL = 256
 
