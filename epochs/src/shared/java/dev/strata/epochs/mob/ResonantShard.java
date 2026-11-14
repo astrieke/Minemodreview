@@ -385,8 +385,13 @@ public class ResonantShard extends StrataMob {
             if (!fresh) return;
             playActionFor("dissonance", warning);
             sound(EpochsMobs.RESONANT_SHARD_DISSONANCE.get(), 0.7f, 1.25f);
-            if (player != null) notify(player, Component.translatable("message.strata_epochs.resonant_shard.uneasy")
-                    .withStyle(ChatFormatting.YELLOW));
+            // Alle im Radius sollen die Warnung lesen, nicht nur der Störer (Mitspieler im Lager).
+            java.util.Set<ServerPlayer> told = new java.util.HashSet<>();
+            if (player != null) told.add(player);
+            if (level() instanceof ServerLevel level) told.addAll(playersWithin(level, radius()));
+            for (ServerPlayer p : told) {
+                notify(p, Component.translatable("message.strata_epochs.resonant_shard.uneasy").withStyle(ChatFormatting.YELLOW));
+            }
         }
     }
 

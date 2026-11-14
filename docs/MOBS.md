@@ -251,7 +251,7 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 
 Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen); Runde 2 mit Code: 7/7/7, freigegeben. Vor einem Release einmal von Hand kämpfen (Diamant und Netherit, Zeit bis zum Sieg, Zahl der Rückspulungen notieren). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
-## Resonanzling (umgesetzt)
+## Resonanzling (umgesetzt, freigegeben)
 
 Eine lebende Stimmgabel aus Kristallquarz: Calcit-Kern mit Gesicht (zwei leuchtende Augenschlitze, darunter die
 singende Stimmritze) und Schichtlinien, darauf zwei Quarz-Zinken mit einer Brücke (U-Bogen), darunter eine Quarzspitze,
@@ -288,7 +288,7 @@ Aufschub in der Mine töten. Ruhe und Abklingzeit stehen im Datapack (`abilities
 
 **Meldungen:** Unruhe, Verstimmung, Einstimmen und Splitter schreiben in die Statusleiste; die Meldung „Die Zeit ruht“ schweigt danach 3 s, damit die Warnung lesbar bleibt.
 
-**Bewusste Grenzen:** Unruhe und Verstimmung werden nicht gespeichert (nach dem Neuladen ist er wieder ruhig, wie beim Glutwühler). Abbau durch Maschinen (simulierte Spieler) verstimmt ihn ohne Warnung, weil dort kein Anschlagen gemeldet wird. Abklingzeit und Pause des Splitters überstehen keinen Neustart.
+**Bewusste Grenzen:** Unruhe und Verstimmung werden nicht gespeichert (nach dem Neuladen ist er wieder ruhig, wie beim Glutwühler). Abbau durch Maschinen (simulierte Spieler) verstimmt ihn ohne Warnung, weil dort kein Anschlagen gemeldet wird. Abklingzeit und Pause des Splitters überstehen keinen Neustart. Lockt man einen eingestimmten Resonanzling um eine Ecke und stimmt ihn dort nicht neu ein, findet er die alte Heimat nicht wieder (er sucht nur auf Sicht) und ruht am neuen Ort; die Unruhe-Meldung bekommen alle Spieler im Radius.
 
 **Spawn:** nur in der Kristallzeit (Kristallhöhlen, Geodengewölbe), selten (Gewicht 6, einzeln), höchstens 2 im
 Umkreis von 48 Blöcken, nur mit 2 Blöcken Luft über dem Boden; er hebt danach ab. Kategorie Kreatur.
@@ -308,7 +308,7 @@ Eigene Klänge: neben Ruf, Schmerz und Tod drei Signale – **Gleichklang** (kla
 Prüfung Modell Runde 1: 6/5/6 (Quarz-Licht, Ring-Naht, Vorwarnung vor dem Auslöser, Trefferfläche, Stärke der Ruhe,
 Splitter), Runde 2: 7/6/7 (erster Treffer tötete statt zu warnen), Runde 3: 8/7/8, freigegeben. Abschlussprüfung mit Code Runde 1: 7/6/6
 (Treffer störten bis 16 Blöcke weit, Warnung sofort überschrieben, Ziele in Fels und Decke); alles umgesetzt, dazu der
-Test über den echten Schadensweg. Ebenfalls umgesetzt aus den Modellrunden: dazu Ring innen ±5 (der Kern
+Test über den echten Schadensweg. Abschlussprüfung Runde 2: 8/7/7, **freigegeben**. Ebenfalls umgesetzt aus den Modellrunden: dazu Ring innen ±5 (der Kern
 stößt beim Drehen nicht mehr hinein), einfarbige Ringseiten, U-Brücke ohne halbe Pixel, hellere Zinken-Seiten.
 
 ## Später (gesammelt, nicht eingeplant)
