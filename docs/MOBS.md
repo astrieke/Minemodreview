@@ -251,7 +251,7 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 
 Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen); Runde 2 mit Code: 7/7/7, freigegeben. Vor einem Release einmal von Hand kämpfen (Diamant und Netherit, Zeit bis zum Sieg, Zahl der Rückspulungen notieren). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
-## Resonanzling (Entwurf, in Arbeit)
+## Resonanzling (umgesetzt)
 
 Eine lebende Stimmgabel aus Kristallquarz: Calcit-Kern mit Gesicht (zwei leuchtende Augenschlitze, darunter die
 singende Stimmritze) und Schichtlinien, darauf zwei Quarz-Zinken mit einer Brücke (U-Bogen), darunter eine Quarzspitze,
@@ -294,6 +294,10 @@ Umkreis von 48 Blöcken, nur mit 2 Blöcken Luft über dem Boden; er hebt danach
 eigener Mechanismus in `Solidification` (`pause(player, ticks)`), den auch der Splitter nutzt; der Gleichklang
 erneuert ihn zweimal pro Sekunde. Anschlagen über `PlayerInteractEvent.LeftClickBlock` (Aktion START), Abbau über
 `BreakHook.onBroken` (BreakEvent bzw. BreakBlockEvent je nach Version).
+
+Eigene Klänge: neben Ruf, Schmerz und Tod drei Signale – **Gleichklang** (klarer Gabelanschlag, 1,8 s), **Unruhe**
+(zwei schiefe Töne im Tritonus, 0,6 s = Vorwarnung) und **Aufschrei** (greller, unharmonischer Ausbruch). Prüfblatt
+`mobs/resonant_shard/sounds_sheet.png`. Im Spiel: `mobs/resonant_shard/shots/ingame_1.21.1.png` und `ingame_26.3.png`.
 
 Prüfung Modell Runde 1: 6/5/6 (Quarz-Licht, Ring-Naht, Vorwarnung vor dem Auslöser, Trefferfläche, Stärke der Ruhe,
 Splitter), Runde 2: 7/6/7 (erster Treffer tötete statt zu warnen). Alles umgesetzt, dazu Ring innen ±5 (der Kern
@@ -389,6 +393,7 @@ Alle Ruf-, Schmerz- und Todeslaute sind eigene Klänge aus `tools/make_mob_sound
 | Glutwühler | Knurren mit Stimmfärbung und knisternden Funken | kurzes, hohes Aufjaulen | verzischende Glut, letztes Knurren, Brocken |
 | Spiralit | freundliches Zwitschern mit Luftblase | kurzes Quieken | absinkender Pfeifton, das Vibrato erlahmt |
 | Stratolith | mahlender Schichtstapel, Grundgestein-Brummen, fernes Kristallklingen | Steinriss mit Kristallsplitter | Zusammenbruch: Kristall zerspringt, Steinlawine, Echo sinkt ab |
+| Resonanzling | summende Stimmgabel mit Schwebung und Kristallklang | Knacks im Quarz, kurzes Klirren | die Gabel zerspringt, Splitter klirren, der Ton sinkt |
 
 **Freigegeben (07.11.2026):** Runde 1 6/5/6, Runde 2 7/7/7 (Designer, Game Design, Technik). Geändert in Runde 2: Grollen mit hörbaren Mitten und an die Vorwarnzeit gekoppelt, Obertöne für Glutwühler und Steinzeuge, wahrnehmungsnahe Lautheit, Schmerz und Tod des Glutwühlers getrennt.
 

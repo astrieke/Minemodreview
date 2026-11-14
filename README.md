@@ -140,7 +140,12 @@ Nur natürliche Blöcke (Tag `strata_epochs:transplantable`) werden verändert, 
 - Geodenkriecher (Kristallzeit, neutral, findet Erz)
 - Sporenbalg (Sporenzeit, Wolken beschleunigen die Verfestigung)
 - **Glutwühler** (Aschezeit): taucht in Vulkanasche ab, nähert sich als glühende Flosse und bricht neben dir hervor. Fester Boden schützt, von hinten ist sein Glutkamm verwundbar.
-- Steinzeuge (erwacht aus versteinertem Stein bei Spielern, die zu lange bleiben) Details in [docs/MOBS.md](docs/MOBS.md).
+- Steinzeuge (erwacht aus versteinertem Stein bei Spielern, die zu lange bleiben)
+- **Resonanzling** (Kristallzeit, friedlich): eine schwebende Stimmgabel. In ihrer Nähe ruht die Verfestigung, solange dort niemand Stein abbaut oder kämpft. Anschlagen macht ihn unruhig, Abbau oder ein zweiter Treffer verstimmt ihn für 30 s. Mit Kristallquarz lockt man ihn und stimmt ihn per Rechtsklick an einem Ort ein (Ruheplatz fürs Lager). Getötet lässt er einen Resonanzsplitter fallen (3 Ladungen, je 30 s Ruhe, auch beim Abbauen).
+
+Details in [docs/MOBS.md](docs/MOBS.md).
+
+![Resonanzling im Spiel (1.21.1)](mobs/resonant_shard/shots/ingame_1.21.1.png)
 
 **Ausrüstung:**
 
@@ -151,6 +156,7 @@ Nur natürliche Blöcke (Tag `strata_epochs:transplantable`) werden verändert, 
 | Bernsteinklinge | Bernstein, Sporenbeutel, Stock | Treffer verlangsamen das Ziel 2 s |
 | Keimfrische | Sporenbeutel, Bernstein, Glasflasche | Rechtsklick in einer Epoche: Uhr 60 s zurück |
 | Kodex-Fragment | Drop des Steinzeugen | Rechtsklick: Kodex-Knoten „Echo eines Reisenden“ |
+| Resonanzsplitter | Drop des Resonanzlings | Rechtsklick in einer Epoche: Uhr ruht 30 s, 5 min Abklingzeit, 3 Ladungen |
 
 Kodex-Knoten werden automatisch freigeschaltet:
 - `strata_epochs:first_core` mit dem ersten Bohrkern
@@ -282,10 +288,11 @@ data/<namespace>/strata_core/codex_node/<name>.json
 ## Noch offen
 
 - Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
-- Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 51 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
+- Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 59 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
 - Kernanalyse-Tisch mit Trichtern und Rohren: freigegeben in Prüfrunde 2 (7/7/8), im Selbsttest mit Vanilla-Trichter und einem Rohr-Cache wie bei Mekanism geprüft. Mit echten Rohr-Mods lief er noch nicht. Strom (FE) nimmt bewusst keiner der Tische an, weil nichts daran Arbeit braucht.
 - Inventar-Verfestigung: freigegeben in Prüfrunde 2 (7/8/8). Im Client gesehen in 1.21.1 (`docs/screenshots/petrify/`, Versteinern im Überlebensmodus). Das Lösen (draußen, beim Tod, fremde Brocken) prüft der Selbsttest; von Hand durchgespielt wurde es noch nicht. Bricht ein anderer Mod den Tod ab (Wiederbelebung), sind die Gegenstände trotzdem schon gelöst.
 - Stratolith: freigegeben in Prüfrunde 2 (7/7/7). Im Spiel in 1.21.1 und 26.3 (Boss-Leiste, Phasen), Selbsttest für Beschwörung, Phasen, Zurückspulen, Konter und Belohnung. Eigene, per Synthese erzeugte Klänge (Ruf, Schmerz, Tod und die Boss-Signaturen Aufsteigen, Zurückspulen, Hammerschlag; Prüfrunde 11.11.: 7/7/8), die Fähigkeits-Effekte bleiben Vanilla. Von Hand gekämpft wurde noch nicht, die Werte (240 Leben, Zurückspulen alle 15 s) sind geschätzt; vor einem Release einmal mit Diamant- und Netherit-Ausrüstung durchspielen.
+- Resonanzling: Modell freigegeben in Prüfrunde 3 (8/7/8), im Spiel gesehen in 1.21.1 und 26.3 (`mobs/resonant_shard/shots/`). Der Selbsttest prüft Ruhe, Störungsregeln, Einstimmen und Splitter; die Suche nach Resonanzlingen um einen abgebauten Block ist Vanilla und wird im Test nicht nachgestellt (Testmobs werden je nach Version asynchron geladen). Von Hand gespielt wurde er noch nicht, insbesondere nicht, ob „ersten behalten, zweiten töten“ trägt.
 - Zeitessenz: freigegeben in Prüfrunde 2 (7/8/8). Nur als Item mit Tag, ein Fluid gibt es nicht; wie oft sie im echten Spiel anfällt, ist geschätzt.
 - Museum der Erdgeschichte: freigegeben in Prüfrunde 2 (8/8/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/museum/`, Vitrinen per Befehl befüllt). Das Ausstellen von Hand per Rechtsklick prüft der Selbsttest nur über die Hilfsfunktion.
 - Zeitrisse: freigegeben in Prüfrunde 2 (8/7/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/rifts/`). Wie oft sie im echten Spiel auftauchen (20 min, 35 %), ist geschätzt und noch nicht ausprobiert.
