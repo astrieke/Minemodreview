@@ -1344,7 +1344,12 @@ final class SelfTest {
         float full = snail.getHealth();
         dev.strata.epochs.mc.MobCompat.hurt(snail, level.damageSources().generic(), 3);
         boolean retreated = snail.inShell();
+        // Im Gehäuse sperrt ein Ziel jede Bewegung: auch ein gesetzter Weg (etwa vom Locken) wird verworfen.
+        var shellAt = snail.position();
+        snail.getNavigation().moveTo(snail.getX() + 5, snail.getY(), snail.getZ(), 1.0);
         for (int i = 0; i < 11; i++) { snail.tickCount++; snail.tick(); }
+        double moved = Math.hypot(snail.getX() - shellAt.x, snail.getZ() - shellAt.z);   // waagerecht (die Spur hebt sie um 1/16)
+        boolean stays = moved < 0.05 && snail.getNavigation().isDone() && snail.shellLocked();
         float before = snail.getHealth();
         dev.strata.epochs.mc.MobCompat.hurt(snail, level.damageSources().generic(), 4);
         boolean shielded = retreated && before < full && before - snail.getHealth() < 2.0f && before - snail.getHealth() > 0f;
@@ -1371,10 +1376,10 @@ final class SelfTest {
                 "subtitles.strata_epochs.resin_snail.death", "subtitles.strata_epochs.resin_snail.retreat")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
-        boolean ok = laid && sticky && capped && freed && dissolves && hardened && shielded && emerged && loot && sounds && missing.isEmpty();
+        boolean ok = laid && sticky && capped && freed && dissolves && hardened && shielded && stays && emerged && loot && sounds && missing.isEmpty();
         StrataEpochs.LOG.info("[Strata-Test] Harzschnecke: Spur={}, klebrig={}, Grenze={}, gefüttert mehr und Abbau macht Platz={}, außerhalb aufgelöst={}, ausgehärtet={}, "
-                + "Gehäuse schützt={}, kommt heraus={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
-                laid, sticky, capped, freed, dissolves, hardened, shielded, emerged, loot, sounds, missing, ok ? "OK" : "FEHLER");
+                + "Gehäuse schützt={}, bleibt im Gehäuse stehen={}, kommt heraus={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
+                laid, sticky, capped, freed, dissolves, hardened, shielded, stays, emerged, loot, sounds, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

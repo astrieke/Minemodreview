@@ -42,8 +42,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
  *       abgebaut sind oder Spur sich auflöst, legt sie neue.</li>
  *   <li><b>Gehäuse</b> ({@code shell}): Nimmt sie Schaden, zieht sie sich 5 s ins Gehäuse zurück und nimmt nur
  *       30 % Schaden.</li>
- *   <li><b>Füttern</b> ({@code feed}): Harzfarn-Sporen locken sie; gefüttert ist sie 2 min satt und legt doppelt
- *       so oft Spur.</li>
+ *   <li><b>Füttern</b> ({@code feed}): Harzfarn-Sporen locken sie; gefüttert ist sie 10 min satt: Ihre Grenze steigt
+ *       von 4 auf 6 Stücke, und sie legt doppelt so oft Spur.</li>
  * </ul>
  */
 public class ResinSnail extends StrataMob {
@@ -58,7 +58,7 @@ public class ResinSnail extends StrataMob {
     public static final int SHELL_TICKS = 100;
     public static final int SHELL_COOLDOWN = 200;
     public static final double SHELL_FACTOR = 0.3;
-    public static final int FED_TICKS = 2400;
+    public static final int FED_TICKS = 12000;
 
     private int shellTicks;
     private int shellCooldown;
@@ -85,11 +85,39 @@ public class ResinSnail extends StrataMob {
 
     @Override
     protected void registerGoals() {
+        goalSelector.addGoal(0, new ShellGoal());
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(1, new TemptGoal(this, 1.2, ResinSnail::isFood, false));
         goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.8));
         goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 6.0f));
         goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+    }
+
+    /** Im Gehäuse: Bewegen, Umschauen und Springen gesperrt (sonst zöge sie das Locken mitsamt Gehäuse hinterher). */
+    private class ShellGoal extends net.minecraft.world.entity.ai.goal.Goal {
+        ShellGoal() {
+            setFlags(java.util.EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            return inShell();
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public void start() {
+            getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            getNavigation().stop();
+        }
     }
 
     public static boolean isFood(ItemStack stack) {
@@ -102,6 +130,11 @@ public class ResinSnail extends StrataMob {
 
     public boolean inShell() {
         return shellTicks > 0;
+    }
+
+    /** Läuft gerade das Ziel, das im Gehäuse Bewegen, Umschauen und Springen sperrt? (Selbsttest) */
+    public boolean shellLocked() {
+        return goalSelector.getAvailableGoals().stream().anyMatch(g -> g.isRunning() && g.getGoal() instanceof ShellGoal);
     }
 
     public boolean fed() {
@@ -163,7 +196,12 @@ public class ResinSnail extends StrataMob {
         List<Long> own = getData(EpochsContent.SNAIL_TRAIL.get());
         List<Long> alive = new java.util.ArrayList<>();
         for (long p : own) {
-            BlockState s = level.getBlockState(BlockPos.of(p));
+            BlockPos pos = BlockPos.of(p);
+            if (!level.isLoaded(pos)) {                         // nicht geladen: zählt weiter (kein Chunk nachladen)
+                alive.add(p);
+                continue;
+            }
+            BlockState s = level.getBlockState(pos);
             if (s.is(EpochsContent.RESIN_TRAIL.get()) || s.is(EpochsContent.AMBER_PLATE.get())) alive.add(p);
         }
         if (alive.size() != own.size()) setData(EpochsContent.SNAIL_TRAIL.get(), List.copyOf(alive));

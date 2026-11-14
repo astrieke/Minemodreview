@@ -65,7 +65,7 @@ public final class EpochsContent {
             p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.1f).sound(SoundType.HONEY_BLOCK).speedFactor(0.4f)
                     .jumpFactor(0.5f).randomTicks().noOcclusion().lightLevel(s -> 4));
     public static final Supplier<Block> AMBER_PLATE = REG.block("amber_plate", net.minecraft.world.level.block.CarpetBlock::new,
-            p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.3f).sound(SoundType.AMETHYST).noOcclusion());
+            p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.3f).sound(SoundType.AMETHYST).noOcclusion().lightLevel(s -> 2));
 
     /** Zeitriss in der Oberwelt (siehe {@link TimeRifts}): ohne Kollision, unzerstörbar, nur mit Zeitanker zu versiegeln. */
     public static final Supplier<Block> TIME_RIFT = REG.ghost("time_rift", TimeRiftBlock::new,

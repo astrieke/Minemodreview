@@ -650,7 +650,7 @@ def d_snail_shell(img, f, rnd):
         for i, (x, y) in enumerate(cells):
             put(img, r, w - 1 - x if side == 'east' else x, y, '#2a1008' if i == 0 else '#f0a23a')
     r = f['north']
-    for y in range(r[3] - 3, r[3]):
+    for y in range(r[3] - 2, r[3]):
         for x in range(1, r[2] - 1):
             put(img, r, x, y, '#2a1008')                    # Mündung, aus der der Körper kommt
     r = f['up']
@@ -659,12 +659,11 @@ def d_snail_shell(img, f, rnd):
 
 
 def d_snail_tip(img, f, rnd):
-    # Spitze der Windung: hellere Rille als Rand der Oberseite (Licht von oben).
+    # Spitze der Windung: Oberseite einfarbig im hellen Gehäuseton, Rand als helle Harzrille (kein dunkler „Kamin“).
     r = f['up']
     for y in range(r[3]):
         for x in range(r[2]):
-            if x in (0, r[2] - 1) or y in (0, r[3] - 1):
-                put(img, r, x, y, '#f0a23a')
+            put(img, r, x, y, '#f0a23a' if x in (0, r[2] - 1) or y in (0, r[3] - 1) else '#d9772e')
 
 
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
@@ -701,7 +700,7 @@ GLOW = {
     # Bernsteinmotte: die Kerne der Augenflecken glimmen (im Dunkeln der Sporenzeit lesbar)
     'amber_moth': {'spots': {'colors': {'#ffe08a', '#ffcf6a'}}},   # Augenkerne und Vorderränder
     # Harzschnecke: das Bernstein-Gehäuse schimmert schwach (in der dunklen Sporenzeit sonst nicht zu sehen)
-    'resin_snail': {'shell': {'colors': {'#f0a23a', '#ffcf6a', '#b5561e', '#d9772e', '#8f3c14'}}},
+    'resin_snail': {'shell': {'colors': {'#f0a23a', '#ffcf6a', '#b5561e', '#d9772e'}}},
     'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
                  'spiral_2': {'colors': {'#4a3591'}, 'glow_color': '#c9a8ff'},
                  'spiral_3': {'colors': {'#4a3592'}, 'glow_color': '#c9a8ff'},

@@ -25,7 +25,7 @@
     },
     "feed": {
       "enabled": true,
-      "duration": 2400
+      "duration": 12000
     }
   }
 }

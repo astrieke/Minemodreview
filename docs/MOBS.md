@@ -271,15 +271,21 @@ Kontrast der Oberseiten: Sporenzeit dunkel 4,0:1, Nebel 1,5:1.
 | Fähigkeit | Auslöser | Wirkung | Signal | Gegenzug / Grenze | Startwerte |
 |---|---|---|---|---|---|
 | **Harzspur** | sie kriecht | Alle 1,5 s legt sie auf freiem, festem Boden (nicht auf Ackerboden oder Pflanzen) ein Stück **Harzspur**: 1 px hoch, klebrig (bremst wie Honig), leuchtet schwach (Licht 4), damit man sie im Dunkeln sieht. **In einer Epoche** härtet sie im Zufallstick zur **Bernsteinplatte** aus (im Mittel etwa 23 min); abgebaut gibt die Platte 1 Bernstein. Außerhalb einer Epoche löst sich die Spur nach etwa 1–2 min auf. | glänzende, schwach leuchtende Spur, alle 2 s ein Harztropfen an ihr | Spur meiden. **Grenze pro Schnecke:** Sie merkt sich ihre eigenen Stücke (Spur oder Platte, übersteht Neustarts); bei 4 legt sie keine neue, bis der Spieler Platten abbaut oder Spur sich auflöst. | alle 30 Ticks, Grenze 4, Chance 0,05 je Zufallstick |
-| **Gehäuse** | sie nimmt Schaden | Sie zieht sich 5 s ins Gehäuse zurück, bleibt stehen und nimmt nur 30 % Schaden (der auslösende Treffer zählt voll); danach kommt sie heraus. | Animation `retreat` (0,45 s), hohles Klacken, das Leuchten sinkt | abwarten | 5 s, Schaden ×0,3, Abklingzeit 10 s |
-| **Füttern** | Harzfarn-Sporen in der Hand locken sie; Rechtsklick damit füttert (1 wird verbraucht) | Sie frisst und ist 2 min **satt**: Sie legt doppelt so oft Spur, die Grenze steigt auf 6. | Animation `eat`, Herzchen | – (Hilfe) | 2 min, Spur alle 15 Ticks, Grenze 6 |
+| **Gehäuse** | sie nimmt Schaden | Sie zieht sich 5 s ins Gehäuse zurück und nimmt nur 30 % Schaden (der auslösende Treffer zählt voll); danach kommt sie heraus. Im Gehäuse sperrt ein eigenes Ziel Bewegen, Umschauen und Springen: Auch Locken zieht sie dann nicht weiter. | Animation `retreat` (0,45 s), hohles Klacken, das Leuchten sinkt | abwarten | 5 s, Schaden ×0,3, Abklingzeit 10 s |
+| **Füttern** | Harzfarn-Sporen in der Hand locken sie; Rechtsklick damit füttert (1 wird verbraucht) | Sie frisst und ist 10 min **satt**: Die Grenze steigt auf 6 Stücke (der eigentliche Gewinn, etwa +45 % Ertrag), und sie legt doppelt so oft Spur. | Animation `eat`, Herzchen | – (Hilfe) | 10 min, Spur alle 15 Ticks, Grenze 6 |
 
 **Ertrag (gerechnet):** Ein Zufallstick trifft einen Block im Mittel alle 4096 / 3 ≈ 1365 Ticks; mit Chance 0,05
 braucht ein Stück im Mittel ≈ 27 300 Ticks ≈ 23 min bis zur Platte. Mit 4 eigenen Stücken, die parallel aushärten,
-und laufendem Abbau: ≈ 1,8 Bernstein in 10 min; dauerhaft gefüttert (Grenze 6, eine Spore alle 2 min): ≈ 2,6 in
-10 min. Ohne Abbau ist nach 4 (bzw. 6) Platten Schluss: Die Höhle wird nicht zugekleistert. Zum Vergleich: ein reifer
+und laufendem Abbau: ≈ 1,8 Bernstein in 10 min; gefüttert (Grenze 6, eine Spore alle 10 min): ≈ 2,6 in 10 min.
+Ausgehärtet wird nur in geladenen Chunks, also während eines Besuchs, in dem die Verfestigung läuft. Ohne Abbau ist nach 4 (bzw. 6) Platten Schluss: Die Höhle wird nicht zugekleistert. Zum Vergleich: ein reifer
 Harzfarn gibt 1 Bernstein, Bernsteinerz 1–2 pro Block. Die Schnecke ist also eine langsame Beigabe, kein Ersatz.
 Getötet gibt sie 0–1 Bernstein: behalten lohnt sich mehr.
+
+**Bernsteinplatte:** leuchtet schwach (Licht 2), damit man sie im Dunkeln findet; solange sie liegt, belegt sie einen
+Platz der Grenze.
+
+**Bewusste Grenzen:** Gehäuse-, Satt- und Abklingzeit werden nicht gespeichert (nach dem Neuladen ist sie draußen und
+hungrig); die eigenen Stücke schon. Stücke in nicht geladenen Chunks zählen weiter mit (sie werden nicht nachgeladen).
 
 **Spawn:** Sporenzeit (Moosmoor, Sporengrotte), einzeln oder zu zweit, Kategorie Kreatur (normale Spawnregeln),
 höchstens 4 im Umkreis von 32 Blöcken.
@@ -292,7 +298,9 @@ damage_factor, cooldown), `feed` (duration), dazu die Attribute (Leben, Tempo, R
 
 Prüfung Modell Runde 1: 6/4/5 (Rückzugspose hielt nicht und zeigte den Kopf, Spirale nicht lesbar, Ertrag 5–10-mal zu
 hoch, Grenze am Umkreis statt an der Schnecke, Aushärten auch in der Oberwelt, im Dunkeln unsichtbar, Trefferfläche zu
-klein). Alles umgesetzt.
+klein). Alles umgesetzt. Runde 2 mit Code: 7/7/6 (im Gehäuse zog das Locken sie weiter); umgesetzt mit einem Ziel, das
+im Gehäuse jede Bewegung sperrt, dazu Füttern 10 min, leuchtende Platten, keine Chunk-Ladung beim Zählen, Spitze ohne
+dunklen Kern, kleinere Mündung, Gehäuse kippt beim Kriechen weniger.
 
 ## Bernsteinmotte (umgesetzt, freigegeben)
 
