@@ -81,6 +81,10 @@ public class ResonantShard extends StrataMob {
     /** So lange hält eine Pause an; der Gleichklang erneuert sie zweimal pro Sekunde. */
     private static final int PAUSE_REFRESH = 30;
     private static final double HOVER = 0.6;
+    /** Länger flieht er nicht (er hängt sonst an einem Hindernis). */
+    private static final int FLEE_TICKS = 60;
+    /** Leuchten des Quarzes in Ruhe (Leucht-Ebene ersetzt die Farbe; darunter wäre er dunkler als die Textur). */
+    private static final float GLOW_REST = 0.85f;
     /** Ohne Heimat (Long.MIN_VALUE): nicht eingestimmt. */
     public static final long NO_HOME = Long.MIN_VALUE;
 
@@ -95,13 +99,15 @@ public class ResonantShard extends StrataMob {
     private Vec3 driftTarget;
     private Vec3 fleeTarget;
     private boolean following;
+    private int fleeTicks;
+    private int pulses;
     private Vec3 lastDisturbance;
     private ServerPlayer disturber;
 
     public ResonantShard(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
         setNoGravity(true);
-        setGlow(GLOW_CRYSTALS, 0.6f);
+        setGlow(GLOW_CRYSTALS, GLOW_REST);
         setGlow(GLOW_EYES, 1.0f);
     }
 
@@ -178,7 +184,7 @@ public class ResonantShard extends StrataMob {
         }
         if (silentTicks > 0 && --silentTicks == 0) {
             if (!tuned) home = blockPosition();
-            setGlow(GLOW_CRYSTALS, 0.6f);
+            setGlow(GLOW_CRYSTALS, GLOW_REST);
             setGlow(GLOW_EYES, 1.0f);
         }
         move(level);
@@ -194,13 +200,13 @@ public class ResonantShard extends StrataMob {
                 else Solidification.slowDown(player, factor, PAUSE_REFRESH);
             }
         }
-        if (uneasyTicks == 0) setGlow(GLOW_CRYSTALS, pulseTicks > 0 ? 1.0f : 0.6f);
+        if (uneasyTicks == 0) setGlow(GLOW_CRYSTALS, pulseTicks > 0 ? 1.0f : GLOW_REST);
         if (pulseTicks > 0) pulseTicks--;
         int interval = Math.max(20, (int) value("calm", "pulse", PULSE_TICKS));
         if (tickCount % interval == 0) {
             pulseTicks = 20;
             if (uneasyTicks == 0) playAction("resonate");
-            sound(EpochsMobs.RESONANT_SHARD_RESONATE.get(), 0.8f, 1.0f);
+            if (pulses++ % 2 == 0) sound(EpochsMobs.RESONANT_SHARD_RESONATE.get(), 0.6f, 1.0f);   // Ton nur jeden 2. Puls
             double ground = groundY(level);
             for (int i = 0; i < 32; i++) {                    // Ring am Boden zeigt den Umkreis
                 double a = i * Math.PI * 2 / 32;
@@ -238,24 +244,23 @@ public class ResonantShard extends StrataMob {
         if (fleeTarget != null) {
             target = fleeTarget;
             speed = 0.3;
-            if (position().distanceTo(fleeTarget) < 0.8 || tickCount % 100 == 0 && getDeltaMovement().lengthSqr() < 1.0e-4) {
+            if (position().distanceTo(fleeTarget) < 0.8 || ++fleeTicks > FLEE_TICKS) {
                 fleeTarget = null;
+                fleeTicks = 0;
             }
         } else if (lure != null) {
             Vec3 eye = lure.getEyePosition();
             Vec3 away = position().subtract(eye);
             away = new Vec3(away.x, 0, away.z);
             away = away.lengthSqr() < 1.0e-4 ? new Vec3(0, 0, 1) : away.normalize();
-            target = eye.add(away.scale(2.0)).add(0, -1.0, 0);
+            Vec3 wanted = eye.add(away.scale(2.0)).add(0, -1.0, 0);
+            target = free(level, wanted) ? wanted : position();   // kein freier Platz neben dem Spieler: warten
             speed = 0.15;
             face = eye;
             if (!tuned) home = blockPosition();
         } else {
             if (driftTarget == null || --driftTicks <= 0 || position().distanceTo(driftTarget) < 0.4) {
-                double drift = value("tune", "drift", DRIFT);
-                double a = random.nextDouble() * Math.PI * 2;
-                double r = random.nextDouble() * drift;
-                driftTarget = Vec3.atBottomCenterOf(home).add(Math.cos(a) * r, 0, Math.sin(a) * r);
+                driftTarget = pickDrift(level);
                 driftTicks = 80 + random.nextInt(80);
             }
             target = driftTarget;
@@ -263,10 +268,14 @@ public class ResonantShard extends StrataMob {
             ServerPlayer near = level.getNearestPlayer(this, 8.0) instanceof ServerPlayer p && !p.isSpectator() ? p : null;
             if (near != null) face = near.getEyePosition();
         }
-        // Höhe: schwebt knapp über dem Boden unter dem Ziel.
-        double hoverY = groundBelow(level, target) + HOVER;
-        double y = lure != null ? Math.max(hoverY, Math.min(target.y, hoverY + 2.0)) : hoverY;
-        target = new Vec3(target.x, y, target.z);
+        // Höhe: knapp über dem Boden unter dem Ziel, aber nur, wenn dort Platz ist (nie in Fels oder Decke).
+        double ground = groundBelow(level, target);
+        if (!Double.isNaN(ground)) {
+            double hoverY = ground + HOVER;
+            double y = lure != null ? Math.max(hoverY, Math.min(target.y, hoverY + 2.0)) : hoverY;
+            Vec3 adjusted = new Vec3(target.x, y, target.z);
+            if (free(level, adjusted)) target = adjusted;
+        }
         Vec3 delta = target.subtract(position());
         double length = delta.length();
         Vec3 wanted = length < 0.05 ? Vec3.ZERO : delta.scale(Math.min(speed, length * 0.2) / length);
@@ -280,6 +289,31 @@ public class ResonantShard extends StrataMob {
         }
     }
 
+    /** Freier Platz für die Trefferfläche an {@code p} und freie Sicht von hier dorthin (nicht durch Wände). */
+    private boolean free(ServerLevel level, Vec3 p) {
+        if (!level.noCollision(this, getBoundingBox().move(p.subtract(position())))) return false;
+        Vec3 from = position().add(0, 0.4, 0);
+        Vec3 to = p.add(0, 0.4, 0);
+        return level.clip(new net.minecraft.world.level.ClipContext(from, to, net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                net.minecraft.world.level.ClipContext.Fluid.NONE, this)).getType() == net.minecraft.world.phys.HitResult.Type.MISS;
+    }
+
+    /** Ein freier, erreichbarer Punkt in Schwebehöhe um die Heimat; sonst bleibt er, wo er ist. */
+    private Vec3 pickDrift(ServerLevel level) {
+        double drift = value("tune", "drift", DRIFT);
+        Vec3 base = Vec3.atBottomCenterOf(home);
+        for (int i = 0; i < 6; i++) {
+            double a = random.nextDouble() * Math.PI * 2;
+            double r = random.nextDouble() * drift;
+            Vec3 at = new Vec3(base.x + Math.cos(a) * r, Math.max(base.y, getY()), base.z + Math.sin(a) * r);
+            double ground = groundBelow(level, at);
+            if (Double.isNaN(ground)) continue;
+            Vec3 p = new Vec3(at.x, ground + HOVER, at.z);
+            if (free(level, p)) return p;
+        }
+        return position();
+    }
+
     /** Nächster Spieler in Reichweite mit Kristallquarz in einer Hand, oder null. */
     private ServerPlayer lure(ServerLevel level) {
         if (!tuning().abilityEnabled("tune")) return null;
@@ -287,6 +321,7 @@ public class ResonantShard extends StrataMob {
         double bestDistance = LURE_RANGE;
         for (ServerPlayer p : players(level, LURE_RANGE)) {
             if (!(isLure(p.getMainHandItem()) || isLure(p.getOffhandItem()))) continue;
+            if (tuned && !p.isShiftKeyDown()) continue;   // einen eingestimmten lockt nur, wer schleicht (kein Versehen)
             double d = p.distanceTo(this);
             if (d < bestDistance) {
                 best = p;
@@ -301,12 +336,17 @@ public class ResonantShard extends StrataMob {
     }
 
     private double groundY(ServerLevel level) {
-        return groundBelow(level, position());
+        double ground = groundBelow(level, position());
+        return Double.isNaN(ground) ? getY() - HOVER : ground;
     }
 
-    /** Oberkante des ersten festen Blocks unter {@code at} (höchstens 8 Blöcke tief), sonst at.y - 1. */
+    /**
+     * Oberkante des ersten festen Blocks unter {@code at} (höchstens 8 Blöcke tief), sonst at.y - 1.
+     * Liegt {@code at} selbst in einem festen Block, gibt es keinen Boden darunter: NaN (Ziel verwerfen).
+     */
     private double groundBelow(ServerLevel level, Vec3 at) {
         BlockPos.MutableBlockPos pos = BlockPos.containing(at.x, at.y + 0.5, at.z).mutable();
+        if (!level.getBlockState(pos).getCollisionShape(level, pos).isEmpty()) return Double.NaN;
         for (int i = 0; i < 9; i++, pos.move(0, -1, 0)) {
             BlockState state = level.getBlockState(pos);
             var shape = state.getCollisionShape(level, pos);
@@ -345,7 +385,7 @@ public class ResonantShard extends StrataMob {
             if (!fresh) return;
             playActionFor("dissonance", warning);
             sound(EpochsMobs.RESONANT_SHARD_DISSONANCE.get(), 0.7f, 1.25f);
-            if (player != null) Mc.actionbar(player, Component.translatable("message.strata_epochs.resonant_shard.uneasy")
+            if (player != null) notify(player, Component.translatable("message.strata_epochs.resonant_shard.uneasy")
                     .withStyle(ChatFormatting.YELLOW));
         }
     }
@@ -363,18 +403,37 @@ public class ResonantShard extends StrataMob {
         level.sendParticles(MobCompat.dust(0xd04a8a, 1.2f), getX(), getY() + 1.1, getZ(), 12, 0.5, 0.3, 0.5, 0);
         flee(lastDisturbance != null ? lastDisturbance : position());
         if (disturber != null && disturber.isAlive()) {
-            Mc.actionbar(disturber, Component.translatable("message.strata_epochs.resonant_shard.silent", silentTicks / 20)
+            notify(disturber, Component.translatable("message.strata_epochs.resonant_shard.silent", silentTicks / 20)
                     .withStyle(ChatFormatting.RED));
         }
         disturber = null;
     }
 
+    /** Weicht vom Störer weg: geradeaus, sonst schräg oder kürzer, immer nur in freien, erreichbaren Raum. */
     private void flee(Vec3 from) {
+        driftTarget = null;
+        fleeTarget = null;
+        fleeTicks = 0;
+        if (!(level() instanceof ServerLevel level)) return;
         Vec3 away = position().subtract(from);
         away = new Vec3(away.x, 0, away.z);
         if (away.lengthSqr() < 1.0e-4) away = new Vec3(random.nextDouble() - 0.5, 0, random.nextDouble() - 0.5);
-        fleeTarget = position().add(away.normalize().scale(value("dissonance", "flee", FLEE_DISTANCE)));
-        driftTarget = null;
+        away = away.normalize();
+        double distance = value("dissonance", "flee", FLEE_DISTANCE);
+        for (double scale : new double[]{1.0, 0.66, 0.33}) {
+            for (int turn : new int[]{0, 45, -45, 90, -90}) {
+                double rad = Math.toRadians(turn);
+                Vec3 dir = new Vec3(away.x * Math.cos(rad) - away.z * Math.sin(rad), 0, away.x * Math.sin(rad) + away.z * Math.cos(rad));
+                Vec3 at = position().add(dir.scale(distance * scale));
+                double ground = groundBelow(level, at);
+                if (Double.isNaN(ground)) continue;
+                Vec3 p = new Vec3(at.x, ground + HOVER, at.z);
+                if (free(level, p)) {
+                    fleeTarget = p;
+                    return;
+                }
+            }
+        }
     }
 
     /** Alle Resonanzlinge, in deren Radius {@code at} liegt. */
@@ -394,6 +453,13 @@ public class ResonantShard extends StrataMob {
         Vec3 at = Vec3.atCenterOf(pos);
         if (!(level() instanceof ServerLevel level) || !disturbs(level, pos, state) || position().distanceTo(at) > radius()) return false;
         disturb(player, at, broken ? Disturbance.BREAK : Disturbance.STRIKE);
+        return true;
+    }
+
+    /** Ein Spieler trifft ein anderes Wesen bei {@code at}: stört nur innerhalb des Radius. */
+    public boolean nearbyHit(ServerPlayer player, Vec3 at) {
+        if (position().distanceTo(at) > radius()) return false;
+        disturb(player, at, Disturbance.HIT);
         return true;
     }
 
@@ -431,7 +497,7 @@ public class ResonantShard extends StrataMob {
         }
         if (selfDefense(event.getEntity())) return;
         Vec3 at = event.getEntity().position();
-        for (ResonantShard shard : around(level, at)) shard.disturb(player, at, Disturbance.HIT);
+        for (ResonantShard shard : around(level, at)) shard.nearbyHit(player, at);
     }
 
     /** Selbstverteidigung: Ein Monster, das gerade einen Spieler angreift, darf man treffen, ohne ihn zu stören. */
@@ -468,13 +534,19 @@ public class ResonantShard extends StrataMob {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!shard.tuning().abilityEnabled("tune")) return;
         if (shard.silent()) {
-            Mc.actionbar(player, Component.translatable("message.strata_epochs.resonant_shard.still_silent")
+            notify(player, Component.translatable("message.strata_epochs.resonant_shard.still_silent")
                     .withStyle(ChatFormatting.GRAY));
             return;
         }
         if (!player.isCreative()) held.shrink(1);
         shard.tune();
-        Mc.actionbar(player, Component.translatable("message.strata_epochs.resonant_shard.tuned").withStyle(ChatFormatting.LIGHT_PURPLE));
+        notify(player, Component.translatable("message.strata_epochs.resonant_shard.tuned").withStyle(ChatFormatting.LIGHT_PURPLE));
+    }
+
+    /** Eigene Meldung in der Statusleiste; die Ruhe-Meldung schweigt solange (3 s), sonst wäre sie sofort überschrieben. */
+    private static void notify(ServerPlayer player, Component message) {
+        Mc.actionbar(player, message);
+        Solidification.holdMessage(player, 60);
     }
 
     // ---- Resonanzsplitter ----
@@ -488,7 +560,11 @@ public class ResonantShard extends StrataMob {
      * Abklingzeit. Nach {@link #SPLINTER_CHARGES} Ladungen zerbricht er. Werte unter {@code abilities.splinter}.
      */
     public static void useSplinter(ServerPlayer player, ItemStack stack) {
-        if (Mc.isOnCooldown(player, stack) || EpochTravel.epochOf(player.level()).isEmpty()) return;
+        if (Mc.isOnCooldown(player, stack)) return;
+        if (EpochTravel.epochOf(player.level()).isEmpty()) {
+            Mc.actionbar(player, Component.translatable("message.strata_epochs.resonant_splinter.no_epoch").withStyle(ChatFormatting.GRAY));
+            return;
+        }
         var tuning = dev.strata.core.api.StrataAPI.mobTuning(((ServerLevel) player.level()).getServer(), DEF.id());
         int pause = (int) tuning.ability("splinter", "pause", SPLINTER_PAUSE);
         Solidification.pause(player, pause);
@@ -500,7 +576,7 @@ public class ResonantShard extends StrataMob {
         }
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), EpochsMobs.RESONANT_SHARD_RESONATE.get(),
                 SoundSource.PLAYERS, 1.0f, 1.2f);
-        Mc.actionbar(player, Component.translatable("message.strata_epochs.resonant_splinter", pause / 20)
+        notify(player, Component.translatable("message.strata_epochs.resonant_splinter", pause / 20)
                 .withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 

@@ -30,6 +30,8 @@ public final class Solidification {
     private static final java.util.Map<java.util.UUID, Factor> FACTORS = new java.util.concurrent.ConcurrentHashMap<>();
     /** Spieler -> Spielzeit, bis zu der seine Uhr ruht (Resonanzling, Resonanzsplitter). Nur im Speicher. */
     private static final java.util.Map<java.util.UUID, Long> PAUSED_UNTIL = new java.util.concurrent.ConcurrentHashMap<>();
+    /** Spieler -> Spielzeit, bis zu der die Ruhe-Meldung schweigt (eine eigene Meldung, z. B. „wird unruhig“, steht). */
+    private static final java.util.Map<java.util.UUID, Long> MESSAGE_HOLD = new java.util.concurrent.ConcurrentHashMap<>();
     /** Bremse aus dem Datapack (Gleichklang mit Faktor > 0): Spieler -> Faktor und Ende. Nur im Speicher. */
     private static final java.util.Map<java.util.UUID, Factor> BRAKES = new java.util.concurrent.ConcurrentHashMap<>();
 
@@ -60,8 +62,10 @@ public final class Solidification {
 
         if (isPaused(player)) {
             // Die Uhr ruht: nichts zählt weiter, und auch eine schon laufende Verfestigung wirkt hier nicht.
-            Mc.actionbar(player, Component.translatable("message.strata_epochs.solidify.paused")
-                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+            if (!messageHeld(player)) {
+                Mc.actionbar(player, Component.translatable("message.strata_epochs.solidify.paused")
+                        .withStyle(ChatFormatting.LIGHT_PURPLE));
+            }
             return;
         }
         long before = visit.ticks();
@@ -137,6 +141,21 @@ public final class Solidification {
             return 1.0;
         }
         return f.factor;
+    }
+
+    /** Die Ruhe-Meldung schweigt {@code ticks} lang, damit eine andere Meldung in der Statusleiste lesbar bleibt. */
+    public static void holdMessage(ServerPlayer player, int ticks) {
+        MESSAGE_HOLD.put(player.getUUID(), player.level().getGameTime() + ticks);
+    }
+
+    public static boolean messageHeld(ServerPlayer player) {
+        Long until = MESSAGE_HOLD.get(player.getUUID());
+        if (until == null) return false;
+        if (until <= player.level().getGameTime()) {
+            MESSAGE_HOLD.remove(player.getUUID());
+            return false;
+        }
+        return true;
     }
 
     /** Ruht die Uhr des Spielers gerade? */

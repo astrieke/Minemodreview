@@ -213,5 +213,6 @@
   "subtitles.strata_epochs.resonant_shard.death": "Resonanzling zerspringt",
   "subtitles.strata_epochs.resonant_shard.resonate": "Resonanzling klingt",
   "subtitles.strata_epochs.resonant_shard.dissonance": "Resonanzling wird unruhig",
-  "subtitles.strata_epochs.resonant_shard.shriek": "Resonanzling schreit auf"
+  "subtitles.strata_epochs.resonant_shard.shriek": "Resonanzling schreit auf",
+  "message.strata_epochs.resonant_splinter.no_epoch": "Der Resonanzsplitter klingt nur in einer Epoche"
 }

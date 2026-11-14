@@ -270,7 +270,7 @@ ernten, Inventar sortieren.
 |---|---|---|---|---|---|
 | **Gleichklang** | passiv, nur wenn er ruht (nicht, während er einem Spieler folgt, flieht oder verstimmt ist) | Die Verfestigungs-Uhr von Spielern im Umkreis ruht; auch eine laufende Verfestigung (Versteinern, Langsamkeit) setzt dort aus. Ist im Datapack ein Faktor > 0 gesetzt, läuft sie stattdessen nur langsamer. | Alle 4 s ein Ton (`resonate`), ein violetter Partikelring am Boden genau auf dem Radius; Statusleiste „Die Zeit ruht“. | Ortsgebunden; Abbau und Kampf darin verstimmen ihn. | Radius 5, Puls alle 4 s, Faktor 0 (ruht) |
 | **Verstimmung** | Stufe 1 *Unruhe*: Ein Spieler beginnt im Radius einen Block mit Härte ≥ 1 anzuschlagen (Stein, Erz; nicht Pflanzen, Erde, Sand), oder ein Spieler trifft dort ein Wesen (auch ihn selbst). Stufe 2 *Aufschrei*: Der Block wird tatsächlich abgebaut, oder ein zweiter Treffer kommt während der Unruhe. | Unruhe: nur Warnung, der Gleichklang bleibt. Aufschrei (nach 0,6 s Vorwarnung): Der Gleichklang endet für 30 s, er weicht 6 Blöcke zurück und glimmt nur noch. Ein eingestimmter kehrt danach in seine Heimat zurück. | Unruhe: Zittern, gespreizte Zinken, schiefer Ton, flackernder Quarz, Statusleiste „wird unruhig“. Aufschrei: Rückstoß, Quarzsplitter, greller Ton. | Aufhören, sobald er unruhig wird; die Mine mehr als 5 Blöcke vom Lager entfernt anlegen. Treffer auf Monster, die einen Spieler angreifen, zählen nicht (Selbstverteidigung). Arbeitsblöcke im Lager (Werkbank, Truhen, Öfen, Amboss, die Strata-Tische, Tag `strata_epochs:resonance_ignores`) stören nie. Wer mit Eile einen Block sofort abbaut, bekommt keine Warnung vorher: Anschlagen und Abbau fallen in denselben Moment. | Unruhe 5 s, Vorwarnung 0,6 s, Pause 30 s, Flucht 6 Blöcke |
-| **Einstimmen** | Kristallquarz in der Hand lockt ihn (er schwebt in 2 Blöcken Abstand hinterher; dabei wirkt kein Gleichklang). Rechtsklick mit Kristallquarz verbraucht 1. | Er bleibt an dieser Stelle (Heimat, driftet höchstens 3 Blöcke) und verschwindet nicht mehr. Umziehen: wieder locken und neu einstimmen. | Animation `tune` (Hüpfer, Ring einmal herum), goldene Funken. | – (Hilfe). Auch der Geodenkriecher folgt Kristallquarz; das ist gewollt. | Drift 3 Blöcke |
+| **Einstimmen** | Kristallquarz in der Hand lockt ihn (er schwebt in 2 Blöcken Abstand hinterher; dabei wirkt kein Gleichklang). Rechtsklick mit Kristallquarz verbraucht 1. | Er bleibt an dieser Stelle (Heimat, driftet höchstens 3 Blöcke) und verschwindet nicht mehr. Umziehen: wieder locken und neu einstimmen; einen eingestimmten lockt nur, wer dabei schleicht (kein versehentliches Weglocken, auch nicht durch Mitspieler). | Animation `tune` (Hüpfer, Ring einmal herum), goldene Funken. | – (Hilfe). Auch der Geodenkriecher folgt Kristallquarz; das ist gewollt. | Drift 3 Blöcke |
 | **Zerbrechlich** | wird getroffen | Er greift nie an. Der erste Treffer eines Spielers macht **keinen Schaden**, nur einen Stoß zurück und Unruhe (Schutz vor Fehlklicks). Erst in der Unruhe oder verstimmt nimmt er Schaden; mit 8 Leben reicht dann ein Schwerthieb. | wie oben | – | Leben 8 |
 
 **Verrechnung mit anderen Zeitquellen:** Die Ruhe schlägt alle Faktoren (Sporenwolke, Spiralit, Geodenrüstung):
@@ -282,7 +282,13 @@ Solange sie wirkt, läuft keine Zeit. Zeitanker und Museum verlängern weiter di
 Wahl: den Resonanzling als ortsfestes Lager behalten (dauerhaft, aber ohne Abbau) oder für 3 × 30 s tragbaren
 Aufschub in der Mine töten. Ruhe und Abklingzeit stehen im Datapack (`abilities.splinter`).
 
-**Leuchten je Zustand:** ruhig Quarz 0,6, beim Ton 1,0, Augen 1,0; unruhig Quarz flackert; verstimmt Quarz 0,1, Augen 0,25.
+**Leuchten je Zustand:** ruhig Quarz 0,85 (die Leucht-Ebene ersetzt die Farbe, darunter wäre er dunkler als die Textur), beim Ton 1,0, Augen 1,0; unruhig Quarz flackert; verstimmt Quarz 0,1, Augen 0,25. Der Partikelring kommt alle 4 s, der Ton nur jedes zweite Mal (sonst klingt es im Lager fast ununterbrochen).
+
+**Bewegung:** Drift- und Fluchtziele werden nur angenommen, wenn dort Platz für die Trefferfläche ist und die Sicht dorthin frei ist; liegt ein Ziel im Fels, wird es verworfen. Er flieht höchstens 3 s, dann gibt er auf. So klebt er in engen Gängen nicht an Wand oder Decke.
+
+**Meldungen:** Unruhe, Verstimmung, Einstimmen und Splitter schreiben in die Statusleiste; die Meldung „Die Zeit ruht“ schweigt danach 3 s, damit die Warnung lesbar bleibt.
+
+**Bewusste Grenzen:** Unruhe und Verstimmung werden nicht gespeichert (nach dem Neuladen ist er wieder ruhig, wie beim Glutwühler). Abbau durch Maschinen (simulierte Spieler) verstimmt ihn ohne Warnung, weil dort kein Anschlagen gemeldet wird. Abklingzeit und Pause des Splitters überstehen keinen Neustart.
 
 **Spawn:** nur in der Kristallzeit (Kristallhöhlen, Geodengewölbe), selten (Gewicht 6, einzeln), höchstens 2 im
 Umkreis von 48 Blöcken, nur mit 2 Blöcken Luft über dem Boden; er hebt danach ab. Kategorie Kreatur.
@@ -300,7 +306,9 @@ Eigene Klänge: neben Ruf, Schmerz und Tod drei Signale – **Gleichklang** (kla
 `mobs/resonant_shard/sounds_sheet.png`. Im Spiel: `mobs/resonant_shard/shots/ingame_1.21.1.png` und `ingame_26.3.png`.
 
 Prüfung Modell Runde 1: 6/5/6 (Quarz-Licht, Ring-Naht, Vorwarnung vor dem Auslöser, Trefferfläche, Stärke der Ruhe,
-Splitter), Runde 2: 7/6/7 (erster Treffer tötete statt zu warnen). Alles umgesetzt, dazu Ring innen ±5 (der Kern
+Splitter), Runde 2: 7/6/7 (erster Treffer tötete statt zu warnen), Runde 3: 8/7/8, freigegeben. Abschlussprüfung mit Code Runde 1: 7/6/6
+(Treffer störten bis 16 Blöcke weit, Warnung sofort überschrieben, Ziele in Fels und Decke); alles umgesetzt, dazu der
+Test über den echten Schadensweg. Ebenfalls umgesetzt aus den Modellrunden: dazu Ring innen ±5 (der Kern
 stößt beim Drehen nicht mehr hinein), einfarbige Ringseiten, U-Brücke ohne halbe Pixel, hellere Zinken-Seiten.
 
 ## Später (gesammelt, nicht eingeplant)

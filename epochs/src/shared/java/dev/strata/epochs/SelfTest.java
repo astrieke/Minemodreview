@@ -1063,19 +1063,30 @@ final class SelfTest {
                 && !a.uneasy() && a.calm();
         boolean farIgnored = !a.nearbyBlock(player, a.blockPosition().offset(8, -1, 0), stone, true) && !a.uneasy();
         a.nearbyBlock(player, near, stone, false);
-        boolean warned = a.uneasy() && a.calm() && !a.silent();
+        boolean warned = a.uneasy() && a.calm() && !a.silent() && Solidification.messageHeld(player);   // Warnung bleibt lesbar
         a.nearbyBlock(player, near, stone, true);
         run.accept(a, dev.strata.epochs.mob.ResonantShard.WARNING_TICKS + 2);
         boolean silenced = a.silent() && !a.calm();
 
         var b = spawn.apply(ground.offset(0, 0, 24));
         run.accept(b, 2);
+        boolean farHitIgnored = !b.nearbyHit(player, b.position().add(8, 0, 0)) && !b.uneasy();
         b.disturb(player, b.position(), dev.strata.epochs.mob.ResonantShard.Disturbance.HIT);
         run.accept(b, dev.strata.epochs.mob.ResonantShard.WARNING_TICKS + 2);
         boolean firstHitWarns = b.uneasy() && !b.silent();
         b.disturb(player, b.position(), dev.strata.epochs.mob.ResonantShard.Disturbance.HIT);
         run.accept(b, dev.strata.epochs.mob.ResonantShard.WARNING_TICKS + 2);
         boolean secondHitSilences = b.silent();
+
+        // Echter Schadensweg (NeoForge-Ereignis): der erste Treffer kostet kein Leben, erst der zweite.
+        var hit = spawn.apply(ground.offset(-24, 0, 0));
+        run.accept(hit, 2);
+        float full = hit.getHealth();
+        dev.strata.epochs.mc.MobCompat.hurt(hit, level.damageSources().playerAttack(player), 3);
+        boolean firstHitHarmless = hit.getHealth() == full && hit.uneasy();
+        dev.strata.epochs.mc.MobCompat.hurt(hit, level.damageSources().playerAttack(player), 3);
+        boolean secondHitHurts = hit.getHealth() < full;
+        hit.discard();
 
         // setTarget verwirft ab 26.1 unverwundbare Ziele (simulierte Spieler), daher die Regel direkt.
         var attacker = new GeodeCrawler(EpochsMobs.GEODE_CRAWLER.get(), level);
@@ -1119,19 +1130,20 @@ final class SelfTest {
                 "item.strata_epochs.resonant_shard_spawn_egg", "message.strata_epochs.solidify.paused",
                 "message.strata_epochs.resonant_shard.uneasy", "message.strata_epochs.resonant_shard.silent",
                 "message.strata_epochs.resonant_shard.still_silent", "message.strata_epochs.resonant_shard.tuned",
-                "message.strata_epochs.resonant_splinter", "subtitles.strata_epochs.resonant_shard.ambient",
+                "message.strata_epochs.resonant_splinter", "message.strata_epochs.resonant_splinter.no_epoch", "subtitles.strata_epochs.resonant_shard.ambient",
                 "subtitles.strata_epochs.resonant_shard.hurt", "subtitles.strata_epochs.resonant_shard.death",
                 "subtitles.strata_epochs.resonant_shard.resonate", "subtitles.strata_epochs.resonant_shard.dissonance",
                 "subtitles.strata_epochs.resonant_shard.shriek")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
         boolean ok = paused && clockStill && noCalmWhileFollowing && softIgnored && farIgnored && warned && silenced
-                && firstHitWarns && secondHitSilences && selfDefense && tuned && splinterOk && loot && sounds && missing.isEmpty();
+                && firstHitWarns && secondHitSilences && farHitIgnored && firstHitHarmless && secondHitHurts && selfDefense && tuned && splinterOk && loot && sounds && missing.isEmpty();
         StrataEpochs.LOG.info("[Strata-Test] Resonanzling: Ruhe={}, Uhr steht={}, folgt ohne Ruhe={}, weich egal={}, weit egal={}, "
-                + "Anschlagen warnt={}, Abbau verstimmt={}, 1. Treffer warnt={}, 2. verstimmt={}, Selbstverteidigung={}, "
+                + "Anschlagen warnt={}, Abbau verstimmt={}, 1. Treffer warnt={}, 2. verstimmt={}, Treffer weit egal={}, "
+                + "1. Treffer ohne Schaden={}, 2. mit Schaden={}, Selbstverteidigung={}, "
                 + "eingestimmt={}, Splitter={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
                 paused, clockStill, noCalmWhileFollowing, softIgnored, farIgnored, warned, silenced, firstHitWarns,
-                secondHitSilences, selfDefense, tuned, splinterOk, loot, sounds, missing, ok ? "OK" : "FEHLER");
+                secondHitSilences, farHitIgnored, firstHitHarmless, secondHitHurts, selfDefense, tuned, splinterOk, loot, sounds, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 
