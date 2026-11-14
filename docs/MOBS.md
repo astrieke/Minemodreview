@@ -251,7 +251,7 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 
 Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen); Runde 2 mit Code: 7/7/7, freigegeben. Vor einem Release einmal von Hand kämpfen (Diamant und Netherit, Zeit bis zum Sieg, Zahl der Rückspulungen notieren). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
-## Harzschnecke (Entwurf, in Arbeit)
+## Harzschnecke (umgesetzt, freigegeben)
 
 Eine Schnecke mit einem Gehäuse aus dunkelrotem Bernstein (abgesetzt von der goldenen Bernsteinmotte): flacher,
 olivbrauner Fuß mit dunkler Sohlenkante, Glanzpunkten vorn und Harz an der Schleppe; kleiner Kopf mit zwei Fühlern und
@@ -262,7 +262,7 @@ Animationen `idle` (Augenstiele wiegen sich), `walk` (Welle nur im Fuß, das sta
 `retreat` (Kopf, Fühler und Augen fahren ganz ins Gehäuse, als gehaltene Pose `hold_on_last_frame`), `emerge`, `eat`.
 Leucht-Ebene `shell` (Gehäuse ohne Rillengrund und Mündung, damit die Spirale als Linie bleibt): ruhig 0,6, im Gehäuse
 0,3. Trefferfläche 0,75 × 0,75. Werte: 10 Leben, Rüstung 2, Tempo 0,12.
-Kontrast der Oberseiten: Sporenzeit dunkel 4,0:1, Nebel 1,5:1.
+Kontrast der Oberseiten: Sporenzeit dunkel 4,1:1, Nebel 1,5:1.
 
 **Rolle im Ablauf:** eine langsame, erneuerbare Bernstein-Quelle ohne Erzabbau. Bernstein braucht man für die Harzfalle
 (Bernsteinmotte), den Schichtkern (Stratolith) und die Bernsteinklinge. Die Schnecke verbindet damit den Pflanzenanbau
@@ -272,7 +272,7 @@ Kontrast der Oberseiten: Sporenzeit dunkel 4,0:1, Nebel 1,5:1.
 |---|---|---|---|---|---|
 | **Harzspur** | sie kriecht | Alle 1,5 s legt sie auf freiem, festem Boden (nicht auf Ackerboden oder Pflanzen) ein Stück **Harzspur**: 1 px hoch, klebrig (bremst wie Honig), leuchtet schwach (Licht 4), damit man sie im Dunkeln sieht. **In einer Epoche** härtet sie im Zufallstick zur **Bernsteinplatte** aus (im Mittel etwa 23 min); abgebaut gibt die Platte 1 Bernstein. Außerhalb einer Epoche löst sich die Spur nach etwa 1–2 min auf. | glänzende, schwach leuchtende Spur, alle 2 s ein Harztropfen an ihr | Spur meiden. **Grenze pro Schnecke:** Sie merkt sich ihre eigenen Stücke (Spur oder Platte, übersteht Neustarts); bei 4 legt sie keine neue, bis der Spieler Platten abbaut oder Spur sich auflöst. | alle 30 Ticks, Grenze 4, Chance 0,05 je Zufallstick |
 | **Gehäuse** | sie nimmt Schaden | Sie zieht sich 5 s ins Gehäuse zurück und nimmt nur 30 % Schaden (der auslösende Treffer zählt voll); danach kommt sie heraus. Im Gehäuse sperrt ein eigenes Ziel Bewegen, Umschauen und Springen: Auch Locken zieht sie dann nicht weiter. | Animation `retreat` (0,45 s), hohles Klacken, das Leuchten sinkt | abwarten | 5 s, Schaden ×0,3, Abklingzeit 10 s |
-| **Füttern** | Harzfarn-Sporen in der Hand locken sie; Rechtsklick damit füttert (1 wird verbraucht) | Sie frisst und ist 10 min **satt**: Die Grenze steigt auf 6 Stücke (der eigentliche Gewinn, etwa +45 % Ertrag), und sie legt doppelt so oft Spur. | Animation `eat`, Herzchen | – (Hilfe) | 10 min, Spur alle 15 Ticks, Grenze 6 |
+| **Füttern** | Harzfarn-Sporen in der Hand locken sie; Rechtsklick damit füttert (1 wird verbraucht) | Sie frisst und ist 10 min **satt**: Die Grenze steigt auf 6 Stücke (der eigentliche Gewinn, +50 % Ertrag), und sie legt doppelt so oft Spur. | Animation `eat`, Herzchen | – (Hilfe) | 10 min, Spur alle 15 Ticks, Grenze 6 |
 
 **Ertrag (gerechnet):** Ein Zufallstick trifft einen Block im Mittel alle 4096 / 3 ≈ 1365 Ticks; mit Chance 0,05
 braucht ein Stück im Mittel ≈ 27 300 Ticks ≈ 23 min bis zur Platte. Mit 4 eigenen Stücken, die parallel aushärten,
@@ -285,7 +285,8 @@ Getötet gibt sie 0–1 Bernstein: behalten lohnt sich mehr.
 Platz der Grenze.
 
 **Bewusste Grenzen:** Gehäuse-, Satt- und Abklingzeit werden nicht gespeichert (nach dem Neuladen ist sie draußen und
-hungrig); die eigenen Stücke schon. Stücke in nicht geladenen Chunks zählen weiter mit (sie werden nicht nachgeladen).
+hungrig); die eigenen Stücke schon. Schwimmt sie, hat das Auftauchen Vorrang vor dem Gehäuse (sie kann dann nicht
+zurückweichen). Stücke in nicht geladenen Chunks zählen weiter mit (sie werden nicht nachgeladen).
 
 **Spawn:** Sporenzeit (Moosmoor, Sporengrotte), einzeln oder zu zweit, Kategorie Kreatur (normale Spawnregeln),
 höchstens 4 im Umkreis von 32 Blöcken.
@@ -300,7 +301,8 @@ Prüfung Modell Runde 1: 6/4/5 (Rückzugspose hielt nicht und zeigte den Kopf, S
 hoch, Grenze am Umkreis statt an der Schnecke, Aushärten auch in der Oberwelt, im Dunkeln unsichtbar, Trefferfläche zu
 klein). Alles umgesetzt. Runde 2 mit Code: 7/7/6 (im Gehäuse zog das Locken sie weiter); umgesetzt mit einem Ziel, das
 im Gehäuse jede Bewegung sperrt, dazu Füttern 10 min, leuchtende Platten, keine Chunk-Ladung beim Zählen, Spitze ohne
-dunklen Kern, kleinere Mündung, Gehäuse kippt beim Kriechen weniger.
+dunklen Kern, kleinere Mündung, Gehäuse kippt beim Kriechen weniger. Runde 3: 7/8/8, **freigegeben**. Offen für
+später: Spitze zur Seite versetzen, Palette des Gehäuses straffen, im Spiel prüfen, ob Licht 2 der Platten reicht.
 
 ## Bernsteinmotte (umgesetzt, freigegeben)
 
@@ -418,8 +420,7 @@ stößt beim Drehen nicht mehr hinein), einfarbige Ringseiten, U-Brücke ohne ha
 
 ## Später (gesammelt, nicht eingeplant)
 
-| Mob | Epoche | Rolle | Warum später |
-|---|---|---|---|
+Alle hier gesammelten Mobs sind inzwischen umgesetzt: Resonanzling, Bernsteinmotte und Harzschnecke (siehe oben).
 
 ## Technische Architektur
 
