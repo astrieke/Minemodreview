@@ -19,8 +19,17 @@
       "parent": "root",
       "origin": [
         0,
-        1,
+        0,
         0
+      ]
+    },
+    {
+      "name": "foot",
+      "parent": "body",
+      "origin": [
+        0,
+        0,
+        1
       ]
     },
     {
@@ -63,7 +72,7 @@
   "cubes": [
     {
       "name": "foot",
-      "bone": "body",
+      "bone": "foot",
       "from": [
         -2,
         0,
@@ -184,14 +193,14 @@
       "name": "shell",
       "bone": "shell",
       "from": [
-        -2.5,
+        -3,
         2,
         -1
       ],
       "to": [
-        2.5,
-        8,
-        6
+        3,
+        10,
+        7
       ],
       "uv_offset": [
         0,
@@ -199,6 +208,26 @@
       ],
       "material": "snail_shell",
       "face": "snail_shell"
+    },
+    {
+      "name": "shell_tip",
+      "bone": "shell",
+      "from": [
+        -2,
+        10,
+        2
+      ],
+      "to": [
+        2,
+        12,
+        6
+      ],
+      "uv_offset": [
+        28,
+        13
+      ],
+      "material": "snail_shell",
+      "face": "snail_tip"
     }
   ],
   "animations": [
@@ -217,161 +246,40 @@
             0,
             -8.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 0.1,
+          "time": 0.375,
           "value": [
-            1.247,
+            4.243,
             0,
-            -7.913
+            -6.828
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 0.2,
+          "time": 0.75,
           "value": [
-            2.44,
+            6.0,
             0,
-            -7.654
+            -4.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 0.3,
+          "time": 1.125,
           "value": [
-            3.527,
+            4.243,
             0,
-            -7.236
+            -1.172
           ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 0.4,
-          "value": [
-            4.459,
-            0,
-            -6.677
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 0.5,
-          "value": [
-            5.196,
-            0,
-            -6.0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 0.6,
-          "value": [
-            5.706,
-            0,
-            -5.236
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 0.7,
-          "value": [
-            5.967,
-            0,
-            -4.418
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 0.8,
-          "value": [
-            5.967,
-            0,
-            -3.582
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 0.9,
-          "value": [
-            5.706,
-            0,
-            -2.764
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 1.0,
-          "value": [
-            5.196,
-            0,
-            -2.0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 1.1,
-          "value": [
-            4.459,
-            0,
-            -1.323
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 1.2,
-          "value": [
-            3.527,
-            0,
-            -0.764
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 1.3,
-          "value": [
-            2.44,
-            0,
-            -0.346
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 1.4,
-          "value": [
-            1.247,
-            0,
-            -0.087
-          ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_left",
@@ -382,161 +290,40 @@
             0,
             0.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 1.6,
+          "time": 1.875,
           "value": [
-            -1.247,
+            -4.243,
             0,
-            -0.087
+            -1.172
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 1.7,
+          "time": 2.25,
           "value": [
-            -2.44,
+            -6.0,
             0,
-            -0.346
+            -4.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 1.8,
+          "time": 2.625,
           "value": [
-            -3.527,
+            -4.243,
             0,
-            -0.764
+            -6.828
           ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 1.9,
-          "value": [
-            -4.459,
-            0,
-            -1.323
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.0,
-          "value": [
-            -5.196,
-            0,
-            -2.0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.1,
-          "value": [
-            -5.706,
-            0,
-            -2.764
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.2,
-          "value": [
-            -5.967,
-            0,
-            -3.582
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.3,
-          "value": [
-            -5.967,
-            0,
-            -4.418
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.4,
-          "value": [
-            -5.706,
-            0,
-            -5.236
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.5,
-          "value": [
-            -5.196,
-            0,
-            -6.0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.6,
-          "value": [
-            -4.459,
-            0,
-            -6.677
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.7,
-          "value": [
-            -3.527,
-            0,
-            -7.236
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.8,
-          "value": [
-            -2.44,
-            0,
-            -7.654
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 2.9,
-          "value": [
-            -1.247,
-            0,
-            -7.913
-          ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_left",
@@ -547,7 +334,7 @@
             0,
             -8.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
@@ -558,161 +345,40 @@
             0,
             0.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 0.1,
+          "time": 0.375,
           "value": [
-            -1.247,
+            -4.243,
             0,
-            0.087
+            1.172
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 0.2,
+          "time": 0.75,
           "value": [
-            -2.44,
+            -6.0,
             0,
-            0.346
+            4.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 0.3,
+          "time": 1.125,
           "value": [
-            -3.527,
+            -4.243,
             0,
-            0.764
+            6.828
           ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 0.4,
-          "value": [
-            -4.459,
-            0,
-            1.323
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 0.5,
-          "value": [
-            -5.196,
-            0,
-            2.0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 0.6,
-          "value": [
-            -5.706,
-            0,
-            2.764
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 0.7,
-          "value": [
-            -5.967,
-            0,
-            3.582
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 0.8,
-          "value": [
-            -5.967,
-            0,
-            4.418
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 0.9,
-          "value": [
-            -5.706,
-            0,
-            5.236
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 1.0,
-          "value": [
-            -5.196,
-            0,
-            6.0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 1.1,
-          "value": [
-            -4.459,
-            0,
-            6.677
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 1.2,
-          "value": [
-            -3.527,
-            0,
-            7.236
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 1.3,
-          "value": [
-            -2.44,
-            0,
-            7.654
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 1.4,
-          "value": [
-            -1.247,
-            0,
-            7.913
-          ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
@@ -723,161 +389,40 @@
             0,
             8.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 1.6,
+          "time": 1.875,
           "value": [
-            1.247,
+            4.243,
             0,
-            7.913
+            6.828
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 1.7,
+          "time": 2.25,
           "value": [
-            2.44,
+            6.0,
             0,
-            7.654
+            4.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 1.8,
+          "time": 2.625,
           "value": [
-            3.527,
+            4.243,
             0,
-            7.236
+            1.172
           ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 1.9,
-          "value": [
-            4.459,
-            0,
-            6.677
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.0,
-          "value": [
-            5.196,
-            0,
-            6.0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.1,
-          "value": [
-            5.706,
-            0,
-            5.236
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.2,
-          "value": [
-            5.967,
-            0,
-            4.418
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.3,
-          "value": [
-            5.967,
-            0,
-            3.582
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.4,
-          "value": [
-            5.706,
-            0,
-            2.764
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.5,
-          "value": [
-            5.196,
-            0,
-            2.0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.6,
-          "value": [
-            4.459,
-            0,
-            1.323
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.7,
-          "value": [
-            3.527,
-            0,
-            0.764
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.8,
-          "value": [
-            2.44,
-            0,
-            0.346
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 2.9,
-          "value": [
-            1.247,
-            0,
-            0.087
-          ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "eye_right",
@@ -888,7 +433,7 @@
             0,
             0.0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
@@ -899,161 +444,40 @@
             0.0,
             0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 0.1,
+          "time": 0.375,
           "value": [
-            0.416,
-            0.624,
+            1.414,
+            2.121,
             0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 0.2,
+          "time": 0.75,
           "value": [
-            0.813,
-            1.22,
+            2.0,
+            3.0,
             0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 0.3,
+          "time": 1.125,
           "value": [
-            1.176,
-            1.763,
+            1.414,
+            2.121,
             0
           ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 0.4,
-          "value": [
-            1.486,
-            2.229,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 0.5,
-          "value": [
-            1.732,
-            2.598,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 0.6,
-          "value": [
-            1.902,
-            2.853,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 0.7,
-          "value": [
-            1.989,
-            2.984,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 0.8,
-          "value": [
-            1.989,
-            2.984,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 0.9,
-          "value": [
-            1.902,
-            2.853,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 1.0,
-          "value": [
-            1.732,
-            2.598,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 1.1,
-          "value": [
-            1.486,
-            2.229,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 1.2,
-          "value": [
-            1.176,
-            1.763,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 1.3,
-          "value": [
-            0.813,
-            1.22,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 1.4,
-          "value": [
-            0.416,
-            0.624,
-            0
-          ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
@@ -1064,161 +488,40 @@
             0.0,
             0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 1.6,
+          "time": 1.875,
           "value": [
-            -0.416,
-            -0.624,
+            -1.414,
+            -2.121,
             0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 1.7,
+          "time": 2.25,
           "value": [
-            -0.813,
-            -1.22,
+            -2.0,
+            -3.0,
             0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
           "channel": "rotation",
-          "time": 1.8,
+          "time": 2.625,
           "value": [
-            -1.176,
-            -1.763,
+            -1.414,
+            -2.121,
             0
           ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 1.9,
-          "value": [
-            -1.486,
-            -2.229,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.0,
-          "value": [
-            -1.732,
-            -2.598,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.1,
-          "value": [
-            -1.902,
-            -2.853,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.2,
-          "value": [
-            -1.989,
-            -2.984,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.3,
-          "value": [
-            -1.989,
-            -2.984,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.4,
-          "value": [
-            -1.902,
-            -2.853,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.5,
-          "value": [
-            -1.732,
-            -2.598,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.6,
-          "value": [
-            -1.486,
-            -2.229,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.7,
-          "value": [
-            -1.176,
-            -1.763,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.8,
-          "value": [
-            -0.813,
-            -1.22,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "rotation",
-          "time": 2.9,
-          "value": [
-            -0.416,
-            -0.624,
-            0
-          ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         },
         {
           "bone": "head",
@@ -1229,7 +532,7 @@
             -0.0,
             0
           ],
-          "interpolation": "linear"
+          "interpolation": "catmullrom"
         }
       ]
     },
@@ -1240,7 +543,7 @@
       "peak": 0.4,
       "keyframes": [
         {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 0.0,
           "value": [
@@ -1251,84 +554,40 @@
           "interpolation": "linear"
         },
         {
-          "bone": "body",
-          "channel": "scale",
-          "time": 0.1,
-          "value": [
-            1,
-            0.985,
-            1.023
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 0.2,
           "value": [
             1,
-            0.972,
-            1.042
+            0.943,
+            1.057
           ],
           "interpolation": "linear"
         },
         {
-          "bone": "body",
-          "channel": "scale",
-          "time": 0.3,
-          "value": [
-            1,
-            0.963,
-            1.055
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 0.4,
           "value": [
             1,
-            0.96,
-            1.06
+            0.92,
+            1.08
           ],
           "interpolation": "linear"
         },
         {
-          "bone": "body",
-          "channel": "scale",
-          "time": 0.5,
-          "value": [
-            1,
-            0.963,
-            1.055
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 0.6,
           "value": [
             1,
-            0.972,
-            1.042
+            0.943,
+            1.057
           ],
           "interpolation": "linear"
         },
         {
-          "bone": "body",
-          "channel": "scale",
-          "time": 0.7,
-          "value": [
-            1,
-            0.985,
-            1.023
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 0.8,
           "value": [
@@ -1339,84 +598,40 @@
           "interpolation": "linear"
         },
         {
-          "bone": "body",
-          "channel": "scale",
-          "time": 0.9,
-          "value": [
-            1,
-            1.015,
-            0.977
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 1.0,
           "value": [
             1,
-            1.028,
-            0.958
+            1.057,
+            0.943
           ],
           "interpolation": "linear"
         },
         {
-          "bone": "body",
-          "channel": "scale",
-          "time": 1.1,
-          "value": [
-            1,
-            1.037,
-            0.945
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 1.2,
           "value": [
             1,
-            1.04,
-            0.94
+            1.08,
+            0.92
           ],
           "interpolation": "linear"
         },
         {
-          "bone": "body",
-          "channel": "scale",
-          "time": 1.3,
-          "value": [
-            1,
-            1.037,
-            0.945
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 1.4,
           "value": [
             1,
-            1.028,
-            0.958
+            1.057,
+            0.943
           ],
           "interpolation": "linear"
         },
         {
-          "bone": "body",
-          "channel": "scale",
-          "time": 1.5,
-          "value": [
-            1,
-            1.015,
-            0.977
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "body",
+          "bone": "foot",
           "channel": "scale",
           "time": 1.6,
           "value": [
@@ -1440,33 +655,11 @@
         {
           "bone": "head",
           "channel": "position",
-          "time": 0.1,
-          "value": [
-            0,
-            0,
-            -0.153
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "position",
           "time": 0.2,
           "value": [
             0,
             0,
-            -0.283
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "position",
-          "time": 0.3,
-          "value": [
-            0,
-            0,
-            -0.37
+            -0.424
           ],
           "interpolation": "linear"
         },
@@ -1477,18 +670,7 @@
           "value": [
             0,
             0,
-            -0.4
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "position",
-          "time": 0.5,
-          "value": [
-            0,
-            0,
-            -0.37
+            -0.6
           ],
           "interpolation": "linear"
         },
@@ -1499,18 +681,7 @@
           "value": [
             0,
             0,
-            -0.283
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "position",
-          "time": 0.7,
-          "value": [
-            0,
-            0,
-            -0.153
+            -0.424
           ],
           "interpolation": "linear"
         },
@@ -1528,33 +699,11 @@
         {
           "bone": "head",
           "channel": "position",
-          "time": 0.9,
-          "value": [
-            0,
-            0,
-            0.153
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "position",
           "time": 1.0,
           "value": [
             0,
             0,
-            0.283
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "position",
-          "time": 1.1,
-          "value": [
-            0,
-            0,
-            0.37
+            0.424
           ],
           "interpolation": "linear"
         },
@@ -1565,18 +714,7 @@
           "value": [
             0,
             0,
-            0.4
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "position",
-          "time": 1.3,
-          "value": [
-            0,
-            0,
-            0.37
+            0.6
           ],
           "interpolation": "linear"
         },
@@ -1587,18 +725,7 @@
           "value": [
             0,
             0,
-            0.283
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "head",
-          "channel": "position",
-          "time": 1.5,
-          "value": [
-            0,
-            0,
-            0.153
+            0.424
           ],
           "interpolation": "linear"
         },
@@ -1618,20 +745,9 @@
           "channel": "rotation",
           "time": 0.0,
           "value": [
-            -1.618,
+            -3.236,
             0,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "shell",
-          "channel": "rotation",
-          "time": 0.1,
-          "value": [
-            -1.045,
-            0,
-            0
+            0.0
           ],
           "interpolation": "linear"
         },
@@ -1640,20 +756,9 @@
           "channel": "rotation",
           "time": 0.2,
           "value": [
-            -0.313,
+            -0.626,
             0,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "shell",
-          "channel": "rotation",
-          "time": 0.3,
-          "value": [
-            0.467,
-            0,
-            0
+            1.061
           ],
           "interpolation": "linear"
         },
@@ -1662,20 +767,9 @@
           "channel": "rotation",
           "time": 0.4,
           "value": [
-            1.176,
+            2.351,
             0,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "shell",
-          "channel": "rotation",
-          "time": 0.5,
-          "value": [
-            1.705,
-            0,
-            0
+            1.5
           ],
           "interpolation": "linear"
         },
@@ -1684,20 +778,9 @@
           "channel": "rotation",
           "time": 0.6,
           "value": [
-            1.975,
+            3.951,
             0,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "shell",
-          "channel": "rotation",
-          "time": 0.7,
-          "value": [
-            1.945,
-            0,
-            0
+            1.061
           ],
           "interpolation": "linear"
         },
@@ -1706,20 +789,9 @@
           "channel": "rotation",
           "time": 0.8,
           "value": [
-            1.618,
+            3.236,
             0,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "shell",
-          "channel": "rotation",
-          "time": 0.9,
-          "value": [
-            1.045,
-            0,
-            0
+            0.0
           ],
           "interpolation": "linear"
         },
@@ -1728,20 +800,9 @@
           "channel": "rotation",
           "time": 1.0,
           "value": [
-            0.313,
+            0.626,
             0,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "shell",
-          "channel": "rotation",
-          "time": 1.1,
-          "value": [
-            -0.467,
-            0,
-            0
+            -1.061
           ],
           "interpolation": "linear"
         },
@@ -1750,20 +811,9 @@
           "channel": "rotation",
           "time": 1.2,
           "value": [
-            -1.176,
+            -2.351,
             0,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "shell",
-          "channel": "rotation",
-          "time": 1.3,
-          "value": [
-            -1.705,
-            0,
-            0
+            -1.5
           ],
           "interpolation": "linear"
         },
@@ -1772,20 +822,9 @@
           "channel": "rotation",
           "time": 1.4,
           "value": [
-            -1.975,
+            -3.951,
             0,
-            0
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "shell",
-          "channel": "rotation",
-          "time": 1.5,
-          "value": [
-            -1.945,
-            0,
-            0
+            -1.061
           ],
           "interpolation": "linear"
         },
@@ -1794,9 +833,9 @@
           "channel": "rotation",
           "time": 1.6,
           "value": [
-            -1.618,
+            -3.236,
             0,
-            0
+            -0.0
           ],
           "interpolation": "linear"
         },
@@ -1814,31 +853,9 @@
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 0.1,
-          "value": [
-            -6.469,
-            0,
-            -6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
           "time": 0.2,
           "value": [
             -5.172,
-            0,
-            -6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 0.3,
-          "value": [
-            -4.304,
             0,
             -6
           ],
@@ -1858,31 +875,9 @@
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 0.5,
-          "value": [
-            -4.304,
-            0,
-            -6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
           "time": 0.6,
           "value": [
             -5.172,
-            0,
-            -6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 0.7,
-          "value": [
-            -6.469,
             0,
             -6
           ],
@@ -1902,31 +897,9 @@
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 0.9,
-          "value": [
-            -9.531,
-            0,
-            -6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
           "time": 1.0,
           "value": [
             -10.828,
-            0,
-            -6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 1.1,
-          "value": [
-            -11.696,
             0,
             -6
           ],
@@ -1946,31 +919,9 @@
         {
           "bone": "eye_left",
           "channel": "rotation",
-          "time": 1.3,
-          "value": [
-            -11.696,
-            0,
-            -6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
           "time": 1.4,
           "value": [
             -10.828,
-            0,
-            -6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_left",
-          "channel": "rotation",
-          "time": 1.5,
-          "value": [
-            -9.531,
             0,
             -6
           ],
@@ -2001,31 +952,9 @@
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 0.1,
-          "value": [
-            -6.469,
-            0,
-            6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
           "time": 0.2,
           "value": [
             -5.172,
-            0,
-            6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 0.3,
-          "value": [
-            -4.304,
             0,
             6
           ],
@@ -2045,31 +974,9 @@
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 0.5,
-          "value": [
-            -4.304,
-            0,
-            6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
           "time": 0.6,
           "value": [
             -5.172,
-            0,
-            6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 0.7,
-          "value": [
-            -6.469,
             0,
             6
           ],
@@ -2089,31 +996,9 @@
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 0.9,
-          "value": [
-            -9.531,
-            0,
-            6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
           "time": 1.0,
           "value": [
             -10.828,
-            0,
-            6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 1.1,
-          "value": [
-            -11.696,
             0,
             6
           ],
@@ -2133,31 +1018,9 @@
         {
           "bone": "eye_right",
           "channel": "rotation",
-          "time": 1.3,
-          "value": [
-            -11.696,
-            0,
-            6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
           "time": 1.4,
           "value": [
             -10.828,
-            0,
-            6
-          ],
-          "interpolation": "linear"
-        },
-        {
-          "bone": "eye_right",
-          "channel": "rotation",
-          "time": 1.5,
-          "value": [
-            -9.531,
             0,
             6
           ],
@@ -2179,7 +1042,7 @@
     {
       "name": "animation.resin_snail.retreat",
       "length": 0.6,
-      "loop": "once",
+      "loop": "hold_on_last_frame",
       "peak": 0.6,
       "keyframes": [
         {
@@ -2196,11 +1059,11 @@
         {
           "bone": "head",
           "channel": "position",
-          "time": 0.4,
+          "time": 0.45,
           "value": [
             0,
-            -0.5,
-            3.5
+            -1,
+            7
           ],
           "interpolation": "linear"
         },
@@ -2210,8 +1073,8 @@
           "time": 0.6,
           "value": [
             0,
-            -0.5,
-            3.5
+            -1,
+            7
           ],
           "interpolation": "linear"
         },
@@ -2229,11 +1092,11 @@
         {
           "bone": "head",
           "channel": "scale",
-          "time": 0.4,
+          "time": 0.45,
           "value": [
-            0.8,
-            0.8,
-            0.8
+            0.6,
+            0.6,
+            0.6
           ],
           "interpolation": "linear"
         },
@@ -2242,9 +1105,9 @@
           "channel": "scale",
           "time": 0.6,
           "value": [
-            0.8,
-            0.8,
-            0.8
+            0.6,
+            0.6,
+            0.6
           ],
           "interpolation": "linear"
         },
@@ -2265,7 +1128,7 @@
           "time": 0.25,
           "value": [
             1,
-            0.2,
+            0.1,
             1
           ],
           "interpolation": "linear"
@@ -2276,7 +1139,7 @@
           "time": 0.6,
           "value": [
             1,
-            0.2,
+            0.1,
             1
           ],
           "interpolation": "linear"
@@ -2298,7 +1161,7 @@
           "time": 0.25,
           "value": [
             1,
-            0.2,
+            0.1,
             1
           ],
           "interpolation": "linear"
@@ -2309,7 +1172,7 @@
           "time": 0.6,
           "value": [
             1,
-            0.2,
+            0.1,
             1
           ],
           "interpolation": "linear"
@@ -2328,11 +1191,11 @@
         {
           "bone": "shell",
           "channel": "position",
-          "time": 0.4,
+          "time": 0.45,
           "value": [
             0,
             -0.8,
-            0
+            -0.5
           ],
           "interpolation": "linear"
         },
@@ -2343,7 +1206,7 @@
           "value": [
             0,
             -0.8,
-            0
+            -0.5
           ],
           "interpolation": "linear"
         },
@@ -2361,7 +1224,7 @@
         {
           "bone": "shell",
           "channel": "rotation",
-          "time": 0.4,
+          "time": 0.45,
           "value": [
             -6,
             0,
@@ -2386,7 +1249,7 @@
       "name": "animation.resin_snail.emerge",
       "length": 0.8,
       "loop": "once",
-      "peak": 0.2,
+      "peak": 0.3,
       "keyframes": [
         {
           "bone": "head",
@@ -2394,15 +1257,15 @@
           "time": 0,
           "value": [
             0,
-            -0.5,
-            3.5
+            -1,
+            7
           ],
           "interpolation": "linear"
         },
         {
           "bone": "head",
           "channel": "position",
-          "time": 0.5,
+          "time": 0.55,
           "value": [
             0,
             0,
@@ -2415,16 +1278,16 @@
           "channel": "scale",
           "time": 0,
           "value": [
-            0.8,
-            0.8,
-            0.8
+            0.6,
+            0.6,
+            0.6
           ],
           "interpolation": "linear"
         },
         {
           "bone": "head",
           "channel": "scale",
-          "time": 0.5,
+          "time": 0.55,
           "value": [
             1,
             1,
@@ -2438,7 +1301,7 @@
           "time": 0,
           "value": [
             1,
-            0.2,
+            0.1,
             1
           ],
           "interpolation": "linear"
@@ -2446,10 +1309,10 @@
         {
           "bone": "eye_left",
           "channel": "scale",
-          "time": 0.4,
+          "time": 0.45,
           "value": [
             1,
-            0.2,
+            0.1,
             1
           ],
           "interpolation": "linear"
@@ -2471,7 +1334,7 @@
           "time": 0,
           "value": [
             1,
-            0.2,
+            0.1,
             1
           ],
           "interpolation": "linear"
@@ -2479,10 +1342,10 @@
         {
           "bone": "eye_right",
           "channel": "scale",
-          "time": 0.4,
+          "time": 0.45,
           "value": [
             1,
-            0.2,
+            0.1,
             1
           ],
           "interpolation": "linear"
@@ -2505,14 +1368,14 @@
           "value": [
             0,
             -0.8,
-            0
+            -0.5
           ],
           "interpolation": "linear"
         },
         {
           "bone": "shell",
           "channel": "position",
-          "time": 0.4,
+          "time": 0.45,
           "value": [
             0,
             0,
@@ -2534,7 +1397,7 @@
         {
           "bone": "shell",
           "channel": "rotation",
-          "time": 0.4,
+          "time": 0.45,
           "value": [
             0,
             0,

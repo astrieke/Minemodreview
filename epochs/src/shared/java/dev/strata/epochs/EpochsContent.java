@@ -63,7 +63,7 @@ public final class EpochsContent {
     /** Harzspur der Harzschnecke (bremst wie Honig) und die daraus ausgehärtete Bernsteinplatte (gibt Bernstein). */
     public static final Supplier<Block> RESIN_TRAIL = REG.block("resin_trail", ResinTrailBlock::new,
             p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.1f).sound(SoundType.HONEY_BLOCK).speedFactor(0.4f)
-                    .jumpFactor(0.5f).randomTicks().noOcclusion());
+                    .jumpFactor(0.5f).randomTicks().noOcclusion().lightLevel(s -> 4));
     public static final Supplier<Block> AMBER_PLATE = REG.block("amber_plate", net.minecraft.world.level.block.CarpetBlock::new,
             p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.3f).sound(SoundType.AMETHYST).noOcclusion());
 
@@ -186,6 +186,9 @@ public final class EpochsContent {
 
     /** Am Stratolithen: wie viele Schichten er schon abgeworfen hat (0–2), damit es nach dem Laden so bleibt. */
     /** Heimat eines eingestimmten Resonanzlings ({@link BlockPos#asLong}), sonst {@code ResonantShard.NO_HOME}. */
+    /** Eigene Spurstücke einer Harzschnecke (Positionen als {@link BlockPos#asLong}): ihre Grenze gilt pro Schnecke. */
+    public static final Supplier<AttachmentType<java.util.List<Long>>> SNAIL_TRAIL =
+            Mc.attachment(ATTACHMENTS, "snail_trail", java.util.List::of, com.mojang.serialization.Codec.LONG.listOf(), false);
     public static final Supplier<AttachmentType<Long>> RESONANT_HOME =
             Mc.attachment(ATTACHMENTS, "resonant_home", () -> dev.strata.epochs.mob.ResonantShard.NO_HOME,
                     com.mojang.serialization.Codec.LONG, false);

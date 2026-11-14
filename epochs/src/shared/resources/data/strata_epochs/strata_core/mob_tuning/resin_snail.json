@@ -13,10 +13,9 @@
     "trail": {
       "enabled": true,
       "interval": 30,
-      "cap": 16,
-      "cap_fed": 24,
-      "radius": 8,
-      "harden_chance": 0.2
+      "cap": 4,
+      "cap_fed": 6,
+      "harden_chance": 0.05
     },
     "shell": {
       "enabled": true,

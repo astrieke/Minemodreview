@@ -253,36 +253,46 @@ Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwu
 
 ## Harzschnecke (Entwurf, in Arbeit)
 
-Eine Schnecke mit einem Gehäuse aus Bernstein: flacher, olivbrauner Fuß mit dunkler Sohlenkante und Harzglanz an
-der Schleppe, kleiner Kopf mit zwei Fühlern und zwei Augenstielen (dunkle Kugel, oben ein Glanzpunkt), darauf ein
-großes Bernstein-Gehäuse mit eckiger Spirale auf beiden Seiten (wie beim Spiralit, aber in Bernstein), dunkler
-Mündung vorn und Glanzpunkten oben. 6 Knochen, 7 Würfel, 64 × 32. Animationen `idle` (Augenstiele wiegen sich),
-`walk` (der Fuß wellt sich, das Gehäuse schaukelt nach), `retreat` (Kopf und Augen verschwinden unter dem Gehäuse,
-gehalten), `emerge`, `eat`. Leucht-Ebene `shell`: das Gehäuse schimmert schwach (0,3), sonst ist sie in der dunklen
-Sporenzeit nicht zu sehen. Trefferfläche 0,5 × 0,5. Kontrast der Oberseiten: Sporenzeit dunkel und Nebel 1,8:1.
+Eine Schnecke mit einem Gehäuse aus dunkelrotem Bernstein (abgesetzt von der goldenen Bernsteinmotte): flacher,
+olivbrauner Fuß mit dunkler Sohlenkante, Glanzpunkten vorn und Harz an der Schleppe; kleiner Kopf mit zwei Fühlern und
+zwei Augenstielen (dunkle Kugel, oben ein Glanzpunkt); darauf ein Gehäuse 6 × 8 × 8 mit einer vollen eckigen Spirale
+(zwei Windungen, helle Harzrille auf dunklem Grund) auf beiden Seiten, dunkler Mündung vorn und einer kleinen Spitze der
+Windung hinten oben. 7 Knochen (eigener Knochen `foot` für die Kriechwelle), 8 Würfel, 64 × 32.
+Animationen `idle` (Augenstiele wiegen sich), `walk` (Welle nur im Fuß, das starre Gehäuse schaukelt nach),
+`retreat` (Kopf, Fühler und Augen fahren ganz ins Gehäuse, als gehaltene Pose `hold_on_last_frame`), `emerge`, `eat`.
+Leucht-Ebene `shell` (Gehäuse ohne Rillengrund und Mündung, damit die Spirale als Linie bleibt): ruhig 0,6, im Gehäuse
+0,3. Trefferfläche 0,75 × 0,75. Werte: 10 Leben, Rüstung 2, Tempo 0,12.
+Kontrast der Oberseiten: Sporenzeit dunkel 4,0:1, Nebel 1,5:1.
 
-**Rolle im Ablauf:** eine erneuerbare Bernstein-Quelle ohne Erzabbau. Bernstein braucht man für die Harzfalle
+**Rolle im Ablauf:** eine langsame, erneuerbare Bernstein-Quelle ohne Erzabbau. Bernstein braucht man für die Harzfalle
 (Bernsteinmotte), den Schichtkern (Stratolith) und die Bernsteinklinge. Die Schnecke verbindet damit den Pflanzenanbau
-(Harzfarn) mit diesen Rezepten.
+(Harzfarn-Sporen als Futter) mit diesen Rezepten.
 
 | Fähigkeit | Auslöser | Wirkung | Signal | Gegenzug / Grenze | Startwerte |
 |---|---|---|---|---|---|
-| **Harzspur** | sie kriecht | Alle 1,5 s legt sie auf freiem, festem Boden eine dünne **Harzspur** (1 px hoch, klebrig: bremst wie Honig). Die Spur härtet im Zufallstick zur **Bernsteinplatte** aus (im Mittel etwa 5,5 min); abgebaut gibt die Platte 1 Bernstein. Frische Spur abgebaut gibt nichts. | glänzende orange Spur hinter ihr, Harztropfen | Spur meiden (sie bremst). Grenze: höchstens 16 Spurstücke und Platten im Umkreis von 8 Blöcken pro Schnecke, sonst legt sie keine neue. | alle 30 Ticks, Grenze 16, Chance 0,2 je Zufallstick |
-| **Gehäuse** | sie nimmt Schaden | Sie zieht sich 5 s ins Gehäuse zurück, bleibt stehen und nimmt nur 30 % Schaden; danach kommt sie wieder heraus. | Animation `retreat` (0,4 s), ein hohles Klacken | abwarten | 5 s, Schaden ×0,3, Abklingzeit 10 s |
-| **Füttern** | Harzfarn-Sporen in der Hand locken sie; Rechtsklick damit füttert (1 wird verbraucht) | Sie frisst und ist 2 min **satt**: Sie legt doppelt so oft Spur, die Grenze steigt auf 24. | Animation `eat`, Herzchen | – (Hilfe) | 2 min, Spur alle 15 Ticks |
+| **Harzspur** | sie kriecht | Alle 1,5 s legt sie auf freiem, festem Boden (nicht auf Ackerboden oder Pflanzen) ein Stück **Harzspur**: 1 px hoch, klebrig (bremst wie Honig), leuchtet schwach (Licht 4), damit man sie im Dunkeln sieht. **In einer Epoche** härtet sie im Zufallstick zur **Bernsteinplatte** aus (im Mittel etwa 23 min); abgebaut gibt die Platte 1 Bernstein. Außerhalb einer Epoche löst sich die Spur nach etwa 1–2 min auf. | glänzende, schwach leuchtende Spur, alle 2 s ein Harztropfen an ihr | Spur meiden. **Grenze pro Schnecke:** Sie merkt sich ihre eigenen Stücke (Spur oder Platte, übersteht Neustarts); bei 4 legt sie keine neue, bis der Spieler Platten abbaut oder Spur sich auflöst. | alle 30 Ticks, Grenze 4, Chance 0,05 je Zufallstick |
+| **Gehäuse** | sie nimmt Schaden | Sie zieht sich 5 s ins Gehäuse zurück, bleibt stehen und nimmt nur 30 % Schaden (der auslösende Treffer zählt voll); danach kommt sie heraus. | Animation `retreat` (0,45 s), hohles Klacken, das Leuchten sinkt | abwarten | 5 s, Schaden ×0,3, Abklingzeit 10 s |
+| **Füttern** | Harzfarn-Sporen in der Hand locken sie; Rechtsklick damit füttert (1 wird verbraucht) | Sie frisst und ist 2 min **satt**: Sie legt doppelt so oft Spur, die Grenze steigt auf 6. | Animation `eat`, Herzchen | – (Hilfe) | 2 min, Spur alle 15 Ticks, Grenze 6 |
 
-**Balance:** Eine gefütterte Schnecke liefert grob 3–4 Bernstein in 10 Minuten, aber nur, wenn man die Platten abbaut
-und die Schnecke freien Boden zum Kriechen hat; die Grenze verhindert, dass sie die Welt zukleistert. Getötet gibt sie
-0–1 Bernstein: behalten lohnt sich mehr.
+**Ertrag (gerechnet):** Ein Zufallstick trifft einen Block im Mittel alle 4096 / 3 ≈ 1365 Ticks; mit Chance 0,05
+braucht ein Stück im Mittel ≈ 27 300 Ticks ≈ 23 min bis zur Platte. Mit 4 eigenen Stücken, die parallel aushärten,
+und laufendem Abbau: ≈ 1,8 Bernstein in 10 min; dauerhaft gefüttert (Grenze 6, eine Spore alle 2 min): ≈ 2,6 in
+10 min. Ohne Abbau ist nach 4 (bzw. 6) Platten Schluss: Die Höhle wird nicht zugekleistert. Zum Vergleich: ein reifer
+Harzfarn gibt 1 Bernstein, Bernsteinerz 1–2 pro Block. Die Schnecke ist also eine langsame Beigabe, kein Ersatz.
+Getötet gibt sie 0–1 Bernstein: behalten lohnt sich mehr.
 
-**Spawn:** Sporenzeit (Moosmoor, Sporengrotte), einzeln oder zu zweit, Kategorie Kreatur, höchstens 4 im Umkreis von
-32 Blöcken.
+**Spawn:** Sporenzeit (Moosmoor, Sporengrotte), einzeln oder zu zweit, Kategorie Kreatur (normale Spawnregeln),
+höchstens 4 im Umkreis von 32 Blöcken.
 
 **Klänge:** Ruf (leises, feuchtes Schmatzen), Schmerz (Klacken am Gehäuse), Tod (das Gehäuse knackt), Rückzug
 (hohles Klacken).
 
-**Datapack-Werte (`strata_core:mob_tuning`):** `trail` (interval, cap, radius), `shell` (duration, damage_factor,
-cooldown), `feed` (duration).
+**Datapack-Werte (`strata_core:mob_tuning`):** `trail` (interval, cap, cap_fed, harden_chance), `shell` (duration,
+damage_factor, cooldown), `feed` (duration), dazu die Attribute (Leben, Tempo, Rüstung).
+
+Prüfung Modell Runde 1: 6/4/5 (Rückzugspose hielt nicht und zeigte den Kopf, Spirale nicht lesbar, Ertrag 5–10-mal zu
+hoch, Grenze am Umkreis statt an der Schnecke, Aushärten auch in der Oberwelt, im Dunkeln unsichtbar, Trefferfläche zu
+klein). Alles umgesetzt.
 
 ## Bernsteinmotte (umgesetzt, freigegeben)
 

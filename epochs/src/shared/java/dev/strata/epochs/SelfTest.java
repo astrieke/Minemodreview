@@ -1281,8 +1281,8 @@ final class SelfTest {
     }
 
     /**
-     * Harzschnecke: legt Harzspur nur auf freiem Boden und bis zur Grenze (gefüttert höher); die Spur bremst und härtet zur
-     * Bernsteinplatte aus, die Bernstein gibt; ein Treffer schickt sie ins Gehäuse, wo sie nur noch wenig Schaden nimmt.
+     * Harzschnecke: legt Harzspur nur auf freiem Boden und bis zu ihrer eigenen Grenze (gefüttert höher); die Spur bremst,
+     * härtet in einer Epoche zur Bernsteinplatte aus (außerhalb löst sie sich auf), die Bernstein gibt; ein Treffer schickt sie ins Gehäuse, wo sie nur noch wenig Schaden nimmt.
      */
     private static int testResinSnail(MinecraftServer server) {
         String epoch = StrataEpochs.id("spore_age");
@@ -1306,21 +1306,31 @@ final class SelfTest {
         boolean laid = snail.layTrail(level) && level.getBlockState(ground).is(trail) && !snail.layTrail(level);
         boolean sticky = trail.getSpeedFactor() < 1.0f && trail.getJumpFactor() < 1.0f;
 
-        // Grenze: 16 Spurstücke im Umkreis, dann keine neue; gefüttert (Grenze 24) wieder.
-        BlockPos at = ground.offset(3, 0, -3);
-        snail.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
-        int need = dev.strata.epochs.mob.ResinSnail.TRAIL_CAP
-                - dev.strata.epochs.mob.ResinSnail.countTrail(level, at, dev.strata.epochs.mob.ResinSnail.TRAIL_RADIUS);
-        for (BlockPos p : BlockPos.betweenClosed(at.offset(-3, 0, -3), at.offset(3, 0, 3))) {
-            if (need <= 0) break;
-            if (p.equals(at) || !level.getBlockState(p).isAir()) continue;
-            level.setBlockAndUpdate(p, trail.defaultBlockState());
-            need--;
-        }
-        boolean capped = !snail.layTrail(level);
+        // Grenze pro Schnecke: 4 eigene Stücke, dann keine neue; gefüttert 6; ein abgebautes Stück macht Platz.
+        java.util.function.IntFunction<Boolean> layAt = dx -> {
+            snail.setPos(ground.getX() + 0.5 + dx, ground.getY(), ground.getZ() + 0.5);
+            return snail.layTrail(level);
+        };
+        boolean four = layAt.apply(2) && layAt.apply(4) && layAt.apply(6);   // mit dem ersten Stück: 4
+        boolean capped = four && !layAt.apply(8) && snail.ownTrail(level).size() == dev.strata.epochs.mob.ResinSnail.TRAIL_CAP;
         snail.feed();
-        boolean fedMore = snail.fed() && snail.layTrail(level)
+        boolean fedMore = snail.fed() && layAt.apply(8) && layAt.apply(10) && !layAt.apply(-2)
                 && dev.strata.epochs.mob.ResinSnail.isFood(new net.minecraft.world.item.ItemStack(EpochsContent.RESIN_FERN_SPORES.get()));
+        level.setBlockAndUpdate(ground.offset(10, 0, 0), air);                 // Spieler baut ein Stück ab
+        boolean freed = fedMore && layAt.apply(-2);
+        snail.setPos(ground.getX() + 0.5, ground.getY(), ground.getZ() + 0.5);
+
+        // Außerhalb einer Epoche löst sich die Spur auf statt auszuhärten.
+        ServerLevel overworld = server.overworld();
+        BlockPos outside = new BlockPos(9300, Mc.minY(overworld) + 3, -9300);
+        overworld.getChunk(outside);
+        overworld.setBlockAndUpdate(outside.below(), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        overworld.setBlockAndUpdate(outside, trail.defaultBlockState());
+        for (int i = 0; i < 200 && overworld.getBlockState(outside).is(trail); i++) {
+            overworld.getBlockState(outside).randomTick(overworld, outside, overworld.getRandom());
+        }
+        boolean dissolves = overworld.getBlockState(outside).isAir();
+        overworld.setBlockAndUpdate(outside.below(), air);
 
         // Aushärten im Zufallstick zur Bernsteinplatte.
         var state = level.getBlockState(ground);
@@ -1361,10 +1371,10 @@ final class SelfTest {
                 "subtitles.strata_epochs.resin_snail.death", "subtitles.strata_epochs.resin_snail.retreat")) {
             for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
         }
-        boolean ok = laid && sticky && capped && fedMore && hardened && shielded && emerged && loot && sounds && missing.isEmpty();
-        StrataEpochs.LOG.info("[Strata-Test] Harzschnecke: Spur={}, klebrig={}, Grenze={}, gefüttert mehr={}, ausgehärtet={}, "
+        boolean ok = laid && sticky && capped && freed && dissolves && hardened && shielded && emerged && loot && sounds && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Harzschnecke: Spur={}, klebrig={}, Grenze={}, gefüttert mehr und Abbau macht Platz={}, außerhalb aufgelöst={}, ausgehärtet={}, "
                 + "Gehäuse schützt={}, kommt heraus={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
-                laid, sticky, capped, fedMore, hardened, shielded, emerged, loot, sounds, missing, ok ? "OK" : "FEHLER");
+                laid, sticky, capped, freed, dissolves, hardened, shielded, emerged, loot, sounds, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

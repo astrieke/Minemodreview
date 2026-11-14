@@ -68,7 +68,8 @@ PAL['moth_fur'] = ['#2a1c12', '#3b2818', '#4f3620', '#66482c', '#7d5a38']
 PAL['moth_wing'] = ['#7a3e0c', '#a8580f', '#d07a1a', '#eda23a', '#ffcf6a']
 # Harzschnecke: feuchte, olivbraune Haut und ein Gehäuse aus Bernstein
 PAL['snail_skin'] = ['#4a3a1e', '#6b5530', '#8a7244', '#a8905a', '#c4ad74']
-PAL['snail_shell'] = ['#7a3c08', '#9c4f0c', '#c26a14', '#e08a26', '#f6ad3e']
+# tiefes Rotbraun (abgesetzt von der goldenen Bernsteinmotte), mit heller Harzrille
+PAL['snail_shell'] = ['#4a1c08', '#6e2a0e', '#8f3c14', '#b5561e', '#d9772e']
 PAL['moth_antenna'] = ['#8a7458', '#b39c78', '#d6c29a', '#e9dbb8', '#f7efd8']
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
 STRATA = [('#3c3742', 3), ('#77707c', 3), ('#b08a5a', 2), ('#5e5868', 3), ('#dcd6cf', 1), ('#77707c', 2), ('#3c3742', 2)]
@@ -608,16 +609,17 @@ def d_moth_eyes(img, f, rnd):
 
 
 def d_snail_foot(img, f, rnd):
-    # Fuß: dunkle Sohlenkante unten, feuchte Glanzpunkte oben; hinten (Box-UV-Zeile 0 der Oberseite) glänzt Harz.
+    # Fuß: dunkle Sohlenkante unten, feuchte Glanzpunkte vorn (sichtbar vor dem Gehäuse; Box-UV-Zeile 0 der Oberseite
+    # liegt hinten), Harz an der Schleppe.
     for face in ('east', 'west', 'north', 'south'):
         r = f[face]
         for x in range(r[2]):
             put(img, r, x, r[3] - 1, '#4a3a1e')
     r = f['up']
-    for x, y in ((1, 3), (2, 7), (0, 9), (3, 5)):
+    for x, y in ((1, 9), (2, 10), (0, 8), (3, 9)):
         put(img, r, x, y, '#d8c48a')
     for x in range(r[2]):
-        put(img, r, x, 0, '#e08a26')                         # Harz an der Schleppe
+        put(img, r, x, 0, '#f0a23a')                         # Harz an der Schleppe
 
 
 def d_snail_face(img, f, rnd):
@@ -635,21 +637,34 @@ def d_snail_eye(img, f, rnd):
 
 
 def d_snail_shell(img, f, rnd):
-    # Gehäuse: eckige Spirale (Rille) auf beiden Seiten, dunkle Mündung vorn unten, Glanzpunkte oben.
+    # Gehäuse: auf beiden Seiten eine volle eckige Spirale als helle Harzrille auf dunklem Grund (zwei Windungen auf
+    # 8 x 8), dunkle Mündung vorn unten, Glanzpunkte oben.
     r = f['east']
     w, h = r[2], r[3]
-    cells = spiral_cells(w, h)
+    cells = spiral_cells(w, h, margin=0)
     for side in ('east', 'west'):
         r = f[side]
+        for y in range(h):
+            for x in range(w):
+                put(img, r, x, y, '#6e2a0e' if y < h - 1 else '#4a1c08')
         for i, (x, y) in enumerate(cells):
-            put(img, r, w - 1 - x if side == 'east' else x, y, '#3b2818' if i == 0 else '#7a3c08')
+            put(img, r, w - 1 - x if side == 'east' else x, y, '#2a1008' if i == 0 else '#f0a23a')
     r = f['north']
-    for y in range(r[3] - 2, r[3]):
-        for x in range(r[2]):
-            put(img, r, x, y, '#3b2818')                    # Mündung, aus der der Körper kommt
+    for y in range(r[3] - 3, r[3]):
+        for x in range(1, r[2] - 1):
+            put(img, r, x, y, '#2a1008')                    # Mündung, aus der der Körper kommt
     r = f['up']
-    for x, y in ((1, 5), (2, 4), (3, 2)):
-        put(img, r, x, y, '#ffcf6a')                        # Glanz (leuchtet schwach)
+    for x, y in ((1, 6), (2, 5), (4, 2)):
+        put(img, r, x, y, '#ffcf6a')
+
+
+def d_snail_tip(img, f, rnd):
+    # Spitze der Windung: hellere Rille als Rand der Oberseite (Licht von oben).
+    r = f['up']
+    for y in range(r[3]):
+        for x in range(r[2]):
+            if x in (0, r[2] - 1) or y in (0, r[3] - 1):
+                put(img, r, x, y, '#f0a23a')
 
 
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
@@ -659,7 +674,8 @@ DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_sp
            'stratolith_eyes': d_stratolith_eyes, 'resonant_face': d_resonant_face,
            'moth_wing_front': d_moth_wing_front, 'moth_wing_back': d_moth_wing_back, 'moth_collar': d_moth_collar,
            'moth_stripes': d_moth_stripes, 'moth_eyes': d_moth_eyes, 'moth_feather': d_moth_feather,
-           'snail_foot': d_snail_foot, 'snail_face': d_snail_face, 'snail_eye': d_snail_eye, 'snail_shell': d_snail_shell}
+           'snail_foot': d_snail_foot, 'snail_face': d_snail_face, 'snail_eye': d_snail_eye, 'snail_shell': d_snail_shell,
+           'snail_tip': d_snail_tip}
 
 
 # Leucht-Ebenen: Name -> Materialien (ganze Würfel) oder Farben (einzelne Pixel, z. B. Augen),
@@ -685,7 +701,7 @@ GLOW = {
     # Bernsteinmotte: die Kerne der Augenflecken glimmen (im Dunkeln der Sporenzeit lesbar)
     'amber_moth': {'spots': {'colors': {'#ffe08a', '#ffcf6a'}}},   # Augenkerne und Vorderränder
     # Harzschnecke: das Bernstein-Gehäuse schimmert schwach (in der dunklen Sporenzeit sonst nicht zu sehen)
-    'resin_snail': {'shell': {'materials': {'snail_shell'}}},
+    'resin_snail': {'shell': {'colors': {'#f0a23a', '#ffcf6a', '#b5561e', '#d9772e', '#8f3c14'}}},
     'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
                  'spiral_2': {'colors': {'#4a3591'}, 'glow_color': '#c9a8ff'},
                  'spiral_3': {'colors': {'#4a3592'}, 'glow_color': '#c9a8ff'},

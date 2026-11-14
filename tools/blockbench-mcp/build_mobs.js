@@ -73,7 +73,10 @@ try {
         const strip = ({ material, face, back, preview, veins, tip, ...rest }) => rest;   // Malhinweise nicht an Blockbench schicken
         await call('build_model', { bones: model.bones, cubes: model.cubes.map(strip) });
         await call('set_texture', { name: id, png_path: path.join(dir, 'texture.png') });
-        for (const a of model.animations || []) await call('add_animation', a);
+        // Blockbench nennt die gehaltene Pose „hold“, der Abspieler im Spiel „hold_on_last_frame“ (wie Bedrock).
+        for (const a of model.animations || []) {
+            await call('add_animation', { ...a, loop: a.loop === 'hold_on_last_frame' ? 'hold' : a.loop });
+        }
 
         const v = views(model);
         for (const [name, view] of Object.entries(v).filter(([n]) => n !== 'anim')) {

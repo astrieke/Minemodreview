@@ -58,7 +58,7 @@ public final class EpochsMobs {
 
     /** Schnecke der Sporenzeit; ihre Harzspur härtet zu Bernsteinplatten aus. */
     public static final Supplier<EntityType<dev.strata.epochs.mob.ResinSnail>> RESIN_SNAIL =
-            REG.entity("resin_snail", dev.strata.epochs.mob.ResinSnail::new, MobCategory.CREATURE, 0.5f, 0.5f, 8);
+            REG.entity("resin_snail", dev.strata.epochs.mob.ResinSnail::new, MobCategory.CREATURE, 0.75f, 0.75f, 8);
     public static final Supplier<Item> RESIN_SNAIL_SPAWN_EGG =
             REG.spawnEgg("resin_snail_spawn_egg", RESIN_SNAIL, 0x8a7244, 0xe08a26);
 

@@ -38,7 +38,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
  * <ul>
  *   <li><b>Harzspur</b> ({@code trail}): Beim Kriechen legt sie alle paar Ticks eine klebrige Harzspur
  *       ({@link dev.strata.epochs.ResinTrailBlock}), die zur Bernsteinplatte aushärtet (Abbau: 1 Bernstein).
- *       Pro Schnecke höchstens {@link #TRAIL_CAP} Stück im Umkreis, sonst legt sie keine neue.</li>
+ *       Pro Schnecke höchstens {@link #TRAIL_CAP} eigene Stücke (Spur oder Platte), gemerkt am Mob; erst wenn Platten
+ *       abgebaut sind oder Spur sich auflöst, legt sie neue.</li>
  *   <li><b>Gehäuse</b> ({@code shell}): Nimmt sie Schaden, zieht sie sich 5 s ins Gehäuse zurück und nimmt nur
  *       30 % Schaden.</li>
  *   <li><b>Füttern</b> ({@code feed}): Harzfarn-Sporen locken sie; gefüttert ist sie 2 min satt und legt doppelt
@@ -51,9 +52,9 @@ public class ResinSnail extends StrataMob {
             List.of("retreat", "emerge", "eat"), "idle", "walk", List.of("shell"), 0.3f);
 
     public static final int TRAIL_INTERVAL = 30;
-    public static final int TRAIL_CAP = 16;
-    public static final int TRAIL_CAP_FED = 24;
-    public static final int TRAIL_RADIUS = 8;
+    public static final int TRAIL_CAP = 4;
+    public static final int TRAIL_CAP_FED = 6;
+    private static final float GLOW_REST = 0.6f;
     public static final int SHELL_TICKS = 100;
     public static final int SHELL_COOLDOWN = 200;
     public static final double SHELL_FACTOR = 0.3;
@@ -66,7 +67,7 @@ public class ResinSnail extends StrataMob {
 
     public ResinSnail(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
-        setGlow(0, 0.3f);
+        setGlow(0, GLOW_REST);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -123,9 +124,12 @@ public class ResinSnail extends StrataMob {
             setDeltaMovement(getDeltaMovement().multiply(0, 1, 0));
             if (--shellTicks == 0) {
                 playAction("emerge");
-                setGlow(0, 0.3f);
+                setGlow(0, GLOW_REST);
             }
             return;
+        }
+        if (tickCount % 40 == 0) {                                // Harztropfen: im Dunkeln sieht man, wo sie kriecht
+            level.sendParticles(MobCompat.dust(0xf0a23a, 0.6f), getX(), getY() + 0.4, getZ() + 0.2, 1, 0.15, 0.1, 0.15, 0);
         }
         if (!tuning().abilityEnabled("trail")) return;
         boolean moving = getDeltaMovement().horizontalDistanceSqr() > 1.0e-5;
@@ -137,28 +141,33 @@ public class ResinSnail extends StrataMob {
         }
     }
 
-    /** Legt ein Stück Harzspur an ihrer Stelle, wenn dort Platz ist und die Grenze nicht erreicht ist. */
+    /** Legt ein Stück Harzspur an ihrer Stelle, wenn dort Platz ist und sie ihre Grenze noch nicht erreicht hat. */
     public boolean layTrail(ServerLevel level) {
         BlockPos pos = blockPosition();
         if (!level.getBlockState(pos).isAir()) return false;
         BlockState below = level.getBlockState(pos.below());
-        if (!below.isFaceSturdy(level, pos.below(), Direction.UP)) return false;
-        int radius = (int) value("trail", "radius", TRAIL_RADIUS);
+        if (!below.isFaceSturdy(level, pos.below(), Direction.UP)) return false;   // nicht auf Ackerboden oder Pflanzen
         int cap = (int) (fedTicks > 0 ? value("trail", "cap_fed", TRAIL_CAP_FED) : value("trail", "cap", TRAIL_CAP));
-        if (countTrail(level, pos, radius) >= cap) return false;
+        List<Long> own = ownTrail(level);
+        if (own.size() >= cap) return false;
         level.setBlockAndUpdate(pos, EpochsContent.RESIN_TRAIL.get().defaultBlockState());
+        List<Long> updated = new java.util.ArrayList<>(own);
+        updated.add(pos.asLong());
+        setData(EpochsContent.SNAIL_TRAIL.get(), List.copyOf(updated));
         level.sendParticles(MobCompat.dust(0xe08a26, 0.6f), getX(), getY() + 0.1, getZ(), 2, 0.15, 0.02, 0.15, 0);
         return true;
     }
 
-    /** Spurstücke und Bernsteinplatten im Umkreis (Würfel, 3 Blöcke hoch). */
-    public static int countTrail(ServerLevel level, BlockPos center, int radius) {
-        int n = 0;
-        for (BlockPos p : BlockPos.betweenClosed(center.offset(-radius, -1, -radius), center.offset(radius, 1, radius))) {
-            BlockState s = level.getBlockState(p);
-            if (s.is(EpochsContent.RESIN_TRAIL.get()) || s.is(EpochsContent.AMBER_PLATE.get())) n++;
+    /** Eigene Stücke, die noch liegen (Spur oder Platte); abgebaute oder aufgelöste fallen heraus. */
+    public List<Long> ownTrail(ServerLevel level) {
+        List<Long> own = getData(EpochsContent.SNAIL_TRAIL.get());
+        List<Long> alive = new java.util.ArrayList<>();
+        for (long p : own) {
+            BlockState s = level.getBlockState(BlockPos.of(p));
+            if (s.is(EpochsContent.RESIN_TRAIL.get()) || s.is(EpochsContent.AMBER_PLATE.get())) alive.add(p);
         }
-        return n;
+        if (alive.size() != own.size()) setData(EpochsContent.SNAIL_TRAIL.get(), List.copyOf(alive));
+        return alive;
     }
 
     // ---- Gehäuse ----
@@ -179,7 +188,7 @@ public class ResinSnail extends StrataMob {
         shellTicks = (int) value("shell", "duration", SHELL_TICKS);
         shellCooldown = shellTicks + (int) value("shell", "cooldown", SHELL_COOLDOWN);
         holdAction("retreat");
-        setGlow(0, 0.15f);
+        setGlow(0, 0.3f);
         getNavigation().stop();
         level().playSound(null, getX(), getY(), getZ(), EpochsMobs.RESIN_SNAIL_RETREAT.get(), SoundSource.NEUTRAL, 1.0f, 1.0f);
     }
