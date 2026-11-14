@@ -1788,6 +1788,50 @@ def amber_moth_spawn_egg():
     return outline(from_grid(rows, pal), '#1b1110')
 
 
+def resin_trail():
+    # Frische Harzspur: klebriger, glänzender Harz, kachelbar, mit hellen Glanzschlieren.
+    img = _resin(411, RESIN[1:], smooth=False)
+    for x, y in [(2, 2), (3, 2), (9, 5), (10, 5), (5, 10), (12, 12), (13, 12), (7, 14)]:
+        img.putpixel((x, y), rgb('#ffcf6a'))
+    return img
+
+
+def amber_plate():
+    # Ausgehärtete Bernsteinplatte: glatt, poliert, mit feinen dunklen Fugen (wie Platten), kachelbar.
+    img = _resin(412, HARD_AMBER, smooth=True)
+    for i in range(16):
+        img.putpixel((i, 7), rgb('#a2560f'))
+        img.putpixel((7 if i < 8 else 11, i), rgb('#a2560f'))
+    for x, y in [(2, 2), (3, 3), (12, 10), (13, 11), (4, 12)]:
+        img.putpixel((x, y), rgb('#fff3c8'))
+    return img
+
+
+def resin_snail_spawn_egg():
+    # Spawn-Ei: olivbraune Haut unten, Bernstein-Gehäuse mit Spirale oben, zwei Augenstiele.
+    pal = {'s': '#8a7244', 'S': '#6b5530', 'd': '#4a3a1e', 'a': '#e08a26', 'A': '#c26a14', 'k': '#7a3c08',
+           'y': '#ffcf6a', 'e': '#1b1110'}
+    rows = [
+        '................',
+        '.....e...e......',
+        '.....s...s......',
+        '.....s.aaaaa....',
+        '....ssaayaaaA...',
+        '...ssaakkkkaAA..',
+        '...ssakaaakaAA..',
+        '...ssakakkaAAA..',
+        '..sssakaaaAAAk..',
+        '..sssaakkkAAkk..',
+        '..ssssaaAAAkk...',
+        '..ssssssSSSSd...',
+        '...SSSSSSSSdd...',
+        '....ddddddd.....',
+        '................',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#2a1c12')
+
+
 BLOCKS = {
     'chronostone': chronostone,
     'crystal_quartz_ore': crystal_quartz_ore,
@@ -1808,6 +1852,8 @@ BLOCKS = {
     'resin_trap': resin_trap,
     'resin_trap_moth': resin_trap_moth,
     'resin_trap_hardened': resin_trap_hardened,
+    'resin_trail': resin_trail,
+    'amber_plate': amber_plate,
 }
 for _crop in (quartz_thistle, resin_fern, ember_tubers):
     for _i in range(4):
@@ -1898,6 +1944,7 @@ SPAWN_EGGS = {
     'stratolith_spawn_egg': stratolith_spawn_egg,
     'resonant_shard_spawn_egg': resonant_shard_spawn_egg,
     'amber_moth_spawn_egg': amber_moth_spawn_egg,
+    'resin_snail_spawn_egg': resin_snail_spawn_egg,
 }
 
 

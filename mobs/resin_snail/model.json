@@ -1,0 +1,2677 @@
+{
+  "id": "resin_snail",
+  "name": "Harzschnecke",
+  "texture_size": [
+    64,
+    32
+  ],
+  "bones": [
+    {
+      "name": "root",
+      "origin": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "body",
+      "parent": "root",
+      "origin": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "origin": [
+        0,
+        2,
+        -4
+      ]
+    },
+    {
+      "name": "eye_left",
+      "parent": "head",
+      "origin": [
+        1,
+        3.5,
+        -6
+      ]
+    },
+    {
+      "name": "eye_right",
+      "parent": "head",
+      "origin": [
+        -1,
+        3.5,
+        -6
+      ]
+    },
+    {
+      "name": "shell",
+      "parent": "body",
+      "origin": [
+        0,
+        2,
+        2
+      ]
+    }
+  ],
+  "cubes": [
+    {
+      "name": "foot",
+      "bone": "body",
+      "from": [
+        -2,
+        0,
+        -4
+      ],
+      "to": [
+        2,
+        2,
+        7
+      ],
+      "uv_offset": [
+        0,
+        0
+      ],
+      "material": "snail_skin",
+      "face": "snail_foot"
+    },
+    {
+      "name": "head",
+      "bone": "head",
+      "from": [
+        -1.5,
+        0.5,
+        -7
+      ],
+      "to": [
+        1.5,
+        3.5,
+        -4
+      ],
+      "uv_offset": [
+        30,
+        0
+      ],
+      "material": "snail_skin",
+      "face": "snail_face"
+    },
+    {
+      "name": "tentacle_left",
+      "bone": "head",
+      "from": [
+        0.5,
+        1,
+        -8
+      ],
+      "to": [
+        1.5,
+        2,
+        -7
+      ],
+      "uv_offset": [
+        46,
+        0
+      ],
+      "material": "snail_skin"
+    },
+    {
+      "name": "tentacle_right",
+      "bone": "head",
+      "from": [
+        -1.5,
+        1,
+        -8
+      ],
+      "to": [
+        -0.5,
+        2,
+        -7
+      ],
+      "uv_offset": [
+        46,
+        0
+      ],
+      "material": "snail_skin",
+      "mirror_uv": true
+    },
+    {
+      "name": "eye_left",
+      "bone": "eye_left",
+      "from": [
+        0.5,
+        3.5,
+        -6.5
+      ],
+      "to": [
+        1.5,
+        7.5,
+        -5.5
+      ],
+      "uv_offset": [
+        42,
+        0
+      ],
+      "material": "snail_skin",
+      "face": "snail_eye"
+    },
+    {
+      "name": "eye_right",
+      "bone": "eye_right",
+      "from": [
+        -1.5,
+        3.5,
+        -6.5
+      ],
+      "to": [
+        -0.5,
+        7.5,
+        -5.5
+      ],
+      "uv_offset": [
+        42,
+        0
+      ],
+      "material": "snail_skin",
+      "mirror_uv": true
+    },
+    {
+      "name": "shell",
+      "bone": "shell",
+      "from": [
+        -2.5,
+        2,
+        -1
+      ],
+      "to": [
+        2.5,
+        8,
+        6
+      ],
+      "uv_offset": [
+        0,
+        13
+      ],
+      "material": "snail_shell",
+      "face": "snail_shell"
+    }
+  ],
+  "animations": [
+    {
+      "name": "animation.resin_snail.idle",
+      "length": 3,
+      "loop": "loop",
+      "peak": 0.75,
+      "keyframes": [
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0.0,
+            0,
+            -8.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            1.247,
+            0,
+            -7.913
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            2.44,
+            0,
+            -7.654
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            3.527,
+            0,
+            -7.236
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            4.459,
+            0,
+            -6.677
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            5.196,
+            0,
+            -6.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            5.706,
+            0,
+            -5.236
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            5.967,
+            0,
+            -4.418
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            5.967,
+            0,
+            -3.582
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            5.706,
+            0,
+            -2.764
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            5.196,
+            0,
+            -2.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.1,
+          "value": [
+            4.459,
+            0,
+            -1.323
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            3.527,
+            0,
+            -0.764
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.3,
+          "value": [
+            2.44,
+            0,
+            -0.346
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            1.247,
+            0,
+            -0.087
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            0.0,
+            0,
+            0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -1.247,
+            0,
+            -0.087
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.7,
+          "value": [
+            -2.44,
+            0,
+            -0.346
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.8,
+          "value": [
+            -3.527,
+            0,
+            -0.764
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.9,
+          "value": [
+            -4.459,
+            0,
+            -1.323
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.0,
+          "value": [
+            -5.196,
+            0,
+            -2.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.1,
+          "value": [
+            -5.706,
+            0,
+            -2.764
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.2,
+          "value": [
+            -5.967,
+            0,
+            -3.582
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.3,
+          "value": [
+            -5.967,
+            0,
+            -4.418
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.4,
+          "value": [
+            -5.706,
+            0,
+            -5.236
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.5,
+          "value": [
+            -5.196,
+            0,
+            -6.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            -4.459,
+            0,
+            -6.677
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.7,
+          "value": [
+            -3.527,
+            0,
+            -7.236
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.8,
+          "value": [
+            -2.44,
+            0,
+            -7.654
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 2.9,
+          "value": [
+            -1.247,
+            0,
+            -7.913
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            -0.0,
+            0,
+            -8.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0.0,
+            0,
+            0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            -1.247,
+            0,
+            0.087
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            -2.44,
+            0,
+            0.346
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -3.527,
+            0,
+            0.764
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            -4.459,
+            0,
+            1.323
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            -5.196,
+            0,
+            2.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            -5.706,
+            0,
+            2.764
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            -5.967,
+            0,
+            3.582
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -5.967,
+            0,
+            4.418
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            -5.706,
+            0,
+            5.236
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            -5.196,
+            0,
+            6.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.1,
+          "value": [
+            -4.459,
+            0,
+            6.677
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            -3.527,
+            0,
+            7.236
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.3,
+          "value": [
+            -2.44,
+            0,
+            7.654
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            -1.247,
+            0,
+            7.913
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            -0.0,
+            0,
+            8.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            1.247,
+            0,
+            7.913
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.7,
+          "value": [
+            2.44,
+            0,
+            7.654
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.8,
+          "value": [
+            3.527,
+            0,
+            7.236
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.9,
+          "value": [
+            4.459,
+            0,
+            6.677
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.0,
+          "value": [
+            5.196,
+            0,
+            6.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.1,
+          "value": [
+            5.706,
+            0,
+            5.236
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.2,
+          "value": [
+            5.967,
+            0,
+            4.418
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.3,
+          "value": [
+            5.967,
+            0,
+            3.582
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.4,
+          "value": [
+            5.706,
+            0,
+            2.764
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.5,
+          "value": [
+            5.196,
+            0,
+            2.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            4.459,
+            0,
+            1.323
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.7,
+          "value": [
+            3.527,
+            0,
+            0.764
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.8,
+          "value": [
+            2.44,
+            0,
+            0.346
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 2.9,
+          "value": [
+            1.247,
+            0,
+            0.087
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0.0,
+            0,
+            0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0.0,
+            0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0.416,
+            0.624,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0.813,
+            1.22,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            1.176,
+            1.763,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            1.486,
+            2.229,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            1.732,
+            2.598,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            1.902,
+            2.853,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            1.989,
+            2.984,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            1.989,
+            2.984,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            1.902,
+            2.853,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            1.732,
+            2.598,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.1,
+          "value": [
+            1.486,
+            2.229,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            1.176,
+            1.763,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.3,
+          "value": [
+            0.813,
+            1.22,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            0.416,
+            0.624,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            0.0,
+            0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -0.416,
+            -0.624,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.7,
+          "value": [
+            -0.813,
+            -1.22,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.8,
+          "value": [
+            -1.176,
+            -1.763,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.9,
+          "value": [
+            -1.486,
+            -2.229,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.0,
+          "value": [
+            -1.732,
+            -2.598,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.1,
+          "value": [
+            -1.902,
+            -2.853,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.2,
+          "value": [
+            -1.989,
+            -2.984,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.3,
+          "value": [
+            -1.989,
+            -2.984,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.4,
+          "value": [
+            -1.902,
+            -2.853,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.5,
+          "value": [
+            -1.732,
+            -2.598,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.6,
+          "value": [
+            -1.486,
+            -2.229,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.7,
+          "value": [
+            -1.176,
+            -1.763,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.8,
+          "value": [
+            -0.813,
+            -1.22,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 2.9,
+          "value": [
+            -0.416,
+            -0.624,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            -0.0,
+            -0.0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.resin_snail.walk",
+      "length": 1.6,
+      "loop": "loop",
+      "peak": 0.4,
+      "keyframes": [
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.0,
+          "value": [
+            1,
+            1.0,
+            1.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.1,
+          "value": [
+            1,
+            0.985,
+            1.023
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.2,
+          "value": [
+            1,
+            0.972,
+            1.042
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.3,
+          "value": [
+            1,
+            0.963,
+            1.055
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.4,
+          "value": [
+            1,
+            0.96,
+            1.06
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.5,
+          "value": [
+            1,
+            0.963,
+            1.055
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.6,
+          "value": [
+            1,
+            0.972,
+            1.042
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.7,
+          "value": [
+            1,
+            0.985,
+            1.023
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.8,
+          "value": [
+            1,
+            1.0,
+            1.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.9,
+          "value": [
+            1,
+            1.015,
+            0.977
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 1.0,
+          "value": [
+            1,
+            1.028,
+            0.958
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 1.1,
+          "value": [
+            1,
+            1.037,
+            0.945
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 1.2,
+          "value": [
+            1,
+            1.04,
+            0.94
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 1.3,
+          "value": [
+            1,
+            1.037,
+            0.945
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 1.4,
+          "value": [
+            1,
+            1.028,
+            0.958
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 1.5,
+          "value": [
+            1,
+            1.015,
+            0.977
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 1.6,
+          "value": [
+            1,
+            1.0,
+            1.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.0,
+          "value": [
+            0,
+            0,
+            -0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            -0.153
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            -0.283
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            -0.37
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            -0.4
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            -0.37
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            -0.283
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.7,
+          "value": [
+            0,
+            0,
+            -0.153
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.8,
+          "value": [
+            0,
+            0,
+            -0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.9,
+          "value": [
+            0,
+            0,
+            0.153
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0.283
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 1.1,
+          "value": [
+            0,
+            0,
+            0.37
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0.4
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 1.3,
+          "value": [
+            0,
+            0,
+            0.37
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 1.4,
+          "value": [
+            0,
+            0,
+            0.283
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 1.5,
+          "value": [
+            0,
+            0,
+            0.153
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            -1.618,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            -1.045,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            -0.313,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0.467,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            1.176,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            1.705,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            1.975,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            1.945,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            1.618,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            1.045,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0.313,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 1.1,
+          "value": [
+            -0.467,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            -1.176,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 1.3,
+          "value": [
+            -1.705,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            -1.975,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            -1.945,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -1.618,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            -8.0,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            -6.469,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            -5.172,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -4.304,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            -4.0,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            -4.304,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            -5.172,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            -6.469,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -8.0,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            -9.531,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            -10.828,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.1,
+          "value": [
+            -11.696,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            -12.0,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.3,
+          "value": [
+            -11.696,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            -10.828,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            -9.531,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -8.0,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            -8.0,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            -6.469,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            -5.172,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -4.304,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            -4.0,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            -4.304,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            -5.172,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            -6.469,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            -8.0,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            -9.531,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            -10.828,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.1,
+          "value": [
+            -11.696,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            -12.0,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.3,
+          "value": [
+            -11.696,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            -10.828,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            -9.531,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            -8.0,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.resin_snail.retreat",
+      "length": 0.6,
+      "loop": "once",
+      "peak": 0.6,
+      "keyframes": [
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.4,
+          "value": [
+            0,
+            -0.5,
+            3.5
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.6,
+          "value": [
+            0,
+            -0.5,
+            3.5
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "scale",
+          "time": 0.4,
+          "value": [
+            0.8,
+            0.8,
+            0.8
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "scale",
+          "time": 0.6,
+          "value": [
+            0.8,
+            0.8,
+            0.8
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "scale",
+          "time": 0.25,
+          "value": [
+            1,
+            0.2,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "scale",
+          "time": 0.6,
+          "value": [
+            1,
+            0.2,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "scale",
+          "time": 0.25,
+          "value": [
+            1,
+            0.2,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "scale",
+          "time": 0.6,
+          "value": [
+            1,
+            0.2,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "position",
+          "time": 0.4,
+          "value": [
+            0,
+            -0.8,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "position",
+          "time": 0.6,
+          "value": [
+            0,
+            -0.8,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            -6,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            -6,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.resin_snail.emerge",
+      "length": 0.8,
+      "loop": "once",
+      "peak": 0.2,
+      "keyframes": [
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            -0.5,
+            3.5
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "position",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            0.8,
+            0.8,
+            0.8
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "scale",
+          "time": 0.5,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            0.2,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "scale",
+          "time": 0.4,
+          "value": [
+            1,
+            0.2,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "scale",
+          "time": 0.8,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            0.2,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "scale",
+          "time": 0.4,
+          "value": [
+            1,
+            0.2,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "scale",
+          "time": 0.8,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            -0.8,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "position",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            -6,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "shell",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.resin_snail.eat",
+      "length": 1.2,
+      "loop": "once",
+      "peak": 0.3,
+      "keyframes": [
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -28,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            -12,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 0.75,
+          "value": [
+            -28,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "head",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            18,
+            0,
+            -8
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_left",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            18,
+            0,
+            8
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "eye_right",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    }
+  ]
+}

@@ -251,6 +251,39 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 
 Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen); Runde 2 mit Code: 7/7/7, freigegeben. Vor einem Release einmal von Hand kämpfen (Diamant und Netherit, Zeit bis zum Sieg, Zahl der Rückspulungen notieren). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
+## Harzschnecke (Entwurf, in Arbeit)
+
+Eine Schnecke mit einem Gehäuse aus Bernstein: flacher, olivbrauner Fuß mit dunkler Sohlenkante und Harzglanz an
+der Schleppe, kleiner Kopf mit zwei Fühlern und zwei Augenstielen (dunkle Kugel, oben ein Glanzpunkt), darauf ein
+großes Bernstein-Gehäuse mit eckiger Spirale auf beiden Seiten (wie beim Spiralit, aber in Bernstein), dunkler
+Mündung vorn und Glanzpunkten oben. 6 Knochen, 7 Würfel, 64 × 32. Animationen `idle` (Augenstiele wiegen sich),
+`walk` (der Fuß wellt sich, das Gehäuse schaukelt nach), `retreat` (Kopf und Augen verschwinden unter dem Gehäuse,
+gehalten), `emerge`, `eat`. Leucht-Ebene `shell`: das Gehäuse schimmert schwach (0,3), sonst ist sie in der dunklen
+Sporenzeit nicht zu sehen. Trefferfläche 0,5 × 0,5. Kontrast der Oberseiten: Sporenzeit dunkel und Nebel 1,8:1.
+
+**Rolle im Ablauf:** eine erneuerbare Bernstein-Quelle ohne Erzabbau. Bernstein braucht man für die Harzfalle
+(Bernsteinmotte), den Schichtkern (Stratolith) und die Bernsteinklinge. Die Schnecke verbindet damit den Pflanzenanbau
+(Harzfarn) mit diesen Rezepten.
+
+| Fähigkeit | Auslöser | Wirkung | Signal | Gegenzug / Grenze | Startwerte |
+|---|---|---|---|---|---|
+| **Harzspur** | sie kriecht | Alle 1,5 s legt sie auf freiem, festem Boden eine dünne **Harzspur** (1 px hoch, klebrig: bremst wie Honig). Die Spur härtet im Zufallstick zur **Bernsteinplatte** aus (im Mittel etwa 5,5 min); abgebaut gibt die Platte 1 Bernstein. Frische Spur abgebaut gibt nichts. | glänzende orange Spur hinter ihr, Harztropfen | Spur meiden (sie bremst). Grenze: höchstens 16 Spurstücke und Platten im Umkreis von 8 Blöcken pro Schnecke, sonst legt sie keine neue. | alle 30 Ticks, Grenze 16, Chance 0,2 je Zufallstick |
+| **Gehäuse** | sie nimmt Schaden | Sie zieht sich 5 s ins Gehäuse zurück, bleibt stehen und nimmt nur 30 % Schaden; danach kommt sie wieder heraus. | Animation `retreat` (0,4 s), ein hohles Klacken | abwarten | 5 s, Schaden ×0,3, Abklingzeit 10 s |
+| **Füttern** | Harzfarn-Sporen in der Hand locken sie; Rechtsklick damit füttert (1 wird verbraucht) | Sie frisst und ist 2 min **satt**: Sie legt doppelt so oft Spur, die Grenze steigt auf 24. | Animation `eat`, Herzchen | – (Hilfe) | 2 min, Spur alle 15 Ticks |
+
+**Balance:** Eine gefütterte Schnecke liefert grob 3–4 Bernstein in 10 Minuten, aber nur, wenn man die Platten abbaut
+und die Schnecke freien Boden zum Kriechen hat; die Grenze verhindert, dass sie die Welt zukleistert. Getötet gibt sie
+0–1 Bernstein: behalten lohnt sich mehr.
+
+**Spawn:** Sporenzeit (Moosmoor, Sporengrotte), einzeln oder zu zweit, Kategorie Kreatur, höchstens 4 im Umkreis von
+32 Blöcken.
+
+**Klänge:** Ruf (leises, feuchtes Schmatzen), Schmerz (Klacken am Gehäuse), Tod (das Gehäuse knackt), Rückzug
+(hohles Klacken).
+
+**Datapack-Werte (`strata_core:mob_tuning`):** `trail` (interval, cap, radius), `shell` (duration, damage_factor,
+cooldown), `feed` (duration).
+
 ## Bernsteinmotte (umgesetzt, freigegeben)
 
 Eine große Motte (Spannweite 19 px, etwa 1,2 Blöcke): dunkelbrauner Pelzkörper mit hellem Kragen vorn und
@@ -369,7 +402,6 @@ stößt beim Drehen nicht mehr hinein), einfarbige Ringseiten, U-Brücke ohne ha
 
 | Mob | Epoche | Rolle | Warum später |
 |---|---|---|---|
-| Harzschnecke (`resin_snail`) | Sporenzeit | passiv; ihre Spur härtet zu Bernsteinplatten aus | gut, aber ohne Bezug zum Kern-Ablauf |
 
 ## Technische Architektur
 

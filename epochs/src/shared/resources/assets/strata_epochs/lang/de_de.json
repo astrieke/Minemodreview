@@ -224,5 +224,13 @@
   "subtitles.strata_epochs.amber_moth.ambient": "Bernsteinmotte flattert",
   "subtitles.strata_epochs.amber_moth.hurt": "Bernsteinmotte zirpt",
   "subtitles.strata_epochs.amber_moth.death": "Bernsteinmotte stirbt",
-  "subtitles.strata_epochs.amber_moth.dust": "Bernsteinmotte stäubt"
+  "subtitles.strata_epochs.amber_moth.dust": "Bernsteinmotte stäubt",
+  "entity.strata_epochs.resin_snail": "Harzschnecke",
+  "item.strata_epochs.resin_snail_spawn_egg": "Harzschnecken-Spawn-Ei",
+  "block.strata_epochs.resin_trail": "Harzspur",
+  "block.strata_epochs.amber_plate": "Bernsteinplatte",
+  "subtitles.strata_epochs.resin_snail.ambient": "Harzschnecke schmatzt",
+  "subtitles.strata_epochs.resin_snail.hurt": "Harzschnecke wird verletzt",
+  "subtitles.strata_epochs.resin_snail.death": "Harzschnecke stirbt",
+  "subtitles.strata_epochs.resin_snail.retreat": "Harzschnecke zieht sich zurück"
 }

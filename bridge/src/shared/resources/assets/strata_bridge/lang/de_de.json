@@ -94,5 +94,8 @@
   "advancements.strata_epochs.met_amber_moth.description": "Begegne einer Bernsteinmotte in der Sporenzeit",
   "jade.strata_bridge.mob.amber_moth": "Sporenzeit · fliegt zum Licht, sprinte nicht in ihrer Nähe",
   "jei.strata_bridge.info.resin_trap": "Stell die Harzfalle in der Sporenzeit auf und setz eine Lichtquelle direkt daneben (Fackel, Leuchtstein). Bernsteinmotten fliegen zum Licht und bleiben am Harz kleben. Nach einigen Minuten härtet die Falle aus; Rechtsklick oder Abbauen gibt dann Bernstein mit Einschluss.",
-  "jei.strata_bridge.info.amber_inclusion": "Aus der ausgehärteten Harzfalle. Gilt beim Transplantator als Fossil der Sporenzeit, wie das Farnfossil."
+  "jei.strata_bridge.info.amber_inclusion": "Aus der ausgehärteten Harzfalle. Gilt beim Transplantator als Fossil der Sporenzeit, wie das Farnfossil.",
+  "advancements.strata_epochs.met_resin_snail.title": "Langsam, aber golden",
+  "advancements.strata_epochs.met_resin_snail.description": "Begegne einer Harzschnecke in der Sporenzeit",
+  "jade.strata_bridge.mob.resin_snail": "Sporenzeit · ihre Harzspur härtet zu Bernstein aus; Harzfarn-Sporen locken sie"
 }

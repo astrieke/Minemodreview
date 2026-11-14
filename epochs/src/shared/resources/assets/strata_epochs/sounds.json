@@ -234,5 +234,32 @@
       "strata_epochs:entity/amber_moth/dust1"
     ],
     "subtitle": "subtitles.strata_epochs.amber_moth.dust"
+  },
+  "entity.resin_snail.ambient": {
+    "sounds": [
+      "strata_epochs:entity/resin_snail/ambient1",
+      "strata_epochs:entity/resin_snail/ambient2",
+      "strata_epochs:entity/resin_snail/ambient3"
+    ],
+    "subtitle": "subtitles.strata_epochs.resin_snail.ambient"
+  },
+  "entity.resin_snail.hurt": {
+    "sounds": [
+      "strata_epochs:entity/resin_snail/hurt1",
+      "strata_epochs:entity/resin_snail/hurt2"
+    ],
+    "subtitle": "subtitles.strata_epochs.resin_snail.hurt"
+  },
+  "entity.resin_snail.death": {
+    "sounds": [
+      "strata_epochs:entity/resin_snail/death1"
+    ],
+    "subtitle": "subtitles.strata_epochs.resin_snail.death"
+  },
+  "entity.resin_snail.retreat": {
+    "sounds": [
+      "strata_epochs:entity/resin_snail/retreat1"
+    ],
+    "subtitle": "subtitles.strata_epochs.resin_snail.retreat"
   }
 }

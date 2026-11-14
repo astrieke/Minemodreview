@@ -599,6 +599,48 @@ def amber_moth(kind, i, rng):
     return x
 
 
+def squelch(rng, dur, f0=900, f1=500):
+    """Feuchtes Schmatzen: kurzes, gefiltertes Rauschen mit absinkender Resonanz."""
+    t = t_axis(dur)
+    n = rng.normal(0, 1, len(t))
+    x = swept_band(n, np.geomspace(f0, f1, max(2, len(t) // 256 + 1)), q=5.0) * env(dur, 0.01, dur * 0.4)
+    return x
+
+
+def resin_snail(kind, i, rng):
+    if kind == "ambient":
+        # Leises, feuchtes Schmatzen in zwei, drei Schüben.
+        dur = 1.0
+        x = silence(dur)
+        at = 0.05
+        for _ in range(rng.integers(2, 4)):
+            place(x, squelch(rng, rng.uniform(0.12, 0.2), rng.uniform(900, 1300), rng.uniform(400, 600)), at)
+            at += rng.uniform(0.2, 0.3)
+        return x
+    if kind == "hurt":
+        # Klacken am Gehäuse und ein kurzes Quietschen.
+        dur = 0.4
+        x = silence(dur)
+        place(x, chime(rng, rng.uniform(1100, 1300), 0.12, ratios=(1.0, 2.3, 3.9), bright=0.5) * 0.8, 0)
+        place(x, band(rng.normal(0, 1, int(0.03 * SR)), 1500, 5000) * env(0.03, 0.0005, 0.008), 0)
+        place(x, squelch(rng, 0.15, 1600, 800) * 0.6, 0.06)
+        return x
+    if kind == "death":
+        # Das Gehäuse knackt, dann ein letztes, langsames Schmatzen.
+        dur = 1.0
+        x = silence(dur)
+        place(x, band(rng.normal(0, 1, int(0.05 * SR)), 800, 4500) * env(0.05, 0.0005, 0.015) * 1.2, 0)
+        place(x, grains(rng, 0.3, 80, 800, 3500, grain=0.01, amp=0.7, decay_rate=6), 0.01)
+        place(x, squelch(rng, 0.45, 800, 300) * 0.8, 0.3)
+        return x
+    # retreat: hohles Klacken, als der Körper ins Gehäuse fährt.
+    dur = 0.45
+    x = silence(dur)
+    place(x, chime(rng, 520, 0.3, ratios=(1.0, 1.9, 3.1), bright=0.4) * 0.9, 0)
+    place(x, squelch(rng, 0.2, 1200, 500) * 0.5, 0.02)
+    return x
+
+
 MOBS = {
     "geode_crawler": (geode_crawler, {"ambient": 3, "hurt": 2, "death": 2}),
     "spore_bellows": (spore_bellows, {"ambient": 3, "hurt": 2, "death": 2}),
@@ -608,6 +650,7 @@ MOBS = {
     "stratolith": (stratolith, {"ambient": 3, "hurt": 2, "death": 1, "rise": 1, "rewind": 2, "slam": 2}),
     "resonant_shard": (resonant_shard, {"ambient": 2, "hurt": 2, "death": 1, "resonate": 1, "dissonance": 1, "shriek": 1}),
     "amber_moth": (amber_moth, {"ambient": 3, "hurt": 2, "death": 1, "dust": 1}),
+    "resin_snail": (resin_snail, {"ambient": 3, "hurt": 2, "death": 1, "retreat": 1}),
 }
 
 

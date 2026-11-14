@@ -12,6 +12,7 @@ public final class EpochsConfig {
     public static final ModConfigSpec.BooleanValue EMBER_BURROWER;
     public static final ModConfigSpec.BooleanValue RESONANT_SHARD;
     public static final ModConfigSpec.BooleanValue AMBER_MOTH;
+    public static final ModConfigSpec.BooleanValue RESIN_SNAIL;
     public static final ModConfigSpec.IntValue MAX_MOBS_PER_EPOCH;
     public static final ModConfigSpec.BooleanValue TRANSPLANTER;
     public static final ModConfigSpec.IntValue TRANSPLANT_RADIUS;
@@ -35,6 +36,7 @@ public final class EpochsConfig {
         EMBER_BURROWER = b.comment("Glutwühler spawnen natürlich (Aschezeit)").define("ember_burrower", true);
         RESONANT_SHARD = b.comment("Resonanzlinge spawnen natürlich (Kristallzeit)").define("resonant_shard", true);
         AMBER_MOTH = b.comment("Bernsteinmotten spawnen natürlich (Sporenzeit)").define("amber_moth", true);
+        RESIN_SNAIL = b.comment("Harzschnecken spawnen natürlich (Sporenzeit)").define("resin_snail", true);
         MAX_MOBS_PER_EPOCH = b.comment("Höchstzahl aller Strata-Mobs pro Epochen-Dimension").defineInRange("max_per_epoch", 60, 0, 10_000);
         b.pop();
         b.comment("Epochen-Transplantator: verwandelt ein Gebiet der Oberwelt dauerhaft in eine Epoche").push("transplanter");

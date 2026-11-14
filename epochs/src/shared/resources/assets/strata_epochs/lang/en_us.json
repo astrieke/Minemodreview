@@ -224,5 +224,13 @@
   "subtitles.strata_epochs.amber_moth.ambient": "Amber Moth flutters",
   "subtitles.strata_epochs.amber_moth.hurt": "Amber Moth chirps",
   "subtitles.strata_epochs.amber_moth.death": "Amber Moth dies",
-  "subtitles.strata_epochs.amber_moth.dust": "Amber Moth sheds dust"
+  "subtitles.strata_epochs.amber_moth.dust": "Amber Moth sheds dust",
+  "entity.strata_epochs.resin_snail": "Resin Snail",
+  "item.strata_epochs.resin_snail_spawn_egg": "Resin Snail Spawn Egg",
+  "block.strata_epochs.resin_trail": "Resin Trail",
+  "block.strata_epochs.amber_plate": "Amber Plate",
+  "subtitles.strata_epochs.resin_snail.ambient": "Resin Snail squelches",
+  "subtitles.strata_epochs.resin_snail.hurt": "Resin Snail hurts",
+  "subtitles.strata_epochs.resin_snail.death": "Resin Snail dies",
+  "subtitles.strata_epochs.resin_snail.retreat": "Resin Snail withdraws"
 }

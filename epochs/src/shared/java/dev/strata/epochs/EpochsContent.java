@@ -60,6 +60,13 @@ public final class EpochsContent {
     public static final Supplier<Block> RESIN_TRAP_HARDENED = REG.block("resin_trap_hardened",
             p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.8f).sound(SoundType.AMETHYST));
 
+    /** Harzspur der Harzschnecke (bremst wie Honig) und die daraus ausgehärtete Bernsteinplatte (gibt Bernstein). */
+    public static final Supplier<Block> RESIN_TRAIL = REG.block("resin_trail", ResinTrailBlock::new,
+            p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.1f).sound(SoundType.HONEY_BLOCK).speedFactor(0.4f)
+                    .jumpFactor(0.5f).randomTicks().noOcclusion());
+    public static final Supplier<Block> AMBER_PLATE = REG.block("amber_plate", net.minecraft.world.level.block.CarpetBlock::new,
+            p -> p.mapColor(MapColor.COLOR_ORANGE).strength(0.3f).sound(SoundType.AMETHYST).noOcclusion());
+
     /** Zeitriss in der Oberwelt (siehe {@link TimeRifts}): ohne Kollision, unzerstörbar, nur mit Zeitanker zu versiegeln. */
     public static final Supplier<Block> TIME_RIFT = REG.ghost("time_rift", TimeRiftBlock::new,
             p -> p.mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 11).sound(SoundType.AMETHYST).randomTicks());

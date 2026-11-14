@@ -56,6 +56,12 @@ public final class EpochsMobs {
     public static final Supplier<Item> STRATOLITH_SPAWN_EGG =
             REG.spawnEgg("stratolith_spawn_egg", STRATOLITH, 0x3c3742, 0x9b87ff);
 
+    /** Schnecke der Sporenzeit; ihre Harzspur härtet zu Bernsteinplatten aus. */
+    public static final Supplier<EntityType<dev.strata.epochs.mob.ResinSnail>> RESIN_SNAIL =
+            REG.entity("resin_snail", dev.strata.epochs.mob.ResinSnail::new, MobCategory.CREATURE, 0.5f, 0.5f, 8);
+    public static final Supplier<Item> RESIN_SNAIL_SPAWN_EGG =
+            REG.spawnEgg("resin_snail_spawn_egg", RESIN_SNAIL, 0x8a7244, 0xe08a26);
+
     /** Motte der Sporenzeit, fliegt zum Licht; Fossil-Quelle über die Harzfalle. */
     public static final Supplier<EntityType<dev.strata.epochs.mob.AmberMoth>> AMBER_MOTH =
             REG.entity("amber_moth", dev.strata.epochs.mob.AmberMoth::new, MobCategory.AMBIENT, 0.7f, 0.4f, 8);
@@ -90,6 +96,10 @@ public final class EpochsMobs {
     public static final Supplier<SoundEvent> SPIRALIT_AMBIENT = REG.sound("entity.spiralit.ambient");
     public static final Supplier<SoundEvent> SPIRALIT_HURT = REG.sound("entity.spiralit.hurt");
     public static final Supplier<SoundEvent> SPIRALIT_DEATH = REG.sound("entity.spiralit.death");
+    public static final Supplier<SoundEvent> RESIN_SNAIL_AMBIENT = REG.sound("entity.resin_snail.ambient");
+    public static final Supplier<SoundEvent> RESIN_SNAIL_HURT = REG.sound("entity.resin_snail.hurt");
+    public static final Supplier<SoundEvent> RESIN_SNAIL_DEATH = REG.sound("entity.resin_snail.death");
+    public static final Supplier<SoundEvent> RESIN_SNAIL_RETREAT = REG.sound("entity.resin_snail.retreat");
     public static final Supplier<SoundEvent> AMBER_MOTH_AMBIENT = REG.sound("entity.amber_moth.ambient");
     public static final Supplier<SoundEvent> AMBER_MOTH_HURT = REG.sound("entity.amber_moth.hurt");
     public static final Supplier<SoundEvent> AMBER_MOTH_DEATH = REG.sound("entity.amber_moth.death");
@@ -120,6 +130,7 @@ public final class EpochsMobs {
             event.put(STRATOLITH.get(), dev.strata.epochs.mob.Stratolith.createAttributes().build());
             event.put(RESONANT_SHARD.get(), dev.strata.epochs.mob.ResonantShard.createAttributes().build());
             event.put(AMBER_MOTH.get(), dev.strata.epochs.mob.AmberMoth.createAttributes().build());
+            event.put(RESIN_SNAIL.get(), dev.strata.epochs.mob.ResinSnail.createAttributes().build());
         });
         modBus.addListener((RegisterSpawnPlacementsEvent event) -> {
             event.register(GEODE_CRAWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -145,6 +156,11 @@ public final class EpochsMobs {
                     (type, level, reason, pos, random) -> EpochsConfig.AMBER_MOTH.get()
                             && belowEpochLimit(level) && dev.strata.epochs.mob.AmberMoth.canSpawnHere(level, pos),
                     RegisterSpawnPlacementsEvent.Operation.REPLACE);
+            event.register(RESIN_SNAIL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    (type, level, reason, pos, random) -> EpochsConfig.RESIN_SNAIL.get()
+                            && Mob.checkMobSpawnRules(type, level, reason, pos, random)
+                            && belowEpochLimit(level) && dev.strata.epochs.mob.ResinSnail.canSpawnHere(level, pos),
+                    RegisterSpawnPlacementsEvent.Operation.REPLACE);
         });
         NeoForge.EVENT_BUS.addListener(StrataMob::handleIncomingDamage);
         NeoForge.EVENT_BUS.addListener(SporeBellows::onDeath);
@@ -155,6 +171,7 @@ public final class EpochsMobs {
         NeoForge.EVENT_BUS.addListener(Spiralit::onServerStopped);
         NeoForge.EVENT_BUS.addListener(dev.strata.epochs.mob.ResonantShard::onInteract);
         NeoForge.EVENT_BUS.addListener(dev.strata.epochs.mob.AmberMoth::onRightClickBlock);
+        NeoForge.EVENT_BUS.addListener(dev.strata.epochs.mob.ResinSnail::onInteract);
         NeoForge.EVENT_BUS.addListener(dev.strata.epochs.mob.ResonantShard::onStartBreaking);
         NeoForge.EVENT_BUS.addListener(dev.strata.epochs.mob.ResonantShard::onDamage);
         dev.strata.epochs.mc.BreakHook.onBroken(dev.strata.epochs.mob.ResonantShard::onBlockBroken);

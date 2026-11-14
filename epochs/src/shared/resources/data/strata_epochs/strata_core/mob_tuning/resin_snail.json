@@ -1,0 +1,32 @@
+{
+  "entity": "strata_epochs:resin_snail",
+  "attributes": {
+    "max_health": 10,
+    "movement_speed": 0.12,
+    "armor": 2
+  },
+  "spawn": {
+    "enabled": true,
+    "max_nearby": 4
+  },
+  "abilities": {
+    "trail": {
+      "enabled": true,
+      "interval": 30,
+      "cap": 16,
+      "cap_fed": 24,
+      "radius": 8,
+      "harden_chance": 0.2
+    },
+    "shell": {
+      "enabled": true,
+      "duration": 100,
+      "damage_factor": 0.3,
+      "cooldown": 200
+    },
+    "feed": {
+      "enabled": true,
+      "duration": 2400
+    }
+  }
+}

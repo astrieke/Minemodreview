@@ -94,5 +94,8 @@
   "advancements.strata_epochs.met_amber_moth.description": "Meet an Amber Moth in the Spore Age",
   "jade.strata_bridge.mob.amber_moth": "Spore Age · flies to light, don't sprint near it",
   "jei.strata_bridge.info.resin_trap": "Place the Resin Trap in the Spore Age and put a light source right next to it (torch, glowstone). Amber Moths fly to the light and get stuck in the resin. After a few minutes the trap hardens; right-click or mine it for Amber with Inclusion.",
-  "jei.strata_bridge.info.amber_inclusion": "From a hardened Resin Trap. Counts as a Spore Age fossil for the Transplanter, like the Fern Fossil."
+  "jei.strata_bridge.info.amber_inclusion": "From a hardened Resin Trap. Counts as a Spore Age fossil for the Transplanter, like the Fern Fossil.",
+  "advancements.strata_epochs.met_resin_snail.title": "Slow, but Golden",
+  "advancements.strata_epochs.met_resin_snail.description": "Meet a Resin Snail in the Spore Age",
+  "jade.strata_bridge.mob.resin_snail": "Spore Age · its resin trail hardens into amber; resin fern spores lure it"
 }

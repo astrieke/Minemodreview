@@ -31,7 +31,7 @@ public final class MobClient {
         modBus.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> {
             for (StrataMobDef def : List.of(GeodeCrawler.DEF, SporeBellows.DEF, PetrifiedWitness.DEF, Spiralit.DEF, EmberBurrower.DEF,
                     dev.strata.epochs.mob.Stratolith.DEF, dev.strata.epochs.mob.ResonantShard.DEF,
-                    dev.strata.epochs.mob.AmberMoth.DEF)) {
+                    dev.strata.epochs.mob.AmberMoth.DEF, dev.strata.epochs.mob.ResinSnail.DEF)) {
                 event.registerLayerDefinition(layer(def), () -> MobModelBuilder.build(def.model()));
             }
         });
@@ -44,6 +44,7 @@ public final class MobClient {
             event.registerEntityRenderer(EpochsMobs.STRATOLITH.get(), ctx -> new StrataMobRenderer<>(ctx, dev.strata.epochs.mob.Stratolith.DEF));
             event.registerEntityRenderer(EpochsMobs.RESONANT_SHARD.get(), ctx -> new StrataMobRenderer<>(ctx, dev.strata.epochs.mob.ResonantShard.DEF));
             event.registerEntityRenderer(EpochsMobs.AMBER_MOTH.get(), ctx -> new StrataMobRenderer<>(ctx, dev.strata.epochs.mob.AmberMoth.DEF));
+            event.registerEntityRenderer(EpochsMobs.RESIN_SNAIL.get(), ctx -> new StrataMobRenderer<>(ctx, dev.strata.epochs.mob.ResinSnail.DEF));
         });
     }
 }

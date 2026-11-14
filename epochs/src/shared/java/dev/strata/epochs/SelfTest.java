@@ -60,6 +60,7 @@ final class SelfTest {
         failures += testStratolith(server);
         failures += testResonantShard(server);
         failures += testAmberMoth(server);
+        failures += testResinSnail(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -89,6 +90,8 @@ final class SelfTest {
                 l -> new dev.strata.epochs.mob.EmberBurrower(EpochsMobs.EMBER_BURROWER.get(), l), "ash_age");
         failures += testMob(server, dev.strata.epochs.mob.Spiralit.DEF,
                 l -> new dev.strata.epochs.mob.Spiralit(EpochsMobs.SPIRALIT.get(), l), "ash_age");
+        failures += testMob(server, dev.strata.epochs.mob.ResinSnail.DEF,
+                l -> new dev.strata.epochs.mob.ResinSnail(EpochsMobs.RESIN_SNAIL.get(), l), "spore_age");
         failures += testMob(server, dev.strata.epochs.mob.AmberMoth.DEF,
                 l -> new dev.strata.epochs.mob.AmberMoth(EpochsMobs.AMBER_MOTH.get(), l), "spore_age");
         failures += testMob(server, dev.strata.epochs.mob.ResonantShard.DEF,
@@ -1274,6 +1277,94 @@ final class SelfTest {
         StrataEpochs.LOG.info("[Strata-Test] Bernsteinmotte: Licht an der Falle={}, gefangen={}, Anflug={}, ausgehärtet={}, nur in Epoche={}, Ernte={}, "
                 + "Fossil-Tag={}, Schleichen sicher={}, Staub+Flucht={}, Beute+Rezept={}, Klänge={}, Texte fehlen={} -> {}",
                 lit, caught, flewIn, hardened, onlyInEpoch, harvested, fossil, sneakSafe, dusted, loot, sounds, missing, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /**
+     * Harzschnecke: legt Harzspur nur auf freiem Boden und bis zur Grenze (gefüttert höher); die Spur bremst und härtet zur
+     * Bernsteinplatte aus, die Bernstein gibt; ein Treffer schickt sie ins Gehäuse, wo sie nur noch wenig Schaden nimmt.
+     */
+    private static int testResinSnail(MinecraftServer server) {
+        String epoch = StrataEpochs.id("spore_age");
+        ServerLevel level = StrataAPI.epochs(server).get(epoch).dimension().map(d -> Mc.level(server, d)).orElse(null);
+        if (level == null) {
+            StrataEpochs.LOG.error("[Strata-Test] Harzschnecke: Sporenzeit fehlt");
+            return 1;
+        }
+        BlockPos ground = EpochTravel.prepareArrival(level, 640, -640);
+        var air = net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();
+        for (BlockPos p : BlockPos.betweenClosed(ground.offset(-12, 0, -12), ground.offset(12, 2, 12))) level.setBlockAndUpdate(p, air);
+        for (BlockPos p : BlockPos.betweenClosed(ground.offset(-12, -1, -12), ground.offset(12, -1, 12))) {
+            level.setBlockAndUpdate(p, net.minecraft.world.level.block.Blocks.MUD.defaultBlockState());
+        }
+        var snail = new dev.strata.epochs.mob.ResinSnail(EpochsMobs.RESIN_SNAIL.get(), level);
+        snail.setPos(ground.getX() + 0.5, ground.getY(), ground.getZ() + 0.5);
+        level.addFreshEntity(snail);
+        snail.tickCount++;
+        snail.tick();
+        var trail = EpochsContent.RESIN_TRAIL.get();
+        boolean laid = snail.layTrail(level) && level.getBlockState(ground).is(trail) && !snail.layTrail(level);
+        boolean sticky = trail.getSpeedFactor() < 1.0f && trail.getJumpFactor() < 1.0f;
+
+        // Grenze: 16 Spurstücke im Umkreis, dann keine neue; gefüttert (Grenze 24) wieder.
+        BlockPos at = ground.offset(3, 0, -3);
+        snail.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        int need = dev.strata.epochs.mob.ResinSnail.TRAIL_CAP
+                - dev.strata.epochs.mob.ResinSnail.countTrail(level, at, dev.strata.epochs.mob.ResinSnail.TRAIL_RADIUS);
+        for (BlockPos p : BlockPos.betweenClosed(at.offset(-3, 0, -3), at.offset(3, 0, 3))) {
+            if (need <= 0) break;
+            if (p.equals(at) || !level.getBlockState(p).isAir()) continue;
+            level.setBlockAndUpdate(p, trail.defaultBlockState());
+            need--;
+        }
+        boolean capped = !snail.layTrail(level);
+        snail.feed();
+        boolean fedMore = snail.fed() && snail.layTrail(level)
+                && dev.strata.epochs.mob.ResinSnail.isFood(new net.minecraft.world.item.ItemStack(EpochsContent.RESIN_FERN_SPORES.get()));
+
+        // Aushärten im Zufallstick zur Bernsteinplatte.
+        var state = level.getBlockState(ground);
+        for (int i = 0; i < 200 && state.is(trail); i++) {
+            state.randomTick(level, ground, level.getRandom());
+            state = level.getBlockState(ground);
+        }
+        boolean hardened = state.is(EpochsContent.AMBER_PLATE.get());
+
+        // Gehäuse: der erste Treffer schickt sie hinein, danach nimmt sie nur noch wenig Schaden; nach 5 s kommt sie heraus.
+        float full = snail.getHealth();
+        dev.strata.epochs.mc.MobCompat.hurt(snail, level.damageSources().generic(), 3);
+        boolean retreated = snail.inShell();
+        for (int i = 0; i < 11; i++) { snail.tickCount++; snail.tick(); }
+        float before = snail.getHealth();
+        dev.strata.epochs.mc.MobCompat.hurt(snail, level.damageSources().generic(), 4);
+        boolean shielded = retreated && before < full && before - snail.getHealth() < 2.0f && before - snail.getHealth() > 0f;
+        for (int i = 0; i < dev.strata.epochs.mob.ResinSnail.SHELL_TICKS; i++) { snail.tickCount++; snail.tick(); }
+        boolean emerged = !snail.inShell();
+        snail.discard();
+        for (BlockPos p : BlockPos.betweenClosed(ground.offset(-12, 0, -12), ground.offset(12, 0, 12))) level.setBlockAndUpdate(p, air);
+
+        boolean loot;
+        try (var in = SelfTest.class.getResourceAsStream("/data/strata_epochs/loot_table/blocks/amber_plate.json")) {
+            String text = in == null ? "" : new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            loot = text.contains("strata_epochs:amber_shard");
+        } catch (java.io.IOException e) {
+            loot = false;
+        }
+        boolean sounds = true;
+        for (String kind : List.of("ambient", "hurt", "death", "retreat")) {
+            if (!SOUNDS.containsKey("entity.resin_snail." + kind)) sounds = false;
+        }
+        List<String> missing = new ArrayList<>();
+        for (String key : List.of("entity.strata_epochs.resin_snail", "item.strata_epochs.resin_snail_spawn_egg",
+                "block.strata_epochs.resin_trail", "block.strata_epochs.amber_plate",
+                "subtitles.strata_epochs.resin_snail.ambient", "subtitles.strata_epochs.resin_snail.hurt",
+                "subtitles.strata_epochs.resin_snail.death", "subtitles.strata_epochs.resin_snail.retreat")) {
+            for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
+        }
+        boolean ok = laid && sticky && capped && fedMore && hardened && shielded && emerged && loot && sounds && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Harzschnecke: Spur={}, klebrig={}, Grenze={}, gefüttert mehr={}, ausgehärtet={}, "
+                + "Gehäuse schützt={}, kommt heraus={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
+                laid, sticky, capped, fedMore, hardened, shielded, emerged, loot, sounds, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

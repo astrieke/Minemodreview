@@ -66,6 +66,9 @@ PAL['gold_ring'] = PAL['gold']
 # Bernsteinmotte: dunkles Pelzbraun, bernsteinfarbene Flügel, helle gefiederte Fühler
 PAL['moth_fur'] = ['#2a1c12', '#3b2818', '#4f3620', '#66482c', '#7d5a38']
 PAL['moth_wing'] = ['#7a3e0c', '#a8580f', '#d07a1a', '#eda23a', '#ffcf6a']
+# Harzschnecke: feuchte, olivbraune Haut und ein Gehäuse aus Bernstein
+PAL['snail_skin'] = ['#4a3a1e', '#6b5530', '#8a7244', '#a8905a', '#c4ad74']
+PAL['snail_shell'] = ['#7a3c08', '#9c4f0c', '#c26a14', '#e08a26', '#f6ad3e']
 PAL['moth_antenna'] = ['#8a7458', '#b39c78', '#d6c29a', '#e9dbb8', '#f7efd8']
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
 STRATA = [('#3c3742', 3), ('#77707c', 3), ('#b08a5a', 2), ('#5e5868', 3), ('#dcd6cf', 1), ('#77707c', 2), ('#3c3742', 2)]
@@ -604,13 +607,59 @@ def d_moth_eyes(img, f, rnd):
     put(img, r, 0, 0, '#1b1110'); put(img, r, r[2] - 1, 0, '#1b1110')
 
 
+def d_snail_foot(img, f, rnd):
+    # Fuß: dunkle Sohlenkante unten, feuchte Glanzpunkte oben; hinten (Box-UV-Zeile 0 der Oberseite) glänzt Harz.
+    for face in ('east', 'west', 'north', 'south'):
+        r = f[face]
+        for x in range(r[2]):
+            put(img, r, x, r[3] - 1, '#4a3a1e')
+    r = f['up']
+    for x, y in ((1, 3), (2, 7), (0, 9), (3, 5)):
+        put(img, r, x, y, '#d8c48a')
+    for x in range(r[2]):
+        put(img, r, x, 0, '#e08a26')                         # Harz an der Schleppe
+
+
+def d_snail_face(img, f, rnd):
+    r = f['north']                                          # 3 x 3
+    put(img, r, 1, 2, '#2a1c12')                            # Mund
+    put(img, r, 0, 1, '#6b5530'); put(img, r, 2, 1, '#6b5530')
+
+
+def d_snail_eye(img, f, rnd):
+    # Augenstiel: dunkle Kugel in den oberen zwei Zeilen, oben ein heller Glanzpunkt (Licht von oben).
+    put(img, f['up'], 0, 0, '#e8d8b0')
+    for face in ('north', 'east', 'west', 'south'):
+        put(img, f[face], 0, 0, '#1b1110')
+        put(img, f[face], 0, 1, '#2a1c12')
+
+
+def d_snail_shell(img, f, rnd):
+    # Gehäuse: eckige Spirale (Rille) auf beiden Seiten, dunkle Mündung vorn unten, Glanzpunkte oben.
+    r = f['east']
+    w, h = r[2], r[3]
+    cells = spiral_cells(w, h)
+    for side in ('east', 'west'):
+        r = f[side]
+        for i, (x, y) in enumerate(cells):
+            put(img, r, w - 1 - x if side == 'east' else x, y, '#3b2818' if i == 0 else '#7a3c08')
+    r = f['north']
+    for y in range(r[3] - 2, r[3]):
+        for x in range(r[2]):
+            put(img, r, x, y, '#3b2818')                    # Mündung, aus der der Körper kommt
+    r = f['up']
+    for x, y in ((1, 5), (2, 4), (3, 2)):
+        put(img, r, x, y, '#ffcf6a')                        # Glanz (leuchtet schwach)
+
+
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
            'amber_top': d_amber_top,
            'spiral': d_spiral, 'hood': d_hood, 'fossil': d_fossil, 'eyes': d_eyes, 'fin_tip': d_fin_tip,
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass, 'mycel': d_mycel, 'mushroom_cap': d_mushroom_cap,
            'stratolith_eyes': d_stratolith_eyes, 'resonant_face': d_resonant_face,
            'moth_wing_front': d_moth_wing_front, 'moth_wing_back': d_moth_wing_back, 'moth_collar': d_moth_collar,
-           'moth_stripes': d_moth_stripes, 'moth_eyes': d_moth_eyes, 'moth_feather': d_moth_feather}
+           'moth_stripes': d_moth_stripes, 'moth_eyes': d_moth_eyes, 'moth_feather': d_moth_feather,
+           'snail_foot': d_snail_foot, 'snail_face': d_snail_face, 'snail_eye': d_snail_eye, 'snail_shell': d_snail_shell}
 
 
 # Leucht-Ebenen: Name -> Materialien (ganze Würfel) oder Farben (einzelne Pixel, z. B. Augen),
@@ -635,6 +684,8 @@ GLOW = {
                        'eyes': {'colors': {'#eeeaff', '#8f7cff'}}},
     # Bernsteinmotte: die Kerne der Augenflecken glimmen (im Dunkeln der Sporenzeit lesbar)
     'amber_moth': {'spots': {'colors': {'#ffe08a', '#ffcf6a'}}},   # Augenkerne und Vorderränder
+    # Harzschnecke: das Bernstein-Gehäuse schimmert schwach (in der dunklen Sporenzeit sonst nicht zu sehen)
+    'resin_snail': {'shell': {'materials': {'snail_shell'}}},
     'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
                  'spiral_2': {'colors': {'#4a3591'}, 'glow_color': '#c9a8ff'},
                  'spiral_3': {'colors': {'#4a3592'}, 'glow_color': '#c9a8ff'},

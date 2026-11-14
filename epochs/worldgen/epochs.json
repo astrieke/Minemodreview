@@ -11,7 +11,8 @@
     "spiralit",
     "stratolith",
     "resonant_shard",
-    "amber_moth"
+    "amber_moth",
+    "resin_snail"
   ],
   "ore_replaceables_tag": "strata_epochs:epoch_ore_replaceables",
   "epochs": [
@@ -187,6 +188,12 @@
               "weight": 30,
               "min": 1,
               "max": 3
+            },
+            {
+              "entity": "strata_epochs:resin_snail",
+              "weight": 20,
+              "min": 1,
+              "max": 1
             }
           ],
           "exclude_features": [
@@ -226,6 +233,12 @@
             {
               "entity": "strata_epochs:spore_bellows",
               "weight": 50,
+              "min": 1,
+              "max": 2
+            },
+            {
+              "entity": "strata_epochs:resin_snail",
+              "weight": 40,
               "min": 1,
               "max": 2
             }
@@ -587,6 +600,13 @@
       "base": "minecraft:blocks/fletching_table",
       "replace": {
         "minecraft:fletching_table": "strata_epochs:amber_inclusion"
+      }
+    },
+    {
+      "block": "amber_plate",
+      "base": "minecraft:blocks/fletching_table",
+      "replace": {
+        "minecraft:fletching_table": "strata_epochs:amber_shard"
       }
     }
   ],
