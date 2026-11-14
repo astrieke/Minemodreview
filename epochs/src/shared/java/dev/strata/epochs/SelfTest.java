@@ -948,10 +948,14 @@ final class SelfTest {
         second.triggerRewind();
         player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,
                 new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_PICKAXE));
+        // Die KI (Umherstreifen, Umschauen) dreht ihn in den Vorwärts-Ticks zufällig: Blickrichtung vor
+        // jedem Treffer fest setzen und den Spieler relativ zu ihr stellen, sonst entscheidet der Zufall über inFront.
+        faceSouth(second);
         player.setPos(second.getX(), second.getY(), second.getZ() - 3);   // hinten
         second.hurt(player.damageSources().playerAttack(player), 1);
         boolean backNoEffect = second.rewindPhase() == dev.strata.epochs.mob.StrataAbility.Phase.WARNING;
         for (int i = 0; i < 11; i++) { second.tickCount++; second.tick(); }   // Unverwundbarkeit nach dem Treffer abwarten (Feld ab 26.3 privat)
+        faceSouth(second);
         player.setPos(second.getX(), second.getY(), second.getZ() + 3);   // vorn
         second.hurt(player.damageSources().playerAttack(player), 1);
         boolean countered = backNoEffect && second.rewindPhase() != dev.strata.epochs.mob.StrataAbility.Phase.WARNING
@@ -1008,6 +1012,14 @@ final class SelfTest {
                 + "Zurückspulen={}, Konter von vorn={}, Herz={}, Kodex={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
                 summonOk, risingSafe, layers, h0, h1, h2, rewound, countered, heart, codex, loot, sounds, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
+    }
+
+    /** Blick, Kopf und Körper nach Süden (+z), damit {@code inFront} im Test nicht von der KI-Drehung abhängt. */
+    private static void faceSouth(net.minecraft.world.entity.Mob mob) {
+        mob.setYRot(0);
+        mob.setXRot(0);
+        mob.setYHeadRot(0);
+        mob.yBodyRot = 0;
     }
 
     /** Glutwühler: taucht bei Ziel in 6 Blöcken ab, grollt nah am Ziel, bricht hervor (Schaden + Wurf). */
