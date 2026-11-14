@@ -85,5 +85,9 @@
   "advancements.strata_epochs.stratolith.description": "Defeat the Stratolith",
   "jei.strata_bridge.info.layer_core": "Layer Core (crystal quartz, amber, ember shard, time essence, chronostone): right-click the top of chronostone to awaken the Stratolith, a mini-boss of three rock layers. Only for those who mastered all three epochs, with 3 × 4 × 3 blocks of room and not on Peaceful. Phases: crystal spikes from the ground, a spore burst with Spore Bellows, and a rewind that only a pickaxe on its core, from the front, can stop.",
   "jei.strata_bridge.info.heart_of_deep_time": "Loot of the Stratolith. In your off hand it strengthens the Transplanter: one and a half times the radius and no fossil needed. It is not used up.",
-  "jade.strata_bridge.mob.stratolith": "Mini-boss · three layers, a pickaxe on its core stops the rewind"
+  "jade.strata_bridge.mob.stratolith": "Mini-boss · three layers, a pickaxe on its core stops the rewind",
+  "advancements.strata_epochs.met_resonant_shard.title": "In Tune",
+  "advancements.strata_epochs.met_resonant_shard.description": "Meet a Resonant Shard in the Crystal Age",
+  "jade.strata_bridge.mob.resonant_shard": "Crystal Age · Resting place: solidification pauses near it",
+  "jei.strata_bridge.info.resonant_splinter": "Dropped by a Resonant Shard killed by a player. Right-click in an epoch: your solidification pauses for 30 s, then a 5 min cooldown. Holds 3 charges and also works while mining. Alive, the Resonant Shard is a fixed resting place as long as nobody mines or fights near it."
 }

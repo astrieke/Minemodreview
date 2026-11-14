@@ -58,6 +58,7 @@ final class SelfTest {
         failures += testRifts(server);
         failures += testMuseum(server);
         failures += testStratolith(server);
+        failures += testResonantShard(server);
 
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
@@ -87,6 +88,8 @@ final class SelfTest {
                 l -> new dev.strata.epochs.mob.EmberBurrower(EpochsMobs.EMBER_BURROWER.get(), l), "ash_age");
         failures += testMob(server, dev.strata.epochs.mob.Spiralit.DEF,
                 l -> new dev.strata.epochs.mob.Spiralit(EpochsMobs.SPIRALIT.get(), l), "ash_age");
+        failures += testMob(server, dev.strata.epochs.mob.ResonantShard.DEF,
+                l -> new dev.strata.epochs.mob.ResonantShard(EpochsMobs.RESONANT_SHARD.get(), l), "crystal_age");
         StrataEpochs.LOG.info("[Strata-Test] Fertig, {} Fehler", failures);
         persistTest(server);
     }
@@ -1007,6 +1010,128 @@ final class SelfTest {
         StrataEpochs.LOG.info("[Strata-Test] Stratolith: Beschwörung={}, Aufsteigen geschützt={}, Schichten={} (Höhe {}/{}/{}), "
                 + "Zurückspulen={}, Konter von vorn={}, Herz={}, Kodex={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
                 summonOk, risingSafe, layers, h0, h1, h2, rewound, countered, heart, codex, loot, sounds, missing, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /**
+     * Resonanzling: Gleichklang hält die Uhr an (auch eine laufende), nicht beim Folgen; weiche Blöcke stören nicht,
+     * Anschlagen nur warnt, Abbau verstimmt; erster Treffer warnt, zweiter verstimmt; Selbstverteidigung zählt nicht;
+     * Einstimmen speichert die Heimat; der Splitter lässt die Uhr ruhen und verbraucht eine von 3 Ladungen.
+     */
+    private static int testResonantShard(MinecraftServer server) {
+        String epoch = StrataEpochs.id("crystal_age");
+        ServerLevel level = StrataAPI.epochs(server).get(epoch).dimension().map(d -> Mc.level(server, d)).orElse(null);
+        if (level == null) {
+            StrataEpochs.LOG.error("[Strata-Test] Resonanzling: Kristallzeit fehlt");
+            return 1;
+        }
+        BlockPos ground = EpochTravel.prepareArrival(level, 640, 640);
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("strata_resonance_test".getBytes()), "strata_resonance_test"));
+        player.setPos(ground.getX() + 0.5, ground.getY(), ground.getZ() + 2.5);
+        var shards = dev.strata.epochs.mob.ResonantShard.TEST_PLAYERS;
+        shards.add(player);
+        java.util.function.Function<BlockPos, dev.strata.epochs.mob.ResonantShard> spawn = at -> {
+            var s = new dev.strata.epochs.mob.ResonantShard(EpochsMobs.RESONANT_SHARD.get(), level);
+            s.setPos(at.getX() + 0.5, at.getY() + 0.6, at.getZ() + 0.5);
+            level.addFreshEntity(s);
+            return s;
+        };
+        java.util.function.BiConsumer<net.minecraft.world.entity.Mob, Integer> run = (m, n) -> {
+            for (int i = 0; i < n; i++) { m.tickCount++; m.tick(); }
+        };
+        var a = spawn.apply(ground);
+        run.accept(a, 25);
+        boolean paused = Solidification.isPaused(player) && Solidification.factor(player) == 0.0;
+        player.setData(EpochsContent.VISIT.get(), player.getData(EpochsContent.VISIT.get()).withTicks(100_000));
+        player.tickCount = 0;
+        Solidification.onPlayerTick(new net.neoforged.neoforge.event.tick.PlayerTickEvent.Post(player));
+        boolean clockStill = player.getData(EpochsContent.VISIT.get()).ticks() == 100_000;   // auch tief in der Verfestigung
+
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(EpochsContent.CRYSTAL_QUARTZ.get()));
+        run.accept(a, 3);
+        boolean noCalmWhileFollowing = !a.calm();
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
+        run.accept(a, 3);
+
+        BlockPos near = a.blockPosition().offset(1, -1, 0);   // relativ zur jetzigen Stelle: er driftet bis zu 3 Blöcke
+        var stone = net.minecraft.world.level.block.Blocks.STONE.defaultBlockState();
+        // Die Suche nach Resonanzlingen ist Vanilla; frisch erzeugte Testmobs findet sie je nach Version erst
+        // später (Entities werden asynchron geladen). Geprüft wird daher die Regel pro Resonanzling.
+        boolean softIgnored = !a.nearbyBlock(player, near, net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState(), true)
+                && !a.nearbyBlock(player, near, net.minecraft.world.level.block.Blocks.CRAFTING_TABLE.defaultBlockState(), true)
+                && !a.uneasy() && a.calm();
+        boolean farIgnored = !a.nearbyBlock(player, a.blockPosition().offset(8, -1, 0), stone, true) && !a.uneasy();
+        a.nearbyBlock(player, near, stone, false);
+        boolean warned = a.uneasy() && a.calm() && !a.silent();
+        a.nearbyBlock(player, near, stone, true);
+        run.accept(a, dev.strata.epochs.mob.ResonantShard.WARNING_TICKS + 2);
+        boolean silenced = a.silent() && !a.calm();
+
+        var b = spawn.apply(ground.offset(0, 0, 24));
+        run.accept(b, 2);
+        b.disturb(player, b.position(), dev.strata.epochs.mob.ResonantShard.Disturbance.HIT);
+        run.accept(b, dev.strata.epochs.mob.ResonantShard.WARNING_TICKS + 2);
+        boolean firstHitWarns = b.uneasy() && !b.silent();
+        b.disturb(player, b.position(), dev.strata.epochs.mob.ResonantShard.Disturbance.HIT);
+        run.accept(b, dev.strata.epochs.mob.ResonantShard.WARNING_TICKS + 2);
+        boolean secondHitSilences = b.silent();
+
+        // setTarget verwirft ab 26.1 unverwundbare Ziele (simulierte Spieler), daher die Regel direkt.
+        var attacker = new GeodeCrawler(EpochsMobs.GEODE_CRAWLER.get(), level);
+        boolean selfDefense = !dev.strata.epochs.mob.ResonantShard.selfDefense(attacker)
+                && dev.strata.epochs.mob.ResonantShard.targetsPlayer(player)
+                && !dev.strata.epochs.mob.ResonantShard.targetsPlayer(attacker);
+
+        var c = spawn.apply(ground.offset(24, 0, 0));
+        run.accept(c, 2);
+        c.tune();
+        boolean tuned = c.tuned() && c.home().equals(c.blockPosition()) && c.isPersistenceRequired()
+                && c.getData(EpochsContent.RESONANT_HOME.get()) == c.home().asLong();
+
+        var other = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("strata_splinter_test".getBytes()), "strata_splinter_test"));
+        other.setPos(ground.getX() + 40.5, ground.getY(), ground.getZ() + 40.5);
+        var splinter = new net.minecraft.world.item.ItemStack(EpochsContent.RESONANT_SPLINTER.get());
+        boolean before = Solidification.isPaused(other);
+        dev.strata.epochs.mob.ResonantShard.useSplinter(other, splinter);
+        boolean splinterOk = !before && Solidification.isPaused(other) && splinter.getMaxDamage() == 3
+                && splinter.getDamageValue() == 1 && Mc.isOnCooldown(other, splinter);
+
+        shards.remove(player);
+        a.discard();
+        b.discard();
+        c.discard();
+
+        boolean loot;
+        try (var in = SelfTest.class.getResourceAsStream("/data/strata_epochs/loot_table/entities/resonant_shard.json")) {
+            String text = in == null ? "" : new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            loot = text.contains("strata_epochs:resonant_splinter") && text.contains("minecraft:killed_by_player");
+        } catch (java.io.IOException e) {
+            loot = false;
+        }
+        boolean sounds = true;
+        for (String kind : List.of("ambient", "hurt", "death", "resonate", "dissonance", "shriek")) {
+            if (!SOUNDS.containsKey("entity.resonant_shard." + kind)) sounds = false;
+        }
+        List<String> missing = new ArrayList<>();
+        for (String key : List.of("entity.strata_epochs.resonant_shard", "item.strata_epochs.resonant_splinter",
+                "item.strata_epochs.resonant_shard_spawn_egg", "message.strata_epochs.solidify.paused",
+                "message.strata_epochs.resonant_shard.uneasy", "message.strata_epochs.resonant_shard.silent",
+                "message.strata_epochs.resonant_shard.still_silent", "message.strata_epochs.resonant_shard.tuned",
+                "message.strata_epochs.resonant_splinter", "subtitles.strata_epochs.resonant_shard.ambient",
+                "subtitles.strata_epochs.resonant_shard.hurt", "subtitles.strata_epochs.resonant_shard.death",
+                "subtitles.strata_epochs.resonant_shard.resonate", "subtitles.strata_epochs.resonant_shard.dissonance",
+                "subtitles.strata_epochs.resonant_shard.shriek")) {
+            for (String lang : List.of("de_de", "en_us")) if (!LANG.get(lang).contains(key)) missing.add(lang + ":" + key);
+        }
+        boolean ok = paused && clockStill && noCalmWhileFollowing && softIgnored && farIgnored && warned && silenced
+                && firstHitWarns && secondHitSilences && selfDefense && tuned && splinterOk && loot && sounds && missing.isEmpty();
+        StrataEpochs.LOG.info("[Strata-Test] Resonanzling: Ruhe={}, Uhr steht={}, folgt ohne Ruhe={}, weich egal={}, weit egal={}, "
+                + "Anschlagen warnt={}, Abbau verstimmt={}, 1. Treffer warnt={}, 2. verstimmt={}, Selbstverteidigung={}, "
+                + "eingestimmt={}, Splitter={}, Beute={}, Klänge={}, Texte fehlen={} -> {}",
+                paused, clockStill, noCalmWhileFollowing, softIgnored, farIgnored, warned, silenced, firstHitWarns,
+                secondHitSilences, selfDefense, tuned, splinterOk, loot, sounds, missing, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

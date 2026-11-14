@@ -59,6 +59,10 @@ PAL = {
     'mycel':         ['#3a3138', '#4f444c', '#6a5c64', '#84757c', '#9c8c92'],
     'glass':         ['#241a3a', '#2e2350', '#3a2c5c', '#4a3a70', '#5c4a86'],
 }
+# Resonanzling: Quarz mit normaler Lichtschattierung (eine Stufe je Fläche, dunkle Unterkante) statt der
+# senkrechten Kristallstreifen; Ring rundum gleich golden, weil er sich dreht.
+PAL['crystal'] = ['#2c2670', '#4a43b8', '#8582f5', '#a9a8ff', '#e6e6ff']   # Seiten heller: Kontrast zum Nebel
+PAL['gold_ring'] = PAL['gold']
 # Gesteinsschichten (von unten nach oben wiederholt): Schiefer, Grau, Ocker, Grau, Calcit-Linie
 STRATA = [('#3c3742', 3), ('#77707c', 3), ('#b08a5a', 2), ('#5e5868', 3), ('#dcd6cf', 1), ('#77707c', 2), ('#3c3742', 2)]
 STRATA_PERIOD = sum(h for _, h in STRATA)
@@ -153,6 +157,8 @@ def paint_cube(img, cube, rnd):
                         v -= 0.6                             # Körnung
                 if mat == 'eye':
                     v = 2 if face == 'down' else 4           # Augen hell, Unterseite dunkler (leuchten mit Segment 4)
+                if mat == 'gold_ring':                       # einfarbig: der Ring dreht sich, jede Seite muss gleich sein
+                    v = 3 if face == 'up' else 1 if face == 'down' else 2
                 if mat == 'calcite' and (x * 5 + y * 7) % 9 == 0:
                     v -= 1.2                                 # Calcit-Sprenkel
                 img.putpixel((x0 + x, y0 + y), rgb(pal[max(0, min(4, int(round(v))))]))
@@ -489,11 +495,28 @@ def d_stratolith_eyes(img, f, rnd):
         put(img, r, ex - 1, 1, '#1b1724'); put(img, r, ex + 3, 1, '#1b1724')
 
 
+def d_resonant_face(img, f, rnd):
+    # Resonanzling: zwei hohe Augenschlitze (leuchten) mit Brauenschatten, darunter die singende Stimmritze;
+    # an den übrigen Seiten eine dunkle und eine helle Schichtlinie (Gesteinsschichten).
+    r = f['north']                                          # 6 x 6, Zeile 0 oben
+    for ex in (1, 4):
+        put(img, r, ex, 0, '#5d5470')
+        for y in (1, 2):
+            put(img, r, ex, y, '#eeeaff')
+    for x in (2, 3):
+        put(img, r, x, 3, '#8f7cff')
+    for face in ('east', 'west', 'south'):
+        s = f[face]
+        for x in range(s[2]):
+            put(img, s, x, 2, '#8f887c')
+            put(img, s, x, 3, '#efebe0')
+
+
 DETAILS = {'lizard': d_lizard, 'snout': d_snout, 'claws': d_claws, 'spore': d_spore, 'amber_dots': d_amber_dots,
            'amber_top': d_amber_top,
            'spiral': d_spiral, 'hood': d_hood, 'fossil': d_fossil, 'eyes': d_eyes, 'fin_tip': d_fin_tip,
            'witness': d_witness, 'niche': d_niche, 'hourglass': d_hourglass, 'mycel': d_mycel, 'mushroom_cap': d_mushroom_cap,
-           'stratolith_eyes': d_stratolith_eyes}
+           'stratolith_eyes': d_stratolith_eyes, 'resonant_face': d_resonant_face}
 
 
 # Leucht-Ebenen: Name -> Materialien (ganze Würfel) oder Farben (einzelne Pixel, z. B. Augen),
@@ -513,6 +536,9 @@ GLOW = {
     # Kern (Sanduhr) und Augen glühen; die Kristalle leuchten, solange die Kristallschicht da ist.
     'stratolith': {'core': {'colors': {'#ffd27a', '#e0a030', '#f2c45a', '#ffe08a'}},
                    'crystals': {'materials': {'quartz'}}},
+    # Resonanzling: Quarz (Zinken, Spitze) leuchtet je nach Stimmung; Augen und Stimmritze eigene Ebene
+    'resonant_shard': {'crystals': {'materials': {'crystal'}},
+                       'eyes': {'colors': {'#eeeaff', '#8f7cff'}}},
     'spiralit': {'spiral_1': {'colors': {'#4a3590'}, 'glow_color': '#c9a8ff'},
                  'spiral_2': {'colors': {'#4a3591'}, 'glow_color': '#c9a8ff'},
                  'spiral_3': {'colors': {'#4a3592'}, 'glow_color': '#c9a8ff'},

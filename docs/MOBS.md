@@ -251,12 +251,59 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 
 Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwurf-Animationen); Runde 2 mit Code: 7/7/7, freigegeben. Vor einem Release einmal von Hand kämpfen (Diamant und Netherit, Zeit bis zum Sieg, Zahl der Rückspulungen notieren). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
+## Resonanzling (Entwurf, in Arbeit)
+
+Eine lebende Stimmgabel aus Kristallquarz: Calcit-Kern mit Gesicht (zwei leuchtende Augenschlitze, darunter die
+singende Stimmritze) und Schichtlinien, darauf zwei Quarz-Zinken mit einer Brücke (U-Bogen), darunter eine Quarzspitze,
+um den Kern ein goldener Stimmring (12 × 12, innen ±5). Gold ist die Gegenfarbe zum violetten Nebel der Kristallzeit.
+7 Knochen, 14 Würfel, 64 × 64, Leucht-Ebenen `crystals` (Quarz) und `eyes` (Augen, Stimmritze).
+Animationen `idle`, `fly`, `resonate`, `dissonance`, `tune`. Der Ring ist rundum gleich bemalt, damit er sich
+nahtlos dreht; gekippt wird er über einen eigenen Knochen `ring_tilt`.
+Trefferfläche 0,75 × 0,8 (Spitze, Kern, Ring; die Zinken ragen darüber hinaus), schwebt 0,6 Blöcke über dem Boden.
+
+**Rolle im Ablauf:** Er ist kein dritter Erzfinder (das machen Geodenkriecher und Spiralit), sondern das Gegenstück
+zum Sporenbalg: Bei ihm ruht die Verfestigung. Weil Abbau und Kampf in seiner Nähe ihn verstimmen, schützt er kein
+Bergbaulager. Er ist ein **Ruheplatz in der Epoche**: Fossilien präparieren, Bohrkerne analysieren, Epochen-Pflanzen
+ernten, Inventar sortieren.
+
+| Fähigkeit | Auslöser | Wirkung | Signal | Gegenzug / Grenze | Startwerte |
+|---|---|---|---|---|---|
+| **Gleichklang** | passiv, nur wenn er ruht (nicht, während er einem Spieler folgt, flieht oder verstimmt ist) | Die Verfestigungs-Uhr von Spielern im Umkreis ruht; auch eine laufende Verfestigung (Versteinern, Langsamkeit) setzt dort aus. Ist im Datapack ein Faktor > 0 gesetzt, läuft sie stattdessen nur langsamer. | Alle 4 s ein Ton (`resonate`), ein violetter Partikelring am Boden genau auf dem Radius; Statusleiste „Die Zeit ruht“. | Ortsgebunden; Abbau und Kampf darin verstimmen ihn. | Radius 5, Puls alle 4 s, Faktor 0 (ruht) |
+| **Verstimmung** | Stufe 1 *Unruhe*: Ein Spieler beginnt im Radius einen Block mit Härte ≥ 1 anzuschlagen (Stein, Erz; nicht Pflanzen, Erde, Sand), oder ein Spieler trifft dort ein Wesen (auch ihn selbst). Stufe 2 *Aufschrei*: Der Block wird tatsächlich abgebaut, oder ein zweiter Treffer kommt während der Unruhe. | Unruhe: nur Warnung, der Gleichklang bleibt. Aufschrei (nach 0,6 s Vorwarnung): Der Gleichklang endet für 30 s, er weicht 6 Blöcke zurück und glimmt nur noch. Ein eingestimmter kehrt danach in seine Heimat zurück. | Unruhe: Zittern, gespreizte Zinken, schiefer Ton, flackernder Quarz, Statusleiste „wird unruhig“. Aufschrei: Rückstoß, Quarzsplitter, greller Ton. | Aufhören, sobald er unruhig wird; die Mine mehr als 5 Blöcke vom Lager entfernt anlegen. Treffer auf Monster, die einen Spieler angreifen, zählen nicht (Selbstverteidigung). Arbeitsblöcke im Lager (Werkbank, Truhen, Öfen, Amboss, die Strata-Tische, Tag `strata_epochs:resonance_ignores`) stören nie. Wer mit Eile einen Block sofort abbaut, bekommt keine Warnung vorher: Anschlagen und Abbau fallen in denselben Moment. | Unruhe 5 s, Vorwarnung 0,6 s, Pause 30 s, Flucht 6 Blöcke |
+| **Einstimmen** | Kristallquarz in der Hand lockt ihn (er schwebt in 2 Blöcken Abstand hinterher; dabei wirkt kein Gleichklang). Rechtsklick mit Kristallquarz verbraucht 1. | Er bleibt an dieser Stelle (Heimat, driftet höchstens 3 Blöcke) und verschwindet nicht mehr. Umziehen: wieder locken und neu einstimmen. | Animation `tune` (Hüpfer, Ring einmal herum), goldene Funken. | – (Hilfe). Auch der Geodenkriecher folgt Kristallquarz; das ist gewollt. | Drift 3 Blöcke |
+| **Zerbrechlich** | wird getroffen | Er greift nie an. Der erste Treffer eines Spielers macht **keinen Schaden**, nur einen Stoß zurück und Unruhe (Schutz vor Fehlklicks). Erst in der Unruhe oder verstimmt nimmt er Schaden; mit 8 Leben reicht dann ein Schwerthieb. | wie oben | – | Leben 8 |
+
+**Verrechnung mit anderen Zeitquellen:** Die Ruhe schlägt alle Faktoren (Sporenwolke, Spiralit, Geodenrüstung):
+Solange sie wirkt, läuft keine Zeit. Zeitanker und Museum verlängern weiter die erlaubte Zeit; Zeitabzüge
+(Sanduhr-Puls des Steinzeugen) wirken auch in der Ruhe.
+
+**Abwurf:** 1 **Resonanzsplitter** mit 3 Ladungen. Rechtsklick in einer Epoche: Die eigene Uhr ruht 30 s, danach
+5 min Abklingzeit; nach 3 Ladungen zerbricht er. Er wirkt überall, **auch beim Abbauen**. Damit gibt es eine echte
+Wahl: den Resonanzling als ortsfestes Lager behalten (dauerhaft, aber ohne Abbau) oder für 3 × 30 s tragbaren
+Aufschub in der Mine töten. Ruhe und Abklingzeit stehen im Datapack (`abilities.splinter`).
+
+**Leuchten je Zustand:** ruhig Quarz 0,6, beim Ton 1,0, Augen 1,0; unruhig Quarz flackert; verstimmt Quarz 0,1, Augen 0,25.
+
+**Spawn:** nur in der Kristallzeit (Kristallhöhlen, Geodengewölbe), selten (Gewicht 6, einzeln), höchstens 2 im
+Umkreis von 48 Blöcken, nur mit 2 Blöcken Luft über dem Boden; er hebt danach ab. Kategorie Kreatur.
+
+**Datapack-Werte (`strata_core:mob_tuning`):** `calm` (radius, höchstens 16, gilt auch für die Störung; pulse, factor),
+`dissonance` (uneasy, warning, silence, flee), `tune` (drift), `splinter` (pause, cooldown).
+
+**Technik:** Schweben wie der Spiralit (`setNoGravity`, eigene Bewegung zum Ziel, kein Pfadfinder). Die Ruhe ist ein
+eigener Mechanismus in `Solidification` (`pause(player, ticks)`), den auch der Splitter nutzt; der Gleichklang
+erneuert ihn zweimal pro Sekunde. Anschlagen über `PlayerInteractEvent.LeftClickBlock` (Aktion START), Abbau über
+`BreakHook.onBroken` (BreakEvent bzw. BreakBlockEvent je nach Version).
+
+Prüfung Modell Runde 1: 6/5/6 (Quarz-Licht, Ring-Naht, Vorwarnung vor dem Auslöser, Trefferfläche, Stärke der Ruhe,
+Splitter), Runde 2: 7/6/7 (erster Treffer tötete statt zu warnen). Alles umgesetzt, dazu Ring innen ±5 (der Kern
+stößt beim Drehen nicht mehr hinein), einfarbige Ringseiten, U-Brücke ohne halbe Pixel, hellere Zinken-Seiten.
+
 ## Später (gesammelt, nicht eingeplant)
 
 | Mob | Epoche | Rolle | Warum später |
 |---|---|---|---|
 | Bernsteinmotte (`amber_moth`) | Sporenzeit | passiv; man fängt sie, und sie reift zu Bernstein mit Einschluss (Fossil-Quelle) | Fliegen ist am teuersten, und das Insektenmodell ist schwer |
-| Resonanzling (`resonant_shard`) | Kristallzeit | neutral; lässt Erz in der Nähe aufleuchten und pausiert kurz die Verfestigung | schwebt, braucht also Flug-Navigation |
 | Harzschnecke (`resin_snail`) | Sporenzeit | passiv; ihre Spur härtet zu Bernsteinplatten aus | gut, aber ohne Bezug zum Kern-Ablauf |
 
 ## Technische Architektur

@@ -1,0 +1,2034 @@
+{
+  "id": "resonant_shard",
+  "name": "Resonanzling",
+  "texture_size": [
+    64,
+    64
+  ],
+  "hover": 10,
+  "bones": [
+    {
+      "name": "root",
+      "origin": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "body",
+      "parent": "root",
+      "origin": [
+        0,
+        8,
+        0
+      ]
+    },
+    {
+      "name": "shard",
+      "parent": "body",
+      "origin": [
+        0,
+        5,
+        0
+      ]
+    },
+    {
+      "name": "prong_left",
+      "parent": "body",
+      "origin": [
+        2.5,
+        12,
+        0
+      ]
+    },
+    {
+      "name": "prong_right",
+      "parent": "body",
+      "origin": [
+        -2.5,
+        12,
+        0
+      ]
+    },
+    {
+      "name": "ring_tilt",
+      "parent": "body",
+      "origin": [
+        0,
+        6,
+        0
+      ]
+    },
+    {
+      "name": "ring",
+      "parent": "ring_tilt",
+      "origin": [
+        0,
+        6,
+        0
+      ]
+    }
+  ],
+  "cubes": [
+    {
+      "name": "core",
+      "bone": "body",
+      "from": [
+        -3,
+        5,
+        -3
+      ],
+      "to": [
+        3,
+        11,
+        3
+      ],
+      "uv_offset": [
+        0,
+        0
+      ],
+      "material": "calcite",
+      "face": "resonant_face"
+    },
+    {
+      "name": "core_cap",
+      "bone": "body",
+      "from": [
+        -3.5,
+        11,
+        -3.5
+      ],
+      "to": [
+        3.5,
+        12,
+        3.5
+      ],
+      "uv_offset": [
+        24,
+        0
+      ],
+      "material": "calcite_light"
+    },
+    {
+      "name": "fork_bridge",
+      "bone": "body",
+      "from": [
+        -1.5,
+        12,
+        -1
+      ],
+      "to": [
+        1.5,
+        13,
+        1
+      ],
+      "uv_offset": [
+        36,
+        12
+      ],
+      "material": "crystal"
+    },
+    {
+      "name": "back_shard",
+      "bone": "body",
+      "from": [
+        -1,
+        7,
+        3
+      ],
+      "to": [
+        1,
+        10,
+        5
+      ],
+      "uv_offset": [
+        28,
+        12
+      ],
+      "material": "crystal"
+    },
+    {
+      "name": "base_shard",
+      "bone": "shard",
+      "from": [
+        -1.5,
+        2,
+        -1.5
+      ],
+      "to": [
+        1.5,
+        5,
+        1.5
+      ],
+      "uv_offset": [
+        0,
+        12
+      ],
+      "material": "crystal"
+    },
+    {
+      "name": "base_tip",
+      "bone": "shard",
+      "from": [
+        -0.5,
+        0,
+        -0.5
+      ],
+      "to": [
+        0.5,
+        2,
+        0.5
+      ],
+      "uv_offset": [
+        12,
+        12
+      ],
+      "material": "crystal"
+    },
+    {
+      "name": "prong_left",
+      "bone": "prong_left",
+      "from": [
+        1.5,
+        12,
+        -1
+      ],
+      "to": [
+        3.5,
+        20,
+        1
+      ],
+      "uv_offset": [
+        16,
+        12
+      ],
+      "material": "crystal"
+    },
+    {
+      "name": "prong_left_tip",
+      "bone": "prong_left",
+      "from": [
+        2,
+        20,
+        -0.5
+      ],
+      "to": [
+        3,
+        22,
+        0.5
+      ],
+      "uv_offset": [
+        24,
+        12
+      ],
+      "material": "crystal"
+    },
+    {
+      "name": "prong_right",
+      "bone": "prong_right",
+      "from": [
+        -3.5,
+        12,
+        -1
+      ],
+      "to": [
+        -1.5,
+        20,
+        1
+      ],
+      "uv_offset": [
+        16,
+        12
+      ],
+      "material": "crystal"
+    },
+    {
+      "name": "prong_right_tip",
+      "bone": "prong_right",
+      "from": [
+        -3,
+        20,
+        -0.5
+      ],
+      "to": [
+        -2,
+        22,
+        0.5
+      ],
+      "uv_offset": [
+        24,
+        12
+      ],
+      "material": "crystal"
+    },
+    {
+      "name": "ring_north",
+      "bone": "ring",
+      "from": [
+        -6,
+        5,
+        -6
+      ],
+      "to": [
+        6,
+        7,
+        -5
+      ],
+      "uv_offset": [
+        0,
+        24
+      ],
+      "material": "gold_ring"
+    },
+    {
+      "name": "ring_south",
+      "bone": "ring",
+      "from": [
+        -6,
+        5,
+        5
+      ],
+      "to": [
+        6,
+        7,
+        6
+      ],
+      "uv_offset": [
+        0,
+        27
+      ],
+      "material": "gold_ring"
+    },
+    {
+      "name": "ring_east",
+      "bone": "ring",
+      "from": [
+        5,
+        5,
+        -5
+      ],
+      "to": [
+        6,
+        7,
+        5
+      ],
+      "uv_offset": [
+        26,
+        24
+      ],
+      "material": "gold_ring"
+    },
+    {
+      "name": "ring_west",
+      "bone": "ring",
+      "from": [
+        -6,
+        5,
+        -5
+      ],
+      "to": [
+        -5,
+        7,
+        5
+      ],
+      "uv_offset": [
+        0,
+        36
+      ],
+      "material": "gold_ring"
+    }
+  ],
+  "animations": [
+    {
+      "name": "animation.resonant_shard.idle",
+      "length": 3,
+      "loop": "loop",
+      "peak": 1.5,
+      "keyframes": [
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.0,
+          "value": [
+            0,
+            0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.25,
+          "value": [
+            0,
+            0.06698729810778065,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.5,
+          "value": [
+            0,
+            0.24999999999999994,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.75,
+          "value": [
+            0,
+            0.49999999999999994,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.0,
+          "value": [
+            0,
+            0.7499999999999999,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.25,
+          "value": [
+            0,
+            0.9330127018922194,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.5,
+          "value": [
+            0,
+            1.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.75,
+          "value": [
+            0,
+            0.9330127018922193,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 2.0,
+          "value": [
+            0,
+            0.7500000000000002,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 2.25,
+          "value": [
+            0,
+            0.5000000000000001,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 2.5,
+          "value": [
+            0,
+            0.24999999999999994,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 2.75,
+          "value": [
+            0,
+            0.06698729810778081,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 3.0,
+          "value": [
+            0,
+            0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "rotation",
+          "time": 3,
+          "value": [
+            0,
+            90,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0,
+            0,
+            -0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            -0.5176380902050415
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            -0.9999999999999999
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.75,
+          "value": [
+            0,
+            0,
+            -1.414213562373095
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            -1.7320508075688772
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.25,
+          "value": [
+            0,
+            0,
+            -1.9318516525781366
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            0,
+            0,
+            -2.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.75,
+          "value": [
+            0,
+            0,
+            -1.9318516525781366
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 2.0,
+          "value": [
+            0,
+            0,
+            -1.7320508075688774
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 2.25,
+          "value": [
+            0,
+            0,
+            -1.4142135623730951
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 2.5,
+          "value": [
+            0,
+            0,
+            -0.9999999999999999
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 2.75,
+          "value": [
+            0,
+            0,
+            -0.517638090205042
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            -2.4492935982947064e-16
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            0,
+            0,
+            0.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            0.5176380902050415
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            0.9999999999999999
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.75,
+          "value": [
+            0,
+            0,
+            1.414213562373095
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            1.7320508075688772
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.25,
+          "value": [
+            0,
+            0,
+            1.9318516525781366
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.5,
+          "value": [
+            0,
+            0,
+            2.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.75,
+          "value": [
+            0,
+            0,
+            1.9318516525781366
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 2.0,
+          "value": [
+            0,
+            0,
+            1.7320508075688774
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 2.25,
+          "value": [
+            0,
+            0,
+            1.4142135623730951
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 2.5,
+          "value": [
+            0,
+            0,
+            0.9999999999999999
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 2.75,
+          "value": [
+            0,
+            0,
+            0.517638090205042
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 3.0,
+          "value": [
+            0,
+            0,
+            2.4492935982947064e-16
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.resonant_shard.fly",
+      "length": 1.2,
+      "loop": "loop",
+      "peak": 0.6,
+      "keyframes": [
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.0,
+          "value": [
+            -8.0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            -8.439339828220179,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            -9.5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            -10.560660171779821,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            -11.0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.75,
+          "value": [
+            -10.560660171779821,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            -9.5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.05,
+          "value": [
+            -8.439339828220177,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            -8.0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.0,
+          "value": [
+            0,
+            0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.15,
+          "value": [
+            0,
+            0.08786796564403572,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.3,
+          "value": [
+            0,
+            0.29999999999999993,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.45,
+          "value": [
+            0,
+            0.5121320343559642,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.6,
+          "value": [
+            0,
+            0.6,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.75,
+          "value": [
+            0,
+            0.5121320343559643,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.9,
+          "value": [
+            0,
+            0.30000000000000004,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.05,
+          "value": [
+            0,
+            0.0878679656440356,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.2,
+          "value": [
+            0,
+            0.0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            90,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            7,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            7,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            7,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            7,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.resonant_shard.resonate",
+      "length": 1.6,
+      "loop": "once",
+      "peak": 0.5,
+      "keyframes": [
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.3,
+          "value": [
+            1.08,
+            1.08,
+            1.08
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 0.6,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "scale",
+          "time": 1.6,
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            -7.428571428571429
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            6.857142857142857
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            -6.285714285714286
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            5.7142857142857135
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            -5.142857142857142
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            4.571428571428571
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            0,
+            0,
+            -4.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            0,
+            0,
+            3.428571428571429
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            0,
+            0,
+            -2.8571428571428577
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            2.2857142857142856
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.1,
+          "value": [
+            0,
+            0,
+            -1.7142857142857144
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            1.1428571428571423
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.1,
+          "value": [
+            0,
+            0,
+            7.428571428571429
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.2,
+          "value": [
+            0,
+            0,
+            -6.857142857142857
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            6.285714285714286
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            -5.7142857142857135
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            5.142857142857142
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            -4.571428571428571
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            0,
+            0,
+            4.0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            0,
+            0,
+            -3.428571428571429
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            0,
+            0,
+            2.8571428571428577
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            -2.2857142857142856
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.1,
+          "value": [
+            0,
+            0,
+            1.7142857142857144
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            -1.1428571428571423
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "rotation",
+          "time": 1.6,
+          "value": [
+            0,
+            180,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "position",
+          "time": 0.4,
+          "value": [
+            0,
+            2,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "position",
+          "time": 1.2,
+          "value": [
+            0,
+            2,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "position",
+          "time": 1.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.resonant_shard.dissonance",
+      "length": 1.0,
+      "loop": "once",
+      "peak": 0.65,
+      "keyframes": [
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            -6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            -3
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            0,
+            0,
+            -9
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            0,
+            0,
+            -5
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            -18
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            0,
+            0,
+            -18
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            6
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.25,
+          "value": [
+            0,
+            0,
+            3
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.35,
+          "value": [
+            0,
+            0,
+            9
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.45,
+          "value": [
+            0,
+            0,
+            5
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            18
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.8,
+          "value": [
+            0,
+            0,
+            18
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.1,
+          "value": [
+            0.5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.2,
+          "value": [
+            -0.5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.3,
+          "value": [
+            0.5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.4,
+          "value": [
+            -0.5,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.5,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 0.7,
+          "value": [
+            12,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring_tilt",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring_tilt",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            10,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring_tilt",
+          "channel": "rotation",
+          "time": 0.6,
+          "value": [
+            25,
+            0,
+            -10
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring_tilt",
+          "channel": "rotation",
+          "time": 1.0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    },
+    {
+      "name": "animation.resonant_shard.tune",
+      "length": 1.4,
+      "loop": "once",
+      "peak": 0.4,
+      "keyframes": [
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.15,
+          "value": [
+            0,
+            2.2,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.3,
+          "value": [
+            0,
+            3,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.5,
+          "value": [
+            0,
+            2,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 0.7,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "body",
+          "channel": "position",
+          "time": 1.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "ring",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            0,
+            360,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            4
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            0,
+            0,
+            4
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_left",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            -4
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 0.9,
+          "value": [
+            0,
+            0,
+            -4
+          ],
+          "interpolation": "linear"
+        },
+        {
+          "bone": "prong_right",
+          "channel": "rotation",
+          "time": 1.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "interpolation": "linear"
+        }
+      ]
+    }
+  ]
+}

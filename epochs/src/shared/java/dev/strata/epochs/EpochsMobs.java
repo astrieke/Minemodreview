@@ -56,6 +56,12 @@ public final class EpochsMobs {
     public static final Supplier<Item> STRATOLITH_SPAWN_EGG =
             REG.spawnEgg("stratolith_spawn_egg", STRATOLITH, 0x3c3742, 0x9b87ff);
 
+    /** Ruheplatz der Kristallzeit; Trefferfläche Spitze, Kern und Ring (die Zinken ragen darüber hinaus). */
+    public static final Supplier<EntityType<dev.strata.epochs.mob.ResonantShard>> RESONANT_SHARD =
+            REG.entity("resonant_shard", dev.strata.epochs.mob.ResonantShard::new, MobCategory.CREATURE, 0.75f, 0.8f, 8);
+    public static final Supplier<Item> RESONANT_SHARD_SPAWN_EGG =
+            REG.spawnEgg("resonant_shard_spawn_egg", RESONANT_SHARD, 0xdcd6c8, 0x6f6cf0);
+
     /** Begleiter aus dem Ammonit-Fossil, spawnt nicht natürlich. */
     public static final Supplier<EntityType<Spiralit>> SPIRALIT =
             REG.entity("spiralit", Spiralit::new, MobCategory.CREATURE, 0.6f, 0.9f, 8);
@@ -78,6 +84,12 @@ public final class EpochsMobs {
     public static final Supplier<SoundEvent> SPIRALIT_AMBIENT = REG.sound("entity.spiralit.ambient");
     public static final Supplier<SoundEvent> SPIRALIT_HURT = REG.sound("entity.spiralit.hurt");
     public static final Supplier<SoundEvent> SPIRALIT_DEATH = REG.sound("entity.spiralit.death");
+    public static final Supplier<SoundEvent> RESONANT_SHARD_AMBIENT = REG.sound("entity.resonant_shard.ambient");
+    public static final Supplier<SoundEvent> RESONANT_SHARD_HURT = REG.sound("entity.resonant_shard.hurt");
+    public static final Supplier<SoundEvent> RESONANT_SHARD_DEATH = REG.sound("entity.resonant_shard.death");
+    public static final Supplier<SoundEvent> RESONANT_SHARD_RESONATE = REG.sound("entity.resonant_shard.resonate");
+    public static final Supplier<SoundEvent> RESONANT_SHARD_DISSONANCE = REG.sound("entity.resonant_shard.dissonance");
+    public static final Supplier<SoundEvent> RESONANT_SHARD_SHRIEK = REG.sound("entity.resonant_shard.shriek");
     public static final Supplier<SoundEvent> STRATOLITH_AMBIENT = REG.sound("entity.stratolith.ambient");
     public static final Supplier<SoundEvent> STRATOLITH_HURT = REG.sound("entity.stratolith.hurt");
     public static final Supplier<SoundEvent> STRATOLITH_DEATH = REG.sound("entity.stratolith.death");
@@ -96,6 +108,7 @@ public final class EpochsMobs {
             event.put(SPIRALIT.get(), Spiralit.createAttributes().build());
             event.put(EMBER_BURROWER.get(), EmberBurrower.createAttributes().build());
             event.put(STRATOLITH.get(), dev.strata.epochs.mob.Stratolith.createAttributes().build());
+            event.put(RESONANT_SHARD.get(), dev.strata.epochs.mob.ResonantShard.createAttributes().build());
         });
         modBus.addListener((RegisterSpawnPlacementsEvent event) -> {
             event.register(GEODE_CRAWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -113,6 +126,10 @@ public final class EpochsMobs {
                             && Mob.checkMobSpawnRules(type, level, reason, pos, random)
                             && belowEpochLimit(level) && EmberBurrower.canSpawnHere(level, pos),
                     RegisterSpawnPlacementsEvent.Operation.REPLACE);
+            event.register(RESONANT_SHARD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    (type, level, reason, pos, random) -> EpochsConfig.RESONANT_SHARD.get()
+                            && belowEpochLimit(level) && dev.strata.epochs.mob.ResonantShard.canSpawnHere(level, pos),
+                    RegisterSpawnPlacementsEvent.Operation.REPLACE);
         });
         NeoForge.EVENT_BUS.addListener(StrataMob::handleIncomingDamage);
         NeoForge.EVENT_BUS.addListener(SporeBellows::onDeath);
@@ -121,6 +138,10 @@ public final class EpochsMobs {
         NeoForge.EVENT_BUS.addListener(Spiralit::onInteract);
         NeoForge.EVENT_BUS.addListener(Spiralit::onChangedDimension);
         NeoForge.EVENT_BUS.addListener(Spiralit::onServerStopped);
+        NeoForge.EVENT_BUS.addListener(dev.strata.epochs.mob.ResonantShard::onInteract);
+        NeoForge.EVENT_BUS.addListener(dev.strata.epochs.mob.ResonantShard::onStartBreaking);
+        NeoForge.EVENT_BUS.addListener(dev.strata.epochs.mob.ResonantShard::onDamage);
+        dev.strata.epochs.mc.BreakHook.onBroken(dev.strata.epochs.mob.ResonantShard::onBlockBroken);
     }
 
     /** Höchstzahl aller Strata-Mobs pro Dimension (Config {@code mobs.max_per_epoch}). */

@@ -20,7 +20,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  * ({@link ItemPetrification}). Ein Zeitanker im Inventar verdoppelt die Zeit.
  *
  * <p>Mobs greifen über {@link #speedUp} (Zeitfaktor, z. B. Sporenwolke) und {@link #advance}
- * (Zeit abziehen, z. B. Sanduhr-Puls) in die Uhr ein.
+ * (Zeit abziehen, z. B. Sanduhr-Puls) in die Uhr ein; {@link #pause} hält sie an (Resonanzling).
  */
 public final class Solidification {
 
@@ -28,6 +28,10 @@ public final class Solidification {
     private record Factor(double factor, long until) {}
 
     private static final java.util.Map<java.util.UUID, Factor> FACTORS = new java.util.concurrent.ConcurrentHashMap<>();
+    /** Spieler -> Spielzeit, bis zu der seine Uhr ruht (Resonanzling, Resonanzsplitter). Nur im Speicher. */
+    private static final java.util.Map<java.util.UUID, Long> PAUSED_UNTIL = new java.util.concurrent.ConcurrentHashMap<>();
+    /** Bremse aus dem Datapack (Gleichklang mit Faktor > 0): Spieler -> Faktor und Ende. Nur im Speicher. */
+    private static final java.util.Map<java.util.UUID, Factor> BRAKES = new java.util.concurrent.ConcurrentHashMap<>();
 
     private static final int CHECK_INTERVAL = 20;
     private static final int PETRIFY_INTERVAL = 100;
@@ -54,6 +58,12 @@ public final class Solidification {
             return;
         }
 
+        if (isPaused(player)) {
+            // Die Uhr ruht: nichts zählt weiter, und auch eine schon laufende Verfestigung wirkt hier nicht.
+            Mc.actionbar(player, Component.translatable("message.strata_epochs.solidify.paused")
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+            return;
+        }
         long before = visit.ticks();
         long ticks = before + Math.round(CHECK_INTERVAL * factor(player));
         player.setData(EpochsContent.VISIT.get(), visit.withTicks(ticks));
@@ -101,6 +111,46 @@ public final class Solidification {
     }
 
     /**
+     * Die Uhr des Spielers ruht für {@code ticks} (keine Zeit läuft ab, auch keine laufende Verfestigung wirkt).
+     * Eine längere Pause bleibt bestehen; Zeitabzüge über {@link #advance} wirken trotzdem.
+     */
+    public static void pause(ServerPlayer player, int ticks) {
+        long until = player.level().getGameTime() + ticks;
+        PAUSED_UNTIL.merge(player.getUUID(), until, Math::max);
+    }
+
+    /** Die Uhr läuft für {@code ticks} höchstens um {@code factor} (0..1) langsamer; die stärkste Bremse gilt. */
+    public static void slowDown(ServerPlayer player, double factor, int ticks) {
+        long now = player.level().getGameTime();
+        BRAKES.merge(player.getUUID(), new Factor(factor, now + ticks), (old, n) -> {
+            if (old.until <= now || n.factor < old.factor) return n;
+            if (n.factor > old.factor) return old;
+            return new Factor(n.factor, Math.max(old.until, n.until));
+        });
+    }
+
+    private static double brake(ServerPlayer player) {
+        Factor f = BRAKES.get(player.getUUID());
+        if (f == null) return 1.0;
+        if (f.until <= player.level().getGameTime()) {
+            BRAKES.remove(player.getUUID());
+            return 1.0;
+        }
+        return f.factor;
+    }
+
+    /** Ruht die Uhr des Spielers gerade? */
+    public static boolean isPaused(ServerPlayer player) {
+        Long until = PAUSED_UNTIL.get(player.getUUID());
+        if (until == null) return false;
+        if (until <= player.level().getGameTime()) {
+            PAUSED_UNTIL.remove(player.getUUID());
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Weitere Orte, an denen ein Zeitanker zählt (z. B. ein Curios-Slot). Strata Bridge trägt sich hier ein,
      * Strata Epochs selbst kennt keine Fremd-Mods.
      */
@@ -138,11 +188,13 @@ public final class Solidification {
         return Optional.of(new Clock(remaining, SolidificationClock.stage(ticks, allowed)));
     }
 
-    /** Aktueller Zeitfaktor des Spielers (1 = normal): Sporenwolken beschleunigen, Geodenrüstung und Spiralit bremsen. */
+    /** Aktueller Zeitfaktor des Spielers (1 = normal): Sporenwolken beschleunigen, Geodenrüstung, Spiralit und
+     * ein Resonanzling mit Datapack-Faktor bremsen (die stärkste Bremse gilt); in der Ruhe 0. */
     public static double factor(ServerPlayer player) {
+        if (isPaused(player)) return 0.0;
         double armor = EpochsGear.hasFullGeodeSet(player) ? EpochsGear.GEODE_SET_FACTOR : 1.0;
         // Rüstung und Spiralit stapeln sich nicht: Es gilt die stärkere Bremse.
-        armor = Math.min(armor, dev.strata.epochs.mob.Spiralit.factorFor(player));
+        armor = Math.min(armor, Math.min(dev.strata.epochs.mob.Spiralit.factorFor(player), brake(player)));
         Factor f = FACTORS.get(player.getUUID());
         if (f == null) return armor;
         if (f.until <= player.level().getGameTime()) {

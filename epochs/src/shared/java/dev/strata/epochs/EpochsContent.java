@@ -100,6 +100,9 @@ public final class EpochsContent {
 
     /** Keimfrische: dreht die Verfestigungs-Uhr ein Stück zurück (siehe {@link GermTonic}). */
     public static final Supplier<Item> GERM_TONIC = REG.item("germ_tonic", p -> p.stacksTo(16));
+    /** Abwurf des Resonanzlings: 3 Ladungen, je eine lässt die eigene Uhr 30 s ruhen. */
+    public static final Supplier<Item> RESONANT_SPLINTER = REG.item("resonant_splinter",
+            p -> p.durability(dev.strata.epochs.mob.ResonantShard.SPLINTER_CHARGES));
 
     /** Ein versteinerter Gegenstand aus dem Inventar; trägt das Original in sich (siehe {@link ItemPetrification}). */
     public static final Supplier<Item> PETRIFIED_ITEM = REG.hiddenItem("petrified_item", ItemPetrification.Lump::new,
@@ -164,6 +167,10 @@ public final class EpochsContent {
             Mc.attachment(ATTACHMENTS, "transplants", java.util.List::of, TransplantRecord.LIST_CODEC, false);
 
     /** Am Stratolithen: wie viele Schichten er schon abgeworfen hat (0–2), damit es nach dem Laden so bleibt. */
+    /** Heimat eines eingestimmten Resonanzlings ({@link BlockPos#asLong}), sonst {@code ResonantShard.NO_HOME}. */
+    public static final Supplier<AttachmentType<Long>> RESONANT_HOME =
+            Mc.attachment(ATTACHMENTS, "resonant_home", () -> dev.strata.epochs.mob.ResonantShard.NO_HOME,
+                    com.mojang.serialization.Codec.LONG, false);
     public static final Supplier<AttachmentType<Integer>> STRATOLITH_LAYER =
             Mc.attachment(ATTACHMENTS, "stratolith_layer", () -> 0, com.mojang.serialization.Codec.INT, false);
 

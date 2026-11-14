@@ -169,5 +169,43 @@
       "strata_epochs:entity/stratolith/slam2"
     ],
     "subtitle": "subtitles.strata_epochs.stratolith.slam"
+  },
+  "entity.resonant_shard.ambient": {
+    "sounds": [
+      "strata_epochs:entity/resonant_shard/ambient1",
+      "strata_epochs:entity/resonant_shard/ambient2"
+    ],
+    "subtitle": "subtitles.strata_epochs.resonant_shard.ambient"
+  },
+  "entity.resonant_shard.hurt": {
+    "sounds": [
+      "strata_epochs:entity/resonant_shard/hurt1",
+      "strata_epochs:entity/resonant_shard/hurt2"
+    ],
+    "subtitle": "subtitles.strata_epochs.resonant_shard.hurt"
+  },
+  "entity.resonant_shard.death": {
+    "sounds": [
+      "strata_epochs:entity/resonant_shard/death1"
+    ],
+    "subtitle": "subtitles.strata_epochs.resonant_shard.death"
+  },
+  "entity.resonant_shard.resonate": {
+    "sounds": [
+      "strata_epochs:entity/resonant_shard/resonate1"
+    ],
+    "subtitle": "subtitles.strata_epochs.resonant_shard.resonate"
+  },
+  "entity.resonant_shard.dissonance": {
+    "sounds": [
+      "strata_epochs:entity/resonant_shard/dissonance1"
+    ],
+    "subtitle": "subtitles.strata_epochs.resonant_shard.dissonance"
+  },
+  "entity.resonant_shard.shriek": {
+    "sounds": [
+      "strata_epochs:entity/resonant_shard/shriek1"
+    ],
+    "subtitle": "subtitles.strata_epochs.resonant_shard.shriek"
   }
 }

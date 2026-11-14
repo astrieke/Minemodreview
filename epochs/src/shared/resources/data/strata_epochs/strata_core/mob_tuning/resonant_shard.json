@@ -1,0 +1,34 @@
+{
+  "entity": "strata_epochs:resonant_shard",
+  "attributes": {
+    "max_health": 8,
+    "movement_speed": 0.2
+  },
+  "spawn": {
+    "enabled": true,
+    "max_nearby": 2
+  },
+  "abilities": {
+    "calm": {
+      "enabled": true,
+      "radius": 5,
+      "pulse": 80,
+      "factor": 0
+    },
+    "dissonance": {
+      "enabled": true,
+      "uneasy": 100,
+      "warning": 12,
+      "silence": 600,
+      "flee": 6
+    },
+    "tune": {
+      "enabled": true,
+      "drift": 3
+    },
+    "splinter": {
+      "pause": 600,
+      "cooldown": 6000
+    }
+  }
+}

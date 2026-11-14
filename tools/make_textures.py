@@ -1698,6 +1698,56 @@ BLOCKS = {
 for _crop in (quartz_thistle, resin_fern, ember_tubers):
     for _i in range(4):
         BLOCKS[f'{_crop.__name__}_stage{_i}'] = (lambda c, i: lambda: c(i))(_crop, _i)
+def resonant_splinter():
+    # Resonanzsplitter: schräger Quarzsplitter einer Stimmgabel mit goldenem Ringband; Licht von oben links.
+    pal = {'w': '#e6e6ff', 'l': '#a9a8ff', 'q': '#6f6cf0', 'Q': '#4a43b8', 'v': '#2c2670',
+           'y': '#ffe08a', 'g': '#d9a43a', 'G': '#9c6a12', 'k': '#6a4708'}
+    rows = [
+        '................',
+        '............wl..',
+        '...........wlqv.',
+        '..........wlqQv.',
+        '.........wlqQv..',
+        '........wlqQv...',
+        '.......wlqQv....',
+        '......ylqQv.....',
+        '.....yggQv......',
+        '....ygGGv.......',
+        '....gGGk........',
+        '...lqQk.........',
+        '..lqQv..........',
+        '..qQv...........',
+        '...v............',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#1a1442')
+
+
+def resonant_shard_spawn_egg():
+    # Spawn-Ei: Calcit-Ei mit Gesicht, zwei Quarz-Zinken oben, goldenem Stimmring und Quarzspitze unten.
+    pal = {'c': '#dcd6c8', 'w': '#efebe0', 'C': '#ada697', 'y': '#ffe08a', 'g': '#d9a43a', 'G': '#9c6a12',
+           'l': '#a9a8ff', 'q': '#6f6cf0', 'e': '#6f6cf0'}
+    rows = [
+        '................',
+        '.....lq..lq.....',
+        '.....lq..lq.....',
+        '.....lqqqlq.....',
+        '.....wcccccC....',
+        '....wwcccccCC...',
+        '...wcceccecCC...',
+        '...ccccccccCC...',
+        '..yyyyyyyyyyyg..',
+        '..gggggggggggG..',
+        '...ccccccccCC...',
+        '...cccccccCCC...',
+        '....ccccCCCC....',
+        '.....CCCCCC.....',
+        '.......qq.......',
+        '................',
+    ]
+    return outline(from_grid(rows, pal), '#2a2238')
+
+
 ITEMS = {
     'core_drill': core_drill,
     'crystal_core_drill': crystal_core_drill,
@@ -1723,6 +1773,7 @@ ITEMS = {
     'heart_of_deep_time': heart_of_deep_time,
     'resin_fern_spores': resin_fern_spores,
     'ember_tuber': ember_tuber,
+    'resonant_splinter': resonant_splinter,
 }
 SPAWN_EGGS = {
     'geode_crawler_spawn_egg': geode_crawler_spawn_egg,
@@ -1730,6 +1781,7 @@ SPAWN_EGGS = {
     'petrified_witness_spawn_egg': petrified_witness_spawn_egg,
     'ember_burrower_spawn_egg': ember_burrower_spawn_egg,
     'stratolith_spawn_egg': stratolith_spawn_egg,
+    'resonant_shard_spawn_egg': resonant_shard_spawn_egg,
 }
 
 

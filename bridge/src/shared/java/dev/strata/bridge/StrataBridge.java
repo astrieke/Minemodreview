@@ -50,6 +50,7 @@ public final class StrataBridge {
             "strata_epochs:strata_codex/met_petrified_witness",
             "strata_epochs:strata_codex/met_spiralit",
             "strata_epochs:strata_codex/met_ember_burrower",
+            "strata_epochs:strata_codex/met_resonant_shard",
             "strata_epochs:strata_codex/first_transplant",
             "strata_epochs:strata_codex/sealed_rift",
             "strata_epochs:strata_codex/museum",
@@ -94,7 +95,8 @@ public final class StrataBridge {
         java.util.Set<String> keys = new java.util.TreeSet<>(BridgeTexts.jeiInfo().values());
         for (var def : java.util.List.of(dev.strata.epochs.mob.GeodeCrawler.DEF, dev.strata.epochs.mob.SporeBellows.DEF,
                 dev.strata.epochs.mob.PetrifiedWitness.DEF, dev.strata.epochs.mob.EmberBurrower.DEF,
-                dev.strata.epochs.mob.Spiralit.DEF, dev.strata.epochs.mob.Stratolith.DEF)) {
+                dev.strata.epochs.mob.Spiralit.DEF, dev.strata.epochs.mob.Stratolith.DEF,
+                dev.strata.epochs.mob.ResonantShard.DEF)) {
             keys.add("jade.strata_bridge.mob." + def.name());
         }
         for (String id : BUILTIN_ADVANCEMENTS) {

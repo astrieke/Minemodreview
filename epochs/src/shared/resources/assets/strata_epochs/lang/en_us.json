@@ -198,5 +198,20 @@
   "message.strata_epochs.stratolith.top": "Place the Layer Core on top of chronostone",
   "message.strata_epochs.stratolith.peaceful": "No Stratolith awakens on Peaceful",
   "message.strata_epochs.stratolith.need_mastery": "Only those who mastered all three epochs (a fossil of each) can awaken the Stratolith",
-  "message.strata_epochs.stratolith.no_space": "Not enough room: 3 × 4 × 3 blocks above the chronostone must be free"
+  "message.strata_epochs.stratolith.no_space": "Not enough room: 3 × 4 × 3 blocks above the chronostone must be free",
+  "entity.strata_epochs.resonant_shard": "Resonant Shard",
+  "item.strata_epochs.resonant_shard_spawn_egg": "Resonant Shard Spawn Egg",
+  "item.strata_epochs.resonant_splinter": "Resonant Splinter",
+  "message.strata_epochs.solidify.paused": "Time stands still",
+  "message.strata_epochs.resonant_shard.uneasy": "The Resonant Shard grows uneasy – stop mining stone or fighting here",
+  "message.strata_epochs.resonant_shard.silent": "The Resonant Shard is out of tune and falls silent for %s s",
+  "message.strata_epochs.resonant_shard.still_silent": "The Resonant Shard is still out of tune",
+  "message.strata_epochs.resonant_shard.tuned": "The Resonant Shard is tuned to this place",
+  "message.strata_epochs.resonant_splinter": "Time stands still for %s s",
+  "subtitles.strata_epochs.resonant_shard.ambient": "Resonant Shard hums",
+  "subtitles.strata_epochs.resonant_shard.hurt": "Resonant Shard cracks",
+  "subtitles.strata_epochs.resonant_shard.death": "Resonant Shard shatters",
+  "subtitles.strata_epochs.resonant_shard.resonate": "Resonant Shard rings",
+  "subtitles.strata_epochs.resonant_shard.dissonance": "Resonant Shard grows uneasy",
+  "subtitles.strata_epochs.resonant_shard.shriek": "Resonant Shard shrieks"
 }

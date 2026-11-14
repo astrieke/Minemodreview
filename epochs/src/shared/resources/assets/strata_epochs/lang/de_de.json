@@ -198,5 +198,20 @@
   "message.strata_epochs.stratolith.top": "Den Schichtkern auf die Oberseite von Zeitgestein setzen",
   "message.strata_epochs.stratolith.peaceful": "Auf Friedlich erwacht kein Stratolith",
   "message.strata_epochs.stratolith.need_mastery": "Erst wer alle drei Epochen gemeistert hat (Fossil jeder Epoche), kann den Stratolithen wecken",
-  "message.strata_epochs.stratolith.no_space": "Zu wenig Platz: 3 × 4 × 3 Blöcke über dem Zeitgestein müssen frei sein"
+  "message.strata_epochs.stratolith.no_space": "Zu wenig Platz: 3 × 4 × 3 Blöcke über dem Zeitgestein müssen frei sein",
+  "entity.strata_epochs.resonant_shard": "Resonanzling",
+  "item.strata_epochs.resonant_shard_spawn_egg": "Resonanzling-Spawn-Ei",
+  "item.strata_epochs.resonant_splinter": "Resonanzsplitter",
+  "message.strata_epochs.solidify.paused": "Die Zeit ruht",
+  "message.strata_epochs.resonant_shard.uneasy": "Der Resonanzling wird unruhig – hör auf, hier Stein abzubauen oder zu kämpfen",
+  "message.strata_epochs.resonant_shard.silent": "Der Resonanzling ist verstimmt und schweigt %s s",
+  "message.strata_epochs.resonant_shard.still_silent": "Der Resonanzling ist noch verstimmt",
+  "message.strata_epochs.resonant_shard.tuned": "Der Resonanzling ist hier eingestimmt",
+  "message.strata_epochs.resonant_splinter": "Die Zeit ruht %s s",
+  "subtitles.strata_epochs.resonant_shard.ambient": "Resonanzling summt",
+  "subtitles.strata_epochs.resonant_shard.hurt": "Resonanzling knackt",
+  "subtitles.strata_epochs.resonant_shard.death": "Resonanzling zerspringt",
+  "subtitles.strata_epochs.resonant_shard.resonate": "Resonanzling klingt",
+  "subtitles.strata_epochs.resonant_shard.dissonance": "Resonanzling wird unruhig",
+  "subtitles.strata_epochs.resonant_shard.shriek": "Resonanzling schreit auf"
 }

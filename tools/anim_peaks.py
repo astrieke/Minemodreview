@@ -4,6 +4,8 @@ Aufruf: python3 tools/anim_peaks.py [mob-id ...]   oder   --json <mob-id>
 
 Ausschlag = Summe über alle Knochen: Rotation in Grad + Position × 5 + |Skalierung − 1| × 100.
 Abgetastet wird alle 0,05 s, linear interpoliert. Für die Wahl des Zeitpunkts reicht das.
+Eine Animation kann den Zeitpunkt mit "peak" selbst festlegen (sonst zählt eine reine Drehung eines
+symmetrischen Teils, die man nicht sieht).
 """
 import json
 import os
@@ -37,6 +39,8 @@ def deflection(anim, t):
 
 
 def peak_time(anim):
+    if 'peak' in anim:                                # fest vorgegeben (z. B. wenn ein symmetrischer Ring sich dreht)
+        return anim['peak']
     steps = int(round(anim['length'] / 0.05))
     times = [round(i * 0.05, 2) for i in range(steps + 1)]
     return max(times, key=lambda t: deflection(anim, t))

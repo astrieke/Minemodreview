@@ -32,6 +32,8 @@ final class GermTonic {
             readFragment(player, stack);
         } else if (stack.is(EpochsContent.GERM_TONIC.get())) {
             drink(player, stack);
+        } else if (stack.is(EpochsContent.RESONANT_SPLINTER.get())) {
+            dev.strata.epochs.mob.ResonantShard.useSplinter(player, stack);
         }
     }
 

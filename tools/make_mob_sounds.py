@@ -475,6 +475,74 @@ def stratolith(kind, i, rng):
     return x
 
 
+def fork_tone(f0, dur, decay, clang=0.35):
+    """Stimmgabel: fast reiner Grundton, dazu der kurze, hohe Anschlag-Teilton (6,27-fach), der schnell verklingt."""
+    t = t_axis(dur)
+    x = np.sin(2 * np.pi * f0 * t) * np.exp(-t / decay)
+    x += clang * np.sin(2 * np.pi * f0 * 6.27 * t) * np.exp(-t / 0.06)
+    x += 0.15 * np.sin(2 * np.pi * f0 * 2.0 * t) * np.exp(-t / (decay * 0.4))
+    return x * env(dur, 0.002, dur, hold=0.0)
+
+
+def resonant_shard(kind, i, rng):
+    if kind == "ambient":
+        # Leises Summen einer Stimmgabel: zwei fast gleiche Töne schweben gegeneinander, dazu ein Kristallklang.
+        dur = 1.4
+        t = t_axis(dur)
+        f = rng.choice([880.0, 932.3, 830.6])
+        beat = rng.uniform(2.5, 4.0)
+        x = (np.sin(2 * np.pi * f * t) + np.sin(2 * np.pi * (f + beat) * t)) * 0.4
+        x += 0.12 * np.sin(2 * np.pi * f * 2 * t)
+        x *= np.sin(np.pi * t / dur) ** 1.5
+        place(x, chime(rng, f * 1.5, 0.4) * 0.25, rng.uniform(0.2, 0.6))
+        return x
+    if kind == "resonate":
+        # Gleichklang: ein klarer Gabelanschlag, der lange nachklingt (der Ruheplatz „läutet“).
+        dur = 1.8
+        x = fork_tone(660.0, dur, 0.7)
+        x += 0.5 * fork_tone(990.0, dur, 0.5, clang=0.15)
+        return x
+    if kind == "dissonance":
+        # Unruhe (0,6 s = Vorwarnzeit): zwei schiefe Töne im Tritonus, die schneller gegeneinander schweben und steigen.
+        dur = 0.6
+        t = t_axis(dur)
+        ph1, _ = sweep(700, 900, dur)
+        ph2, _ = sweep(990, 1290, dur)
+        trem = 0.6 + 0.4 * np.sin(2 * np.pi * (8 + 22 * t / dur) * t)
+        x = (np.sin(ph1) + 0.8 * np.sin(ph2) + 0.25 * np.sin(2 * ph1)) * trem
+        return x * np.clip(t / 0.08, 0, 1) * np.clip((dur - t) / 0.04, 0, 1) * (0.5 + 0.5 * t / dur)
+    if kind == "shriek":
+        # Aufschrei: greller, unharmonischer Ausbruch, der abwärts kippt, dazu splitternder Quarz.
+        dur = 0.7
+        t = t_axis(dur)
+        x = silence(dur)
+        for r in (1.0, 1.41, 2.13, 2.97, 4.1):
+            ph, _ = sweep(1200 * r, 700 * r, dur)
+            x += np.sin(ph) * env(dur, 0.003, 0.22) * (0.6 / r ** 0.5)
+        x += band(rng.normal(0, 1, len(t)), 1500, 6000) * env(dur, 0.002, 0.08) * 0.5
+        place(x, grains(rng, 0.4, 120, 2000, 6000, grain=0.006, amp=0.6, decay_rate=5), 0.02)
+        return x
+    if kind == "hurt":
+        # Knacks im Quarz: heller Anschlag, kurzes Klirren.
+        dur = 0.4
+        x = silence(dur)
+        place(x, band(rng.normal(0, 1, int(0.02 * SR)), 2000, 7000) * env(0.02, 0.0003, 0.006), 0)
+        place(x, chime(rng, rng.uniform(1300, 1600), 0.3) * 0.8, 0.003)
+        place(x, fork_tone(rng.uniform(600, 700), 0.35, 0.1, clang=0.2) * 0.5, 0.0)
+        return x
+    # death: die Gabel zerspringt; Splitter klirren herab, der letzte Ton sinkt und erstirbt.
+    dur = 1.5
+    t = t_axis(dur)
+    ph, _ = sweep(660, 330, dur)
+    x = np.sin(ph) * env(dur, 0.005, 0.5, hold=0.1) * 0.6
+    at = 0.0
+    for _ in range(7):
+        place(x, chime(rng, rng.uniform(1200, 2600), rng.uniform(0.15, 0.35)) * rng.uniform(0.3, 0.6), at)
+        at += rng.uniform(0.04, 0.12)
+    place(x, grains(rng, 0.8, 160, 1500, 6000, grain=0.006, amp=0.6, decay_rate=3), 0.0)
+    return x
+
+
 MOBS = {
     "geode_crawler": (geode_crawler, {"ambient": 3, "hurt": 2, "death": 2}),
     "spore_bellows": (spore_bellows, {"ambient": 3, "hurt": 2, "death": 2}),
@@ -482,6 +550,7 @@ MOBS = {
     "ember_burrower": (ember_burrower, {"ambient": 3, "hurt": 2, "death": 2, "dig": 3, "tremor": 2, "emerge": 2}),
     "spiralit": (spiralit, {"ambient": 3, "hurt": 2, "death": 1}),
     "stratolith": (stratolith, {"ambient": 3, "hurt": 2, "death": 1, "rise": 1, "rewind": 2, "slam": 2}),
+    "resonant_shard": (resonant_shard, {"ambient": 2, "hurt": 2, "death": 1, "resonate": 1, "dissonance": 1, "shriek": 1}),
 }
 
 
