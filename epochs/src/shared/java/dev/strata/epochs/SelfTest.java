@@ -1452,8 +1452,9 @@ final class SelfTest {
     /** Erlaubter Anteil des Fleckenblocks am Boden. */
     // Gemessen wird nur ein kleines Gebiet; je nach Welt lag der Magma-Anteil bisher zwischen 7 und 51 %.
     // Geprüft wird daher nur, dass es Flecken gibt und das Biom nicht ganz aus Magma besteht.
+    // Fleckenanteil am Boden (Rauschen, je nach Seed verschieden): Moos lag in den Läufen bei 22–50 %, darum ab 15 %.
     private static final Map<String, double[]> PATCH_RANGE = Map.of(
-            "magma_rifts", new double[] {0.03, 0.65}, "moss_marsh", new double[] {0.25, 0.85});
+            "magma_rifts", new double[] {0.03, 0.65}, "moss_marsh", new double[] {0.15, 0.85});
 
     /**
      * Mehrere Biome pro Epoche: Jedes Biom der Dimension braucht einen spürbaren Anteil, muss höchstens
