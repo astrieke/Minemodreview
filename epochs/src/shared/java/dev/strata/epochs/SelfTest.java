@@ -49,6 +49,7 @@ final class SelfTest {
         failures += testAnalysis(server);
         failures += testPreparation(server);
         failures += testTransplant(server);
+        failures += testLootFormat(server);
         failures += testBurrower(server);
         failures += testBiomes(server);
         failures += testSpiralitBond(server);
@@ -97,6 +98,7 @@ final class SelfTest {
         failures += testMob(server, dev.strata.epochs.mob.ResonantShard.DEF,
                 l -> new dev.strata.epochs.mob.ResonantShard(EpochsMobs.RESONANT_SHARD.get(), l), "crystal_age");
         StrataEpochs.LOG.info("[Strata-Test] Fertig, {} Fehler", failures);
+        Playthrough.start(server);   // läuft über echte Server-Ticks weiter
         persistTest(server);
     }
 
@@ -274,6 +276,35 @@ final class SelfTest {
         boolean ok = done && rest && worn && broken && risks && seed;
         StrataEpochs.LOG.info("[Strata-Test] Präparation: Fossil={}, Rest={}, Meißel={}, Bruch={}, Risiko={}, Samen={} -> {}",
                 done, rest, worn, broken, risks, seed, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /**
+     * Beutetabellen werden auch wirklich ausgewertet (nicht nur geladen): Die Motte gibt ihren Splitter nur, wenn ein
+     * Spieler sie erlegt. Ab 26.3 hat sich das Format geändert, und unbekannte Felder übergeht das Spiel stillschweigend;
+     * dann fiele die Bedingung weg. Ohne Spieler als Täter darf hier also nichts fallen.
+     */
+    private static int testLootFormat(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        int x = 4200, z = -4200;
+        level.getChunk(x >> 4, z >> 4);
+        int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z) + 2;
+        BlockPos chest = new BlockPos(x, y, z);
+        level.setBlockAndUpdate(chest, net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
+        // In eine Truhe würfeln: Frisch gespawnte Gegenstände findet die Entity-Suche hier nicht zuverlässig.
+        for (int i = 0; i < 8; i++) {
+            Transplanter.command(level, "loot insert " + x + " " + y + " " + z + " loot strata_epochs:entities/amber_moth");
+        }
+        int rolled = 0;
+        if (level.getBlockEntity(chest) instanceof net.minecraft.world.Container box) {
+            for (int i = 0; i < box.getContainerSize(); i++) {
+                if (box.getItem(i).is(EpochsContent.AMBER_SHARD.get())) rolled += box.getItem(i).getCount();
+            }
+            box.clearContent();
+        }
+        level.setBlockAndUpdate(chest, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        boolean ok = rolled == 0;
+        StrataEpochs.LOG.info("[Strata-Test] Beuteformat: Splitter ohne Spieler als Täter={} (erwartet 0) -> {}", rolled, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 

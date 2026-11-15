@@ -15,11 +15,13 @@ def generate = tasks.register('generateEpochData') {
     def specFile = rootProject.file('epochs/worldgen/epochs.json')
     def recipeDir = rootProject.file('epochs/worldgen/recipes')
     def mobsDir = rootProject.file('mobs')
+    def lootDir = rootProject.file('epochs/worldgen/loot')
     // 1.21.x: Vanilla-Daten liegen in einem Laufzeit-Jar; 26.x: im kompilierten Minecraft-Jar.
     def classpath = configurations.compileClasspath + configurations.runtimeClasspath
     inputs.file(specFile)
     inputs.dir(recipeDir)
     inputs.dir(mobsDir)
+    inputs.dir(lootDir)
     inputs.files(classpath)
     outputs.dir(outDir)
 
@@ -312,6 +314,39 @@ def generate = tasks.register('generateEpochData') {
             }
         }
 
+        // Loot-Format: Quellen im alten Format ("conditions"/"functions" als Listen, Typ unter "condition"/"function").
+        // Ab 26.3 gibt es je eine "condition" (mehrere über all_of) und einen "modifier" (einer oder eine Liste), Typ
+        // jeweils unter "type". Unbekannte Felder übergeht das Spiel stillschweigend; ohne Umsetzung fielen dort alle
+        // Bedingungen und Mengen weg (z. B. jeder Fossilbrocken immer und überall, ohne Epoche).
+        def newLoot = vanilla('minecraft:blocks/potatoes', 'loot_table').containsKey('modifier')
+        def lootFormat
+        def lootCondition = { Map c -> lootFormat(c.collectEntries { k, v -> [(k == 'condition' ? 'type' : k), v] }) }
+        lootFormat = { node ->
+            if (!newLoot) return node
+            if (node instanceof List) return node.collect { lootFormat(it) }
+            if (!(node instanceof Map)) return node
+            def out = [:]
+            node.each { k, v ->
+                if (k == 'conditions') {
+                    def cs = v.collect { lootCondition(it) }
+                    out.condition = cs.size() == 1 ? cs[0] : [type: 'minecraft:all_of', terms: cs]
+                } else if (k == 'functions') {
+                    def fs = v.collect { f -> lootFormat(f.collectEntries { fk, fv -> [(fk == 'function' ? 'type' : fk), fv] }) }
+                    out.modifier = fs.size() == 1 ? fs[0] : fs
+                } else if (k == 'term' || k == 'terms') {
+                    out[k] = v instanceof List ? v.collect { lootCondition(it) } : lootCondition(v)
+                } else {
+                    out[k] = lootFormat(v)
+                }
+            }
+            out
+        }
+        lootDir.eachFileRecurse(groovy.io.FileType.FILES) { f ->
+            if (f.name.endsWith('.json')) {
+                write("data/${ns}/loot_table/${lootDir.toPath().relativize(f.toPath()).toString().replace('\\', '/')}", lootFormat(slurper.parse(f)))
+            }
+        }
+
         // Loot-Tabellen: Vanilla-Tabelle kopieren und die IDs austauschen (Silk Touch, Fortune usw. bleiben erhalten).
         spec.loot_tables.each { l ->
             def (lns, lpath) = l.base.split(':')
@@ -344,14 +379,15 @@ def generate = tasks.register('generateEpochData') {
             def fossilChance = spec.fossils?.blocks?.get(l.block)
             if (fossilChance != null) {
                 spec.epochs.each { e ->
-                    table.pools << [
+                    def epochId = "${ns}:${e.id}".toString()
+                    table.pools << lootFormat([
                             rolls     : 1,
                             entries   : [[type     : 'minecraft:item', name: spec.fossils.item,
                                           functions: [[function: 'minecraft:set_components',
-                                                       components: [(spec.fossils.component): "${ns}:${e.id}".toString()]]]]],
+                                                       components: [(spec.fossils.component): epochId]]]]],
                             conditions: [[condition: 'minecraft:random_chance', chance: fossilChance],
-                                         [condition: 'minecraft:location_check', predicate: [dimension: "${ns}:${e.id}".toString()]]]
-                    ]
+                                         [condition: 'minecraft:location_check', predicate: [dimension: epochId]]]
+                    ])
                 }
             }
             write("data/${ns}/loot_table/blocks/${l.block}.json", table)

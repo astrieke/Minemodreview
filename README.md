@@ -20,7 +20,7 @@ Eine Hauptmod und zwei Addons. Alle Texte gibt es auf Deutsch und Englisch.
 | 26.2 | 26.2.0.93 | 25 |
 | 26.3 | 26.3.0.99 | 25 |
 
-Für jede Version gilt: Alle drei Mods bauen, und der Server startet mit dem ganzen Set plus JEI und Jade. Ein Selbsttest generiert beide Epochen-Dimensionen, findet alle Advancements und prüft die Kette „Kodex-Knoten freischalten → Event → Advancement“.
+Für jede Version gilt: Alle drei Mods bauen, und der Server startet mit dem ganzen Set plus JEI und Jade. Ein Selbsttest generiert beide Epochen-Dimensionen, findet alle Advancements und prüft die Kette „Kodex-Knoten freischalten → Event → Advancement“. Danach spielt ein **Durchspieltest** den Kern-Ablauf über echte Server-Ticks so durch, wie ein Spieler klickt: Bohrkern ziehen, analysieren, durchs Tor in die Kristallzeit, Verfestigung, Fossilbrocken abbauen und präparieren, Kodex, zurück durchs Tor, transplantieren und auf dem neuen Boden eine Quarzdistel säen (`[Strata-Durchspiel] … -> OK`, etwa 470 Ticks).
 
 | Fremd-Mod | 1.21.1 | 1.21.11 | 26.1 | 26.2 | 26.3 |
 |---|---|---|---|---|---|
@@ -207,7 +207,7 @@ tools/make_textures.py           Erzeugt die Texturen (mit --preview <datei> ein
 tools/blockbench-mcp/            MCP-Server + Blockbench-Plugin, damit Claude Modelle in Blockbench bauen kann
 ```
 
-**Warum das Worldgen erzeugt wird:** Mojang ändert das Format von Dimensionen, Biomen, Erz-Features, Loot-Tabellen und Rezepten fast in jeder Version. In 1.21.11 kamen z. B. „attributes“ dazu, in 26.3 wurde `configured_feature` zu `feature`. Der Task `generateEpochData` nimmt deshalb die Vanilla-Dateien genau der gebauten Version als Vorlage (Höhlen-Dimension, Höhlen-Noise, Vorlage-Biome, Vanilla-Loot) und ändert nur wenige Felder. Damit mehrere Biome nebeneinander liegen, übernimmt das Höhlen-Noise die Klima-Noises des Nethers; die Biome einer Epoche sind Punkte in diesem Klima (`multi_noise`).
+**Warum das Worldgen erzeugt wird:** Mojang ändert das Format von Dimensionen, Biomen, Erz-Features, Loot-Tabellen und Rezepten fast in jeder Version. In 1.21.11 kamen z. B. „attributes“ dazu, in 26.3 wurde `configured_feature` zu `feature`. Der Task `generateEpochData` nimmt deshalb die Vanilla-Dateien genau der gebauten Version als Vorlage (Höhlen-Dimension, Höhlen-Noise, Vorlage-Biome, Vanilla-Loot) und ändert nur wenige Felder. Eigene Loot-Tabellen (`epochs/worldgen/loot/`) stehen im alten Format und werden ab 26.3 umgeschrieben (eine `condition` statt der Liste `conditions`, `modifier` statt `functions`). Das ist nötig, weil 26.3 unbekannte Felder stillschweigend übergeht: Bedingungen und Mengen fielen sonst einfach weg. Der Selbsttest würfelt deshalb eine Tabelle wirklich aus („Beuteformat“). Damit mehrere Biome nebeneinander liegen, übernimmt das Höhlen-Noise die Klima-Noises des Nethers; die Biome einer Epoche sind Punkte in diesem Klima (`multi_noise`).
 
 ## Bauen und testen
 
@@ -290,7 +290,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 
 ## Noch offen
 
-- Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Richtig gespielt (Bohren, Tor, Verfestigung von Hand) wurde noch nicht.
+- Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Den Kern-Ablauf spielt der Durchspieltest in allen Versionen mit einem simulierten Spieler durch (echte Rechtsklicks und Abbau über den Server). Was nur der Client zeigt (Bildschirmtexte, Partikel, Steuerung), deckt er nicht ab; von einem Menschen durchgespielt wurde das Ganze noch nicht.
 - Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 73 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
 - Kernanalyse-Tisch mit Trichtern und Rohren: freigegeben in Prüfrunde 2 (7/7/8), im Selbsttest mit Vanilla-Trichter und einem Rohr-Cache wie bei Mekanism geprüft. Mit echten Rohr-Mods lief er noch nicht. Strom (FE) nimmt bewusst keiner der Tische an, weil nichts daran Arbeit braucht.
 - Inventar-Verfestigung: freigegeben in Prüfrunde 2 (7/8/8). Im Client gesehen in 1.21.1 (`docs/screenshots/petrify/`, Versteinern im Überlebensmodus). Das Lösen (draußen, beim Tod, fremde Brocken) prüft der Selbsttest; von Hand durchgespielt wurde es noch nicht. Bricht ein anderer Mod den Tod ab (Wiederbelebung), sind die Gegenstände trotzdem schon gelöst.

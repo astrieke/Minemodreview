@@ -3,7 +3,8 @@
 # (Strata Core + Epochs + Bridge, dazu JEI und Jade) und dem Demo-Datapack, und prüft das Log:
 #  - Strata Core erkennt alle Epochen und Kodex-Knoten ohne Fehler,
 #  - der Selbsttest von Strata Epochs generiert jede Epochen-Dimension erfolgreich,
-#  - Strata Bridge findet alle mitgelieferten Advancements.
+#  - Strata Bridge findet alle mitgelieferten Advancements,
+#  - der Durchspieltest geht den Kern-Ablauf mit einem simulierten Spieler durch (Bohrkern bis Anbau).
 #
 # Aufruf: scripts/smoke-test.sh [version ...]   (ohne Argument: alle Versionen)
 set -uo pipefail
@@ -20,6 +21,9 @@ expected_test='\[Strata-Test\] Fertig, 0 Fehler'
 expected_bridge='\[Strata-Bridge-Test\] 25 von 25 Advancements geladen'
 expected_chain='\[Strata-Bridge-Test\] Freischaltung: .* -> OK'
 expected_texts='\[Strata-Bridge-Test\] Texte: .* -> OK'
+# Durchspieltest: ein simulierter Spieler geht den Kern-Ablauf über echte Server-Ticks durch.
+expected_play='\[Strata-Durchspiel\] .* -> OK'
+
 failed=()
 
 for v in "${versions[@]}"; do
@@ -36,8 +40,8 @@ for v in "${versions[@]}"; do
     pid=$!
     result="TIMEOUT"
     for _ in $(seq 1 300); do
-        if grep -qE '\[Strata-Test\] Fertig, [1-9]|Advancement fehlt|Freischaltung: .* -> FEHLER|Texte: .* -> FEHLER|Curios: .* -> FEHLER|\[Strata\] .*, [1-9][0-9]* Fehler|Failed to start|Crash report|Exception in server tick|BUILD FAILED' "$log"; then result="FEHLER"; break; fi
-        if grep -qE "$expected_core" "$log" && grep -qE "$expected_test" "$log" && grep -qE "$expected_bridge" "$log" && grep -qE "$expected_chain" "$log" && grep -qE "$expected_texts" "$log"; then result="OK"; break; fi
+        if grep -qE '\[Strata-Test\] Fertig, [1-9]|Advancement fehlt|Freischaltung: .* -> FEHLER|Texte: .* -> FEHLER|Curios: .* -> FEHLER|Strata-Durchspiel\] .* -> FEHLER|\[Strata\] .*, [1-9][0-9]* Fehler|Failed to start|Crash report|Exception in server tick|BUILD FAILED' "$log"; then result="FEHLER"; break; fi
+        if grep -qE "$expected_core" "$log" && grep -qE "$expected_test" "$log" && grep -qE "$expected_bridge" "$log" && grep -qE "$expected_chain" "$log" && grep -qE "$expected_texts" "$log" && grep -qE "$expected_play" "$log"; then result="OK"; break; fi
         if ! kill -0 "$pid" 2>/dev/null; then result="BEENDET"; break; fi
         sleep 2
     done

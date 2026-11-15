@@ -35,6 +35,11 @@ public final class Transplanter {
 
     private static final List<TransplantJob> JOBS = new ArrayList<>();
 
+    /** Läuft in der Nähe von {@code pos} (32 Blöcke) schon eine Transplantation? */
+    public static boolean busyNear(ServerLevel level, BlockPos pos) {
+        return JOBS.stream().anyMatch(j -> j.level == level && j.center.distSqr(pos) < 32 * 32);
+    }
+
     private Transplanter() {}
 
     static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
@@ -72,7 +77,7 @@ public final class Transplanter {
             fail(player, "not_mastered", CoreSamples.epochName(id));
             return;
         }
-        if (JOBS.stream().anyMatch(j -> j.level == level && j.center.distSqr(pos) < 32 * 32)) {
+        if (busyNear(level, pos)) {
             fail(player, "busy");
             return;
         }
