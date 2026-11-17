@@ -111,6 +111,12 @@ public class ResonantShard extends StrataMob {
         setGlow(GLOW_EYES, 1.0f);
     }
 
+    /** Immer schwerelos, auch nach {@code /summon} ohne „NoGravity“ in den Daten (siehe {@link AmberMoth#isNoGravity}). */
+    @Override
+    public boolean isNoGravity() {
+        return true;
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
         return MobCompat.baseAttributes()
                 .add(Attributes.MAX_HEALTH, 8.0)

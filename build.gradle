@@ -103,6 +103,8 @@ def configureStrataProject = { Project p ->
                 programArgument '--nogui'
                 // Schaltet beim Serverstart zusätzliche Selbsttests ein (nur in Entwicklungsläufen).
                 systemProperty 'strata.selftest', 'true'
+                // Balance-Messung (scripts/balance.sh): misst Erträge über echte Spielzeit im Schnelllauf.
+                if (rootProject.hasProperty('balance')) systemProperty 'strata.balance', rootProject.property('balance') as String
             }
             client {
                 client()

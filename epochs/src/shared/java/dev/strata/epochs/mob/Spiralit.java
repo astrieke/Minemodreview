@@ -95,6 +95,12 @@ public class Spiralit extends StrataMob {
         showSegments(SEGMENTS, 0.6f);
     }
 
+    /** Immer schwerelos, auch nach {@code /summon} ohne „NoGravity“ in den Daten (siehe {@link AmberMoth#isNoGravity}). */
+    @Override
+    public boolean isNoGravity() {
+        return true;
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
         return MobCompat.baseAttributes()
                 .add(Attributes.MAX_HEALTH, 12.0)
