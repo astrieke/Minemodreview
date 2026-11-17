@@ -202,6 +202,7 @@ bridge/src/mc_*/                 JEI- und Jade-Plugins (nur geladen, wenn die Mo
 bridge/generated.gradle          Erzeugt das Wurzel-Advancement passend zur Version
 example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kodex-Knoten)
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
+scripts/balance.sh               Balance-Messung: Erträge über echte Spielzeit im Schnelllauf (Harzschnecke, Harzfalle)
 scripts/client-screenshot.sh     Startet den Client auf einem virtuellen Bildschirm und macht einen Screenshot
 tools/make_textures.py           Erzeugt die Texturen (mit --preview <datei> ein Vorschaublatt)
 tools/blockbench-mcp/            MCP-Server + Blockbench-Plugin, damit Claude Modelle in Blockbench bauen kann
@@ -234,6 +235,7 @@ Gradle braucht zum Starten Java 17 oder neuer. Fehlende JDKs (21 für 1.21.x, 25
 ./gradlew runClient -Pmc=26.3          # dasselbe kurz; ohne -Pmc startet 1.21.1
 scripts/smoke-test.sh                  # Server + Selbsttest in allen Versionen
 scripts/smoke-test.sh 1.21.1 26.3      # nur bestimmte Versionen
+scripts/balance.sh 1.21.1 60           # Balance-Messung, 60 Spielminuten (etwa 2 min Laufzeit)
 ```
 
 Ein bloßes `runClient` bzw. `runServer` im Hauptordner (auch per Doppelklick in IntelliJ) startet nur **einen** Client bzw. Server mit allen drei Mods, nicht alle 15 Unterprojekte gleichzeitig.
@@ -296,8 +298,8 @@ data/<namespace>/strata_core/codex_node/<name>.json
 - Inventar-Verfestigung: freigegeben in Prüfrunde 2 (7/8/8). Im Client gesehen in 1.21.1 (`docs/screenshots/petrify/`, Versteinern im Überlebensmodus). Das Lösen (draußen, beim Tod, fremde Brocken) prüft der Selbsttest; von Hand durchgespielt wurde es noch nicht. Bricht ein anderer Mod den Tod ab (Wiederbelebung), sind die Gegenstände trotzdem schon gelöst.
 - Stratolith: freigegeben in Prüfrunde 2 (7/7/7). Im Spiel in 1.21.1 und 26.3 (Boss-Leiste, Phasen), Selbsttest für Beschwörung, Phasen, Zurückspulen, Konter und Belohnung. Eigene, per Synthese erzeugte Klänge (Ruf, Schmerz, Tod und die Boss-Signaturen Aufsteigen, Zurückspulen, Hammerschlag; Prüfrunde 11.11.: 7/7/8), die Fähigkeits-Effekte bleiben Vanilla. Von Hand gekämpft wurde noch nicht, die Werte (240 Leben, Zurückspulen alle 15 s) sind geschätzt; vor einem Release einmal mit Diamant- und Netherit-Ausrüstung durchspielen.
 - Resonanzling: freigegeben (Modell Runde 3: 8/7/8, Umsetzung Runde 2: 8/7/7), im Spiel gesehen in 1.21.1 und 26.3 (`mobs/resonant_shard/shots/`). Der Selbsttest prüft Ruhe, Störungsregeln, Einstimmen und Splitter; die Suche nach Resonanzlingen um einen abgebauten Block ist Vanilla und wird im Test nicht nachgestellt (Testmobs werden je nach Version asynchron geladen). Von Hand gespielt wurde er noch nicht, insbesondere nicht, ob „ersten behalten, zweiten töten“ trägt.
-- Harzschnecke: freigegeben in Prüfrunde 3 (7/8/8). Spur, Grenze pro Schnecke, Aushärten nur in Epochen (außerhalb löst sich die Spur auf), Gehäuse und Füttern prüft der Selbsttest in allen Versionen; im Spiel gesehen in 1.21.1 (`mobs/resin_snail/shots/`). Der Ertrag (gerechnet etwa 2–3 Bernstein in 10 min) ist noch nicht ausprobiert.
-- Bernsteinmotte und Harzfalle: freigegeben in Prüfrunde 2 (8/7/8). Der Selbsttest prüft Falle mit Licht, Fang, echten Anflug, Aushärten (nur in Epochen), Ernte, Fossil-Tag des Transplantators, Schleichen und Schuppenstaub. Den Lichttanz prüft er nicht (die Lichtberechnung läuft verzögert). Wie viele Fallen man pro Besuch sinnvoll betreibt, ist noch nicht ausprobiert.
+- Harzschnecke: freigegeben in Prüfrunde 3 (7/8/8). Spur, Grenze pro Schnecke, Aushärten nur in Epochen (außerhalb löst sich die Spur auf), Gehäuse und Füttern prüft der Selbsttest in allen Versionen; im Spiel gesehen in 1.21.1 (`mobs/resin_snail/shots/`). Den Ertrag misst `scripts/balance.sh` über echte Spielzeit im Schnelllauf: etwa 1,7 Bernstein je Schnecke und 10 min, gefüttert etwa 2,5, wie gerechnet.
+- Bernsteinmotte und Harzfalle: freigegeben in Prüfrunde 2 (8/7/8). Der Selbsttest prüft Falle mit Licht, Fang, echten Anflug, Aushärten (nur in Epochen), Ernte, Fossil-Tag des Transplantators, Schleichen und Schuppenstaub. Den Lichttanz prüft er nicht (die Lichtberechnung läuft verzögert). Die Balance-Messung zeigt: Eine Motte im Pferch klebt nach im Mittel 4 s an der beleuchteten Falle, das Aushärten dauert im Mittel 4–5 min. Dabei fiel ein Fehler auf: Per `/summon` gerufene Motten (ebenso Spiralit und Resonanzling) verloren ihre Schwerelosigkeit, krabbelten am Boden und erreichten keine Falle; behoben. Wie viele Fallen man pro Besuch sinnvoll betreibt, hängt von den Motten in der Nähe ab und ist nicht gemessen.
 - Zeitessenz: freigegeben in Prüfrunde 2 (7/8/8). Nur als Item mit Tag, ein Fluid gibt es nicht; wie oft sie im echten Spiel anfällt, ist geschätzt.
 - Museum der Erdgeschichte: freigegeben in Prüfrunde 2 (8/8/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/museum/`, Vitrinen per Befehl befüllt). Das Ausstellen von Hand per Rechtsklick prüft der Selbsttest nur über die Hilfsfunktion.
 - Zeitrisse: freigegeben in Prüfrunde 2 (8/7/8), im Client gesehen in 1.21.1 und 26.3 (`docs/screenshots/rifts/`). Wie oft sie im echten Spiel auftauchen (20 min, 35 %), ist geschätzt und noch nicht ausprobiert.

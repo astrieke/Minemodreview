@@ -263,18 +263,10 @@ public class AmberMoth extends StrataMob {
 
     /** Freier Platz für die Trefferfläche an {@code p} und freie Sicht von hier dorthin. */
     private boolean free(ServerLevel level, Vec3 p) {
-        return free(level, p, null);
-    }
-
-    /**
-     * Wie {@link #free(ServerLevel, Vec3)}, aber {@code ignore} verdeckt die Sicht nicht: Die Harzfalle selbst liegt oft
-     * zwischen der Motte und dem Platz über ihr, wenn die Motte unten um die Fackel neben der Falle tanzt.
-     */
-    private boolean free(ServerLevel level, Vec3 p, BlockPos ignore) {
         if (!level.noCollision(this, getBoundingBox().move(p.subtract(position())))) return false;
-        var hit = level.clip(new net.minecraft.world.level.ClipContext(position().add(0, 0.25, 0), p.add(0, 0.25, 0),
-                net.minecraft.world.level.ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, this));
-        return hit.getType() == net.minecraft.world.phys.HitResult.Type.MISS || hit.getBlockPos().equals(ignore);
+        return level.clip(new net.minecraft.world.level.ClipContext(position().add(0, 0.25, 0), p.add(0, 0.25, 0),
+                net.minecraft.world.level.ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, this))
+                .getType() == net.minecraft.world.phys.HitResult.Type.MISS;
     }
 
     // ---- Schuppenstaub ----
@@ -333,7 +325,7 @@ public class AmberMoth extends StrataMob {
         for (BlockPos p : BlockPos.betweenClosed(center.offset(-r, -4, -r), center.offset(r, 4, r))) {
             if (!level.getBlockState(p).is(EpochsContent.RESIN_TRAP.get()) || !lit(level, p)) continue;
             double d = p.distToCenterSqr(position());
-            if (d < bestDistance && free(level, Vec3.atCenterOf(p.above()).add(0, 0.1, 0), p)) {
+            if (d < bestDistance && free(level, Vec3.atCenterOf(p.above()).add(0, 0.1, 0))) {
                 best = p.immutable();
                 bestDistance = d;
             }

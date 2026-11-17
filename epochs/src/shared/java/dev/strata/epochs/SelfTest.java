@@ -1246,8 +1246,7 @@ final class SelfTest {
         var b = spawn.apply(net.minecraft.world.phys.Vec3.atCenterOf(trapB.above()).add(-3, 0.5, 0));
         run.accept(b, 200);
         boolean flewIn = b.isRemoved() && level.getBlockState(trapB).is(EpochsContent.RESIN_TRAP_MOTH.get());
-        // Anflug von unten: Fackel auf dem Boden neben der Falle, die Motte tanzt auf Bodenhöhe daneben. Die Falle selbst
-        // verdeckt ihr dann die Sicht auf den Landeplatz (bis zur Balance-Messung fing sich so keine Motte).
+        // Anflug von unten: Fackel auf dem Boden neben der Falle (der übliche Aufbau), die Motte startet auf Bodenhöhe.
         BlockPos trapC = ground.offset(4, 0, -3);
         level.setBlockAndUpdate(trapC, EpochsContent.RESIN_TRAP.get().defaultBlockState());
         level.setBlockAndUpdate(trapC.east(), net.minecraft.world.level.block.Blocks.TORCH.defaultBlockState());

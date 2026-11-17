@@ -277,6 +277,8 @@ Kontrast der Oberseiten: Sporenzeit dunkel 4,1:1, Nebel 1,5:1.
 **Ertrag (gerechnet):** Ein Zufallstick trifft einen Block im Mittel alle 4096 / 3 ≈ 1365 Ticks; mit Chance 0,05
 braucht ein Stück im Mittel ≈ 27 300 Ticks ≈ 23 min bis zur Platte. Mit 4 eigenen Stücken, die parallel aushärten,
 und laufendem Abbau: ≈ 1,8 Bernstein in 10 min; gefüttert (Grenze 6, eine Spore alle 10 min): ≈ 2,6 in 10 min.
+**Gemessen** (`scripts/balance.sh`, 60 Spielminuten, je 12 Schnecken, laufende Ernte): ungefüttert 1,72 (1.21.1) bzw. 1,67 (26.3),
+gefüttert 2,60 bzw. 2,46 Bernstein je Schnecke und 10 min. Die Rechnung stimmt also.
 Ausgehärtet wird nur in geladenen Chunks, also während eines Besuchs, in dem die Verfestigung läuft. Ohne Abbau ist nach 4 (bzw. 6) Platten Schluss: Die Höhle wird nicht zugekleistert. Zum Vergleich: ein reifer
 Harzfarn gibt 1 Bernstein, Bernsteinerz 1–2 pro Block. Die Schnecke ist also eine langsame Beigabe, kein Ersatz.
 Getötet gibt sie 0–1 Bernstein: behalten lohnt sich mehr.
@@ -334,7 +336,10 @@ sie per Rechtsklick oder Abbau **Bernstein mit Einschluss** und ist verbraucht.
 
 **Balance:** Jedes Fossil kostet eine Falle (4 Bernstein und eine Spore aus dem Pflanzenanbau) und Zeit in der Epoche,
 wo die Verfestigung läuft. In transplantierten Gebieten der Oberwelt können Motten spawnen, aber dort härtet nichts
-aus: keine AFK-Farm. Das Herz der Tiefenzeit bleibt die Endspiel-Belohnung (alle Epochen, ohne Kosten, größerer Radius);
+aus: keine AFK-Farm. **Gemessen** (`scripts/balance.sh`, 60 Spielminuten, 6 Fallen mit Fackel daneben und je zwei
+Motten im Pferch): Eine Motte klebt nach im Mittel 4 s fest, das Aushärten dauert im Mittel 244 s (1.21.1) bzw. 291 s
+(26.3), gerechnet 4,5 min. Mit ständig nachgelegten Motten sind das etwa 2 Einschlüsse je Falle und 10 min; im Spiel
+begrenzt die Zahl der Motten und Fallen. Das Herz der Tiefenzeit bleibt die Endspiel-Belohnung (alle Epochen, ohne Kosten, größerer Radius);
 der Einschluss hilft nur bei der Sporenzeit. Im Museum zählt er nicht (dort bleibt das Farnfossil).
 
 **Bernstein mit Einschluss:** gilt beim Transplantator als Fossil der Sporenzeit (Tag
