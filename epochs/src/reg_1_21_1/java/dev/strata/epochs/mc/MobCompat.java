@@ -46,4 +46,9 @@ public final class MobCompat {
     public static net.minecraft.world.level.block.Block block(String id) {
         return net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(net.minecraft.resources.ResourceLocation.parse(id));
     }
+
+    /** JSON mit Registry-Zugriff zum Lesen von Datendateien (1.21.1: Loot-Prädikate stehen noch inline). */
+    public static com.mojang.serialization.DynamicOps<com.google.gson.JsonElement> dataOps(net.minecraft.server.MinecraftServer server) {
+        return net.minecraft.resources.RegistryOps.create(com.mojang.serialization.JsonOps.INSTANCE, server.registryAccess());
+    }
 }
