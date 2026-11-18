@@ -7,7 +7,7 @@ Eine Hauptmod und zwei Addons. Alle Texte gibt es auf Deutsch und Englisch.
 | Mod | Rolle | Inhalt |
 |---|---|---|
 | **Strata Core** | Hauptmod (Pflicht) | Epochen, Kodex-Knoten und Mob-Werte per Datapack, Kodex-Fortschritt, `/strata`-Befehle, öffentliche API |
-| **Strata Epochs** | Addon (braucht Core) | Kernbohrer, Epochentor, Verfestigung, Kristallzeit und Sporenzeit, 3 Mobs, Ausrüstung |
+| **Strata Epochs** | Addon (braucht Core) | Kernbohrer, Epochentor, Verfestigung, drei Epochen (Kristall-, Sporen-, Aschezeit), Fossilien, Transplantator, acht Kreaturen und der Stratolith als Boss, Pflanzen, Zeitrisse, Museum, Ausrüstung |
 | **Strata Bridge** | Addon (braucht Core und Epochs) | JEI- und EMI-Infoseiten, Jade-Hinweise, Curios-Slot für den Zeitanker, KubeJS-Plugin, Advancements für Quest-Mods |
 
 ![Logos: Strata Core, Epochs, Bridge](docs/screenshots/logos.png)
