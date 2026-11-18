@@ -105,9 +105,9 @@ public class Stratolith extends StrataMob {
 
     public static AttributeSupplier.Builder createAttributes() {
         return MobCompat.baseAttributes()
-                .add(Attributes.MAX_HEALTH, 240.0)
+                .add(Attributes.MAX_HEALTH, 480.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.18)
-                .add(Attributes.ATTACK_DAMAGE, 12.0)
+                .add(Attributes.ATTACK_DAMAGE, 18.0)
                 .add(Attributes.ARMOR, 10.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
                 .add(Attributes.FOLLOW_RANGE, 32.0);
@@ -154,6 +154,11 @@ public class Stratolith extends StrataMob {
 
     public StrataAbility.Phase rewindPhase() {
         return rewind.phase();
+    }
+
+    /** Phase der Kristallspitzen (Warnkreis am Boden = WARNING); für die Balance-Messung. */
+    public StrataAbility.Phase shardsPhase() {
+        return shards.phase();
     }
 
     public boolean isStunned() {
@@ -403,7 +408,7 @@ public class Stratolith extends StrataMob {
         @Override
         protected void onStart() {
             ServerLevel level = mob.server();
-            float damage = (float) value("damage", 8.0);
+            float damage = (float) value("damage", 12.0);
             double radius = value("radius", 1.4);
             for (Vec3 m : marks) {
                 level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.AMETHYST_CLUSTER.defaultBlockState()),
@@ -412,7 +417,9 @@ public class Stratolith extends StrataMob {
                 level.playSound(null, m.x, m.y, m.z, SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.HOSTILE, 1.5f, 0.7f);
                 for (ServerPlayer p : level.getEntitiesOfClass(ServerPlayer.class, new AABB(m, m).inflate(radius, 2, radius))) {
                     if (p.isCreative() || p.isSpectator()) continue;
-                    MobCompat.hurt(p, mob.damageSources().mobAttack(mob), damage);
+                    // Durchdringt Rüstung (wie Magie; Schutz-Verzauberung mindert weiter): Die Spitzen kommen von unten und sind
+                    // angekündigt. Wer dem Warnkreis ausweicht, nimmt nichts; wer stehen bleibt, dem hilft schwere Rüstung allein nicht.
+                    MobCompat.hurt(p, mob.damageSources().indirectMagic(mob, mob), damage);
                     p.push(0, value("lift", 0.6), 0);
                 }
             }

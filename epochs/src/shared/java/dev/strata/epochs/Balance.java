@@ -44,6 +44,7 @@ final class Balance {
     private final List<Long> hardenTimes = new ArrayList<>();
     private int tick;
     private boolean done;
+    private List<BossFight> fights = List.of();
     /** Kalibrierung: Kakteen-Sonden zeigen, ob das Spiel hier ohne Spieler selbst Zufallsticks vergibt. */
     private static final int CALIBRATION_TICKS = 2400;
     private static final int PROBES = 64;
@@ -94,6 +95,9 @@ final class Balance {
             }
         }
         for (int t = 0; t < TRAP_PENS; t++) armTrap(t);
+        ServerLevel crystal = Mc.level(server, StrataEpochs.id("crystal_age"));
+        Transplanter.command(server.overworld(), "difficulty normal");   // Server-Standard ist leicht; Spielwelten meist normal
+        if (crystal != null) fights = BossFight.setup(crystal, 6000, Math.max(Mc.minY(crystal) + 20, 40), 6000);
         // Sonden: 64 Kakteen auf Sand (je ein Block Abstand); jeder Zufallstick erhöht ihr Alter um 1.
         BlockPos field = new BlockPos(x0, y, z0 + 12);
         for (BlockPos p : BlockPos.betweenClosed(field.offset(-1, -1, -1), field.offset(16, 3, 16))) {
@@ -156,6 +160,7 @@ final class Balance {
                 fedAmber += fedNow;
             }
         }
+        for (BossFight f : fights) f.tick();
         if (tick <= CALIBRATION_TICKS) return;   // Kalibrierung: Erträge zählen noch nicht
         measured++;
         if (measured % 6000 == 0 || (totalTicks <= 6000 && measured % 600 == 0)) report(false);   // kurze Läufe: jede halbe Minute
@@ -267,6 +272,7 @@ final class Balance {
                 last ? "Ergebnis" : "Zwischenstand", String.format("%.1f", minutes), String.format("%.2f", perSnailUnfed),
                 String.format("%.2f", perSnailFed), catchTimes.size(), mean(catchTimes), hardenTimes.size(), mean(hardenTimes),
                 String.format("%.2f", hardenTimes.size() / (double) TRAP_PENS / minutes * 10));
+        if (last) for (String line : BossFight.summary(fights)) StrataEpochs.LOG.info("[Strata-Balance] Stratolith {}", line);
         StrataEpochs.LOG.info("[Strata-Balance] Stand: {}", state());
         if (last) StrataEpochs.LOG.info("[Strata-Balance] Fertig");
     }

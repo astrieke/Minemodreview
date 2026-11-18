@@ -52,4 +52,11 @@ public final class MobCompat {
     public static com.mojang.serialization.DynamicOps<com.google.gson.JsonElement> dataOps(net.minecraft.server.MinecraftServer server) {
         return net.minecraft.resources.RegistryOps.create(com.mojang.serialization.JsonOps.INSTANCE, server.reloadableRegistries().lookup());
     }
+
+    /** Verzaubert einen Gegenstand, z. B. {@code "minecraft:sharpness"}, Stufe 5 (Balance-Messung). */
+    public static void enchant(net.minecraft.world.item.ItemStack stack, net.minecraft.server.level.ServerLevel level, String id, int lvl) {
+        var key = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENCHANTMENT,
+                net.minecraft.resources.Identifier.parse(id));
+        stack.enchant(level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(key), lvl);
+    }
 }
