@@ -205,6 +205,7 @@ bridge/generated.gradle          Erzeugt das Wurzel-Advancement passend zur Vers
 example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kodex-Knoten)
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
 scripts/release.sh               Baut alle 15 Jars, prüft Metadaten, Logo und Lizenz, legt sie mit Prüfsummen in dist/<version>/ ab
+scripts/perf.sh                  Leistungsmessung: Tickdauer mit Strata-Mobs (jede Art einzeln), Zombies zum Vergleich, Transplantationen
 scripts/balance.sh               Balance-Messung: Erträge im Schnelllauf (Harzschnecke, Harzfalle) und simulierter Stratolith-Kampf
 scripts/client-screenshot.sh     Startet den Client auf einem virtuellen Bildschirm und macht einen Screenshot
 tools/make_logo.py               Erzeugt die Mod-Logos für die Modliste (mit --preview <datei> alle drei nebeneinander)
@@ -240,6 +241,7 @@ Gradle braucht zum Starten Java 17 oder neuer. Fehlende JDKs (21 für 1.21.x, 25
 scripts/smoke-test.sh                  # Server + Selbsttest in allen Versionen
 scripts/smoke-test.sh 1.21.1 26.3      # nur bestimmte Versionen
 scripts/release.sh                     # alle Jars bauen und prüfen -> dist/0.1.0/ (vorher den Smoke-Test laufen lassen)
+scripts/perf.sh 26.3                   # Leistungsmessung (etwa 3 min Laufzeit)
 scripts/balance.sh 1.21.1 60           # Balance-Messung, 60 Spielminuten (etwa 2 min Laufzeit)
 ```
 
@@ -298,6 +300,7 @@ data/<namespace>/strata_core/codex_node/<name>.json
 ## Noch offen
 
 - Automatisch getestet ist der Server in allen Versionen. Der Client lief in 1.21.1, 1.21.11 und 26.3 (Mobs, Rüstung, Werkzeuge, siehe `docs/screenshots/clients/`). Unter 26.x startet er ohne Grafikkarte über Vulkan mit Mesa lavapipe (`apt-get install mesa-vulkan-drivers`); `scripts/client-screenshot.sh` stellt das selbst ein. 26.1 und 26.2 liefen inzwischen auch im Client (Spiralit bzw. Transplantation). Den Kern-Ablauf spielt der Durchspieltest in allen Versionen mit einem simulierten Spieler durch (echte Rechtsklicks und Abbau über den Server). Was nur der Client zeigt (Bildschirmtexte, Partikel, Steuerung), deckt er nicht ab; von einem Menschen durchgespielt wurde das Ganze noch nicht.
+- Leistung: `scripts/perf.sh` misst die Tickdauer im Schnelllauf (18.11.2026). Ein Strata-Mob kostet etwa so viel wie ein Zombie: im Mittel 0,019–0,025 ms je Tick (Zombie 0,015–0,029 ms), am teuersten Steinzeuge, Glutgräber und Resonanzling mit höchstens 0,05 ms. Zwei laufende Transplantationen kosten 0,6–1,1 ms. Ein Tick hat 50 ms; Handlungsbedarf gibt es nicht. Die Werte schwanken zwischen Läufen um etwa ±50 %, die Größenordnung ist verlässlich.
 - Die Mob-Sounds sind eigene, per Synthese erzeugte Klänge (`tools/make_mob_sounds.py`, 73 Dateien, mono). Geprüft wurden sie über Messwerte und Spektrogramme (Prüfrunde 2: 7/7/7); angehört hat sie noch niemand.
 - Kernanalyse-Tisch mit Trichtern und Rohren: freigegeben in Prüfrunde 2 (7/7/8), im Selbsttest mit Vanilla-Trichter und einem Rohr-Cache wie bei Mekanism geprüft. Mit echten Rohr-Mods lief er noch nicht. Strom (FE) nimmt bewusst keiner der Tische an, weil nichts daran Arbeit braucht.
 - Inventar-Verfestigung: freigegeben in Prüfrunde 2 (7/8/8). Im Client gesehen in 1.21.1 (`docs/screenshots/petrify/`, Versteinern im Überlebensmodus). Das Lösen (draußen, beim Tod, fremde Brocken) prüft der Selbsttest; von Hand durchgespielt wurde es noch nicht. Bricht ein anderer Mod den Tod ab (Wiederbelebung), sind die Gegenstände trotzdem schon gelöst.

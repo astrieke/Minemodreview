@@ -54,6 +54,7 @@ public final class StrataEpochs {
         NeoForge.EVENT_BUS.addListener(EpochsCommands::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(SelfTest::onServerStarted);
         NeoForge.EVENT_BUS.addListener(Balance::onServerStarted);
+        NeoForge.EVENT_BUS.addListener(Perf::onServerStarted);
     }
 
     public static String id(String path) {

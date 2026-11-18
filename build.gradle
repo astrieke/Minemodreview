@@ -105,6 +105,8 @@ def configureStrataProject = { Project p ->
                 systemProperty 'strata.selftest', 'true'
                 // Balance-Messung (scripts/balance.sh): misst Erträge über echte Spielzeit im Schnelllauf.
                 if (rootProject.hasProperty('balance')) systemProperty 'strata.balance', rootProject.property('balance') as String
+                // Leistungsmessung (scripts/perf.sh): Tickdauer mit Strata-Mobs, Vanilla-Vergleich, Transplantationen.
+                if (rootProject.hasProperty('perf')) systemProperty 'strata.perf', 'true'
             }
             client {
                 client()

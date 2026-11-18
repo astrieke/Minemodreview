@@ -31,4 +31,5 @@ für Minecraft 1.21.1, 1.21.11, 26.1, 26.2 und 26.3 (NeoForge); der Dateiname ne
 - Pro Version: Build, Serverstart mit dem ganzen Set, Selbsttest, Durchspieltest des Kern-Ablaufs,
   Format-Wächter für alle Datendateien (`scripts/smoke-test.sh`, auch in der CI).
 - Balance-Messung über echte Spielzeit (`scripts/balance.sh`): Harzschnecke, Harzfalle, Stratolith-Kampf.
+- Leistungsmessung (`scripts/perf.sh`): Strata-Mobs kosten etwa so viel wie Zombies, eine Transplantation unter 1 ms je Tick.
 - Noch nicht von einem Menschen durchgespielt; offene Punkte stehen in der README unter „Noch offen“.
