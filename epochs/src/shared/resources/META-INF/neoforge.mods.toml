@@ -7,14 +7,19 @@ issueTrackerURL = "https://github.com/astrieke/Minemodreview/issues"
 modId = "${mod_id}"
 version = "${mod_version}"
 displayName = "${mod_name}"
+logoFile = "strata_epochs_logo.png"
+logoBlur = false
 authors = "${mod_authors}"
 description = '''
-Addon for Strata Core: core drills, epoch gates, the Crystal Age and Spore Age dimensions,
-solidification, three mobs (Geode Crawler, Spore Bellows, Petrified Witness), crystal quartz tools,
-geode armor and the amber blade.
+Addon for Strata Core: drill core samples from the deep, open epoch gates and survive three prehistoric
+cave epochs (Crystal Age, Spore Age, Ash Age) before solidification sets in. Fossils, a codex, eight
+creatures and the Stratolith boss, epoch crops, time rifts, a museum, crystal quartz tools, geode armor,
+and the Transplanter that brings an epoch's landscape to the overworld.
 
-Addon für Strata Core: Kernbohrer, Epochentore, Kristall- und Sporenzeit, Verfestigung,
-drei Mobs, Kristallquarz-Werkzeuge, Geodenrüstung und Bernsteinklinge.
+Addon für Strata Core: Bohrkerne aus der Tiefe ziehen, Epochentore öffnen und drei urzeitliche
+Höhlen-Epochen (Kristall-, Sporen-, Aschezeit) erkunden, bevor die Verfestigung einsetzt. Fossilien,
+Kodex, acht Kreaturen und der Stratolith als Boss, Epochen-Pflanzen, Zeitrisse, Museum, Kristallquarz-
+Werkzeuge, Geodenrüstung und der Transplantator, der die Landschaft einer Epoche in die Oberwelt holt.
 '''
 
 [[dependencies.${mod_id}]]

@@ -10,6 +10,8 @@ Eine Hauptmod und zwei Addons. Alle Texte gibt es auf Deutsch und Englisch.
 | **Strata Epochs** | Addon (braucht Core) | Kernbohrer, Epochentor, Verfestigung, Kristallzeit und Sporenzeit, 3 Mobs, Ausrüstung |
 | **Strata Bridge** | Addon (braucht Core und Epochs) | JEI- und EMI-Infoseiten, Jade-Hinweise, Curios-Slot für den Zeitanker, KubeJS-Plugin, Advancements für Quest-Mods |
 
+![Logos: Strata Core, Epochs, Bridge](docs/screenshots/logos.png)
+
 ## Unterstützte Versionen
 
 | Minecraft | NeoForge | Java |
@@ -20,7 +22,7 @@ Eine Hauptmod und zwei Addons. Alle Texte gibt es auf Deutsch und Englisch.
 | 26.2 | 26.2.0.93 | 25 |
 | 26.3 | 26.3.0.99 | 25 |
 
-Für jede Version gilt: Alle drei Mods bauen, und der Server startet mit dem ganzen Set plus JEI und Jade. Ein Selbsttest generiert beide Epochen-Dimensionen, findet alle Advancements und prüft die Kette „Kodex-Knoten freischalten → Event → Advancement“. Danach spielt ein **Durchspieltest** den Kern-Ablauf über echte Server-Ticks so durch, wie ein Spieler klickt: Bohrkern ziehen, analysieren, durchs Tor in die Kristallzeit, Verfestigung, Fossilbrocken abbauen und präparieren, Kodex, zurück durchs Tor, transplantieren und auf dem neuen Boden eine Quarzdistel säen (`[Strata-Durchspiel] … -> OK`, etwa 470 Ticks).
+Für jede Version gilt: Alle drei Mods bauen, und der Server startet mit dem ganzen Set plus JEI und Jade. Ein Selbsttest generiert alle drei Epochen-Dimensionen, findet alle Advancements und prüft die Kette „Kodex-Knoten freischalten → Event → Advancement“. Danach spielt ein **Durchspieltest** den Kern-Ablauf über echte Server-Ticks so durch, wie ein Spieler klickt: Bohrkern ziehen, analysieren, durchs Tor in die Kristallzeit, Verfestigung, Fossilbrocken abbauen und präparieren, Kodex, zurück durchs Tor, transplantieren und auf dem neuen Boden eine Quarzdistel säen (`[Strata-Durchspiel] … -> OK`, etwa 470 Ticks).
 
 | Fremd-Mod | 1.21.1 | 1.21.11 | 26.1 | 26.2 | 26.3 |
 |---|---|---|---|---|---|
@@ -202,8 +204,10 @@ bridge/src/mc_*/                 JEI- und Jade-Plugins (nur geladen, wenn die Mo
 bridge/generated.gradle          Erzeugt das Wurzel-Advancement passend zur Version
 example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kodex-Knoten)
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
+scripts/release.sh               Baut alle 15 Jars, prüft Metadaten, Logo und Lizenz, legt sie mit Prüfsummen in dist/<version>/ ab
 scripts/balance.sh               Balance-Messung: Erträge im Schnelllauf (Harzschnecke, Harzfalle) und simulierter Stratolith-Kampf
 scripts/client-screenshot.sh     Startet den Client auf einem virtuellen Bildschirm und macht einen Screenshot
+tools/make_logo.py               Erzeugt die Mod-Logos für die Modliste (mit --preview <datei> alle drei nebeneinander)
 tools/make_textures.py           Erzeugt die Texturen (mit --preview <datei> ein Vorschaublatt)
 tools/blockbench-mcp/            MCP-Server + Blockbench-Plugin, damit Claude Modelle in Blockbench bauen kann
 ```
@@ -235,6 +239,7 @@ Gradle braucht zum Starten Java 17 oder neuer. Fehlende JDKs (21 für 1.21.x, 25
 ./gradlew runClient -Pmc=26.3          # dasselbe kurz; ohne -Pmc startet 1.21.1
 scripts/smoke-test.sh                  # Server + Selbsttest in allen Versionen
 scripts/smoke-test.sh 1.21.1 26.3      # nur bestimmte Versionen
+scripts/release.sh                     # alle Jars bauen und prüfen -> dist/0.1.0/ (vorher den Smoke-Test laufen lassen)
 scripts/balance.sh 1.21.1 60           # Balance-Messung, 60 Spielminuten (etwa 2 min Laufzeit)
 ```
 

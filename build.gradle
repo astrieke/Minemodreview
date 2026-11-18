@@ -143,6 +143,8 @@ def configureStrataProject = { Project p ->
     }
 
     tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+    // Lizenz in jedes Jar (MIT verlangt, dass der Hinweis mitgeliefert wird).
+    tasks.named('jar') { from(rootProject.file('LICENSE')) { rename { "LICENSE_${info.id}" } } }
 
     if (mod == 'epochs') apply from: rootProject.file('epochs/worldgen.gradle')
     if (mod == 'bridge') apply from: rootProject.file('bridge/generated.gradle')
