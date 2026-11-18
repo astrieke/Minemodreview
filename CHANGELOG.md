@@ -20,7 +20,7 @@ für Minecraft 1.21.1, 1.21.11, 26.1, 26.2 und 26.3 (NeoForge); der Dateiname ne
 - Transplantator: holt die Landschaft einer Epoche in die Oberwelt (übersteht Neustarts).
 - Epochen-Pflanzen (Quarzdistel, Harzfarn, Glutknolle), Zeitrisse in der Oberwelt, Museum mit Vitrinen.
 - Acht Kreaturen (Geodenkriecher, Sporenbalg, Steinzeuge, Glutgräber, Spiralit, Resonanzling, Bernsteinmotte,
-  Harzschnecke) und der Stratolith als Boss mit drei Phasen; eigene Modelle, Texturen und Klänge.
+  Harzschnecke) und der Stratolith als Boss mit drei Phasen (750 Leben, auf Endspiel-Ausrüstung abgestimmt); eigene Modelle, Texturen und Klänge.
 - Ausrüstung: Kristallquarz-Werkzeuge, Geodenrüstung, Bernsteinklinge, Zeitanker, Herz der Tiefenzeit.
 
 ### Strata Bridge

@@ -237,8 +237,8 @@ Arme mit Basaltfäusten, darüber die Sporenschicht (Myzel, zwei Pilzhüte) und 
 | | |
 |---|---|
 | Beschwörung | Schichtkern (Kristallquarz, Bernstein, Glutsplitter, Zeitessenz, Zeitgestein) auf die Oberseite von Zeitgestein. Nur mit `mastered_<epoche>` für alle drei Epochen, mit 3 × 4 × 3 Blöcken Platz und nicht auf Friedlich. Er steigt 3 s aus dem Boden (`rise`) und ist dabei unverwundbar. |
-| Werte | 480 Leben, 18 Schaden (Hammerschlag), Rüstung 10, langsam (0,18), kein Rückstoß; Boss-Leiste. Trefferfläche 2,3 breit (mit Armen), Höhe je Phase 3,1 / 2,3 / 1,5. |
-| Phase 1: Kristallschicht (100–67 %) | **Kristallspitzen** (`shards`): 1,2 s Warnkreis am Boden unter jedem Spieler in 16 Blöcken, dann brechen Spitzen hervor (12 Schaden, durchdringt Rüstung wie Magie, Schutz mindert weiter; Wurf). |
+| Werte | 750 Leben, 22 Schaden (Hammerschlag), Rüstung 10, langsam (0,18), kein Rückstoß; Boss-Leiste. Trefferfläche 2,3 breit (mit Armen), Höhe je Phase 3,1 / 2,3 / 1,5. |
+| Phase 1: Kristallschicht (100–67 %) | **Kristallspitzen** (`shards`): 1,2 s Warnkreis am Boden unter jedem Spieler in 16 Blöcken, dann brechen Spitzen hervor (14 Schaden, durchdringt Rüstung wie Magie, Schutz mindert weiter; Wurf; alle 5 s). Ab Phase 2 kommen die Spitzen weiter, zwischen den Fähigkeiten der Phase (`shards.all_phases`). |
 | Phase 2: Sporenschicht (67–33 %) | **Sporenstoß** (`spores`): Sporenwolke (Verfestigung ×2,5 in Epochen), Langsamkeit II, zwei Sporenbälge (höchstens 4 in der Nähe). |
 | Phase 3: Grundgestein (33–0 %) | **Zurückspulen** (`rewind`): 2 s Vorwarnung, der Kern tritt hervor und dreht sich; danach holt er sich das Leben der letzten 8 s zurück (höchstens bis 1/3). |
 | Kern-Regel | Ein Treffer mit einer **Spitzhacke von vorn** (Angreifer höchstens 45° neben seiner Blickrichtung) während der Vorwarnung bricht das Zurückspulen ab und betäubt ihn 2 s. Von der Seite oder hinten zählt er nicht. Mehr als eine Trefferfläche hat Vanilla nicht; „von vorn“ ersetzt den Treffer auf den Kern. |
@@ -255,19 +255,20 @@ Prüfung Modell Runde 1: 6/6/7 (Gesicht, Sporenschicht, Hitbox, Kern-Regel, Abwu
 Schwerttakt voll aufgeladen zu (also besser als ein Mensch) und steht im Nahkampf; „geübt“ weicht dem Warnkreis aus
 und kontert mit der Spitzhacke von vorn. Je 4 Kämpfe, Schwierigkeit Normal, gleiche Werte in 1.21.1 und 26.3.
 Mit den ursprünglichen Werten (240 Leben, 12 / 8 Schaden) lag er nach 36 s (Diamant) bzw. 23–25 s (Schärfe V,
-Schutz IV), und Schutz IV hielt den Schaden fast ganz ab: zu leicht für den Endboss. Neu: **480 Leben,
-Hammerschlag 18, Kristallspitzen 12 und rüstungsdurchdringend** (wer ausweicht, nimmt sie nicht). Gemessen danach:
+Schutz IV), und Schutz IV hielt den Schaden fast ganz ab: zu leicht für den Endboss. Erster Schritt: 480 Leben, Hammerschlag 18,
+Kristallspitzen 12 und rüstungsdurchdringend; danach noch 0–1 Heiltrank mit Endspiel-Ausrüstung. Auf Wunsch
+(„soll schwerer werden“) jetzt: **750 Leben, Hammerschlag 22, Kristallspitzen 14, rüstungsdurchdringend, alle 5 s und
+in allen drei Phasen.** Gemessen (1.21.1 und 26.3 gleich):
 
-| Ausrüstung | Kampf | Schaden genommen | Heiltränke II |
+| Ausrüstung | Kampf | Heiltränke II geübt | Heiltränke II ungeübt |
 |---|---|---|---|
-| Diamant, unverzaubert | 68–75 s | 45–96 | 4–10 |
-| Diamant, Schärfe V / Schutz IV | 45 s | 10–22 | 0–1 |
-| Netherit, Schärfe V / Schutz IV | 41 s | 13–18 | 0–1 |
+| Diamant, unverzaubert | 113–117 s | ≈ 18 | 32–43 |
+| Diamant, Schärfe V / Schutz IV | 74 s | ≈ 4 | ≈ 8–9 |
+| Netherit, Schärfe V / Schutz IV | 67–69 s | ≈ 1–2 | ≈ 6–8 |
 
-Ein Mensch trifft seltener und steht nicht immer richtig; real ist mit etwa der doppelten Zeit zu rechnen. Mit voller
-Endspiel-Ausrüstung bleibt der Kampf leicht. Härter machen ließe er sich über mehr Kristallspitzen (auch in Phase 2/3)
-oder kürzere Abklingzeiten; das sollte ein Mensch nach einem echten Kampf entscheiden. Alle Werte stehen im Datapack
-(`mob_tuning/stratolith.json`). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
+Wer dem Warnkreis ausweicht und kontert, braucht also deutlich weniger Heilung; unverzauberte Diamantausrüstung
+reicht kaum. Ein Mensch trifft seltener als der Testspieler, real ist mit etwa der doppelten Kampfzeit zu rechnen
+(gut 2 min mit Netherit). Alle Werte stehen im Datapack (`mob_tuning/stratolith.json`). Bilder: `mobs/stratolith/review_sheet.png`, im Spiel `mobs/stratolith/shots/ingame_phases_1.21.1.png` (links Phase 3, rechts Phase 1).
 
 ## Harzschnecke (umgesetzt, freigegeben)
 

@@ -1,8 +1,8 @@
 {
   "entity": "strata_epochs:stratolith",
   "attributes": {
-    "max_health": 480,
-    "attack_damage": 18,
+    "max_health": 750,
+    "attack_damage": 22,
     "armor": 10,
     "movement_speed": 0.18
   },
@@ -16,11 +16,12 @@
     "shards": {
       "enabled": true,
       "warning": 24,
-      "cooldown": 120,
+      "cooldown": 100,
       "range": 16,
       "radius": 1.4,
-      "damage": 12,
-      "lift": 0.6
+      "damage": 14,
+      "lift": 0.6,
+      "all_phases": 1
     },
     "spores": {
       "enabled": true,

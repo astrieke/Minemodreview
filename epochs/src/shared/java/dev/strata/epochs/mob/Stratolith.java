@@ -105,9 +105,9 @@ public class Stratolith extends StrataMob {
 
     public static AttributeSupplier.Builder createAttributes() {
         return MobCompat.baseAttributes()
-                .add(Attributes.MAX_HEALTH, 480.0)
+                .add(Attributes.MAX_HEALTH, 750.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.18)
-                .add(Attributes.ATTACK_DAMAGE, 18.0)
+                .add(Attributes.ATTACK_DAMAGE, 22.0)
                 .add(Attributes.ARMOR, 10.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
                 .add(Attributes.FOLLOW_RANGE, 32.0);
@@ -213,6 +213,13 @@ public class Stratolith extends StrataMob {
             case 0 -> { if (distanceTo(target) <= shards.value("range", 16.0) && hasLineOfSight(target)) shards.trigger(); }
             case 1 -> { if (distanceTo(target) <= spores.value("range", 10.0)) spores.trigger(); }
             default -> { if (lostRecently() >= rewind.value("min_loss", 12.0)) rewind.trigger(); }
+        }
+        // Kristallspitzen auch in Phase 2 und 3 (abilities.shards.all_phases): Sie durchdringen Rüstung, so bleibt der
+        // Kampf auch mit voller Endspiel-Ausrüstung gefährlich, und Ausweichen zahlt sich aus. Nie gleichzeitig mit
+        // einer anderen Vorwarnung.
+        if (layer() > 0 && shards.value("all_phases", 1.0) > 0 && !busy()
+                && distanceTo(target) <= shards.value("range", 16.0) && hasLineOfSight(target)) {
+            shards.trigger();
         }
     }
 
@@ -377,7 +384,7 @@ public class Stratolith extends StrataMob {
         private final List<Vec3> marks = new ArrayList<>();
 
         Shards(Stratolith mob) {
-            super(mob, "shards", 24, 1, 120);
+            super(mob, "shards", 24, 1, 100);
         }
 
         @Override
@@ -408,7 +415,7 @@ public class Stratolith extends StrataMob {
         @Override
         protected void onStart() {
             ServerLevel level = mob.server();
-            float damage = (float) value("damage", 12.0);
+            float damage = (float) value("damage", 14.0);
             double radius = value("radius", 1.4);
             for (Vec3 m : marks) {
                 level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.AMETHYST_CLUSTER.defaultBlockState()),
