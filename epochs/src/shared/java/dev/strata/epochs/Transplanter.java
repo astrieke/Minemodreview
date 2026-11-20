@@ -188,9 +188,22 @@ public final class Transplanter {
     }
 
     /** Führt einen Befehl als Server aus, ohne Ausgabe im Chat (für /fillbiome, /place, /summon). */
+    /** Zahl der fehlgeschlagenen Befehle seit dem Start (für den Selbsttest: z. B. Features, die nicht wachsen). */
+    static final java.util.concurrent.atomic.AtomicInteger FAILED_COMMANDS = new java.util.concurrent.atomic.AtomicInteger();
+
+    /** Führt einen Befehl still aus und meldet, ob er gelungen ist (ohne Warnung im Log). */
+    static boolean tryCommand(ServerLevel level, String command) {
+        boolean[] ok = {false};
+        var source = level.getServer().createCommandSourceStack().withSuppressedOutput().withLevel(level)
+                .withCallback((success, result) -> ok[0] |= success);
+        level.getServer().getCommands().performPrefixedCommand(source, command);
+        return ok[0];
+    }
+
     static void command(ServerLevel level, String command) {
         var source = level.getServer().createCommandSourceStack().withSuppressedOutput().withLevel(level)
                 .withCallback((success, result) -> {
+                    if (!success) FAILED_COMMANDS.incrementAndGet();
                     if (!success) StrataEpochs.LOG.warn("[Strata] Befehl fehlgeschlagen: {}", command);
                 });
         level.getServer().getCommands().performPrefixedCommand(source, command);
