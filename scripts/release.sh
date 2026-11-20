@@ -28,6 +28,7 @@ for mod in core epochs bridge; do
         check 'grep -q "version = \"$version+$mc\"" <<<"$toml"' "Version im mods.toml passt nicht"
         check 'grep -q "versionRange = \"\[$mc" <<<"$toml"' "Minecraft-Bereich passt nicht zu $mc"
         check 'unzip -l "$jar" "${id}_logo.png" >/dev/null' "Logo fehlt"
+        check 'grep -qE "^(logoFile|iconFile) = \"${id}_logo.png\"" <<<"$toml"' "Logo nicht eingetragen"
         check 'unzip -l "$jar" "LICENSE_$id" >/dev/null' "Lizenz fehlt"
         cp "$jar" "$out/"
         count=$((count + 1))

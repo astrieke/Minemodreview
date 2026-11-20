@@ -32,6 +32,8 @@
 # SHOT_MUSEUM=1: in der Oberwelt stehen sechs Vitrinen mit Bohrkern und Fossil jeder Epoche (Museum der Erdgeschichte).
 # SHOT_NBT2=',<nbt>' (mit SHOT_MOB): zusätzliche NBT für das rechte Exemplar, z. B. die Phase des Stratolithen
 #   ',"neoforge:attachments":{"strata_epochs:stratolith_layer":2}'.
+# SHOT_INVENTORY=1: Überlebensmodus, Inventar, Rüstung und zweite Hand mit Strata-Items gefüllt; das zweite Bild
+#   (<ausgabe>_inventar.png) zeigt sie alle (zum Prüfen der Item-Texturen im Spiel).
 # SHOT_BEARING=1: Kurz vor dem Bild peilt der Spieler die Biome (/strata_epochs bearing), die Zeilen stehen im Chat.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -186,6 +188,27 @@ if [ -n "${SHOT_PETRIFY:-}" ]; then
     sed -i 's|^gamemode creative @a\[tag=!strata_shot\]|gamemode survival @a[tag=!strata_shot]\neffect give @a[tag=!strata_shot] minecraft:night_vision infinite 0 true\neffect give @a[tag=!strata_shot] minecraft:resistance infinite 4 true|' "$f"
     sed -i 's|^tag @a add strata_shot|item replace entity @a[tag=!strata_shot] hotbar.5 with strata_epochs:germ_tonic 3\nitem replace entity @a[tag=!strata_shot] hotbar.6 with minecraft:diamond_pickaxe\nitem replace entity @a[tag=!strata_shot] hotbar.7 with minecraft:torch 32\ntag @a add strata_shot|' "$f"
 fi
+if [ -n "${SHOT_INVENTORY:-}" ]; then
+    items=(core_drill crystal_core_drill deep_core_drill chisel crystal_quartz_pickaxe crystal_quartz_axe
+           crystal_quartz_shovel crystal_quartz_hoe crystal_quartz_sword amber_blade
+           core_sample crystal_quartz amber_shard ember_shard time_essence time_anchor layer_core
+           resonant_splinter calcite_scale codex_fragment fossil_chunk ammonite_fossil fern_fossil ancient_skull
+           amber_inclusion quartz_thistle_seeds resin_fern_spores ember_tuber spore_sac
+           germ_tonic geode_crawler_spawn_egg amber_moth_spawn_egg resonant_shard_spawn_egg
+           resin_snail_spawn_egg stratolith_spawn_egg)
+    f="$dp/data/strata_shot/function/tick.mcfunction"
+    cmds=""
+    for i in "${!items[@]}"; do
+        if [ "$i" -lt 9 ]; then slot="hotbar.$i"; else slot="inventory.$((i - 9))"; fi
+        cmds+="item replace entity @a[tag=!strata_shot] $slot with strata_epochs:${items[$i]}\n"
+    done
+    for piece in head:helmet chest:chestplate legs:leggings feet:boots; do
+        cmds+="item replace entity @a[tag=!strata_shot] armor.${piece%%:*} with strata_epochs:geode_${piece##*:}\n"
+    done
+    cmds+="item replace entity @a[tag=!strata_shot] weapon.offhand with strata_epochs:heart_of_deep_time\n"
+    sed -i "s|^gamemode creative @a\[tag=!strata_shot\]|gamemode survival @a[tag=!strata_shot]\neffect give @a[tag=!strata_shot] minecraft:resistance infinite 4 true|" "$f"
+    sed -i "s|^tag @a add strata_shot|${cmds}tag @a add strata_shot|" "$f"
+fi
 if [ -n "${SHOT_MOB:-}" ]; then
     # Bühne erst nach 3 s bauen, wenn die Chunks am Ankunftsplatz geladen sind. Geschlossener Kasten
     # (sonst läuft Wasser hinein), Boden wie in der Epoche.
@@ -273,7 +296,7 @@ if [ -n "${PYTHON:-}" ]; then
 fi
 
 ok=0
-for _ in $(seq 1 60); do
+for _ in $(seq 1 "${SHOT_WAIT:-100}"); do   # bis 5 min: der erste Start unter lavapipe dauert
     if grep -qE 'joined the game|hat das Spiel betreten' "$log"; then ok=1; break; fi
     if grep -qE 'Crash report|BUILD FAILED' "$log"; then break; fi
     sleep 3
