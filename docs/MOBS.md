@@ -263,7 +263,7 @@ in allen drei Phasen.** Gemessen (1.21.1 und 26.3 gleich):
 | Ausrüstung | Kampf | Heiltränke II geübt | Heiltränke II ungeübt |
 |---|---|---|---|
 | Diamant, unverzaubert | 113–117 s | ≈ 18 | 32–43 |
-| Diamant, Schärfe V / Schutz IV | 74 s | ≈ 4 | ≈ 8–9 |
+| Diamant, Schärfe V / Schutz IV | 74–75 s | ≈ 3–4 | ≈ 6–9 |
 | Netherit, Schärfe V / Schutz IV | 67–69 s | ≈ 1–2 | ≈ 6–8 |
 
 Wer dem Warnkreis ausweicht und kontert, braucht also deutlich weniger Heilung; unverzauberte Diamantausrüstung

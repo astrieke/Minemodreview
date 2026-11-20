@@ -105,7 +105,10 @@ final class Perf {
     }
 
     private void nextScene() {
-        Transplanter.command(level, "kill @e[tag=" + TAG + "]");
+        // Arena direkt räumen (ein kill-Befehl trifft frisch gerufene Mobs je nach Version nicht alle).
+        for (Entity e : level.getAllEntities()) {
+            if (e instanceof net.minecraft.world.entity.Mob && inArena(e)) e.discard();
+        }
         scene++;
         tick = 0;
         times.clear();
@@ -120,6 +123,10 @@ final class Perf {
             case 3 -> startTransplants();
             default -> { for (int i = 0; i < 40; i++) summon("strata_epochs:" + STRATA_MOBS[scene - 4], i * 2); }
         }
+    }
+
+    private boolean inArena(Entity e) {
+        return Math.abs(e.getX() - center.getX()) < 17 && Math.abs(e.getZ() - center.getZ()) < 17;
     }
 
     private void summon(String type, int i) {
@@ -154,8 +161,7 @@ final class Perf {
         long count = 0;
         // Mobs in der Arena zählen (nicht über Tags: der Getter heißt ab 26.3 anders)
         for (Entity e : level.getAllEntities()) {
-            if (e instanceof net.minecraft.world.entity.Mob && Math.abs(e.getX() - center.getX()) < 17
-                    && Math.abs(e.getZ() - center.getZ()) < 17) count++;
+            if (e instanceof net.minecraft.world.entity.Mob && inArena(e)) count++;
         }
         means.add(mean);
         double perMob = count == 0 ? 0 : (mean - means.get(0)) / count;

@@ -24,18 +24,19 @@ final class FormatGuard {
 
     /**
      * Felder, die beim Zurückschreiben fehlen dürfen: Sie stehen auf dem Standardwert, den der Codec weglässt. Selbst wenn
-     * eine Version so ein Feld nicht mehr kennt, ändert sich nichts. Schlüssel ist das Pfadende, Wert der Standard als JSON.
+     * eine Version so ein Feld nicht mehr kennt, ändert sich nichts. Schlüssel ist „Ordner:Pfadende“ (nur für diesen
+     * Dateityp), Wert der Standard als JSON.
      */
     private static final Map<String, String> DEFAULTS = Map.of(
-            ".display.frame", "\"task\"",
-            ".display.show_toast", "true",
-            ".display.announce_to_chat", "true",
-            ".result.count", "1",
-            ".category", "\"misc\"",                 // Rezepte (ab 26.2 optional)
-            ".solidify_seconds", "600",               // Strata-Epoche (ab 26.3 als Datapack-Registry geprüft)
-            ".depth", "1",
-            ".landscape.depth", "10",
-            ".landscape.feature_count", "6");
+            "advancement:.display.frame", "\"task\"",
+            "advancement:.display.show_toast", "true",
+            "advancement:.display.announce_to_chat", "true",
+            "recipe:.result.count", "1",
+            "recipe:.category", "\"misc\"",                 // ab 26.2 optional
+            "strata_core/epoch:.solidify_seconds", "600",     // ab 26.3 als Datapack-Registry geprüft
+            "strata_core/epoch:.depth", "1",
+            "strata_core/epoch:.landscape.depth", "10",
+            "strata_core/epoch:.landscape.feature_count", "6");
 
     private FormatGuard() {}
 
@@ -58,9 +59,12 @@ final class FormatGuard {
             for (var entry : found.entrySet()) {
                 if (!entry.getKey().getNamespace().startsWith("strata")) continue;   // Strata-Mods und Demo-Datapack
                 String name = entry.getKey().getPath();
-                if (name.substring(type.getKey().length() + 1).contains("/") && !type.getKey().equals("loot_table")
-                        && !type.getKey().equals("advancement")) {
-                    continue;   // Unterordner gehören zu einem anderen Typ (z. B. worldgen/biome unter worldgen)
+                // Liegt die Datei im Ordner eines anderen, genaueren Typs (z. B. a/b/c.json bei den Typen a und a/b),
+                // prüft sie jener; alle anderen Unterordner (etwa recipe/gear/) gehören zu diesem Typ.
+                String dir = type.getKey();
+                if (codecs.keySet().stream().anyMatch(k -> k.length() > dir.length() && k.startsWith(dir + "/")
+                        && name.startsWith(k + "/"))) {
+                    continue;
                 }
                 files++;
                 JsonElement source;
@@ -70,7 +74,7 @@ final class FormatGuard {
                     broken.add(name + ": " + e.getMessage());
                     continue;
                 }
-                String problem = roundTrip(type.getValue(), ops, source, name, lost);
+                String problem = roundTrip(type.getValue(), ops, source, dir + ":" + name, lost);
                 if (problem != null) broken.add(name + ": " + problem);
             }
         }
@@ -117,8 +121,10 @@ final class FormatGuard {
     }
 
     private static boolean isDefault(String path, JsonElement value) {
-        // Längstes passendes Pfadende gewinnt (".landscape.depth" vor ".depth").
-        return DEFAULTS.entrySet().stream().filter(d -> path.endsWith(d.getKey()))
+        // path = "<ordner>:<datei>.<feld>"; nur Ausnahmen desselben Ordners, das längste passende Pfadende gewinnt.
+        String dir = path.substring(0, path.indexOf(':'));
+        return DEFAULTS.entrySet().stream().filter(d -> d.getKey().startsWith(dir + ":")
+                        && path.endsWith(d.getKey().substring(dir.length() + 1)))
                 .max(java.util.Comparator.comparingInt(d -> d.getKey().length()))
                 .map(d -> d.getValue().equals(value.toString())).orElse(false);
     }
@@ -138,6 +144,7 @@ final class FormatGuard {
         } else if (source.isJsonArray() && written.isJsonArray()) {
             var s = source.getAsJsonArray();
             var w = written.getAsJsonArray();
+            if (w.size() < s.size()) lost.add(path + " = " + (s.size() - w.size()) + " von " + s.size() + " Listeneinträgen");
             for (int i = 0; i < Math.min(s.size(), w.size()); i++) compare(s.get(i), w.get(i), path + "[" + i + "]", lost);
         } else if (source.isJsonObject() && written.isJsonArray() && written.getAsJsonArray().size() == 1) {
             compare(source, written.getAsJsonArray().get(0), path, lost);   // Einzelwert, als Liste geschrieben

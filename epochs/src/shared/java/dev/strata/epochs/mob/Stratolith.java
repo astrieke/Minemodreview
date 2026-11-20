@@ -209,14 +209,16 @@ public class Stratolith extends StrataMob {
         }
         LivingEntity target = getTarget();
         if (!(target instanceof Player) || stunned > 0) return;
+        // Nie zwei Vorwarnungen gleichzeitig: Wer aus dem Warnkreis tritt, soll nicht zugleich kontern müssen.
+        if (busy()) return;
         switch (layer()) {
             case 0 -> { if (distanceTo(target) <= shards.value("range", 16.0) && hasLineOfSight(target)) shards.trigger(); }
             case 1 -> { if (distanceTo(target) <= spores.value("range", 10.0)) spores.trigger(); }
             default -> { if (lostRecently() >= rewind.value("min_loss", 12.0)) rewind.trigger(); }
         }
         // Kristallspitzen auch in Phase 2 und 3 (abilities.shards.all_phases): Sie durchdringen Rüstung, so bleibt der
-        // Kampf auch mit voller Endspiel-Ausrüstung gefährlich, und Ausweichen zahlt sich aus. Nie gleichzeitig mit
-        // einer anderen Vorwarnung.
+        // Kampf auch mit voller Endspiel-Ausrüstung gefährlich, und Ausweichen zahlt sich aus. Nur wenn die Fähigkeit
+        // der Phase eben nicht ausgelöst hat (busy() prüft das).
         if (layer() > 0 && shards.value("all_phases", 1.0) > 0 && !busy()
                 && distanceTo(target) <= shards.value("range", 16.0) && hasLineOfSight(target)) {
             shards.trigger();

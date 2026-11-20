@@ -367,7 +367,12 @@ final class Playthrough {
 
     private void leaveSecondClick() {
         EpochVisit visit = player.getData(EpochsContent.VISIT.get());
-        click(gateNear());
+        BlockPos gate = gateNear();
+        if (gate == null) {
+            fail("Tor zwischen den beiden Klicks verschwunden");
+            return;
+        }
+        click(gate);
         player.setPos(visit.x(), visit.y(), visit.z());   // wie oben: sonst Aufgabe der Netzwerkverbindung
         boolean home = player.level() == overworld;
         boolean reset = player.getData(EpochsContent.VISIT.get()).ticks() == 0;

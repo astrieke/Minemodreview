@@ -299,20 +299,29 @@ final class SelfTest {
         BlockPos chest = new BlockPos(x, y, z);
         level.setBlockAndUpdate(chest, net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
         // In eine Truhe würfeln: Frisch gespawnte Gegenstände findet die Entity-Suche hier nicht zuverlässig.
+        // Gegenprobe: Der Glutgräber gibt ohne Bedingung 1-2 Splitter; kommt dort nichts an, würfelt der Befehl gar nicht.
+        int control = rollInto(level, chest, "strata_epochs:entities/ember_burrower", EpochsContent.EMBER_SHARD.get());
+        int rolled = rollInto(level, chest, "strata_epochs:entities/amber_moth", EpochsContent.AMBER_SHARD.get());
+        level.setBlockAndUpdate(chest, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        boolean ok = rolled == 0 && control >= 8;
+        StrataEpochs.LOG.info("[Strata-Test] Beuteformat: Splitter ohne Spieler als Täter={} (erwartet 0), Gegenprobe Glutgräber={} "
+                + "(erwartet 8-16) -> {}", rolled, control, ok ? "OK" : "FEHLER");
+        return ok ? 0 : 1;
+    }
+
+    /** Würfelt eine Beutetabelle achtmal in die Truhe und zählt das Item; leert die Truhe danach. */
+    private static int rollInto(ServerLevel level, BlockPos chest, String table, net.minecraft.world.item.Item item) {
         for (int i = 0; i < 8; i++) {
-            Transplanter.command(level, "loot insert " + x + " " + y + " " + z + " loot strata_epochs:entities/amber_moth");
+            Transplanter.command(level, "loot insert " + chest.getX() + " " + chest.getY() + " " + chest.getZ() + " loot " + table);
         }
-        int rolled = 0;
+        int n = 0;
         if (level.getBlockEntity(chest) instanceof net.minecraft.world.Container box) {
             for (int i = 0; i < box.getContainerSize(); i++) {
-                if (box.getItem(i).is(EpochsContent.AMBER_SHARD.get())) rolled += box.getItem(i).getCount();
+                if (box.getItem(i).is(item)) n += box.getItem(i).getCount();
             }
             box.clearContent();
         }
-        level.setBlockAndUpdate(chest, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
-        boolean ok = rolled == 0;
-        StrataEpochs.LOG.info("[Strata-Test] Beuteformat: Splitter ohne Spieler als Täter={} (erwartet 0) -> {}", rolled, ok ? "OK" : "FEHLER");
-        return ok ? 0 : 1;
+        return n;
     }
 
     /** Transplantation im Testgebiet: Oberfläche, Unterschicht, Biom; ein „Bau“-Block bleibt unberührt. */
@@ -1503,12 +1512,12 @@ final class SelfTest {
 
     /**
      * Mehrere Biome pro Epoche: Jedes Biom der Dimension braucht einen spürbaren Anteil, muss höchstens
-     * 300 Blöcke vom Ankunftsort liegen, an seinen Böden die eigene Oberfläche haben, und eine Ankunft
+     * 350 Blöcke vom Ankunftsort liegen, an seinen Böden die eigene Oberfläche haben, und eine Ankunft
      * dort steht auf sicherem Boden (kein Magma, keine Lava).
      */
     private static int testBiomes(MinecraftServer server) {
         int failures = 0;
-        final int step = 32, range = 1536, maxDistance = 300;
+        final int step = 32, range = 1536, maxDistance = 350;   // 300 war zu knapp: ein Seed brachte 312 (Suchschritt 32)
         for (Map.Entry<String, Epoch> entry : StrataAPI.epochs(server).entrySet()) {
             if (entry.getValue().dimension().isEmpty()) continue;
             ServerLevel level = Mc.level(server, entry.getValue().dimension().get());

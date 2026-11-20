@@ -10,6 +10,8 @@ cd "$(dirname "$0")/.."
 version=$(grep '^mod_version=' gradle.properties | cut -d= -f2)
 out="dist/$version"
 echo "== Strata $version: bauen …"
+# collectJars löscht nie: Alte Jars (frühere Builds, entfernte Versionen) vorher entfernen, sonst landen sie im Release.
+rm -f core/build/libs/*.jar epochs/build/libs/*.jar bridge/build/libs/*.jar
 ./gradlew --console=plain -q :core:build :epochs:build :bridge:build
 rm -rf "$out"
 mkdir -p "$out"
