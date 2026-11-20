@@ -330,6 +330,9 @@ public final class TransplantJob {
     private void planGrowth() {
         if (landscape.features().isEmpty()) return;
         int count = (int) Math.round(landscape.featureCount() * (radius * radius) / 144.0);
+        // Vanilla-Features (z. B. Riesenpilze) brauchen Platz für ihre Krone; bei 4 Blöcken Abstand kamen sie sich in die
+        // Quere (Selbsttest: ein Pilz wuchs trotz Ausweichstellen nicht). Eigene Wuchsformen sind schmal.
+        int spacing = landscape.features().stream().allMatch(f -> f.startsWith(StrataEpochs.MOD_ID + ":")) ? 4 : 7;
         for (int i = 0; i < count * 4 && growSpots.size() < count; i++) {
             double angle = random.nextDouble() * Math.PI * 2;
             double dist = Math.sqrt(random.nextDouble()) * (radius - 2);
@@ -341,7 +344,7 @@ public final class TransplantJob {
             int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
             if (!level.getBlockState(new BlockPos(x, y - 1, z)).is(top.getBlock())) continue;
             BlockPos spot = new BlockPos(x, y, z);
-            if (growSpots.stream().anyMatch(p -> p.distSqr(spot) < 16)) continue;
+            if (growSpots.stream().anyMatch(p -> p.distSqr(spot) < spacing * spacing)) continue;
             growSpots.add(spot);
         }
     }
@@ -356,10 +359,7 @@ public final class TransplantJob {
         BlockPos spot = growSpots.poll();
         if (spot != null) {
             String feature = landscape.features().get(random.nextInt(landscape.features().size()));
-            if (!growBuiltIn(feature, spot)) {
-                Transplanter.command(level, String.format(Locale.ROOT, "place feature %s %d %d %d",
-                        feature, spot.getX(), spot.getY(), spot.getZ()));
-            }
+            if (!growBuiltIn(feature, spot)) placeFeature(feature, spot);
             if (!instant) {
                 level.sendParticles(ParticleTypes.HAPPY_VILLAGER, spot.getX() + 0.5, spot.getY() + 1, spot.getZ() + 0.5,
                         12, 0.8, 1.0, 0.8, 0.0);
@@ -370,6 +370,29 @@ public final class TransplantJob {
             finishRising(true);
             phase = Phase.DONE;
         }
+    }
+
+    /**
+     * Vanilla-Feature setzen; scheitert es (z. B. Riesenpilz ohne Platz für die Krone), bis zu dreimal an einer
+     * Nachbarstelle auf dem Epochenboden versuchen. Erst wenn alles scheitert, wird es gemeldet und gezählt.
+     */
+    private void placeFeature(String feature, BlockPos spot) {
+        for (int attempt = 0; attempt < 4; attempt++) {
+            BlockPos at = spot;
+            if (attempt > 0) {
+                int x = spot.getX() + random.nextInt(5) - 2, z = spot.getZ() + random.nextInt(5) - 2;
+                if (!level.hasChunkAt(new BlockPos(x, spot.getY(), z))) continue;
+                int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
+                if (!level.getBlockState(new BlockPos(x, y - 1, z)).is(top.getBlock())) continue;
+                at = new BlockPos(x, y, z);
+            }
+            if (Transplanter.tryCommand(level, String.format(Locale.ROOT, "place feature %s %d %d %d",
+                    feature, at.getX(), at.getY(), at.getZ()))) {
+                return;
+            }
+        }
+        Transplanter.FAILED_COMMANDS.incrementAndGet();
+        StrataEpochs.LOG.warn("[Strata] Feature {} wuchs bei {} auch nach drei Ausweichstellen nicht", feature, spot.toShortString());
     }
 
     // ---- eigene Wuchsformen ----
