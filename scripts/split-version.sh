@@ -14,7 +14,7 @@ v="${1:?Version fehlt, z. B. 1.21.1}"
 # 1. Andere Versionen entfernen.
 for dir in versions/*/; do
     other=$(basename "$dir")
-    [ "$other" = "$v" ] || git rm -rq "versions/$other"
+    [ "$other" = "$v" ] || git rm -rqf "versions/$other"
 done
 
 # 2. Quellgruppen, die diese Version nicht nutzt, entfernen.
@@ -22,14 +22,14 @@ for mod in core epochs bridge; do
     groups=$(grep "^${mod}_src_groups=" "versions/$v/gradle.properties" | cut -d= -f2 | tr ',' ' ')
     for dir in "$mod"/src/*/; do
         g=$(basename "$dir")
-        if ! grep -qw "$g" <<<"$groups"; then git rm -rq "$mod/src/$g"; fi
+        if ! grep -qw "$g" <<<"$groups"; then git rm -rqf "$mod/src/$g"; fi
     done
 done
 
 # 3. Skripte für andere Versionen (KubeJS-Test gibt es nur für 1.21.1 und 26.1).
-if ! grep -q "kubejs" "versions/$v/gradle.properties"; then git rm -q scripts/kubejs-test.sh; fi
-git rm -q scripts/split-version.sh   # wird auf dem Versions-Branch nicht mehr gebraucht
-[ -f scripts/update-release-branches.sh ] && git rm -q scripts/update-release-branches.sh
+if ! grep -q "kubejs" "versions/$v/gradle.properties"; then git rm -qf scripts/kubejs-test.sh; fi
+git rm -qf scripts/split-version.sh   # wird auf dem Versions-Branch nicht mehr gebraucht
+[ -f scripts/update-release-branches.sh ] && git rm -qf scripts/update-release-branches.sh
 
 # 4. CI, Standardversion und Hinweise auf diese Version stellen.
 python3 - "$v" <<'PY'
