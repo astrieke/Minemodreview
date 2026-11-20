@@ -2,10 +2,10 @@
 # Leistungsmessung: startet einen Server mit dem ganzen Set und misst die Tickdauer in vier Szenen
 # (siehe epochs/src/shared/java/dev/strata/epochs/Perf.java). Gibt die Messwerte aus dem Log aus.
 #
-# Aufruf: scripts/perf.sh [version]   (Standard: 26.3)
+# Aufruf: scripts/perf.sh [version]   (Standard: 1.21.1)
 set -uo pipefail
 cd "$(dirname "$0")/.."
-v="${1:-26.3}"
+v="${1:-1.21.1}"
 run="bridge/versions/$v/run/server"
 rm -rf "$run"
 mkdir -p "$run"

@@ -1,8 +1,5 @@
 # Strata – Tiefenzeit
 
-> **Dieser Branch (`release/26.3`) enthält nur Minecraft 26.3.** Entwickelt wird für alle Versionen gemeinsam auf dem Hauptbranch; dieser Stand wurde daraus mit `scripts/split-version.sh 26.3` erzeugt. Abschnitte der README zu anderen Versionen gelten hier nicht.
-
-
 Ein Modset für Minecraft-Modpacks. Das Konzept steht in [KONZEPT.md](KONZEPT.md), der Plan für eigene Mobs in [docs/MOBS.md](docs/MOBS.md).
 
 Eine Hauptmod und zwei Addons. Alle Texte gibt es auf Deutsch und Englisch.
@@ -208,6 +205,7 @@ bridge/generated.gradle          Erzeugt das Wurzel-Advancement passend zur Vers
 example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kodex-Knoten)
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
 scripts/split-version.sh         Erzeugt aus diesem Stand einen Stand für eine Minecraft-Version (Branches release/<version>)
+scripts/update-release-branches.sh  Zieht alle Branches release/<version> auf den aktuellen Stand nach (bauen, testen, pushen)
 scripts/release.sh               Baut alle 15 Jars, prüft Metadaten, Logo und Lizenz, legt sie mit Prüfsummen in dist/<version>/ ab
 scripts/perf.sh                  Leistungsmessung: Tickdauer mit Strata-Mobs (jede Art einzeln), Zombies zum Vergleich, Transplantationen
 scripts/balance.sh               Balance-Messung: Erträge im Schnelllauf (Harzschnecke, Harzfalle) und simulierter Stratolith-Kampf
@@ -248,6 +246,23 @@ scripts/release.sh                     # alle Jars bauen und prüfen -> dist/0.1
 scripts/perf.sh 26.3                   # Leistungsmessung (etwa 3 min Laufzeit)
 scripts/balance.sh 1.21.1 60           # Balance-Messung, 60 Spielminuten (etwa 2 min Laufzeit)
 ```
+
+### Versions-Branches `release/<version>`
+
+Für jede Minecraft-Version gibt es einen eigenen Branch, der nur deren Code enthält: `release/1.21.1`, `release/1.21.11`,
+`release/26.1`, `release/26.2` und `release/26.3`. Dort fehlen die anderen Versionen und alle Quellordner, die die
+Version nicht nutzt; CI, Skripte und Standardversion sind auf sie eingestellt. **Entwickelt wird weiter hier, für alle
+Versionen gemeinsam.** Danach zieht
+
+```bash
+scripts/update-release-branches.sh            # alle Versions-Branches: aufteilen, bauen, Smoke-Test, pushen
+scripts/update-release-branches.sh 26.3       # nur einen
+PUSH=0 scripts/update-release-branches.sh     # nur vorbereiten und testen
+```
+
+die Branches nach. Es setzt jeden Branch auf den aktuellen Stand, teilt mit `scripts/split-version.sh` auf und legt
+das als neuen Commit an (die Historie des Branches bleibt). Gepusht wird nur, was baut und den Smoke-Test besteht.
+Auf den Versions-Branches selbst nichts ändern: Das nächste Nachziehen würde es überschreiben.
 
 Ein bloßes `runClient` bzw. `runServer` im Hauptordner (auch per Doppelklick in IntelliJ) startet nur **einen** Client bzw. Server mit allen drei Mods, nicht alle 15 Unterprojekte gleichzeitig.
 
