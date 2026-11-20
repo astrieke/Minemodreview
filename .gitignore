@@ -8,3 +8,5 @@ out/
 __pycache__/
 *.pyc
 dist/
+.release-worktrees/
+update.log
