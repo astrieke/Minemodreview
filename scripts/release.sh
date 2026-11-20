@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Baut alle drei Mods für alle Minecraft-Versionen, prüft jedes Jar und legt sie mit Prüfsummen in dist/<version>/ ab.
+# Baut alle drei Mods für alle Minecraft-Versionen (versions/*), prüft jedes Jar und legt sie mit Prüfsummen in dist/<version>/ ab.
 #
 # Geprüft wird je Jar: Metadaten vollständig eingesetzt (keine ${...}), Version und Minecraft-Bereich passen zum
 # Dateinamen, Logo und Lizenz liegen bei. Den Spieltest macht scripts/smoke-test.sh (vor einem Release ausführen).
@@ -36,5 +36,6 @@ done
 (cd "$out" && sha256sum ./*.jar > SHA256SUMS)
 cp CHANGELOG.md LICENSE "$out/"
 echo "== $count Jars in $out, $problems Probleme"
-[ "$count" -eq 15 ] || { echo "FEHLER: erwartet 15 Jars (3 Mods × 5 Versionen)"; exit 1; }
+versions=$(find versions -mindepth 1 -maxdepth 1 -type d | wc -l)
+[ "$count" -eq $((3 * versions)) ] || { echo "FEHLER: erwartet $((3 * versions)) Jars (3 Mods × $versions Versionen)"; exit 1; }
 [ "$problems" -eq 0 ]

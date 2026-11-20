@@ -204,6 +204,7 @@ bridge/src/mc_*/                 JEI- und Jade-Plugins (nur geladen, wenn die Mo
 bridge/generated.gradle          Erzeugt das Wurzel-Advancement passend zur Version
 example-datapacks/strata-demo/   Demo-Datapack (2 Epochen ohne Dimension, 3 Kodex-Knoten)
 scripts/smoke-test.sh            Startet pro Version einen Server und prüft das Log
+scripts/split-version.sh         Erzeugt aus diesem Stand einen Stand für eine Minecraft-Version (Branches release/<version>)
 scripts/release.sh               Baut alle 15 Jars, prüft Metadaten, Logo und Lizenz, legt sie mit Prüfsummen in dist/<version>/ ab
 scripts/perf.sh                  Leistungsmessung: Tickdauer mit Strata-Mobs (jede Art einzeln), Zombies zum Vergleich, Transplantationen
 scripts/balance.sh               Balance-Messung: Erträge im Schnelllauf (Harzschnecke, Harzfalle) und simulierter Stratolith-Kampf
