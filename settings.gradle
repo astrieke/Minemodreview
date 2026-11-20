@@ -35,9 +35,9 @@ file('versions').eachDir { dir ->
 
 // Ein bloßes "runClient" oder "runServer" im Hauptordner (z. B. Doppelklick in IntelliJ) würde sonst
 // alle 15 Unterprojekte gleichzeitig starten. Stattdessen startet es einen Client mit allen drei Mods:
-// Strata Bridge in der Version aus -Pmc=<version> (Standard 1.21.1).
+// Strata Bridge in der Version aus -Pmc=<version> (Standard 26.2).
 if (gradle.startParameter.currentDir.canonicalFile == settingsDir.canonicalFile) {
-    def mc = gradle.startParameter.projectProperties.get('mc') ?: '1.21.1'
+    def mc = gradle.startParameter.projectProperties.get('mc') ?: '26.2'
     def names = gradle.startParameter.taskNames
     if (names.any { it in ['runClient', 'runServer'] }) {
         gradle.startParameter.taskNames = names.collect { it in ['runClient', 'runServer'] ? ":bridge:${mc}:${it}".toString() : it }
