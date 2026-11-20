@@ -212,6 +212,7 @@ tool('server_start',
         const password = crypto.randomBytes(12).toString('hex');
         fs.writeFileSync(path.join(dir, 'server.properties'), [
             'online-mode=false', 'level-type=minecraft\\:flat', 'spawn-protection=0', 'max-tick-time=-1',
+            `server-port=${port - 25575 + 25600}`,   // eigener Port: Smoke-Test (25565) kann parallel laufen
             'enable-rcon=true', `rcon.port=${port}`, `rcon.password=${password}`, 'broadcast-rcon-to-ops=false', '',
         ].join('\n'));
         const logFile = path.join(dir, 'mcp.log');

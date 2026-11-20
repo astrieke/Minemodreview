@@ -431,16 +431,21 @@ final class SelfTest {
         var landscape = StrataAPI.epochs(server).get(epochId).landscape().orElseThrow();
         int cx = 5000 + 200 * List.of("crystal_age", "spore_age", "ash_age").indexOf(name), cz = 5000;
         for (int k = 0; k < 12 && !cleanSite(level, cx, cz, 12); k++) cz += 160;
+        // Umgebung ganz laden, wie neben einem Spieler: Direkt nach dem Erzeugen scheiterten sonst Riesenpilze am Rand
+        // frisch erzeugter Chunks (zur Laufzeit wachsen sie an denselben Stellen).
+        for (int dx = -2; dx <= 2; dx++) for (int dz = -2; dz <= 2; dz++) level.getChunk((cx >> 4) + dx, (cz >> 4) + dz);
         int ground = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz) - 1;
+        int failedBefore = Transplanter.FAILED_COMMANDS.get();
         TransplantJob job = Transplanter.start(level, new BlockPos(cx, ground + 1, cz), epochId, landscape, 10, null);
         job.runToEnd();
+        int failed = Transplanter.FAILED_COMMANDS.get() - failedBefore;   // z. B. Riesenpilze ohne Platz für die Krone
         int grown = 0;
         for (BlockPos pos : BlockPos.betweenClosed(cx - 10, ground + 1, cz - 10, cx + 10, ground + 12, cz + 10)) {
             if (!level.getBlockState(pos).isAir()) grown++;
         }
-        boolean ok = grown > 0;
-        StrataEpochs.LOG.info("[Strata-Test] Wachsen {}: {} Blöcke über dem Boden ({}) -> {}", name, grown,
-                landscape.features(), ok ? "OK" : "FEHLER");
+        boolean ok = grown > 0 && failed == 0;
+        StrataEpochs.LOG.info("[Strata-Test] Wachsen {}: {} Blöcke über dem Boden ({}), fehlgeschlagen {} -> {}", name, grown,
+                landscape.features(), failed, ok ? "OK" : "FEHLER");
         return ok ? 0 : 1;
     }
 
