@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "strata-test": {
+      "command": "node",
+      "args": ["tools/strata-test-mcp/server.js"]
+    }
+  }
+}
