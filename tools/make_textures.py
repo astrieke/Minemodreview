@@ -870,15 +870,15 @@ def gear(rows, pal, edge):
 
 GEAR = {
     'crystal_quartz_sword': gear(SWORD, GEAR_QUARTZ, '#1a1450'),
-    'crystal_quartz_pickaxe': gear(PICKAXE, GEAR_QUARTZ, '#1a1450'),
-    'crystal_quartz_axe': gear(AXE, GEAR_QUARTZ, '#1a1450'),
-    'crystal_quartz_shovel': gear(SHOVEL, GEAR_QUARTZ, '#1a1450'),
-    'crystal_quartz_hoe': gear(HOE, GEAR_QUARTZ, '#1a1450'),
-    'amber_blade': gear(AMBER_BLADE, GEAR_AMBER, '#3a1b04'),
-    'geode_helmet': gear(HELMET, GEAR_GEODE, '#231c2a'),
-    'geode_chestplate': gear(CHESTPLATE, GEAR_GEODE, '#231c2a'),
-    'geode_leggings': gear(LEGGINGS, GEAR_GEODE, '#231c2a'),
-    'geode_boots': gear(BOOTS, GEAR_GEODE, '#231c2a'),
+    'crystal_quartz_pickaxe': lambda: v2_pickaxe(),
+    'crystal_quartz_axe': lambda: v2_axe(),
+    'crystal_quartz_shovel': lambda: v2_shovel(),
+    'crystal_quartz_hoe': lambda: v2_hoe(),
+    'amber_blade': lambda: v2_amber_blade(),
+    'geode_helmet': lambda: armor(V2_HELMET)(),
+    'geode_chestplate': lambda: armor(V2_CHESTPLATE)(),
+    'geode_leggings': lambda: armor(V2_LEGGINGS)(),
+    'geode_boots': lambda: armor(V2_BOOTS)(),
 }
 
 
@@ -1849,9 +1849,9 @@ BLOCKS = {
     'display_case_base': display_case_base,
     'display_case_base_top': display_case_base_top,
     'display_case_trim': display_case_trim,
-    'resin_trap': resin_trap,
-    'resin_trap_moth': resin_trap_moth,
-    'resin_trap_hardened': resin_trap_hardened,
+    'resin_trap': lambda: v2_resin_trap(),
+    'resin_trap_moth': lambda: v2_resin_trap_moth(),
+    'resin_trap_hardened': lambda: v2_resin_trap_hardened(),
     'resin_trail': resin_trail,
     'amber_plate': amber_plate,
 }
@@ -1908,44 +1908,773 @@ def resonant_shard_spawn_egg():
     return outline(from_grid(rows, pal), '#2a2238')
 
 
+# ---------------------------------------------------------------- Überarbeitung 11/2026 (einheitlicher Item-Stil)
+#
+# Formen werden als Masken mit Material-Buchstaben gezeichnet; shade() setzt Licht und Schatten einheitlich
+# (Licht oben links: freie Kante oben/links = heller, unten/rechts = dunkler), danach eine farbige Kontur je Item.
+# Rampen: (Glanz, hell, mittel, dunkel).
+
+R_WOOD = ('#c49a6c', '#9a7048', '#6f4c2e', '#4a3220')
+R_QUARTZ = ('#f2f2ff', '#b8b6ff', '#7471f2', '#4a44c0')
+R_QUARTZ_DARK = ('#b8b6ff', '#7471f2', '#4a44c0', '#2c2470')
+R_IRON = ('#f4f7fa', '#c5ced6', '#8d98a3', '#5d6670')
+R_IRON_DARK = ('#c5ced6', '#8d98a3', '#5d6670', '#3b4148')
+R_TEAL = ('#e9fffd', '#8ff0e6', '#3fc7b8', '#1f6f6a')
+R_TEAL_DARK = ('#8ff0e6', '#3fc7b8', '#1f6f6a', '#124440')
+R_AMBER = ('#fff3c8', '#ffd27a', '#d9821c', '#a2560f')
+R_SLATE = ('#9a8fa6', '#776c84', '#584e66', '#3b3348')
+
+
+def shade(mask, mats):
+    """mask: {(x, y): material}; mats: material -> Rampe. Gibt ein Bild mit Licht von oben links zurück."""
+    img = canvas()
+    for (x, y), m in mask.items():
+        tl = (mask.get((x, y - 1)) != m) + (mask.get((x - 1, y)) != m)
+        br = (mask.get((x, y + 1)) != m) + (mask.get((x + 1, y)) != m)
+        score = tl - br
+        ramp = mats[m]
+        c = ramp[0] if score >= 2 else ramp[1] if score == 1 else ramp[2] if score == 0 else ramp[3]
+        img.putpixel((x, y), rgb(c))
+    return img
+
+
+def grid_mask(rows):
+    mask = {}
+    for y, row in enumerate(rows):
+        assert len(row) == 16, (len(row), row)
+        for x, ch in enumerate(row):
+            if ch != '.':
+                mask[(x, y)] = ch
+    return mask
+
+
+def handle_mask(top_row, bottom_row=14, mat='h'):
+    """Diagonaler Stiel, 2 px breit, von unten links bis top_row (wie bei Vanilla-Werkzeugen)."""
+    mask = {}
+    for r in range(top_row, bottom_row + 1):
+        mask[(15 - r, r)] = mat
+        mask[(16 - r, r)] = mat
+    return mask
+
+
+def tool(head_rows, handle_top, mats, edge):
+    mask = handle_mask(handle_top)
+    mask.update(grid_mask(head_rows))
+    return outline(shade(mask, mats), edge)
+
+
+TOOL_MATS = {'h': R_WOOD, 'q': R_QUARTZ}
+R_EDGE = ('#ffffff', '#ffffff', '#e6e6ff', '#b8b6ff')   # helle Schneide
+
+
+def v2_pickaxe():
+    # Kopf: Bogen über die obere rechte Ecke, symmetrisch zur Stielachse (Spiegelung (x, y) -> (15-y, 15-x)).
+    top = {1: [(4, 10)], 2: [(2, 12)], 3: [(1, 4), (9, 12)], 4: [(1, 3), (11, 12)], 5: [(1, 2)]}
+    mask = handle_mask(5, 14)
+    for y, spans in top.items():
+        for a, b in spans:
+            for x in range(a, b + 1):
+                mask[(x, y)] = 'q'
+                mask[(15 - y, 15 - x)] = 'q'
+    return outline(shade(mask, TOOL_MATS), '#1a1450')
+
+
+def v2_axe():
+    # Kopf quer zum Stiel am oberen Ende, ragt nach oben links; flache Rückseite am Stiel, helle gebogene Schneide.
+    return tool([
+        '................',
+        '.......eqq......',
+        '......eqqqq.....',
+        '.....eqqqqqq....',
+        '.....eqqqqq.....',
+        '......eqqq......',
+        '.......ee.......',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+    ], 3, {**TOOL_MATS, 'e': R_EDGE}, '#1a1450')
+
+
+def v2_shovel():
+    # Blatt als gedrehtes Quadrat (6 x 6) mit dunkler Mittelrinne vom Stielansatz.
+    mask = handle_mask(9, 14)
+    cx, cy = 11.5, 4.5
+    for y in range(16):
+        for x in range(16):
+            if abs(x - cx) + abs(y - cy) <= 4.0:
+                mask[(x, y)] = 'q'
+    for x, y in ((8, 8), (9, 7), (10, 6), (11, 5)):
+        mask[(x, y)] = 'g'
+    mats = {**TOOL_MATS, 'g': ('#4a44c0', '#3a32a0', '#2c2670', '#1a1450')}
+    return outline(shade(mask, mats), '#1a1450')
+
+
+def v2_hoe():
+    return tool([
+        '................',
+        '.....qqqqqqqqq..',
+        '....qqqqqqqqqqq.',
+        '....qqq.....hh..',
+        '....qq..........',
+        '....q...........',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+        '................',
+    ], 3, TOOL_MATS, '#1a1450')
+
+
+def diag_mask(spec, t_range, u_center=15):
+    """Wie diag_shape, aber spec(t, du) gibt einen Material-Buchstaben zurück (für shade)."""
+    mask = {}
+    for y in range(16):
+        for x in range(16):
+            t, du = x - y, x + y - u_center
+            if t_range[0] <= t <= t_range[1]:
+                m = spec(t, du)
+                if m:
+                    mask[(x, y)] = m
+    return mask
+
+
+def v2_chisel():
+    # Holzgriff (3 breit), 1-px-Zwinge, kurzer Stahlschaft, flache 3 px breite Klinge mit heller Schneide.
+    def spec(t, du):
+        if t <= -4:
+            return 'h' if -1 <= du <= 1 else None
+        if t == -3:
+            return 'f' if -1 <= du <= 1 else None
+        if t <= 1:
+            return 's' if 0 <= du <= 1 else None
+        if t <= 6:
+            return 'e' if t == 6 and -1 <= du <= 1 else ('b' if -1 <= du <= 1 else None)
+        return None
+    mats = {'h': R_WOOD, 'f': ('#5a5a66', '#4a4a55', '#3b3b44', '#2a2a32'), 's': R_IRON_DARK, 'b': R_IRON,
+            'e': ('#ffffff', '#ffffff', '#eef3f7', '#c5ced6')}
+    return outline(shade(diag_mask(spec, (-12, 6)), mats), '#1e1a22')
+
+
+def drill(tier):
+    """Kernbohrer: Kurbel am Griffende (kein Querbalken, sonst wirkt er wie ein Schwert), Holzgriff, Gehäuse,
+    Stahlschaft und ein konisch zulaufender Bohrkopf mit Spiralstreifen; der Kopf ist je Stufe länger
+    (5, 6, 7 px) und aus Eisen, Kristallquarz bzw. türkisem Tiefengestein."""
+    head = {1: 9, 2: 10, 3: 11}[tier]
+    tip = 11
+    start = tip - head
+
+    def spec(t, du):
+        if t <= -11:                                     # Kurbel: L-Form, nur zu einer Seite
+            if -4 <= du <= 1:
+                return 'k' if du <= -3 or t == -11 else 'h'
+            return None
+        if t <= -8:                                      # Holzgriff
+            return 'h' if 0 <= du <= 1 else None
+        if t <= -5:                                      # Gehäuse, breiter als der Kopf, in Kontrastfarbe
+            return 'f' if -2 <= du <= 3 else None
+        if t < start:                                    # Schaft
+            return 'r' if 0 <= du <= 1 else None
+        k = (t - start) / head                           # Kopf: Basis 4 px, gleichmäßig zur 1-px-Spitze
+        half = {1: 3.0, 2: 3.0, 3: 3.5}[tier] * (1 - k) + 0.3
+        if -half + 0.5 <= du <= half + 0.5:
+            return 's' if t % 2 == 0 else 'b'            # Spiralbänder: alle 2 px ein dunkler Streifen quer zur Achse
+        return None
+    bit = {1: ('#eef3f7', '#d8e0e8', '#8a929c', '#6a727c'), 2: R_QUARTZ, 3: R_TEAL}[tier]
+    stripe = {1: ('#555c66',) * 4, 2: ('#1a1450',) * 4, 3: ('#124440',) * 4}[tier]
+    mats = {'h': R_WOOD, 'k': R_WOOD if tier == 1 else R_QUARTZ if tier == 2 else R_AMBER,
+            'f': ('#e8a85a', '#d08a3a', '#a0662a', '#6e4418') if tier == 1 else R_WOOD if tier == 2 else R_AMBER,
+            'r': R_IRON_DARK, 'b': bit, 's': stripe}
+    edge = {1: '#1e1a22', 2: '#1a1450', 3: '#0c2826'}[tier]
+    return outline(shade(diag_mask(spec, (-13, tip)), mats), edge)
+
+
+def ramp_from(base):
+    """Glanz/hell/mittel/dunkel aus einer Grundfarbe."""
+    r, g, b, _ = rgb(base)
+    def mix(f, to):
+        return '#%02x%02x%02x' % tuple(round(c + (t - c) * f) for c, t in zip((r, g, b), to))
+    return (mix(0.45, (255, 255, 255)), mix(0.22, (255, 255, 255)), base, mix(0.35, (0, 0, 0)))
+
+
+EGG_ROWS = [  # einheitliche Ei-Form für alle Spawn-Eier (breiteste Stelle im unteren Drittel)
+    '................',
+    '.......xx.......',
+    '......xxxx......',
+    '.....xxxxxx.....',
+    '.....xxxxxx.....',
+    '....xxxxxxxx....',
+    '....xxxxxxxx....',
+    '...xxxxxxxxxx...',
+    '...xxxxxxxxxx...',
+    '...xxxxxxxxxx...',
+    '...xxxxxxxxxx...',
+    '...xxxxxxxxxx...',
+    '....xxxxxxxx....',
+    '.....xxxxxx.....',
+    '......xxxx......',
+    '................',
+]
+EGG_SPOTS = [(7, 2), (8, 4), (9, 4), (6, 6), (5, 7), (6, 7), (10, 7), (11, 8), (10, 8), (7, 9), (8, 10), (5, 11),
+             (4, 11), (9, 12), (10, 12), (6, 13)]
+
+
+def egg(base, spot):
+    mask = grid_mask(EGG_ROWS)
+    for p in EGG_SPOTS:
+        mask[p] = 's'
+    img = shade({p: 'x' for p in mask}, {'x': ramp_from(base)})   # Schattierung nach der Eiform
+    sp = ramp_from(spot)
+    for (x, y) in EGG_SPOTS:
+        img.putpixel((x, y), rgb(sp[1] if (x + y) % 2 == 0 else sp[2]))
+    return outline(img, ramp_from(ramp_from(base)[3])[3])
+
+
+V2_EGGS = {
+    'geode_crawler_spawn_egg': ('#5a4f66', '#b8b6ff'),
+    'spore_bellows_spawn_egg': ('#4f7a3a', '#d8cfa0'),
+    'petrified_witness_spawn_egg': ('#8a8478', '#e8c25a'),
+    'ember_burrower_spawn_egg': ('#4a2018', '#ff8a2a'),
+    'stratolith_spawn_egg': ('#3c3742', '#c8a26a'),
+    'resonant_shard_spawn_egg': ('#4a44c0', '#f2f2ff'),
+    'amber_moth_spawn_egg': ('#d9821c', '#3a1b04'),
+    'resin_snail_spawn_egg': ('#8a3a14', '#ffd27a'),
+}
+
+
+R_CALCITE = ('#fffdf6', '#f0ebdf', '#d6cfbf', '#a59d8c')
+R_GEODE_IN = ('#8a7a99', '#6a5a7a', '#4f4360', '#352b44')
+R_MOSS = ('#e2f7c4', '#9fd06a', '#5c8f3c', '#355a22')
+R_EMBER = ('#fff1c4', '#ff9a3c', '#e0531c', '#9e2a0c')
+R_STONE = ('#b3acb8', '#8f8896', '#6e6878', '#4e4858')
+R_GOLD = ('#fff1b0', '#ffd25a', '#e0a82e', '#9a6a14')
+ARMOR_MATS = {'c': R_CALCITE, 'v': R_QUARTZ, 'g': R_GEODE_IN}
+
+
+def armor(rows):
+    return lambda: outline(shade(grid_mask(rows), ARMOR_MATS), '#231c2a')
+
+
+V2_HELMET = [
+    '................',
+    '................',
+    '................',
+    '....cccccccc....',
+    '...ccvccccvcc...',
+    '..ccvvvccvvvcc..',
+    '..cccccccccccc..',
+    '..ccc......ccc..',
+    '..cc........cc..',
+    '..cc........cc..',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+]
+V2_CHESTPLATE = [
+    '................',
+    '..ccc......ccc..',
+    '.ccccc....ccccc.',
+    '.cccccccccccccc.',
+    '.cccccvvvvccccc.',
+    '..ccccvggvcccc..',
+    '...cccvggvccc...',
+    '...ccccvvcccc...',
+    '...cccccccccc...',
+    '...cccccccccc...',
+    '...cccccccccc...',
+    '...cccccccccc...',
+    '....cccccccc....',
+    '................',
+    '................',
+    '................',
+]
+V2_LEGGINGS = [
+    '................',
+    '...cccccccccc...',
+    '...cvcvcvcvcc...',
+    '...cccccccccc...',
+    '...cccc..cccc...',
+    '...ccc....ccc...',
+    '...ccc....ccc...',
+    '...ccc....ccc...',
+    '...ccc....ccc...',
+    '...ccc....ccc...',
+    '...ccc....ccc...',
+    '...cvc....cvc...',
+    '...ccc....ccc...',
+    '................',
+    '................',
+    '................',
+]
+V2_BOOTS = [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '...ccc....ccc...',
+    '...cvc....cvc...',
+    '...ccc....ccc...',
+    '...ccc....ccc...',
+    '..cccc....cccc..',
+    '.ccccc....ccccc.',
+    '.ccccc....ccccc.',
+    '................',
+    '................',
+    '................',
+    '................',
+]
+
+
+def v2_seeds():
+    # Kompaktes Häufchen aus fünf Distelsamen (Pyramide 2-2-1), Körner 3 x 4, zwei mit violettem Spitzchen.
+    mask = {}
+    seeds = [(4, 10), (8, 10), (6, 7), (10, 7), (7, 4)]
+    for sx, sy in seeds:
+        for dx in range(3):
+            for dy in range(4):
+                if (dx, dy) in ((0, 0), (2, 0), (0, 3), (2, 3)):
+                    continue                              # Ecken weg: oval
+                mask[(sx + dx, sy + dy)] = 's'
+    img = shade(mask, {'s': ('#c8e8cc', '#9cc4a4', '#5f8a6a', '#3a5a44')})
+    for sx, sy in seeds:                                  # Glanzpixel je Korn
+        img.putpixel((sx + 1, sy + 1), rgb('#c8e8cc'))
+    for sx, sy in (seeds[4], seeds[3]):
+        img.putpixel((sx + 1, sy - 1), rgb('#b8b6ff'))
+    return outline(img, '#1e3424')
+
+
+def v2_spores():
+    # Eine Prise Harzfarn-Sporen: drei grüne Kugeln mit Bernsteinglanz.
+    mask = grid_mask([
+        '................',
+        '................',
+        '................',
+        '................',
+        '........ggg.....',
+        '.......ggggg....',
+        '.......ggggg....',
+        '...ggg.ggggg....',
+        '..ggggg.ggg.....',
+        '..ggggg.........',
+        '..ggggg..ggg....',
+        '...ggg..ggggg...',
+        '........ggggg...',
+        '........ggggg...',
+        '.........ggg....',
+        '................',
+    ])
+    img = shade(mask, {'g': R_MOSS})
+    for x, y in ((8, 5), (3, 8), (9, 11)):
+        img.putpixel((x, y), rgb('#ffd27a'))
+    return outline(img, '#1f3a14')
+
+
+def v2_layer_core():
+    # Aufrechter Bohrkern 6 breit mit den drei Epochen-Schichten (Kristall, Sporen, Asche) zwischen Zeitgestein.
+    bands = ['k', 'k', 'q', 'q', 'q', 'k', 'm', 'm', 'm', 'k', 'e', 'e', 'e', 'k']
+    mask = {}
+    for i, b in enumerate(bands):
+        for x in range(5, 11):
+            mask[(x, 1 + i)] = b
+    img = shade(mask, {'k': R_SLATE, 'q': R_QUARTZ, 'm': R_MOSS, 'e': R_EMBER})
+    for y in range(1, 15):                      # Rundung: linke Kante hell, rechte dunkel
+        img.putpixel((5, y), rgb(ramp_from('#%02x%02x%02x' % img.getpixel((7, y))[:3])[1]))
+        img.putpixel((10, y), rgb(ramp_from('#%02x%02x%02x' % img.getpixel((7, y))[:3])[3]))
+    for x in range(6, 10):                      # Schnittfläche oben
+        img.putpixel((x, 1), rgb('#d9cce6'))
+    return outline(img, '#1a1422')
+
+
+def v2_splinter():
+    # Bruchstück eines Resonanzlings: unregelmäßig, in der Mitte am breitesten, eine Seite gezackt, unten stumpf.
+    mask = grid_mask([
+        '................',
+        '............q...',
+        '...........qq...',
+        '..........qqqq..',
+        '.........qqqq...',
+        '........qqqqqq..',
+        '.......qqqqq....',
+        '......qqqqqqq...',
+        '.....qqqqqq.....',
+        '.....qqqqq......',
+        '....qqqqq.......',
+        '....qqqq........',
+        '...qqqq.........',
+        '...qqq..........',
+        '................',
+        '................',
+    ])
+    img = shade(mask, {'q': R_QUARTZ})
+    for x, y in ((11, 3), (10, 4), (10, 5), (9, 6), (8, 7), (8, 8), (7, 9), (6, 10), (6, 11)):   # Zickzack-Riss
+        img.putpixel((x, y), rgb('#f2f2ff'))
+    img = outline(img, '#1a1450')
+    for x, y in ((14, 6), (2, 9)):                           # Resonanz-Funken
+        img.putpixel((x, y), rgb('#b8b6ff'))
+    return img
+
+
+def v2_calcite_scale():
+    # Fächerförmige Schuppe aus Calcit mit Rillen und violettem Rand.
+    mask = grid_mask([
+        '................',
+        '................',
+        '................',
+        '....cccccccc....',
+        '...cccccccccc...',
+        '..cccccccccccc..',
+        '..cccccccccccc..',
+        '..cccccccccccc..',
+        '...cccccccccc...',
+        '...cccccccccc...',
+        '....cccccccc....',
+        '.....cccccc.....',
+        '......cccc......',
+        '.......cc.......',
+        '................',
+        '................',
+    ])
+    img = shade(mask, {'c': R_CALCITE})
+    for x0 in (5, 8, 11):                       # Rillen strahlen zum Ansatz unten
+        for y in range(4, 12):
+            x = round(x0 + (7.5 - x0) * (y - 4) / 9)
+            if (x, y) in mask:
+                img.putpixel((x, y), rgb('#c9c1b0'))
+    for x in range(4, 12):
+        img.putpixel((x, 3), rgb('#b8b6ff'))
+    return outline(img, '#3a3046')
+
+
+def v2_codex_fragment():
+    # Steintafel, oben rechts schräg abgebrochen, unten links abgeplatzt, Zickzack-Riss, drei Zeilen kleiner Zeichen.
+    mask = grid_mask([
+        '................',
+        '..ssssssssss....',
+        '..sssssssssss...',
+        '..ssssssssssss..',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '...ssssssssssss.',
+        '....sssssssssss.',
+        '................',
+        '................',
+    ])
+    img = shade(mask, {'s': ('#b6b0bc', '#9a94a0', '#7a7482', '#57515f')})
+    lines = {4: [(4, 1), (6, 2), (9, 1), (11, 1)], 7: [(4, 2), (7, 1), (9, 2)], 10: [(4, 1), (6, 1), (8, 2), (11, 1)]}
+    for y, marks in lines.items():                        # Zeichen: kurze Striche und Punkte mit Lücken
+        for x, w in marks:
+            for dx in range(w):
+                if (x + dx, y) in mask:
+                    img.putpixel((x + dx, y), rgb('#e8c25a'))
+                if (x + dx, y + 1) in mask:
+                    img.putpixel((x + dx, y + 1), rgb('#7a5a14'))
+        img.putpixel((marks[0][0], y - 1), rgb('#e8c25a'))   # ein Häkchen je Zeile
+    for x, y in ((11, 5), (10, 6), (11, 7), (10, 8), (11, 9), (12, 10)):   # Zickzack-Riss
+        img.putpixel((x, y), rgb('#3a3540'))
+    return outline(img, '#2a2430')
+
+
+R_ROCK = ('#a8a2ae', '#8c8694', '#706a78', '#4f4a56')
+R_BONE = ('#fffaf0', '#f0e6cc', '#d9c9a2', '#a8946a')
+R_ASH_STONE = ('#a59a8c', '#857a6c', '#675e53', '#463f37')
+
+
+def v2_fossil_chunk():
+    # Gesteinsbrocken mit großem hellem Knochenabdruck (Wirbel und Rippe).
+    mask = grid_mask([
+        '................',
+        '................',
+        '.....rrrrrr.....',
+        '...rrrrrrrrrr...',
+        '..rrrbbrrrrrrr..',
+        '..rrrbbbbrrrrr..',
+        '.rrrrrbbbbrrrrr.',
+        '.rrrrrrrbbbbrrr.',
+        '.rrrbrrrrrbbrrr.',
+        '.rrrbbrrrrrrrrr.',
+        '..rrrbbbrrrrrr..',
+        '..rrrrrbbrrrr...',
+        '...rrrrrrrrrr...',
+        '.....rrrrrr.....',
+        '................',
+        '................',
+    ])
+    return outline(shade(mask, {'r': R_ROCK, 'b': R_BONE}), '#2c2832')
+
+
+def v2_petrified_item():
+    # Versteinerte Stammscheibe frontal, von Hand gezeichnet: warme Rinde, zwei Jahresringe, dunkler Kern, Riss.
+    rows = [
+        '................',
+        '.....bbbbbb.....',
+        '...bbbccccbbb...',
+        '..bbccccccccbb..',
+        '..bccrrrrrrccb..',
+        '.bbcrccccccrcbb.',
+        '.bccrcrrrrcrccb.',
+        '.bccrcrkkrcrkkb.',
+        '.bccrcrkkrcrccb.',
+        '.bccrcrrrrcrccb.',
+        '.bbcrccccccrcbb.',
+        '..bccrrrrrrccb..',
+        '..bbccccccccbb..',
+        '...bbbccccbbb...',
+        '.....bbbbbb.....',
+        '................',
+    ]
+    mask = grid_mask(rows)
+    img = shade({p: m for p, m in mask.items() if m in 'bc'},
+                {'b': ('#8a6e54', '#6b5440', '#54412f', '#3e2e20'), 'c': ('#d4cab2', '#c6bca4', '#b8ae96', '#968c76')})
+    for p, m in mask.items():
+        if m == 'r':
+            img.putpixel(p, rgb('#7a7060'))
+        elif m == 'k':
+            img.putpixel(p, rgb('#4a4236'))
+    return outline(img, '#2a1e14')
+
+
+def v2_ammonite():
+    # Ammonit: helle Schale, darauf eine dunkle Spirallinie (Archimedes, drei Windungen) und Kammerkerben am Rand.
+    import math
+    mask = {}
+    for y in range(16):
+        for x in range(16):
+            if (x - 7.5) ** 2 + (y - 7.5) ** 2 <= 6.7 ** 2:
+                mask[(x, y)] = 'c'
+    img = shade(mask, {'c': R_BONE})
+    th = 0.0
+    while th < 2.3 * 2 * math.pi:
+        r = 0.6 + 0.42 * th
+        x, y = round(7.5 + r * math.cos(th)), round(7.5 + r * math.sin(th))
+        if (x, y) in mask:
+            img.putpixel((x, y), rgb('#7a6640'))
+        th += 0.05
+    for k in range(12):                                   # Kammerkerben am Außenrand
+        a2 = k * math.pi / 6
+        x, y = round(7.5 + 5.6 * math.cos(a2)), round(7.5 + 5.6 * math.sin(a2))
+        if (x, y) in mask:
+            img.putpixel((x, y), rgb('#a8946a'))
+    return outline(img, '#3a2f1c')
+
+
+def v2_fern_fossil():
+    # Unregelmäßiger Steinbrocken mit großem Farnwedel-Abdruck.
+    mask = grid_mask([
+        '................',
+        '................',
+        '....rrrrrrrr....',
+        '...rrrrrrrrrrr..',
+        '..rrrrrrrrrrrr..',
+        '..rrrrrrrrrrrrr.',
+        '.rrrrrrrrrrrrrr.',
+        '.rrrrrrrrrrrrrr.',
+        '.rrrrrrrrrrrrrr.',
+        '.rrrrrrrrrrrrr..',
+        '..rrrrrrrrrrrr..',
+        '..rrrrrrrrrrr...',
+        '...rrrrrrrrr....',
+        '....rrrrrr......',
+        '................',
+        '................',
+    ])
+    img = shade(mask, {'r': R_ROCK})
+    for y in range(3, 13):                                    # senkrechter Farnwedel als dunkler Abdruck
+        img.putpixel((7, y), rgb('#2e3a2a'))
+    for y, n in ((5, 1), (7, 2), (9, 3), (11, 3)):            # Fiedern, nach unten länger, schräg nach oben
+        for k in range(1, n + 1):
+            for x in (7 - k, 7 + k):
+                if (x, y - k + 1) in mask:
+                    img.putpixel((x, y - k + 1), rgb('#3e5a36' if k < n else '#5c7a4e'))
+    return outline(img, '#2c2832')
+
+
+def v2_amber_blade():
+    # Klinge aus Bernstein mit Spitze, heller Schneide und dunklem Rücken; dunkler Holzgriff, Einschluss.
+    mask = grid_mask([
+        '................',
+        '.............ee.',
+        '............eaa.',
+        '...........eaad.',
+        '..........eaad..',
+        '.........eaad...',
+        '........eaid....',
+        '.......eaad.....',
+        '...g..eaad......',
+        '....gaaad.......',
+        '.....gad........',
+        '....hhg.........',
+        '...hh..g........',
+        '..hh............',
+        '.hh.............',
+        '................',
+    ])
+    mats = {'e': ('#fff3c8', '#fff3c8', '#ffe2a0', '#ffd27a'), 'a': R_AMBER, 'd': ('#d9821c', '#a2560f', '#7a3e0a', '#5a2a06'),
+            'i': ('#3a1b04', '#3a1b04', '#3a1b04', '#3a1b04'), 'g': R_GOLD, 'h': ('#7a5a3e', '#5a3f2a', '#3e2a1c', '#2a1a10')}
+    return outline(shade(mask, mats), '#3a1b04')
+
+
+def v2_amber_inclusion():
+    # Bernsteinbrocken in Tropfenform, darin eine deutlich erkennbare Mücke.
+    mask = grid_mask([
+        '................',
+        '.......aa.......',
+        '......aaaa......',
+        '.....aaaaaa.....',
+        '....aaaaaaaa....',
+        '...aaaaaaaaaa...',
+        '...aaaaaaaaaa...',
+        '..aaaaaaaaaaaa..',
+        '..aaaaaaaaaaaa..',
+        '..aaaaaaaaaaaa..',
+        '..aaaaaaaaaaaa..',
+        '...aaaaaaaaaa...',
+        '....aaaaaaaa....',
+        '......aaaa......',
+        '................',
+        '................',
+    ])
+    img = shade(mask, {'a': R_AMBER})
+    body = [(7, 9), (8, 8), (9, 7)]                       # kompakter Körper, 3 px diagonal
+    wings = [(5, 6), (6, 6), (5, 7), (6, 7), (9, 4), (10, 4), (9, 5), (10, 5)]   # zwei getrennte Flügel als V
+    legs = [(6, 10), (8, 10)]
+    for x, y in set(body + wings + legs):                 # 1 px dunklerer Hof
+        for ox, oy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            p = (x + ox, y + oy)
+            if p in mask and p not in body + wings + legs:
+                img.putpixel(p, rgb('#a2560f'))
+    for x, y in body:
+        img.putpixel((x, y), rgb('#3a1b04'))
+    img.putpixel((10, 6), rgb('#1e0e02'))                 # Kopf
+    for i, (x, y) in enumerate(wings):
+        img.putpixel((x, y), rgb('#fff1c4' if i in (0, 4) else '#ffd27a'))
+    for x, y in legs:
+        img.putpixel((x, y), rgb('#5c2e0a'))
+    return outline(img, '#3a1b04')
+
+
+def v2_heart():
+    # Herz aus Kristallquarz, darin ein kleiner goldener Sanduhr-Kern.
+    mask = grid_mask([
+        '................',
+        '................',
+        '...qqq....qqq...',
+        '..qqqqq..qqqqq..',
+        '.qqqqqqqqqqqqqq.',
+        '.qqqqqqqqqqqqqq.',
+        '.qqqqqqqqqqqqqq.',
+        '..qqqqqqqqqqqq..',
+        '...qqqqqqqqqq...',
+        '....qqqqqqqq....',
+        '.....qqqqqq.....',
+        '......qqqq......',
+        '.......qq.......',
+        '................',
+        '................',
+        '................',
+    ])
+    img = shade(mask, {'q': R_QUARTZ})
+    hourglass = [(6, 4), (7, 4), (8, 4), (9, 4), (7, 5), (8, 5), (7, 6), (8, 6), (7, 7), (8, 7), (6, 8), (7, 8), (8, 8), (9, 8)]
+    for x, y in hourglass:
+        img.putpixel((x, y), rgb('#ffd25a' if y in (4, 8) else '#fff1b0' if (x, y) == (7, 5) else '#e0a82e'))
+    return outline(img, '#1a1450')
+
+
+def resin_cells(seed, pal, glossy=True):
+    """Harz als nahtlos kachelnde Blasen: Zellen in 2-3-px-Clustern, zur Zellmitte heller (statt Pixelrauschen)."""
+    rnd = random.Random(seed)
+    pts = [(rnd.uniform(0, 16), rnd.uniform(0, 16)) for _ in range(11)]
+    img = canvas()
+    for y in range(16):
+        for x in range(16):
+            ds = []
+            for px, py in pts:
+                dx = min(abs(x - px), 16 - abs(x - px))
+                dy = min(abs(y - py), 16 - abs(y - py))
+                ds.append((dx * dx + dy * dy) ** 0.5)
+            ds.sort()
+            edge = ds[1] - ds[0]                      # klein an der Zellgrenze
+            v = min(0.85, 0.45 + 0.14 * edge)
+            if edge < 0.55:
+                v = 0.3                               # dunklere Fuge zwischen den Blasen
+            img.putpixel((x, y), pick(pal, v))
+    if glossy:
+        for x, y in ((3, 2), (4, 2), (2, 3), (11, 9), (12, 9), (7, 12)):   # Glanzpunkte
+            img.putpixel((x, y), rgb(pal[-1]))
+    return img
+
+
+def v2_resin_trap():
+    img = resin_cells(401, RESIN)
+    for y in range(5, 11):                            # klebriger, dunkler Fangkern in der Mitte
+        for x in range(5, 11):
+            if (x - 7.5) ** 2 + (y - 7.5) ** 2 <= 8:
+                img.putpixel((x, y), rgb('#7a3c08' if (x + y) % 3 else '#5a2a06'))
+    return img
+
+
+def v2_resin_trap_moth():
+    img = resin_cells(401, RESIN)
+    _moth_inside(img, '#2a1c12', '#6a3606', '#3b2818')
+    return img
+
+
+def v2_resin_trap_hardened():
+    img = resin_cells(403, HARD_AMBER)
+    _moth_inside(img, '#5a2a06', '#a2560f', '#4f3620')
+    for i in range(5):                                # polierter Glanz oben links
+        img.putpixel((1 + i, 1 + i // 2), rgb('#fff3c8'))
+    return img
+
+
 ITEMS = {
-    'core_drill': core_drill,
-    'crystal_core_drill': crystal_core_drill,
-    'deep_core_drill': deep_core_drill,
+    'core_drill': lambda: drill(1),
+    'crystal_core_drill': lambda: drill(2),
+    'deep_core_drill': lambda: drill(3),
     'ember_shard': ember_shard,
-    'fossil_chunk': fossil_chunk,
-    'chisel': chisel,
-    'ammonite_fossil': ammonite_fossil,
-    'fern_fossil': fern_fossil,
+    'fossil_chunk': v2_fossil_chunk,
+    'chisel': v2_chisel,
+    'ammonite_fossil': v2_ammonite,
+    'fern_fossil': v2_fern_fossil,
     'ancient_skull': ancient_skull,
     'core_sample': core_sample,
     'crystal_quartz': crystal_quartz,
     'amber_shard': amber_shard,
     'time_anchor': time_anchor,
-    'calcite_scale': calcite_scale,
+    'calcite_scale': v2_calcite_scale,
     'spore_sac': spore_sac,
     'germ_tonic': germ_tonic,
-    'codex_fragment': codex_fragment,
-    'quartz_thistle_seeds': quartz_thistle_seeds,
-    'petrified_item': petrified_item,
+    'codex_fragment': v2_codex_fragment,
+    'quartz_thistle_seeds': v2_seeds,
+    'petrified_item': v2_petrified_item,
     'time_essence': time_essence,
-    'layer_core': layer_core,
-    'heart_of_deep_time': heart_of_deep_time,
-    'resin_fern_spores': resin_fern_spores,
+    'layer_core': v2_layer_core,
+    'heart_of_deep_time': v2_heart,
+    'resin_fern_spores': v2_spores,
     'ember_tuber': ember_tuber,
-    'resonant_splinter': resonant_splinter,
-    'amber_inclusion': amber_inclusion,
+    'resonant_splinter': v2_splinter,
+    'amber_inclusion': v2_amber_inclusion,
 }
-SPAWN_EGGS = {
-    'geode_crawler_spawn_egg': geode_crawler_spawn_egg,
-    'spore_bellows_spawn_egg': spore_bellows_spawn_egg,
-    'petrified_witness_spawn_egg': petrified_witness_spawn_egg,
-    'ember_burrower_spawn_egg': ember_burrower_spawn_egg,
-    'stratolith_spawn_egg': stratolith_spawn_egg,
-    'resonant_shard_spawn_egg': resonant_shard_spawn_egg,
-    'amber_moth_spawn_egg': amber_moth_spawn_egg,
-    'resin_snail_spawn_egg': resin_snail_spawn_egg,
-}
+SPAWN_EGGS = {name: (lambda b=b, s=s: egg(b, s)) for name, (b, s) in V2_EGGS.items()}
 
 
 def save_all():

@@ -138,6 +138,8 @@ def configureStrataProject = { Project p ->
             strata_version_range   : "[${rootProject.property('mod_version')},)",
             jei_version            : versionProps.getProperty('jei_version') ?: '',
             jade_version           : versionProps.getProperty('jade_version') ?: '',
+            // Mod-Symbol: bis 26.1 "logoFile", ab 26.2 "iconFile" (logoFile gilt dort als veraltet).
+            logo_key               : versionProps.getProperty('logo_key') ?: 'logoFile',
     ]
     tasks.named('processResources') {
         inputs.properties props
