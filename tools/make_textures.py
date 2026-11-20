@@ -2086,14 +2086,14 @@ def drill(tier):
         if t < start:                                    # Schaft
             return 'r' if 0 <= du <= 1 else None
         k = (t - start) / head                           # Kopf: Basis 4 px, gleichmäßig zur 1-px-Spitze
-        half = {1: 2.0, 2: 2.0, 3: 2.5}[tier] * (1 - k) + 0.2
+        half = {1: 3.0, 2: 3.0, 3: 3.5}[tier] * (1 - k) + 0.3
         if -half + 0.5 <= du <= half + 0.5:
             return 's' if t % 2 == 0 else 'b'            # Spiralbänder: alle 2 px ein dunkler Streifen quer zur Achse
         return None
-    bit = {1: ('#ffffff', '#e2e8ee', '#c8d0d8', '#9aa4ae'), 2: R_QUARTZ, 3: R_TEAL}[tier]
-    stripe = {1: ('#2e2e36',) * 4, 2: ('#1a1450',) * 4, 3: ('#124440',) * 4}[tier]
+    bit = {1: ('#eef3f7', '#d8e0e8', '#8a929c', '#6a727c'), 2: R_QUARTZ, 3: R_TEAL}[tier]
+    stripe = {1: ('#555c66',) * 4, 2: ('#1a1450',) * 4, 3: ('#124440',) * 4}[tier]
     mats = {'h': R_WOOD, 'k': R_WOOD if tier == 1 else R_QUARTZ if tier == 2 else R_AMBER,
-            'f': R_IRON_DARK if tier == 1 else R_WOOD if tier == 2 else R_AMBER,
+            'f': ('#e8a85a', '#d08a3a', '#a0662a', '#6e4418') if tier == 1 else R_WOOD if tier == 2 else R_AMBER,
             'r': R_IRON_DARK, 'b': bit, 's': stripe}
     edge = {1: '#1e1a22', 2: '#1a1450', 3: '#0c2826'}[tier]
     return outline(shade(diag_mask(spec, (-13, tip)), mats), edge)
@@ -2240,19 +2240,21 @@ V2_BOOTS = [
 
 
 def v2_seeds():
-    # Fünf ovale Distelsamen eng gehäuft, Glanz oben links, je ein violettes Pappus-Spitzchen.
+    # Kompaktes Häufchen aus fünf Distelsamen (Pyramide 2-2-1), Körner 3 x 4, zwei mit violettem Spitzchen.
     mask = {}
-    seeds = [(3, 6), (8, 4), (5, 10), (11, 8), (9, 12)]
+    seeds = [(4, 10), (8, 10), (6, 7), (10, 7), (7, 4)]
     for sx, sy in seeds:
-        for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1), (0, 2), (1, 2)):
-            mask[(sx + dx, sy + dy)] = 's'
-    img = shade(mask, {'s': ('#d8f0d8', '#9cc4a6', '#6a9078', '#46644f')})
-    for sx, sy in seeds:
-        img.putpixel((sx, sy - 1), rgb('#b8b6ff'))
-        img.putpixel((sx, sy), rgb('#c8e0c8'))
-    img.putpixel((9, 2), rgb('#f2f2ff'))                   # Hauch Flaum
-    img.putpixel((5, 3), rgb('#e6e6ff'))
-    return outline(img, '#24402a')
+        for dx in range(3):
+            for dy in range(4):
+                if (dx, dy) in ((0, 0), (2, 0), (0, 3), (2, 3)):
+                    continue                              # Ecken weg: oval
+                mask[(sx + dx, sy + dy)] = 's'
+    img = shade(mask, {'s': ('#c8e8cc', '#9cc4a4', '#5f8a6a', '#3a5a44')})
+    for sx, sy in seeds:                                  # Glanzpixel je Korn
+        img.putpixel((sx + 1, sy + 1), rgb('#c8e8cc'))
+    for sx, sy in (seeds[4], seeds[3]):
+        img.putpixel((sx + 1, sy - 1), rgb('#b8b6ff'))
+    return outline(img, '#1e3424')
 
 
 def v2_spores():
@@ -2358,34 +2360,37 @@ def v2_calcite_scale():
 
 
 def v2_codex_fragment():
-    # Gebrochene Steintafel: Bruchkante rechts in Stufen, dunkler Riss, drei Zeilen unterschiedlicher Goldzeichen.
+    # Steintafel, oben rechts schräg abgebrochen, unten links abgeplatzt, Zickzack-Riss, drei Zeilen kleiner Zeichen.
     mask = grid_mask([
         '................',
-        '................',
-        '..ssssssss......',
-        '..sssssssss.....',
-        '..ssssssssss....',
         '..ssssssssss....',
         '..sssssssssss...',
+        '..ssssssssssss..',
         '..sssssssssssss.',
         '..sssssssssssss.',
-        '..ssssssssssss..',
-        '..ssssssssssss..',
-        '..sssssssssss...',
-        '..sssssssss.....',
-        '..ssssssss......',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '..sssssssssssss.',
+        '...ssssssssssss.',
+        '....sssssssssss.',
         '................',
         '................',
     ])
     img = shade(mask, {'s': ('#b6b0bc', '#9a94a0', '#7a7482', '#57515f')})
-    for x, y in ((10, 3), (9, 4), (9, 5), (8, 6), (8, 7), (9, 8), (10, 9), (10, 10)):   # Riss
+    lines = {4: [(4, 1), (6, 2), (9, 1), (11, 1)], 7: [(4, 2), (7, 1), (9, 2)], 10: [(4, 1), (6, 1), (8, 2), (11, 1)]}
+    for y, marks in lines.items():                        # Zeichen: kurze Striche und Punkte mit Lücken
+        for x, w in marks:
+            for dx in range(w):
+                if (x + dx, y) in mask:
+                    img.putpixel((x + dx, y), rgb('#e8c25a'))
+                if (x + dx, y + 1) in mask:
+                    img.putpixel((x + dx, y + 1), rgb('#7a5a14'))
+        img.putpixel((marks[0][0], y - 1), rgb('#e8c25a'))   # ein Häkchen je Zeile
+    for x, y in ((11, 5), (10, 6), (11, 7), (10, 8), (11, 9), (12, 10)):   # Zickzack-Riss
         img.putpixel((x, y), rgb('#3a3540'))
-    rows = {5: '#.##.#', 8: '##.#.##', 11: '#.###'}     # drei Schriftzeilen, Lücken als Wortgrenzen
-    for y, pattern in rows.items():
-        for i, ch in enumerate(pattern):
-            if ch == '#' and (4 + i, y) in mask:
-                img.putpixel((4 + i, y), rgb('#ffd25a'))
-                img.putpixel((4 + i, y + 1), rgb('#8a6a1a'))
     return outline(img, '#2a2430')
 
 
@@ -2418,27 +2423,34 @@ def v2_fossil_chunk():
 
 
 def v2_petrified_item():
-    # Versteinertes Holzstück: Stammscheibe vorn mit Jahresringen, Rinde nach hinten.
-    mask = grid_mask([
+    # Versteinerte Stammscheibe frontal, von Hand gezeichnet: warme Rinde, zwei Jahresringe, dunkler Kern, Riss.
+    rows = [
         '................',
+        '.....bbbbbb.....',
+        '...bbbccccbbb...',
+        '..bbccccccccbb..',
+        '..bccrrrrrrccb..',
+        '.bbcrccccccrcbb.',
+        '.bccrcrrrrcrccb.',
+        '.bccrcrkkrcrkkb.',
+        '.bccrcrkkrcrccb.',
+        '.bccrcrrrrcrccb.',
+        '.bbcrccccccrcbb.',
+        '..bccrrrrrrccb..',
+        '..bbccccccccbb..',
+        '...bbbccccbbb...',
+        '.....bbbbbb.....',
         '................',
-        '................',
-        '.......sssssss..',
-        '.....sssssssss..',
-        '...ccccsssssss..',
-        '..ccccccssssss..',
-        '..ccrrccssssss..',
-        '..ccrccrcsssss..',
-        '..ccrrccssssss..',
-        '..ccccccsssss...',
-        '...ccccssss.....',
-        '................',
-        '................',
-        '................',
-        '................',
-    ])
-    mats = {'s': R_ASH_STONE, 'c': ('#f0e8dc', '#d8ccb8', '#bcae98', '#8e826e'), 'r': ('#8e826e', '#7a6e5c', '#665a48', '#4a4034')}
-    return outline(shade(mask, mats), '#2a241e')
+    ]
+    mask = grid_mask(rows)
+    img = shade({p: m for p, m in mask.items() if m in 'bc'},
+                {'b': ('#8a6e54', '#6b5440', '#54412f', '#3e2e20'), 'c': ('#d4cab2', '#c6bca4', '#b8ae96', '#968c76')})
+    for p, m in mask.items():
+        if m == 'r':
+            img.putpixel(p, rgb('#7a7060'))
+        elif m == 'k':
+            img.putpixel(p, rgb('#4a4236'))
+    return outline(img, '#2a1e14')
 
 
 def v2_ammonite():
@@ -2542,13 +2554,21 @@ def v2_amber_inclusion():
         '................',
     ])
     img = shade(mask, {'a': R_AMBER})
-    for x, y in ((8, 7), (8, 8), (8, 9), (8, 10), (9, 11)):                 # Körper schmal, leicht schräg
-        img.putpixel((x, y), rgb('#2a1203'))
-    img.putpixel((8, 6), rgb('#2a1203'))                                      # Kopf
-    for x, y in ((7, 6), (6, 5), (5, 4), (9, 6), (10, 5), (11, 4), (6, 4), (10, 4)):   # Flügel als V nach oben
-        img.putpixel((x, y), rgb('#fffbeb'))
-    for x, y in ((7, 9), (6, 10), (9, 9), (10, 10)):                        # Beine
-        img.putpixel((x, y), rgb('#5a2a06'))
+    body = [(7, 9), (8, 8), (9, 7)]                       # kompakter Körper, 3 px diagonal
+    wings = [(5, 6), (6, 6), (5, 7), (6, 7), (9, 4), (10, 4), (9, 5), (10, 5)]   # zwei getrennte Flügel als V
+    legs = [(6, 10), (8, 10)]
+    for x, y in set(body + wings + legs):                 # 1 px dunklerer Hof
+        for ox, oy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            p = (x + ox, y + oy)
+            if p in mask and p not in body + wings + legs:
+                img.putpixel(p, rgb('#a2560f'))
+    for x, y in body:
+        img.putpixel((x, y), rgb('#3a1b04'))
+    img.putpixel((10, 6), rgb('#1e0e02'))                 # Kopf
+    for i, (x, y) in enumerate(wings):
+        img.putpixel((x, y), rgb('#fff1c4' if i in (0, 4) else '#ffd27a'))
+    for x, y in legs:
+        img.putpixel((x, y), rgb('#5c2e0a'))
     return outline(img, '#3a1b04')
 
 
