@@ -1,5 +1,8 @@
 # Strata – Tiefenzeit
 
+> **Dieser Branch (`release/1.21.1`) enthält nur Minecraft 1.21.1.** Entwickelt wird für alle Versionen gemeinsam auf dem Hauptbranch; dieser Stand wurde daraus mit `scripts/split-version.sh 1.21.1` erzeugt. Abschnitte der README zu anderen Versionen gelten hier nicht.
+
+
 Ein Modset für Minecraft-Modpacks. Das Konzept steht in [KONZEPT.md](KONZEPT.md), der Plan für eigene Mobs in [docs/MOBS.md](docs/MOBS.md).
 
 Eine Hauptmod und zwei Addons. Alle Texte gibt es auf Deutsch und Englisch.
