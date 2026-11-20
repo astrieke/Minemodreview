@@ -216,6 +216,7 @@ scripts/client-screenshot.sh     Startet den Client auf einem virtuellen Bildsch
 tools/make_logo.py               Erzeugt die Mod-Logos für die Modliste (mit --preview <datei> alle drei nebeneinander)
 tools/make_textures.py           Erzeugt die Texturen (mit --preview <datei> ein Vorschaublatt)
 tools/blockbench-mcp/            MCP-Server + Blockbench-Plugin, damit Claude Modelle in Blockbench bauen kann
+tools/strata-test-mcp/           MCP-Server, mit dem Claude die Mods selbstständig baut, startet, bespielt und prüft
 ```
 
 **Warum das Worldgen erzeugt wird:** Mojang ändert das Format von Dimensionen, Biomen, Erz-Features, Loot-Tabellen und Rezepten fast in jeder Version. In 1.21.11 kamen z. B. „attributes“ dazu, in 26.3 wurde `configured_feature` zu `feature`. Der Task `generateEpochData` nimmt deshalb die Vanilla-Dateien genau der gebauten Version als Vorlage (Höhlen-Dimension, Höhlen-Noise, Vorlage-Biome, Vanilla-Loot) und ändert nur wenige Felder. Eigene Loot-Tabellen (`epochs/worldgen/loot/`) stehen im alten Format und werden ab 26.3 umgeschrieben (eine `condition` statt der Liste `conditions`, `modifier` statt `functions`). Das ist nötig, weil 26.3 unbekannte Felder stillschweigend übergeht: Bedingungen und Mengen fielen sonst einfach weg. Der Selbsttest würfelt deshalb eine Tabelle wirklich aus („Beuteformat“). Allgemein wacht der **Format-Wächter** darüber: Er liest jede Datendatei der Strata-Mods und des Demo-Datapacks (Loot, Rezepte, Advancements, Dimensionen, Worldgen, Biom-Modifier, Epochen; 157 Dateien) mit dem Codec der laufenden Version, schreibt sie zurück und meldet jedes Feld, das dabei verloren geht. Ausgenommen sind nur Felder auf ihrem Standardwert, etwa `"count": 1`. Mit dem alten Loot-Format in 26.3 meldet er 27 verlorene Felder. Damit mehrere Biome nebeneinander liegen, übernimmt das Höhlen-Noise die Klima-Noises des Nethers; die Biome einer Epoche sind Punkte in diesem Klima (`multi_noise`).
@@ -249,6 +250,13 @@ scripts/release.sh                     # alle Jars bauen und prüfen -> dist/0.1
 scripts/perf.sh 26.3                   # Leistungsmessung (etwa 3 min Laufzeit)
 scripts/balance.sh 1.21.1 60           # Balance-Messung, 60 Spielminuten (etwa 2 min Laufzeit)
 ```
+
+### Claude testet selbst: `tools/strata-test-mcp`
+
+Ein MCP-Server gibt Claude Werkzeuge zum eigenständigen Testen: bauen, Smoke-Test, Testserver starten und per
+Befehl bespielen, Logs lesen, Balance und Leistung messen, Screenshots aus dem Spiel ansehen. In Claude Code ist er
+über `.mcp.json` angemeldet (vorher einmal `cd tools/strata-test-mcp && npm install`). Details:
+[`tools/strata-test-mcp/README.md`](tools/strata-test-mcp/README.md).
 
 ### Versions-Branches `release/<version>`
 
