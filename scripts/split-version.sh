@@ -29,6 +29,7 @@ done
 # 3. Skripte für andere Versionen (KubeJS-Test gibt es nur für 1.21.1 und 26.1).
 if ! grep -q "kubejs" "versions/$v/gradle.properties"; then git rm -q scripts/kubejs-test.sh; fi
 git rm -q scripts/split-version.sh   # wird auf dem Versions-Branch nicht mehr gebraucht
+[ -f scripts/update-release-branches.sh ] && git rm -q scripts/update-release-branches.sh
 
 # 4. CI, Standardversion und Hinweise auf diese Version stellen.
 python3 - "$v" <<'PY'
@@ -46,7 +47,8 @@ for script in ('scripts/balance.sh', 'scripts/perf.sh'):
     edit(script, lambda s: s.replace('v="${1:-1.21.1}"', f'v="${{1:-{v}}}"').replace('Standard: 1.21.1', f'Standard: {v}'))
 note = (f'> **Dieser Branch (`release/{v}`) enthält nur Minecraft {v}.** Entwickelt wird für alle Versionen gemeinsam '
         f'auf dem Hauptbranch; dieser Stand wurde daraus mit `scripts/split-version.sh {v}` erzeugt. '
-        'Abschnitte der README zu anderen Versionen gelten hier nicht.\n\n')
+        'Abschnitte der README zu anderen Versionen gelten hier nicht. Änderungen gehören auf den Hauptbranch; '
+        'von dort zieht `scripts/update-release-branches.sh` diesen Branch nach.\n\n')
 edit('README.md', lambda s: s.replace('\n', '\n\n' + note, 1) if s.startswith('# ') else note + s)
 PY
 git add -A .github settings.gradle scripts README.md
